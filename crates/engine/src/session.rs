@@ -416,6 +416,9 @@ pub struct Session {
     /// Quick Parts / AutoText entries.
     pub building_blocks: std::collections::BTreeMap<String, Fragment>,
     pub autosave: bool,
+    /// The document's file as last read or written, AutoSave's conflict waiting, and the cloud
+    /// folders on this computer (`cmd::cloud`).
+    pub cloud: crate::cmd::cloud::CloudState,
     /// Citation style: APA, MLA, Chicago, IEEE.
     pub bib_style: String,
     /// Mail merge data source and preview.
@@ -629,6 +632,7 @@ impl Session {
             versions: Vec::new(),
             building_blocks: Default::default(),
             autosave: true,
+            cloud: Default::default(),
             bib_style,
             merge: Default::default(),
             ui_requests: Vec::new(),
@@ -1001,6 +1005,7 @@ impl Session {
         self.doc.ensure_nonempty();
         self.password = None;
         self.file_name = None;
+        self.cloud.forget_file();
         self.sel = Selection::caret(self.doc.start_of(StoryRef::Body));
         self.pending = None;
         self.also_selected.clear();
@@ -1075,6 +1080,8 @@ impl Session {
             versions: _,
             building_blocks: _,
             autosave: _,
+            // Like the file path: the file on disk, not an edit.
+            cloud: _,
             bib_style: _,
             merge: _,
             ui_requests: _,

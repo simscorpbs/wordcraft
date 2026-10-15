@@ -573,13 +573,36 @@ pub fn save_path(path: &std::path::Path, doc: &Document) -> Result<(), String> {
 /// [`save_path`], encrypted with `password` as [`save_bytes_with`] does.
 #[cfg(not(target_arch = "wasm32"))]
 pub fn save_path_with(path: &std::path::Path, doc: &Document, password: Option<&str>, opts: &ExportOptions) -> Result<(), String> {
+    save_path_stamped(path, doc, password, opts).map(|_| ())
+}
+
+/// [`save_path_with`], returning the stamp of the bytes written (AutoSave's conflict check);
+/// `None` when the file's details can't be read back.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn save_path_stamped(
+    path: &std::path::Path,
+    doc: &Document,
+    password: Option<&str>,
+    opts: &ExportOptions,
+) -> Result<Option<wordcraft_cloud::DiskStamp>, String> {
     crate::file_access::check_write(&path.to_string_lossy())?;
     let bytes = save_bytes_with(&path.to_string_lossy(), doc, password, opts)?;
-    safe_save::write(path, &bytes).map_err(|e| format!("{}: {e}", path.display()))
+    safe_save::write(path, &bytes).map_err(|e| format!("{}: {e}", path.display()))?;
+    Ok(wordcraft_cloud::DiskStamp::of_bytes(path, &bytes).ok())
 }
 
 #[cfg(target_arch = "wasm32")]
 pub fn save_path_with(path: &std::path::Path, _doc: &Document, _password: Option<&str>, _opts: &ExportOptions) -> Result<(), String> {
+    Err(format!("{}: files are saved through the browser on the web", path.display()))
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn save_path_stamped(
+    path: &std::path::Path,
+    _doc: &Document,
+    _password: Option<&str>,
+    _opts: &ExportOptions,
+) -> Result<Option<wordcraft_cloud::DiskStamp>, String> {
     Err(format!("{}: files are saved through the browser on the web", path.display()))
 }
 

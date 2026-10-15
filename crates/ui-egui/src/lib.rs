@@ -524,6 +524,8 @@ pub struct WordApp {
     /// there. A file that was merely opened isn't rewritten until the user saves it: saving drops
     /// whatever WordCraft can't represent (content controls, charts, macros…).
     autosave_path: Option<std::path::PathBuf>,
+    /// The cloud folders being looked for in the background ([`Self::discover_cloud`]).
+    cloud_discovery: Option<std::sync::mpsc::Receiver<Vec<wordcraft_engine::cloud::CloudRoot>>>,
     /// Web: saves the browser's picker hasn't finished yet ([`async_saves`], #1315).
     saves_in_flight: Vec<SaveInFlight>,
     /// Web: the command a Save Changes prompt held back until its picker save ends (#1315).
@@ -627,6 +629,7 @@ impl WordApp {
             read_aloud_at: None,
             read_aloud_error: None,
             autosave_path: None,
+            cloud_discovery: None,
             saves_in_flight: Vec::new(),
             awaiting_save: None,
             change_picture_target: None,
@@ -913,8 +916,8 @@ impl WordApp {
         }
         // An explicit save to the document's own file lets AutoSave keep writing there.
         if let Ok(v) = &r
-            && matches!(id, "file.save" | "file.saveAs")
-            && v.get("saved").and_then(Value::as_bool) == Some(true)
+            && matches!(id, "file.save" | "file.saveAs" | "file.saveToCloud" | "file.resolveConflict")
+            && (v.get("saved").and_then(Value::as_bool) == Some(true) || id == "file.resolveConflict")
             && v.get("path").and_then(Value::as_str).map(std::path::Path::new) == self.session.path.as_deref()
         {
             self.autosave_path = self.session.path.clone();
@@ -1425,6 +1428,25 @@ impl WordApp {
                 let lang = i18n::Lang::from_pref(&self.ui.language);
                 json!({"language": self.ui.language, "effective": lang.code(), "available": i18n::Lang::all().map(|l| json!({"code": l.code(), "name": l.name()})).collect::<Vec<_>>()})
             }
+            "ui.saveConflict" => {
+                let Some(dialogs::Dialog::SaveConflict { .. }) = self.dialog else {
+                    return Some(Err("no save conflict is being asked about".into()));
+                };
+                match s("answer") {
+                    Some("later") => {
+                        self.dialog = None;
+                        json!({"resolved": false})
+                    }
+                    Some(keep @ ("both" | "mine" | "theirs")) => {
+                        let result = self.execute("file.resolveConflict", json!({"keep": keep}));
+                        if result.is_ok() {
+                            self.dialog = None;
+                        }
+                        return Some(result);
+                    }
+                    _ => return Some(Err("`answer` must be both, mine, theirs or later".into())),
+                }
+            }
             "ui.recoveryDiscard" => {
                 if let Some(answer) = s("answer") {
                     let Some(dialogs::Dialog::DiscardRecovery { id, .. }) = self.dialog.clone() else {
@@ -1832,6 +1854,12 @@ impl WordApp {
         if let Some(wait) = self.session.recovery_wait() {
             ctx.request_repaint_after(wait);
         }
+        if let Some(rx) = &self.cloud_discovery
+            && let Ok(roots) = rx.try_recv()
+        {
+            self.session.cloud.roots = roots;
+            self.cloud_discovery = None;
+        }
         self.autosave_tick(now_ms());
         if self.autosaves() && self.session.dirty {
             ctx.request_repaint_after(std::time::Duration::from_millis(1000));
@@ -1921,7 +1949,52 @@ impl WordApp {
         if !self.saved_here() {
             return Some(AutoSaveBlock::NotSavedHere);
         }
+        if let Some(conflict) = self.session.cloud.conflict {
+            return Some(AutoSaveBlock::Conflict { missing: conflict == wordcraft_engine::cloud::DiskState::Missing });
+        }
         None
+    }
+
+    /// Look for the iCloud Drive, Google Drive and OneDrive folders on this computer, off the UI
+    /// thread (on Windows it looks at every drive letter); `repaint` wakes the app when done.
+    /// The desktop app calls this once; until it finishes, no cloud folder is offered.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn discover_cloud(&mut self, repaint: std::sync::Arc<dyn Fn() + Send + Sync>) {
+        let (tx, rx) = std::sync::mpsc::channel();
+        let spawned = std::thread::Builder::new().name("cloud-discovery".into()).spawn(move || {
+            let roots = wordcraft_engine::cloud::discover(&wordcraft_engine::cloud::Env::current());
+            if tx.send(roots).is_ok() {
+                repaint();
+            }
+        });
+        match spawned {
+            Ok(_) => self.cloud_discovery = Some(rx),
+            Err(e) => log::warn!("cloud folders not looked for: {e}"),
+        }
+    }
+
+    /// Where the document is kept in the cloud, if it is: the provider's name ("iCloud Drive").
+    pub fn cloud_name(&self) -> Option<&'static str> {
+        let path = self.session.path.as_deref()?;
+        wordcraft_engine::cloud::locate(path, &self.session.cloud.roots).map(|l| l.provider.name())
+    }
+
+    /// Ask what to do about the conflict AutoSave found (the AutoSave switch, and AutoSave itself).
+    pub fn show_save_conflict(&mut self) {
+        if let Some(conflict) = self.session.cloud.conflict {
+            let missing = conflict == wordcraft_engine::cloud::DiskState::Missing;
+            self.dialog = Some(dialogs::Dialog::SaveConflict { name: self.title_stem(), missing });
+        }
+    }
+
+    /// Turning AutoSave on for a new document: offer the cloud folders found (as Word offers
+    /// OneDrive), else Save As.
+    pub fn start_autosave_new(&mut self) {
+        if self.session.cloud.roots.is_empty() {
+            let _ = self.save_as(crate::file_dialogs::AfterSave::AutoSave);
+        } else {
+            self.dialog = Some(dialogs::Dialog::SaveToCloud { name: self.title_stem() });
+        }
     }
 
     /// Whether AutoSave covers the document: it is on and nothing blocks it ([`Self::autosave_block`]).
@@ -1947,10 +2020,20 @@ impl WordApp {
     fn autosave_tick(&mut self, now: f64) {
         if self.autosaves() && self.session.dirty && now - self.last_autosave > 2500.0 && now - self.canvas.caret_visible_since > 1500.0 {
             self.last_autosave = now;
-            if let Err(e) = self.session.run("file.save", &json!({})) {
-                log::warn!("AutoSave failed: {e}");
-                self.autosave_path = None;
-                self.status(i18n::fmt(tl!("AutoSave failed: {error}. Save the document to turn AutoSave back on."), &[("error", &e.to_string())]));
+            // `ifUnchanged`: never over a version another device saved meanwhile.
+            match self.session.run("file.save", &json!({"ifUnchanged": true})) {
+                Ok(v) if v.get("conflict").is_some() => {
+                    log::warn!("AutoSave paused: {} was changed elsewhere", self.title_stem());
+                    if self.dialog.is_none() {
+                        self.show_save_conflict();
+                    }
+                }
+                Ok(_) => {}
+                Err(e) => {
+                    log::warn!("AutoSave failed: {e}");
+                    self.autosave_path = None;
+                    self.status(i18n::fmt(tl!("AutoSave failed: {error}. Save the document to turn AutoSave back on."), &[("error", &e.to_string())]));
+                }
             }
         }
     }
@@ -2236,6 +2319,9 @@ pub enum AutoSaveBlock {
     Format { name: String },
     /// A file that was opened but not yet saved in this session.
     NotSavedHere,
+    /// Another device or program changed the file (or moved or deleted it, `missing`) since it
+    /// was last read or written here; AutoSave waits for the user to choose what to keep.
+    Conflict { missing: bool },
 }
 
 impl AutoSaveBlock {
@@ -2253,12 +2339,18 @@ impl AutoSaveBlock {
             AutoSaveBlock::NotSavedHere => {
                 tl!("Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)").to_string()
             }
+            AutoSaveBlock::Conflict { missing: false } => {
+                tl!("AutoSave is paused: this file was changed on another device. Click to choose which version to keep.").to_string()
+            }
+            AutoSaveBlock::Conflict { missing: true } => {
+                tl!("AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.").to_string()
+            }
         }
     }
 
     /// Whether Save As can lift the block (everywhere but the browser).
     pub fn save_as_helps(&self) -> bool {
-        !matches!(self, AutoSaveBlock::Browser)
+        !matches!(self, AutoSaveBlock::Browser | AutoSaveBlock::Conflict { .. })
     }
 }
 
