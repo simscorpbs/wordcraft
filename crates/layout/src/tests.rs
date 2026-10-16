@@ -556,6 +556,48 @@ fn layout_time_ratio(doc: impl Fn(usize) -> Document, n: usize, opts: &LayoutOpt
     )
 }
 
+/// Whether the first line of "… a typography lesson" ends in "ty-" when the plain break before
+/// "typography" leaves `gap_after_ty` points more than " ty" needs, with a 36 pt zone.
+fn hyphenates_typography(compat_mode: u32, gap_after_ty: f32) -> bool {
+    let lead = format!("{}typography", "a ".repeat(30));
+    let at = lead.len() - "typography".len();
+    let natural = Document::from_text(&lead);
+    let l = lay(&natural);
+    let (before, ty) = l
+        .pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .find_map(|it| match it {
+            Placed::Lines { para, x, .. } => Some((para.x_of(0, at - 1).unwrap() + x, para.x_of(0, at + 2).unwrap() + x)),
+            _ => None,
+        })
+        .unwrap();
+    let mut d = Document::from_text(&format!("{lead} lesson"));
+    d.settings.auto_hyphenation = true;
+    d.settings.hyphenation_zone = 36.0;
+    d.settings.compat_mode = compat_mode;
+    let indent = 540.0 - ty - gap_after_ty;
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_right = Some(indent)).unwrap();
+    assert!(ty - before + gap_after_ty < 36.0, "the gap stays inside the zone");
+    let l = lay(&d);
+    l.pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .find_map(|it| match it {
+            Placed::Lines { para, .. } => para.lines.first().map(|li| li.hyphen.is_some()),
+            _ => None,
+        })
+        .unwrap()
+}
+
+#[test]
+fn word_2013_mode_hyphenates_whatever_the_zone() {
+    // Word 2013+ hyphenates whenever "ty-" fits, even inside the zone; older modes leave a gap up
+    // to the zone instead (measured in Word for Mac with zones of 18 and 36 pt).
+    assert!(hyphenates_typography(15, 8.0), "mode 15: the hyphen fits, so the word splits");
+    assert!(!hyphenates_typography(14, 8.0), "mode 14: the gap is inside the zone, no hyphen");
+}
+
 #[test]
 fn hidden_separators_with_automatic_hyphenation_lay_out_in_linear_time() {
     // "hyphenation " n times with every space hidden: one joined word of 11n letters reaches the
