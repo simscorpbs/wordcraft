@@ -574,7 +574,7 @@ fn spelling_issues(text: &str, lang: impl Fn(usize) -> ProofLang, opts: &Options
 
 /// The whitespace-delimited token enclosing the word at `a..b` of `text`: its byte range, and
 /// whether it looks like a web or e-mail address.
-fn enclosing_token(text: &str, a: usize, b: usize) -> (usize, usize, bool) {
+pub(crate) fn enclosing_token(text: &str, a: usize, b: usize) -> (usize, usize, bool) {
     let ts = text.get(..a).and_then(|t| t.rfind(char::is_whitespace)).map(|i| i + 1).unwrap_or(0);
     let te = text.get(b..).and_then(|t| t.find(char::is_whitespace)).map(|i| b + i).unwrap_or(text.len());
     let token = text.get(ts..te).unwrap_or("");

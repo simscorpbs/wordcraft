@@ -4,9 +4,10 @@
 //!
 //! - **Repeated word** (`ele ele`), except interjections and words Portuguese doubles on purpose
 //!   (`sim sim`, `não não`, `ora ora`).
-//! - **Space before punctuation** (`bem ,`) and **double spaces**; emoticons (` :)`) and
-//!   ellipses are left alone.
-//! - **Capital letter at the start of a sentence**, knowing Portuguese abbreviations (`etc.`,
+//! - **Space before punctuation** (`bem ,`); emoticons (` :)`) and ellipses are left alone.
+//!   Double spaces are not marked, as in Word's Portuguese grammar (letters and footers often
+//!   align with runs of spaces).
+//! - **Capital letter at the start of a sentence** (never on an e-mail or web address), knowing Portuguese abbreviations (`etc.`,
 //!   `pág.`, `Prof.`, `Dr.`), initials, ordinal numbers (`5. colocado`), ellipses and dialogue
 //!   dashes (`— Vai — disse`), after which lower case is correct.
 //! - **Doubled punctuation** (`,,`, `..`, `;;`).
@@ -116,12 +117,8 @@ fn spaces(text: &str, v: &mut Vec<Issue>) {
             v.push(issue(i, i + 1 + p.len_utf8(), "Espaço antes da pontuação".into(), vec![p.to_string()]));
         }
     }
-    for (i, _) in text.match_indices("  ") {
-        if i > 0 && text.get(..i).is_some_and(|t| t.ends_with(' ')) {
-            continue;
-        }
-        v.push(issue(i, i + 2, "Espaço duplo".into(), vec![" ".into()]));
-    }
+    // No double-space rule: Word's Portuguese grammar leaves "2.  Do" and "site   |   (11)" alone
+    // (measured in Word for Mac), while its English grammar marks "a  b".
 }
 
 fn sentence_capitals(text: &str, ws: &[(usize, usize)], v: &mut Vec<Issue>) {
@@ -136,7 +133,8 @@ fn sentence_capitals(text: &str, ws: &[(usize, usize)], v: &mut Vec<Issue>) {
             let Some(&(pa, pb)) = ws.get(k - 1) else { continue };
             ends_sentence(text.get(pb..a).unwrap_or(""), text.get(pa..pb).unwrap_or(""))
         };
-        if starts && w.chars().next().is_some_and(char::is_lowercase) && w.chars().all(char::is_alphabetic) {
+        // An e-mail or web address (`contato@…`, `www.…`) keeps its case, as in Word.
+        if starts && w.chars().next().is_some_and(char::is_lowercase) && w.chars().all(char::is_alphabetic) && !crate::enclosing_token(text, a, b).2 {
             v.push(issue(a, b, "Letra maiúscula no início da frase".into(), vec![capitalize(w)]));
         }
     }
@@ -196,11 +194,20 @@ mod tests {
         assert!(m.contains(&"Espaço antes da pontuação@ ,".to_string()), "{m:?}");
         assert!(m.contains(&"Espaço antes da pontuação@ .".to_string()), "{m:?}");
         assert!(m.contains(&"Espaço antes da pontuação@ ?".to_string()), "{m:?}");
-        assert!(m.contains(&"Espaço duplo@  ".to_string()), "{m:?}");
+        assert!(!m.iter().any(|x| x.starts_with("Espaço duplo")), "{m:?}");
         clean("Legal :) Muito bom :-) Ou :D Valor .5 e reticências ...");
         let m = messages("Falou,, e saiu.. depois;; fim.");
         assert_eq!(m.iter().filter(|x| x.starts_with("Sinal repetido")).count(), 3, "{m:?}");
         clean("Esperei… e esperei... até ele voltar.");
+    }
+
+    #[test]
+    fn double_spaces_are_left_alone_like_word() {
+        // Measured in Word for Mac with Portuguese (Brazil) proofing: no marks on either line.
+        clean("2.  Do exercício da advocacia.");
+        clean("contato@brennoadv.com   |   (11) 9-4101-5096");
+        // An address opening a line keeps its lower case.
+        clean("www.brennoadv.com e contato@brennoadv.com");
     }
 
     #[test]
