@@ -7,7 +7,7 @@ Snapshot taken 2026-10-16 ~17:20 UTC because the PC had to shut down. Nothing he
 - Session id: `20261016-122803-gpt-6-luna-max-38312`
 - Full log: `C:\Users\Brenno\estagiario-logs$2.log`
 - Resume (from a worktree on this branch, clean tree): `estagiario continuar 20261016-122803-gpt-6-luna-max-38312 "<what to fix or finish>"`
-- Status when snapshotted: still running, no final report yet.
+- Status: stopped on purpose at ~17:25 UTC (PC shutting down) while idle between steps, before its final report. The session is resumable with the command above.
 
 ## Done (per the files on disk; not yet reviewed item by item)
 - New crates/engine/src/versions.rs and crates/ui-egui/src/versions_pane.rs; hooks in cmd/tools.rs (file.versions), io.rs, session.rs, engine lib.rs, ui-egui lib.rs, backstage.rs (File > Info), chrome.rs (title bar), apps/wordcraft/src/main.rs; versions-shot.jsonl for ui_shot. The intern was in static review after cargo fmt.
@@ -16,12 +16,14 @@ Snapshot taken 2026-10-16 ~17:20 UTC because the PC had to shut down. Nothing he
 - Final report; confirm storage, coalescing, pruning, open/restore, UI pane and tests against the brief; run ui_shot light and dark and look at the captures.
 - Then: review item by item, translations and docs (Sol), one `cargo xtask ci` (6 Windows-only failures known on base 86adfd34), commit "Cloud AutoSave: Word-like close, cloud files covered on open, version history", push feat/cloud-autosave, merge into fork main.
 
-## Last words in the log
+## Last words in the log (final)
 ```
 Mapeamento concluído. Vou implementar primeiro o núcleo do engine: índice persistente e worker assíncrono, política de retenção/coalescência, captura dos bytes que `save_path_stamped` acabou de gravar e integração da sessão/comando. Depois conecto o painel e o host desktop, sem tocar nas áreas atribuídas ao outro agente.
-apply patch
 O núcleo e os ganchos de UI já estão escritos. Vou rodar apenas `cargo fmt` (permitido pela instrução), usar a saída para corrigir sintaxe/formatação e fazer revisão estática; não vou executar compilação, clippy ou testes.
 Vou retomar a revisão estática do histórico de versões já implementado, conferindo as assinaturas reais, os caminhos de WASM e os pontos de integração. Só farei `cargo fmt`; não vou compilar nem executar testes, conforme instrução.
+Encontrei um erro estático claro no painel: o mesmo `String` de ID era movido ao montar os dois botões da linha. Também vou fazer o painel continuar lendo o histórico quando uma versão anterior estiver aberta e reforçar os testes de abertura, restauração persistente e poda.
+Vou retomar a implementação já gravada, revisar as assinaturas e os trechos alterados contra o plano do repositório, corrigir riscos estáticos de compilação e fechar o script de captura. Não vou executar compilação, `check`, `clippy` nem testes, conforme a instrução.
+A revisão encontrou um problema de comportamento que a compilação não revelaria: ao abrir uma versão anterior, a sessão descartava o documento original, então “Restore” não poderia deixar um Undo de volta ao trabalho atual. Vou guardar uma cópia do documento e da seleção originais na representação da versão aberta e usar esse estado ao restaurar. Também vou preservar a forma numérica legada de `restore` e tornar o nome da barra de título um ponto explícito de acesso ao painel.
 ```
 
 ## Brief given

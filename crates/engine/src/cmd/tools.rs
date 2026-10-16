@@ -51,6 +51,11 @@ fn open_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     let (info, bytes) = s.read_version(&source, id).map_err(CmdError::Failed)?;
     let password = s.password.as_ref().map(|value| value.as_str().to_owned());
     let (doc, encrypted) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password.as_deref()).map_err(CmdError::Failed)?;
+    let (original_doc, original_sel) = s
+        .opened_version
+        .as_ref()
+        .map(|version| (version.original_doc.clone(), version.original_sel.clone()))
+        .unwrap_or_else(|| (s.doc.clone(), s.sel.clone()));
     let stem =
         source.file_stem().map(|name| name.to_string_lossy().into_owned()).filter(|name| !name.is_empty()).unwrap_or_else(|| "Document".into());
     let label = format!("{stem} (version {})", info.saved_at);
@@ -61,7 +66,7 @@ fn open_persisted_version(s: &mut Session, id: &str) -> CmdResult {
         s.password = password.as_deref().map(crate::io::Password::new);
     }
     s.dirty = false;
-    s.opened_version = Some(OpenedVersion { path: source, info: info.clone() });
+    s.opened_version = Some(OpenedVersion { path: source, info: info.clone(), original_doc, original_sel });
     Ok(json!({"opened": info.id, "savedAt": info.saved_at, "name": s.file_name.clone()}))
 }
 
@@ -70,17 +75,22 @@ fn restore_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     let (info, bytes) = s.read_version(&source, id).map_err(CmdError::Failed)?;
     let password = s.password.as_ref().map(crate::io::Password::as_str);
     let (doc, _) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password).map_err(CmdError::Failed)?;
-    let was_previous = s.opened_version.is_some();
-    s.checkpoint("Restore Version");
+    let opened = s.opened_version.take();
+    if let Some(previous) = &opened {
+        // The previous-version window replaced the live document in this single-session host.
+        // Put the live document back as the undo target, then apply the selected version.
+        s.push_undo("Restore Version", previous.original_doc.clone(), previous.original_sel.clone());
+    } else {
+        s.checkpoint("Restore Version");
+    }
     s.doc = doc;
     s.doc.ensure_nonempty();
     s.touch();
     s.relayout();
     s.clamp_selection();
-    if was_previous {
+    if opened.is_some() {
         s.path = Some(source);
         s.file_name = None;
-        s.opened_version = None;
     }
     s.version_next_kind = Some(VersionKind::Restore);
     Ok(json!({"restored": info.id, "savedAt": info.saved_at}))
@@ -115,7 +125,7 @@ fn versions_command(s: &mut Session, v: &Value) -> CmdResult {
         return open_persisted_version(s, id);
     }
     if let Some(restore) = v.get("restore") {
-        if let Some(index) = restore.as_u64() {
+        if let Some(index) = p::u64(v, "restore") {
             let (_, _, doc) = s
                 .versions
                 .get(usize::try_from(index).map_err(|_| CmdError::Params("no such version".into()))?)

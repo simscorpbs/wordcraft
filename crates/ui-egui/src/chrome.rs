@@ -377,14 +377,17 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                 let rect = Rect::from_center_size(pos2(cx, full.center().y), vec2(w + 8.0, control_h));
                 let response = ui
                     .interact(rect, ui.id().with("document_name"), Sense::click())
-                    .on_hover_text(tl!("Rename Document (right-click for Version History)"));
+                    .on_hover_text(tl!("Rename Document"));
                 response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, &title));
                 if response.clicked() {
                     let _ = app.run("file.rename", json!({}));
                 }
-                if response.secondary_clicked() {
-                    app.ui.versions_pane = true;
-                }
+                response.context_menu(|ui| {
+                    if ui.button(tl!("Version History")).clicked() {
+                        app.ui.versions_pane = true;
+                        ui.close();
+                    }
+                });
 
                 paint_text(
                     ui.painter(),

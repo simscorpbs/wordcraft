@@ -13,7 +13,7 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
 #[cfg(not(target_arch = "wasm32"))]
-use std::sync::{Arc, mpsc};
+use std::sync::{Arc, OnceLock, mpsc};
 
 /// A version's origin.
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -45,11 +45,188 @@ pub struct VersionInfo {
     pub kind: VersionKind,
 }
 
+/// Format a stored UTC timestamp for the history pane.  Version metadata stays UTC on disk so
+/// pruning and clients have a stable value; the pane converts it to the computer's local clock.
+/// A missing or unreadable zone database falls back to UTC, which is still an unambiguous time.
+pub fn local_timestamp(saved_at: &str) -> String {
+    let Some(secs) = parse_iso_timestamp(saved_at) else { return saved_at.to_owned() };
+    #[cfg(not(target_arch = "wasm32"))]
+    let offset = local_offset(secs);
+    #[cfg(target_arch = "wasm32")]
+    let offset = 0i32;
+    let Some(local) = i64::try_from(secs).ok().and_then(|value| value.checked_add(i64::from(offset))) else {
+        return saved_at.to_owned();
+    };
+    let days = local.div_euclid(86_400);
+    let seconds = local.rem_euclid(86_400);
+    let (year, month, day) = crate::cmd::civil_from_days(days);
+    format!("{year:04}-{month:02}-{day:02} {:02}:{:02}", seconds / 3_600, seconds / 60 % 60)
+}
+
+fn parse_iso_timestamp(value: &str) -> Option<u64> {
+    let bytes = value.as_bytes();
+    if bytes.len() != 20
+        || bytes.get(4) != Some(&b'-')
+        || bytes.get(7) != Some(&b'-')
+        || bytes.get(10) != Some(&b'T')
+        || bytes.get(13) != Some(&b':')
+        || bytes.get(16) != Some(&b':')
+        || bytes.get(19) != Some(&b'Z')
+    {
+        return None;
+    }
+    let year = i64::try_from(parse_decimal(bytes.get(0..4)?)?).ok()?;
+    let month = parse_decimal(bytes.get(5..7)?)?;
+    let day = parse_decimal(bytes.get(8..10)?)?;
+    let hour = parse_decimal(bytes.get(11..13)?)?;
+    let minute = parse_decimal(bytes.get(14..16)?)?;
+    let second = parse_decimal(bytes.get(17..19)?)?;
+    if !(1..=12).contains(&month) || day == 0 || day > 31 || hour > 23 || minute > 59 || second > 59 {
+        return None;
+    }
+    let month = i64::try_from(month).ok()?;
+    let day = i64::try_from(day).ok()?;
+    let y = year - if month <= 2 { 1 } else { 0 };
+    let era = if y >= 0 { y } else { y - 399 } / 400;
+    let yoe = y - era * 400;
+    let mp = month + if month > 2 { -3 } else { 9 };
+    let doy = (153 * mp + 2) / 5 + day - 1;
+    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+    let days = era.checked_mul(146_097)?.checked_add(doe)?.checked_sub(719_468)?;
+    if days < 0 {
+        return None;
+    }
+    u64::try_from(days).ok()?.checked_mul(86_400)?.checked_add(hour.checked_mul(3_600)?)?.checked_add(minute.checked_mul(60)?)?.checked_add(second)
+}
+
+fn parse_decimal(bytes: &[u8]) -> Option<u64> {
+    if bytes.is_empty() {
+        return None;
+    }
+    let mut value = 0u64;
+    for byte in bytes {
+        if !byte.is_ascii_digit() {
+            return None;
+        }
+        value = value.checked_mul(10)?.checked_add(u64::from(byte - b'0'))?;
+    }
+    Some(value)
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+#[derive(Clone)]
+struct LocalZone {
+    default_offset: i32,
+    transitions: Vec<(i64, i32)>,
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl LocalZone {
+    fn offset_at(&self, secs: i64) -> i32 {
+        match self.transitions.binary_search_by_key(&secs, |(at, _)| *at) {
+            Ok(index) => self.transitions.get(index).map(|(_, offset)| *offset).unwrap_or(self.default_offset),
+            Err(0) => self.default_offset,
+            Err(index) => self.transitions.get(index.saturating_sub(1)).map(|(_, offset)| *offset).unwrap_or(self.default_offset),
+        }
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn local_offset(secs: u64) -> i32 {
+    static ZONE: OnceLock<Option<LocalZone>> = OnceLock::new();
+    let Ok(secs) = i64::try_from(secs) else { return 0 };
+    ZONE.get_or_init(load_local_zone).as_ref().map_or(0, |zone| zone.offset_at(secs))
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn load_local_zone() -> Option<LocalZone> {
+    let path = std::env::var_os("TZ").filter(|value| value.as_encoded_bytes().first() == Some(&b'/')).map(std::path::PathBuf::from).unwrap_or_else(|| std::path::PathBuf::from("/etc/localtime"));
+    let metadata = std::fs::metadata(&path).ok()?;
+    if !metadata.is_file() || metadata.len() > 1 << 20 {
+        return None;
+    }
+    let bytes = std::fs::read(path).ok()?;
+    parse_tzif(&bytes)
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn parse_tzif(bytes: &[u8]) -> Option<LocalZone> {
+    let (version, counts) = tzif_header(bytes, 0)?;
+    let (offset, time_size) = if matches!(version, b'2' | b'3' | b'4') {
+        let first_size = tzif_block_size(counts, 4)?;
+        let second = 44usize.checked_add(first_size)?;
+        (second, 8)
+    } else {
+        (0, 4)
+    };
+    let (_, counts) = tzif_header(bytes, offset)?;
+    let (timecnt, typecnt) = (counts.3, counts.4);
+    if typecnt == 0 || typecnt > 256 || timecnt > 200_000 {
+        return None;
+    }
+    let mut cursor = offset.checked_add(44)?;
+    let mut transition_times = Vec::with_capacity(timecnt);
+    for _ in 0..timecnt {
+        let end = cursor.checked_add(time_size)?;
+        let raw = bytes.get(cursor..end)?;
+        let at = if time_size == 8 {
+            i64::from_be_bytes(raw.try_into().ok()?)
+        } else {
+            i64::from(i32::from_be_bytes(raw.try_into().ok()?))
+        };
+        transition_times.push(at);
+        cursor = end;
+    }
+    let transition_types = bytes.get(cursor..cursor.checked_add(timecnt)?)?;
+    cursor = cursor.checked_add(timecnt)?;
+    let mut offsets = Vec::with_capacity(typecnt);
+    for _ in 0..typecnt {
+        let end = cursor.checked_add(6)?;
+        let info = bytes.get(cursor..end)?;
+        offsets.push(i32::from_be_bytes(info.get(..4)?.try_into().ok()?));
+        cursor = end;
+    }
+    let default_offset = *offsets.first()?;
+    let mut transitions = Vec::with_capacity(timecnt);
+    for (at, kind) in transition_times.into_iter().zip(transition_types) {
+        let offset = offsets.get(usize::from(*kind)).copied()?;
+        transitions.push((at, offset));
+    }
+    Some(LocalZone { default_offset, transitions })
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn tzif_header(bytes: &[u8], offset: usize) -> Option<(u8, (usize, usize, usize, usize, usize, usize))> {
+    let header = bytes.get(offset..offset.checked_add(44)?)?;
+    if header.get(..4)? != b"TZif" {
+        return None;
+    }
+    let version = *header.get(4)?;
+    let mut counts = [0usize; 6];
+    for (index, count) in counts.iter_mut().enumerate() {
+        let start = 20usize.checked_add(index.checked_mul(4)?)?;
+        let raw = header.get(start..start.checked_add(4)?)?;
+        *count = usize::try_from(u32::from_be_bytes(raw.try_into().ok()?)).ok()?;
+    }
+    Some((version, (counts[0], counts[1], counts[2], counts[3], counts[4], counts[5])))
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn tzif_block_size(counts: (usize, usize, usize, usize, usize, usize), time_size: usize) -> Option<usize> {
+    let (leapcnt, timecnt, typecnt, charcnt) = (counts.2, counts.3, counts.4, counts.5);
+    timecnt.checked_mul(time_size)?.checked_add(timecnt)?.checked_add(typecnt.checked_mul(6)?)?.checked_add(charcnt)?.checked_add(leapcnt.checked_mul(time_size.checked_add(4)?)?)?.checked_add(counts.0)?.checked_add(counts.1)
+}
+
 /// The source document retained while a previous version is being viewed.
 #[derive(Clone, Debug)]
 pub struct OpenedVersion {
     pub(crate) path: PathBuf,
     pub(crate) info: VersionInfo,
+    /// The document that was active before this previous version was opened.  Keeping it here
+    /// lets Restore replace the original document in one undoable step instead of losing the
+    /// unsaved work when the read-only copy is shown.
+    pub(crate) original_doc: wordcraft_doc::Document,
+    pub(crate) original_sel: crate::Selection,
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -753,10 +930,19 @@ mod tests {
         assert!(opened.path.is_none());
         assert!(opened.file_name.as_deref().is_some_and(|name| name.contains("(version ")));
 
+        let mut opened_restore = crate::Session::new(wordcraft_doc::Document::from_text("current"));
+        opened_restore.path = Some(file.clone());
+        opened_restore.version_store = Some(Versions::start(root.clone(), std::sync::Arc::new(|| {})).unwrap());
+        assert!(opened_restore.run("file.versions", &json!({"open": id.clone()})).is_ok());
+        assert!(opened_restore.run("file.versions", &json!({"restore": id.clone()})).is_ok());
+        assert_eq!(opened_restore.doc.plain_text(wordcraft_doc::StoryRef::Body), "previous");
+        assert!(opened_restore.run("edit.undo", &json!({})).is_ok());
+        assert_eq!(opened_restore.doc.plain_text(wordcraft_doc::StoryRef::Body), "current");
+
         let mut restored = crate::Session::new(wordcraft_doc::Document::from_text("current"));
         restored.path = Some(file);
         restored.version_store = Some(Versions::start(root.clone(), std::sync::Arc::new(|| {})).unwrap());
-        assert!(restored.run("file.versions", &json!({"restore": list[0].id})).is_ok());
+        assert!(restored.run("file.versions", &json!({"restore": list[0].id.clone()})).is_ok());
         assert_eq!(restored.doc.plain_text(wordcraft_doc::StoryRef::Body), "previous");
         assert!(restored.run("edit.undo", &json!({})).is_ok());
         assert_eq!(restored.doc.plain_text(wordcraft_doc::StoryRef::Body), "current");
