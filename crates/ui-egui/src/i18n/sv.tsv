@@ -2647,3 +2647,7 @@ preview	Title	Titel
 	Bottom Right Cell	Nedre högra cellen
 	Inside Horizontal Border	Inre vågrät kantlinje
 	Inside Vertical Border	Inre lodrät kantlinje
+# Mac title bar options
+	Show Discord button in the title bar	Show Discord button in the title bar
+	Show account picture in the title bar	Show account picture in the title bar
+	Saved to my Mac	Saved to my Mac

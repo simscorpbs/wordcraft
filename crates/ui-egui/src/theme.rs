@@ -234,6 +234,10 @@ impl From<Animations> for String {
 pub struct Tokens {
     pub dark: bool,
     pub title_bar: Color32,
+    /// macOS and native title bars when their viewport is active.
+    pub title_bar_focused: Color32,
+    /// macOS and native title bars when their viewport is inactive.
+    pub title_bar_unfocused: Color32,
     pub ribbon: Color32,
     pub tab_strip: Color32,
     pub canvas: Color32,
@@ -283,6 +287,8 @@ impl Tokens {
         Tokens {
             dark: false,
             title_bar: Color32::from_rgb(0xF0, 0xF0, 0xF0),
+            title_bar_focused: Color32::from_rgb(0xF2, 0xF2, 0xF2),
+            title_bar_unfocused: Color32::from_rgb(0xE3, 0xE3, 0xE3),
             ribbon: Color32::from_rgb(0xF9, 0xF9, 0xF9),
             tab_strip: Color32::from_rgb(0xF0, 0xF0, 0xF0),
             canvas: Color32::from_rgb(0xE6, 0xE6, 0xE6),
@@ -325,6 +331,8 @@ impl Tokens {
         Tokens {
             dark: true,
             title_bar: Color32::from_rgb(0x1F, 0x1F, 0x1F),
+            title_bar_focused: Color32::from_rgb(0x2A, 0x2A, 0x2A),
+            title_bar_unfocused: Color32::from_rgb(0x18, 0x18, 0x18),
             ribbon: Color32::from_rgb(0x29, 0x29, 0x29),
             tab_strip: Color32::from_rgb(0x1F, 0x1F, 0x1F),
             canvas: Color32::from_rgb(0x14, 0x14, 0x14),

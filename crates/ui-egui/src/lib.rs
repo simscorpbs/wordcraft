@@ -257,6 +257,8 @@ pub struct UiState {
     pub(crate) legacy_dark: Option<bool>,
     pub nav_tab: String,
     pub show_discord: bool,
+    /// File › Options › General: show the account picture in the title bar.
+    pub show_account_picture: bool,
     /// User name (File › Options) for comments and tracked changes; empty keeps the default.
     pub author: String,
     /// Desktop: the main window's size and position, restored at the next launch.
@@ -336,6 +338,7 @@ pub const MAX_DICTIONARY: usize = 10_000;
 
 impl Default for UiState {
     fn default() -> Self {
+        let show_title_bar_extras = !cfg!(target_os = "macos");
         UiState {
             tab: DEFAULT_TAB.into(),
             backstage: false,
@@ -351,7 +354,8 @@ impl Default for UiState {
             animations: theme::Animations::default(),
             legacy_dark: None,
             nav_tab: "headings".into(),
-            show_discord: true,
+            show_discord: show_title_bar_extras,
+            show_account_picture: show_title_bar_extras,
             author: String::new(),
             window: None,
             language: i18n::AUTO.into(),
@@ -1496,6 +1500,22 @@ impl WordApp {
                 self.canvas.open_url = Some("https://discord.gg/artcraft".into());
                 json!({})
             }
+            "ui.showDiscord" => {
+                match p.get("value") {
+                    None => {}
+                    Some(Value::Bool(on)) => self.ui.show_discord = *on,
+                    Some(_) => return Some(Err("`value` must be true or false".into())),
+                }
+                json!({"showDiscord": self.ui.show_discord})
+            }
+            "ui.showAccountPicture" => {
+                match p.get("value") {
+                    None => {}
+                    Some(Value::Bool(on)) => self.ui.show_account_picture = *on,
+                    Some(_) => return Some(Err("`value` must be true or false".into())),
+                }
+                json!({"showAccountPicture": self.ui.show_account_picture})
+            }
             "ui.caretAnimation" => {
                 // File › Options › Advanced › Animation: `value` true or false turns the caret's
                 // glide and fading blink on or off; no value reads it.
@@ -2391,6 +2411,8 @@ pub(crate) fn works_without_document(id: &str) -> bool {
             | "ui.fileBrowser"
             | "ui.makeDefaultApp"
             | "ui.discord"
+            | "ui.showDiscord"
+            | "ui.showAccountPicture"
             | "ui.caretAnimation"
             | "ui.startScreen"
     ) || id.starts_with("help.")
@@ -2568,13 +2590,15 @@ mod tests {
     #[test]
     fn title_and_account_buttons_work() {
         use egui_kittest::kittest::Queryable;
+        let mut initial = app();
+        initial.run("ui.showAccountPicture", json!({"value": true})).unwrap();
         let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
             |ui, app: &mut WordApp| {
                 let ctx = ui.ctx().clone();
                 app.logic(&ctx);
                 app.ui(ui);
             },
-            app(),
+            initial,
         );
         h.run_steps(6);
         h.get_by_label("Document1 — Not saved").click();
@@ -2661,6 +2685,36 @@ mod tests {
         let old: UiState = serde_json::from_str(r#"{"tab":"Insert"}"#).unwrap();
         assert!(old.caret_animation && old.tab == "Insert");
         assert_eq!(a.run("ui.caretAnimation", json!({"value": true})).unwrap()["caretAnimation"], true);
+    }
+
+    /// The title-bar extras are independent UI commands, default together per platform, and stay
+    /// in the saved UI preferences.
+    #[test]
+    fn title_bar_extras_are_ui_commands_and_survive_a_restart() {
+        let mut a = app();
+        let default = !cfg!(target_os = "macos");
+        assert_eq!(a.ui.show_discord, default);
+        assert_eq!(a.ui.show_account_picture, default);
+        assert_eq!(a.run("ui.showDiscord", json!({})).unwrap(), json!({"showDiscord": default}));
+        assert_eq!(a.run("ui.showAccountPicture", json!({})).unwrap(), json!({"showAccountPicture": default}));
+        assert_eq!(a.run("ui.showDiscord", json!({"value": false})).unwrap(), json!({"showDiscord": false}));
+        assert_eq!(a.run("ui.showAccountPicture", json!({"value": false})).unwrap(), json!({"showAccountPicture": false}));
+        for id in ["ui.showDiscord", "ui.showAccountPicture"] {
+            for junk in [json!({"value": "no"}), json!({"value": 0}), json!({"value": null})] {
+                assert!(a.run(id, junk).is_err(), "{id} rejects non-booleans");
+            }
+        }
+        let saved = serde_json::to_string(&a.prefs()).unwrap();
+        assert!(saved.contains(r#""showDiscord":false"#), "{saved}");
+        assert!(saved.contains(r#""showAccountPicture":false"#), "{saved}");
+        let mut b = app();
+        b.apply_prefs(serde_json::from_str(&saved).unwrap());
+        assert!(!b.ui.show_discord && !b.ui.show_account_picture);
+        assert!(works_without_document("ui.showDiscord"));
+        assert!(works_without_document("ui.showAccountPicture"));
+        let old: UiState = serde_json::from_str(r#"{"tab":"Home"}"#).unwrap();
+        assert_eq!(old.show_discord, default);
+        assert_eq!(old.show_account_picture, default);
     }
 
     fn harness(a: WordApp) -> egui_kittest::Harness<'static, WordApp> {
@@ -4540,7 +4594,8 @@ mod tests {
                 a,
             );
             h.run_steps(4);
-            assert!(h.query_by_label("Show the community button in the title bar").is_some(), "hook {hook}: the Options page rendered");
+            assert!(h.query_by_label("Show Discord button in the title bar").is_some(), "hook {hook}: the Options page rendered");
+            assert!(h.query_by_label("Show account picture in the title bar").is_some(), "hook {hook}: the account option rendered");
             assert_eq!(h.query_by_label(LABEL).is_some(), hook, "hook {hook}: the button");
             if hook {
                 h.get_by_label(LABEL).click();
