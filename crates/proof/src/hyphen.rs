@@ -264,20 +264,17 @@ pub fn hyphen_points_in(word: &str, lim: &Limits, lang: ProofLang) -> Vec<usize>
     }
     let min_before = lim.after_first.max(1);
     let min_after = lim.before_last.max(min_after_hyphen(lang));
-    // Counted once, so each point's checks take constant time however long the word: letters and
-    // uppercase letters before each char, and the letter run (trimmed of apostrophes) of each char.
-    let (mut letters, mut upper) = (Vec::with_capacity(chars.len() + 1), Vec::with_capacity(chars.len() + 1));
-    let (mut l, mut u) = (0usize, 0usize);
+    // Counted once, so each point's checks take constant time however long the word: letters
+    // before each char, and the letter run (trimmed of apostrophes) of each char.
+    let mut letters = Vec::with_capacity(chars.len() + 1);
+    let mut l = 0usize;
     for c in &chars {
         letters.push(l);
-        upper.push(u);
         if c.is_alphabetic() {
             l += 1;
-            u += usize::from(c.is_uppercase());
         }
     }
     letters.push(l);
-    upper.push(u);
     let mut run_of: Vec<(usize, usize)> = vec![(0, 0); chars.len()];
     let mut i = 0;
     while i < chars.len() {
@@ -304,9 +301,6 @@ pub fn hyphen_points_in(word: &str, lim: &Limits, lang: ProofLang) -> Vec<usize>
             let Some(&(a, b)) = run_of.get(p) else { return false };
             let n = count(&letters, a, b);
             if n < lim.min_word.max(2) {
-                return false;
-            }
-            if n > 1 && count(&upper, a, b) == n {
                 return false;
             }
             if !lim.capitalized && chars.get(a).is_some_and(|c| c.is_uppercase()) {
@@ -495,7 +489,9 @@ mod tests {
     #[test]
     fn case_apostrophes_and_punctuation() {
         assert_eq!(h("Typography"), "Ty-pog-ra-phy");
-        assert_eq!(h("TYPOGRAPHY"), "TYPOGRAPHY");
+        // Words in capitals hyphenate too; the document's "Hyphenate words in CAPS" is the
+        // layout's to apply.
+        assert_eq!(h("TYPOGRAPHY"), "TY-POG-RA-PHY");
         assert_eq!(h("typography,"), "ty-pog-ra-phy,");
         assert_eq!(h("“typography”"), "“ty-pog-ra-phy”");
         assert_eq!(h("typography's"), "ty-pog-ra-phy's");
@@ -598,9 +594,6 @@ mod tests {
                 let run = &chars[a..b];
                 let letters = run.iter().filter(|c| c.is_alphabetic()).count();
                 if letters < lim.min_word.max(2) {
-                    return false;
-                }
-                if letters > 1 && run.iter().filter(|c| c.is_alphabetic()).all(|c| c.is_uppercase()) {
                     return false;
                 }
                 if !lim.capitalized && run[0].is_uppercase() {
@@ -831,6 +824,10 @@ mod tests {
         assert_eq!(w("problema"), "pro-blema");
         assert_eq!(w("Constituição"), "Cons-ti-tu-i-ção");
         assert_eq!(w("Requerida"), "Re-que-rida");
+        // Words in capitals hyphenate like any other, as in Word (whose "Hyphenate words in CAPS",
+        // `w:doNotHyphenateCaps`, the layout applies): "CONSTI-TUI-ÇÃO" in a pt-BR heading.
+        assert_eq!(w("CONSTITUIÇÃO"), "CONS-TI-TU-I-ÇÃO");
+        assert_eq!(w("HORIZONTE"), "HO-RI-ZONTE");
         // English keeps the paragraph's two.
         assert_eq!(hyphenate_word_in("hyphenation", &lim, ProofLang::En), hyphenate_word("hyphenation", &lim));
         assert_eq!(min_after_hyphen(ProofLang::En), 1);
