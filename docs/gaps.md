@@ -89,6 +89,7 @@ The same gaps grouped the way the parity documents are, for agents working in on
 |---|---|---|
 | 2026-10-15 | trivial | #1: shapes keep their fill transparency |
 | 2026-10-15 | trivial | #1: freeform subpaths of one `a:path` filled even-odd, so vector logos keep the holes in their letters |
+| 2026-10-15 | trivial | #1: DATE fields in Portuguese documents read "15 de outubro de 2026", as in Word |
 | 2026-10-14 | trivial | Row table border exceptions fixed; other row table exceptions remain unsupported |
 | 2026-10-12 | minor | Czech proofing review: short-word splits rank after deletion, NOSUGGEST excludes suggestions while accepting typed forms, affix comments apply only to headers, ratios keep spaces and repeated-word messages use Czech quotes; synthetic engine end-to-end and latency checks |
 | 2026-10-12 | minor | Czech spelling from the installed Hunspell dictionary, runtime-table suggestions and generic checks; Czech interface writes cs-CZ documents; no Czech hyphenation patterns bundled; estimates unchanged |

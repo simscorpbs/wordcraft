@@ -138,6 +138,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 | 2026-10-15 | Headers and footers fade like Word's while the body is edited: blended with the paper at about 57% (was 45%), and a logo or shape in the header fades with the text instead of staying at full strength |
 | 2026-10-15 | Shapes keep their fill transparency: a shape whose fill is partly transparent (`a:alpha`, Format Shape › Fill › Transparency), such as a pale background shape behind a letterhead, is drawn see-through on screen and in PDFs and saved that way, instead of as a solid patch |
 | 2026-10-15 | Logos drawn as freeform shapes keep their holes: the inside of an "o", "e" or "Q" in a vector logo (subpaths of one DrawingML `a:path`) is left empty on screen and in PDFs, as in Word, instead of being filled solid, and saving keeps the subpaths together so Word still shows the holes |
+| 2026-10-15 | Date fields speak the document's language: a `DATE \@ "d 'de' MMMM 'de' yyyy"` field in a Portuguese document shows "15 de outubro de 2026" as in Word (it showed "15 '15e' October '15e' 2026"): text in single quotes is copied as it is, and month and weekday names follow the field's language |
 | 2026-10-14 | DOCX row table border exceptions render and survive saving. Explicit cell borders win; a row exception does not change other rows. |
 | 2026-10-14 | Tab stops edited on the ruler: the corner selector picks Left/Center/Right/Decimal/Bar, a click sets a stop (Alt skips the snap), dragging moves it with a guide line and position tooltip, dragging off the ruler clears it; markers draw per kind and mirror for RTL; one `para.tabs` call and one undo step per gesture |
 | 2026-10-12 | Fields keep `w:dirty` through DOCX saves (#877): a begin marker flagged by a generator that couldn't compute a result (pandoc-style TOC placeholders) keeps the flag on open/save — as a buffered field or a range field — so Word still refreshes it on open; computing a result (Update Field, Update Table) clears it, like Word's F9 |
@@ -409,6 +410,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 | 2026-10-15 | trivial | Progress log: headers fade like Word's |
 | 2026-10-15 | trivial | Progress log: shape fill transparency |
 | 2026-10-15 | trivial | Progress log: freeform holes |
+| 2026-10-15 | trivial | Progress log: date fields in the field's language |
 | 2026-10-14 | trivial | Progress log: row table border exceptions |
 | 2026-10-12 | minor | Czech proofing review: short-word splits rank after deletion, NOSUGGEST excludes suggestions while accepting typed forms, affix comments apply only to headers, ratios keep spaces and repeated-word messages use Czech quotes; synthetic engine end-to-end and latency checks |
 | 2026-10-12 | minor | Czech spelling from the installed Hunspell dictionary, runtime-table suggestions and generic checks; Czech interface writes cs-CZ documents; no Czech hyphenation patterns bundled; estimates unchanged |

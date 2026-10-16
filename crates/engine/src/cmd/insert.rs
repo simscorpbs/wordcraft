@@ -787,8 +787,15 @@ fn date_time(s: &mut Session, v: &Value) -> CmdResult {
     sel_result(s)
 }
 
-/// Format today's date with a Word picture (`M/d/yyyy`, `MMMM d, yyyy`, `yyyy-MM-dd`, `dddd`…).
+/// Format today's date with a Word picture (`M/d/yyyy`, `MMMM d, yyyy`, `yyyy-MM-dd`, `dddd`…),
+/// in English.
 pub fn format_date(fmt: &str) -> String {
+    format_date_in(fmt, None)
+}
+
+/// Format today's date with a Word picture, month and weekday names in the language `lang` (a
+/// tag such as `pt-BR`; English when `None` or a language without names here).
+pub fn format_date_in(fmt: &str, lang: Option<&str>) -> String {
     let iso = super::now_iso();
     let y: i64 = iso.get(0..4).and_then(|x| x.parse().ok()).unwrap_or(2026);
     let m: usize = iso.get(5..7).and_then(|x| x.parse().ok()).unwrap_or(1);
@@ -796,21 +803,79 @@ pub fn format_date(fmt: &str) -> String {
     let hh: u32 = iso.get(11..13).and_then(|x| x.parse().ok()).unwrap_or(0);
     let mm: u32 = iso.get(14..16).and_then(|x| x.parse().ok()).unwrap_or(0);
     let ss: u32 = iso.get(17..19).and_then(|x| x.parse().ok()).unwrap_or(0);
-    format_date_parts(fmt, y, m, d, (hh, mm, ss), (super::now_unix() / 86_400) as i64)
+    format_date_parts_in(fmt, lang, y, m, d, (hh, mm, ss), (super::now_unix() / 86_400) as i64)
+}
+
+/// Month and weekday names of a language, as Word writes them in date fields: full names, the
+/// three-letter forms (`MMM`, `ddd`) being their first three letters, without a full stop.
+/// Weekdays start on Thursday (1970-01-01).
+struct DateNames {
+    months: [&'static str; 12],
+    days: [&'static str; 7],
+    /// The picture of a `DATE` field without `\@`.
+    default: &'static str,
+}
+
+const ENGLISH: DateNames = DateNames {
+    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    days: ["Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"],
+    default: "M/d/yyyy",
+};
+
+/// Portuguese (observed in Word for Mac with a pt-BR document): lower-case names, `MMM` = `out`,
+/// `ddd` = `qui`, and `dd/MM/yyyy` for a field without a picture.
+const PORTUGUESE: DateNames = DateNames {
+    months: ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
+    days: ["quinta-feira", "sexta-feira", "sábado", "domingo", "segunda-feira", "terça-feira", "quarta-feira"],
+    default: "dd/MM/yyyy",
+};
+
+fn date_names(lang: Option<&str>) -> &'static DateNames {
+    let primary = lang.and_then(|l| l.trim().split(['-', '_']).next()).unwrap_or("");
+    if primary.eq_ignore_ascii_case("pt") { &PORTUGUESE } else { &ENGLISH }
+}
+
+/// The picture Word gives a `DATE` field that has no `\@` switch, in the field's language.
+pub fn default_date_picture(lang: Option<&str>) -> &'static str {
+    date_names(lang).default
 }
 
 /// Format a date and time with a Word picture; `days_since` (days since 1970-01-01) gives the weekday.
-pub fn format_date_parts(fmt: &str, y: i64, m: usize, d: u32, (hh, mm, ss): (u32, u32, u32), days_since: i64) -> String {
-    const MONTHS: [&str; 12] =
-        ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const DAYS: [&str; 7] = ["Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"];
-    let month = MONTHS.get(m.saturating_sub(1)).copied().unwrap_or("January");
-    let day = DAYS.get(days_since.rem_euclid(7) as usize).copied().unwrap_or("Monday");
+pub fn format_date_parts(fmt: &str, y: i64, m: usize, d: u32, hms: (u32, u32, u32), days_since: i64) -> String {
+    format_date_parts_in(fmt, None, y, m, d, hms, days_since)
+}
+
+/// [`format_date_parts`] with month and weekday names in `lang`. Text between single quotes is
+/// copied as it is (`'de'`), and two single quotes there are one.
+#[allow(clippy::too_many_arguments)]
+pub fn format_date_parts_in(fmt: &str, lang: Option<&str>, y: i64, m: usize, d: u32, (hh, mm, ss): (u32, u32, u32), days_since: i64) -> String {
+    let names = date_names(lang);
+    let month = names.months.get(m.saturating_sub(1)).copied().unwrap_or(names.months[0]);
+    let day = names.days.get(days_since.rem_euclid(7) as usize).copied().unwrap_or(names.days[0]);
+    let three = |s: &str| -> String { s.chars().take(3).collect() };
     let mut out = String::new();
     let chars: Vec<char> = fmt.chars().collect();
     let mut i = 0;
     while i < chars.len() {
         let c = chars.get(i).copied().unwrap_or(' ');
+        // A quoted literal: copied up to the closing quote (or the end), `''` inside is one quote.
+        if c == '\'' {
+            i += 1;
+            while let Some(&q) = chars.get(i) {
+                if q == '\'' {
+                    if chars.get(i + 1) == Some(&'\'') {
+                        out.push('\'');
+                        i += 2;
+                        continue;
+                    }
+                    i += 1;
+                    break;
+                }
+                out.push(q);
+                i += 1;
+            }
+            continue;
+        }
         // `am/pm` (any case) is one token: AM or PM.
         if chars.get(i..i + 5).is_some_and(|w| w.iter().collect::<String>().eq_ignore_ascii_case("am/pm")) {
             out.push_str(if hh < 12 { "AM" } else { "PM" });
@@ -825,11 +890,11 @@ pub fn format_date_parts(fmt: &str, y: i64, m: usize, d: u32, (hh, mm, ss): (u32
             ('y', 4..) => out.push_str(&format!("{y:04}")),
             ('y', _) => out.push_str(&format!("{:02}", y % 100)),
             ('M', 4..) => out.push_str(month),
-            ('M', 3) => out.push_str(month.get(..3).unwrap_or(month)),
+            ('M', 3) => out.push_str(&three(month)),
             ('M', 2) => out.push_str(&format!("{m:02}")),
             ('M', 1) => out.push_str(&m.to_string()),
             ('d', 4..) => out.push_str(day),
-            ('d', 3) => out.push_str(day.get(..3).unwrap_or(day)),
+            ('d', 3) => out.push_str(&three(day)),
             ('d', 2) => out.push_str(&format!("{d:02}")),
             ('d', 1) => out.push_str(&d.to_string()),
             ('H', 2..) => out.push_str(&format!("{hh:02}")),
@@ -1139,5 +1204,25 @@ mod tests {
         assert_eq!(date_picture(r#"DATE \@ "MMMM d, yyyy" \* MERGEFORMAT"#).as_deref(), Some("MMMM d, yyyy"));
         assert_eq!(date_picture(r#"TIME \@ HH:mm"#).as_deref(), Some("HH:mm"));
         assert_eq!(date_picture("DATE"), None);
+    }
+
+    /// Portuguese date fields as Word writes them (15 October 2026, a Thursday; 20 741 days after
+    /// 1970-01-01): lower-case names, three-letter forms without a stop, quoted literals copied.
+    #[test]
+    fn portuguese_date_pictures_like_word() {
+        let f = |pic: &str| format_date_parts_in(pic, Some("pt-BR"), 2026, 10, 15, (9, 5, 0), 20_741);
+        assert_eq!(f("d 'de' MMMM 'de' yyyy"), "15 de outubro de 2026");
+        assert_eq!(f("d 'de' MMM 'de' yyyy"), "15 de out de 2026");
+        assert_eq!(f("dddd, d 'de' MMMM 'de' yyyy"), "quinta-feira, 15 de outubro de 2026");
+        assert_eq!(f("ddd, d MMM yyyy"), "qui, 15 out 2026");
+        assert_eq!(f("'São Paulo,' d 'de' MMMM 'de' yyyy"), "São Paulo, 15 de outubro de 2026");
+        assert_eq!(f("'hoje é ' dddd"), "hoje é  quinta-feira");
+        assert_eq!(f("MMMM yyyy"), "outubro 2026");
+        assert_eq!(format_date_parts_in("ddd", Some("pt"), 2026, 10, 17, (0, 0, 0), 20_743), "sáb", "three letters, not three bytes");
+        assert_eq!(format_date_parts_in("d 'de' MMMM", Some("en-US"), 2026, 10, 15, (0, 0, 0), 20_741), "15 de October");
+        assert_eq!(default_date_picture(Some("pt-BR")), "dd/MM/yyyy");
+        assert_eq!(default_date_picture(None), "M/d/yyyy");
+        // An unclosed quote runs to the end; two quotes inside are one.
+        assert_eq!(f("d 'it''s"), "15 it's");
     }
 }

@@ -129,3 +129,20 @@ fn a_date_field_in_a_header_is_refreshed_too() {
         .collect();
     assert_eq!(found, [today], "the header's field is refreshed as well as the body's");
 }
+
+#[test]
+fn a_portuguese_date_field_uses_portuguese_names_and_quoted_literals() {
+    // Brenno's petition template: `DATE \@ "d 'de' MMMM 'de' yyyy"` in a pt-BR run.
+    let pt = |f: String| f.replace("<w:r>", r#"<w:r><w:rPr><w:lang w:val="pt-BR"/></w:rPr>"#);
+    let d = open_body(&format!(
+        "<w:p>{}</w:p><w:p>{}</w:p>",
+        pt(field(r#"DATE \@ "d 'de' MMMM 'de' yyyy" \* MERGEFORMAT"#, "1 de janeiro de 2020", false)),
+        pt(field("DATE", "01/01/2020", false)),
+    ));
+    let got = fields(&d);
+    let long = wordcraft_engine::cmd::insert::format_date_in("d 'de' MMMM 'de' yyyy", Some("pt-BR"));
+    assert_eq!(got[0].1, long);
+    assert!(long.contains(" de ") && !long.contains('\''), "{long}");
+    assert!(!["January", "October", "December"].iter().any(|m| long.contains(m)), "{long}");
+    assert_eq!(got[1].1, wordcraft_engine::cmd::insert::format_date_in("dd/MM/yyyy", None), "Word's pt-BR default picture");
+}
