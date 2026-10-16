@@ -3138,8 +3138,10 @@ mod tests {
         frame(&mut a, vec![], screen);
         assert!((a.canvas.scroll_offset.x - initial_scroll).abs() < 0.5);
         assert!(a.session.sel.is_collapsed());
-        // An explicit caret move outside the visible columns must still reveal its destination.
-        a.run("caret.set", json!({"pos": wordcraft_doc::Pos::body(0, 5000)})).unwrap();
+        // An explicit caret move outside the visible columns must still reveal its destination:
+        // near the end of the text, in a column beyond the several that fit the window at any
+        // scale (at 72 pixels per inch four columns are visible, so offset 5000 is in view).
+        a.run("caret.set", json!({"pos": wordcraft_doc::Pos::body(0, 14_000)})).unwrap();
         frame(&mut a, vec![], screen);
         assert!(a.canvas.scroll_offset.x > initial_scroll + a.session.view.read_width * a.canvas.scale);
         a.run("caret.set", json!({"pos": wordcraft_doc::Pos::body(0, 0)})).unwrap();

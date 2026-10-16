@@ -23,8 +23,12 @@ pub(crate) fn big_table_doc(rows: usize, cols: usize) -> Document {
 }
 
 fn harness(doc: Document) -> egui_kittest::Harness<'static, WordApp> {
+    harness_sized(doc, 1440.0)
+}
+
+fn harness_sized(doc: Document, width: f32) -> egui_kittest::Harness<'static, WordApp> {
     let a = WordApp::new(wordcraft_engine::Session::new(doc), Services::default());
-    egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
+    egui_kittest::Harness::builder().with_size(egui::vec2(width, 900.0)).build_ui_state(
         |ui, app: &mut WordApp| {
             let ctx = ui.ctx().clone();
             app.logic(&ctx);
@@ -100,7 +104,9 @@ fn big_table_scroll_bench() {
 /// per layout and only when it is on screen, and keeps textures only near the view.
 #[test]
 fn scrolling_a_big_table_fingerprints_only_pages_coming_into_view() {
-    let mut h = harness(big_table_doc(600, 8));
+    // Narrow enough that pages stay one to a row (a Letter page is 612 points wide, so two would
+    // fit side by side in 1440 at 72 pixels per inch), whatever `PX_PER_PT` is.
+    let mut h = harness_sized(big_table_doc(600, 8), 1200.0);
     h.run_steps(4);
     let layout = h.state_mut().session.layout();
     let pages = layout.pages.len();
@@ -111,18 +117,22 @@ fn scrolling_a_big_table_fingerprints_only_pages_coming_into_view() {
     h.run_steps(3);
     assert_eq!(h.state().canvas.page_keys.hashed, first, "idle frames fingerprint nothing");
     // Scroll a long way down: each newly shown page is fingerprinted once.
+    // The same number of pages whatever `PX_PER_PT` is: 400 points a step at 96 pixels per inch.
+    let px = crate::canvas::PX_PER_PT;
+    let step = 400.0 * px / (96.0 / 72.0);
     let mut max_textures = 0;
     for _ in 0..60 {
-        wheel(&mut h, -400.0);
+        wheel(&mut h, -step);
         h.step();
         max_textures = max_textures.max(h.state().canvas.texture_count());
     }
     let offset = h.state().canvas.scroll_offset.y;
-    assert!(offset > 20_000.0, "scrolled through many pages: {offset}");
+    let pitch = 792.0 * px + 18.0;
+    assert!(offset > 18.0 * pitch, "scrolled through many pages: {offset}");
     let after = std::sync::Arc::clone(&h.state_mut().session.layout());
     assert!(std::sync::Arc::ptr_eq(&layout, &after), "scrolling never lays the document out again");
     let hashed = h.state().canvas.page_keys.hashed;
-    // 60 steps of 400 pt cross about 24'000 / 1'056 ≈ 23 pages (at 100%, 1.33 px a point).
+    // 60 steps cross about 23 pages (at 96 pixels per inch: 24'000 / 1'056).
     assert!(hashed < pages && hashed <= first + 30, "pages fingerprinted: {hashed} of {pages}");
     // Textures stay bounded to the pages near the view.
     assert!(max_textures <= 12, "textures kept while scrolling: {max_textures}");

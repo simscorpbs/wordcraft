@@ -14,7 +14,14 @@ use wordcraft_layout::{DocLayout, Page, Placed};
 use crate::WordApp;
 use crate::theme::{Tokens, regular, semibold};
 
-/// Points on screen per document point at 100% (96 px per inch, like a word processor).
+/// Points on screen per document point at 100%. Word for Mac draws a page at 100% one screen
+/// point per document point (72 per inch: at 100% its page is three quarters of Windows' size;
+/// measured side by side, Word for Mac at 136% matches 96 per inch), Word for Windows and the
+/// web at 96 per inch.
+#[cfg(target_os = "macos")]
+pub const PX_PER_PT: f32 = 1.0;
+/// Points on screen per document point at 100% (96 px per inch, like Word for Windows).
+#[cfg(not(target_os = "macos"))]
 pub const PX_PER_PT: f32 = 96.0 / 72.0;
 const GAP: f32 = 18.0;
 const RULER: f32 = 22.0;
@@ -2477,10 +2484,6 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
         let step = unit / div as f32 / 2.0;
         let ruler = crate::ruler_tabs::Ruler { bar, text, width: w, step, rtl, x_of: &px, dist_at: &dist_at };
         crate::ruler_tabs::stops(app, ui, &hp, &ruler, &rp.tabs);
-        // In a table, its column borders: registered after the tab stops (whose set-a-stop zone
-        // spans the text area, so a border marker keeps its drag) and before the indent markers,
-        // which keep the pointer where they overlap.
-        crate::table_ruler::columns(app, ui, layout, pi, bar, x0, scale);
         // Dragging the left-indent marker.
         let id = ui.id().with("ruler_left");
         let mr = Rect::from_center_size(pos2(left, bar.max.y - 3.0), vec2(12.0, 12.0));
@@ -2517,6 +2520,13 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
             }
             let _ = app.run("para.indents", json!({"right": (pt / 4.5).round() * 4.5}));
         }
+        // In a table, its column borders: registered after the tab stops (whose set-a-stop zone
+        // spans the text area, so a border marker keeps its drag) and after the indent markers.
+        // A cell's text starts and ends one cell margin (about 5 points) from its borders, so at
+        // 72 pixels per inch the indent markers' 12-pixel drag zones cover the border markers;
+        // the border zones are narrower (8 pixels), so the indent markers keep the pointer on
+        // their own centres and a border marker keeps it on its own.
+        crate::table_ruler::columns(app, ui, layout, pi, bar, x0, scale);
     }
     // Vertical.
     let vp = ui.painter_at(v);
@@ -4265,7 +4275,9 @@ mod tests {
     /// letter page in an ordinary window stays one per row.
     #[test]
     fn pages_flow_into_rows_when_they_fit() {
-        let letter = 612.0 * PX_PER_PT;
+        // A pure function of widths in screen points: pinned at 96 per inch (816 wide), whatever
+        // `PX_PER_PT` is on this platform.
+        let letter = 612.0 * 96.0 / 72.0;
         assert_eq!(columns_for(1200.0, letter, 10, 1, true), 1, "100%: one page per row");
         assert_eq!(columns_for(1200.0, letter * 0.6, 10, 1, true), 2, "60%: two per row");
         assert_eq!(columns_for(1200.0, letter * 0.25, 10, 1, true), 5, "25%: five per row");
