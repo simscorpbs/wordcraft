@@ -6,7 +6,14 @@
 
 use serde::{Deserialize, Serialize};
 
-/// The smallest window restored: the desktop app's minimum inner size.
+/// The smallest window: the desktop app's minimum inner size, and the smallest size restored.
+/// On a Mac it is Word for Mac's own minimum, 360 × 366 points (measured), so the window shrinks
+/// beside other apps as far as Word's does; the ribbon scrolls its groups and folds its tabs into
+/// the overflow menu to fit.
+#[cfg(target_os = "macos")]
+pub const MIN_SIZE: egui::Vec2 = egui::vec2(360.0, 366.0);
+/// The smallest window: the desktop app's minimum inner size, and the smallest size restored.
+#[cfg(not(target_os = "macos"))]
 pub const MIN_SIZE: egui::Vec2 = egui::vec2(760.0, 480.0);
 /// Larger saved sizes are corrupt. eframe also shrinks the start size to the largest monitor.
 const MAX_SIZE: egui::Vec2 = egui::vec2(16384.0, 16384.0);

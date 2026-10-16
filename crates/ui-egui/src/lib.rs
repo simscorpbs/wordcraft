@@ -2566,6 +2566,29 @@ mod tests {
     }
 
     #[test]
+    fn every_ribbon_tab_draws_in_the_smallest_window() {
+        // Word for Mac's smallest window, 360 × 366 points: every tab draws and the page keeps
+        // room on screen.
+        let size = egui::vec2(360.0, 366.0);
+        let mut h = egui_kittest::Harness::builder().with_size(size).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                app.logic(&ctx);
+                app.ui(ui);
+            },
+            app(),
+        );
+        h.state_mut().session.run("text.insert", &json!({"text": "Belo Horizonte, 16 de outubro de 2026."})).unwrap();
+        for tab in ribbon::TABS {
+            h.state_mut().ui.tab = tab.into();
+            h.run_steps(4);
+            let canvas = h.state().canvas.canvas_rect.unwrap_or(egui::Rect::NOTHING);
+            assert!(canvas.width() > 100.0 && canvas.height() > 40.0, "{tab}: {canvas:?}");
+            assert!(canvas.max.x <= size.x + 0.5 && canvas.max.y <= size.y + 0.5, "{tab}: {canvas:?}");
+        }
+    }
+
+    #[test]
     fn title_and_account_buttons_work() {
         use egui_kittest::kittest::Queryable;
         let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
