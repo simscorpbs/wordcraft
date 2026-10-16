@@ -9,6 +9,7 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 33		Add to Dictionary	Adicionar ao dicionário	Adicionar ao Dicionário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 34		Add to Style Gallery	Adicionar à galeria de estilos	Adicionar à Galeria de Estilos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 35		Address Block	Bloco de endereço	Bloco de Endereço	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+37		Address\nBlock	Bloco de\nendereço	Bloco de\nEndereço	maiuscula	É um botão da faixa de Correspondências.
 43		Align Left	Alinhar à esquerda	Alinhar à Esquerda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 44		Align Right	Alinhar à direita	Alinhar à Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 47		All Borders	Todas as bordas	Todas as Bordas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -18,16 +19,16 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 53		Alt Text	Texto alternativo	Texto Alternativo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 55		Apply Character Style	Aplicar estilo de caractere	Aplicar Estilo de Caractere	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 56		Apply Style	Aplicar estilo	Aplicar Estilo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+58		Arrange\nAll	Organizar\ntudo	Organizar\nTudo	maiuscula	É um botão da faixa Exibir.
 60		Artistic Effects	Efeitos artísticos	Efeitos Artísticos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 63		Asian Typography	Tipografia asiática	Tipografia Asiática	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 65		AutoCorrect Options	Opções de autocorreção	Opções de Autocorreção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 67		AutoFit Contents	Autoajustar ao conteúdo	Autoajustar ao Conteúdo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 68		AutoFit Window	Autoajustar à janela	Autoajustar à Janela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
-69		AutoSave writes your changes to the file a moment after you stop typing.	O salvamento automático grava suas alterações no arquivo pouco depois que você para de digitar.	O Salvamento Automático grava suas alterações no arquivo pouco depois que você para de digitar.	gramatica	A mensagem usa o nome oficial do recurso.
 72		Automatic follows your system's language. Menus and commands change; your documents don't.	Automático segue o idioma do seu sistema. Menus e comandos mudam; seus documentos, não.	O modo Automático segue o idioma do sistema. Os menus e comandos mudam. Os documentos não mudam.	gramatica	A redação corrige a concordância da mensagem.
-76		AutoSave saves every change to the file (needs a saved document)	O salvamento automático grava cada alteração no arquivo (requer um documento já salvo)	O Salvamento Automático grava cada alteração no arquivo. É necessário que o documento esteja salvo.	gramatica	A mensagem separa a condição do efeito.
-77		AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	O salvamento automático não está disponível no navegador: ele não pode gravar nos seus arquivos. Salvar baixa uma cópia.	O Salvamento Automático não está disponível no navegador porque não pode gravar nos arquivos. Salvar baixa uma cópia.	gramatica	A mensagem evita a construção literal e mantém a ação do botão.
-78		AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	O salvamento automático só mantém arquivos .docx, .odt e .rtf; {name} não guarda toda a formatação. Salve como .docx para ativar o salvamento automático.	O Salvamento Automático mantém apenas arquivos .docx, .odt e .rtf. {name} não preserva toda a formatação. Salve como .docx para ativá-lo.	gramatica	A mensagem separa as condições e mantém o placeholder.
+76		AutoSave saves every change to the file (needs a saved document)	O salvamento automático grava cada alteração no arquivo (requer um documento já salvo)	O salvamento automático grava cada alteração no arquivo. É necessário que o documento esteja salvo.	gramatica	A mensagem separa a condição do efeito e mantém o nome comum em minúsculas.
+77		AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	O salvamento automático não está disponível no navegador: ele não pode gravar nos seus arquivos. Salvar baixa uma cópia.	O salvamento automático não está disponível no navegador porque não pode gravar nos arquivos. Salvar baixa uma cópia.	gramatica	A mensagem evita a construção literal e mantém o nome comum em minúsculas.
+78		AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	O salvamento automático só mantém arquivos .docx, .odt e .rtf; {name} não guarda toda a formatação. Salve como .docx para ativar o salvamento automático.	O salvamento automático mantém apenas arquivos .docx, .odt e .rtf. {name} não preserva toda a formatação. Salve como .docx para ativá-lo.	gramatica	A mensagem separa as condições e mantém o nome comum em minúsculas.
 85		Click level to modify:	Clique no nível a modificar:	Clique no nível que deseja modificar:	gramatica	A instrução fica natural no diálogo de listas.
 86		Click to switch back to inserting	Clique para voltar a inserir	Clique para voltar ao modo de inserção	gramatica	A dica descreve a alternância entre inserção e sobrescrita.
 89		Define New Multilevel List	Definir nova lista de vários níveis	Definir Nova Lista de Vários Níveis	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -50,6 +51,7 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 163		Block\nAuthors	Bloquear\nautores	Bloquear\nAutores	maiuscula	É o comando da aba Revisão.
 167		Delete Bookmark	Excluir indicador	Excluir Indicador	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 170		Border Painter	Pincel de bordas	Pincel de Bordas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+171		Border\nPainter	Pincel\nde bordas	Pincel de\nBordas	maiuscula	É um botão da faixa contextual da tabela.
 187		Page Border	Borda da página	Borda da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 189		These marks show even when Show/Hide ¶ is off.	Estas marcas aparecem mesmo com Mostrar/ocultar ¶ desativado.	Estas marcas aparecem mesmo quando Mostrar/Ocultar ¶ está desativado.	gramatica	A mensagem usa o nome do comando e concordância natural.
 190		Title Bar	Barra de título	Barra de Título	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -65,6 +67,7 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 218		Capitalize Each Word	Capitalizar cada palavra	Capitalizar Cada Palavra	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 220		Cell Margins	Margens das células	Margens das Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 221		Cell Size	Tamanho das células	Tamanho das Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+222		Cell\nMargins	Margens\ndas células	Margens\ndas Células	maiuscula	É um botão da faixa contextual da tabela.
 225		Change Case	Alterar maiúsculas/minúsculas	Alterar Maiúsculas e Minúsculas	termo-word	O Word pt-BR usa Maiúsculas e Minúsculas.
 226		Change List Level	Alterar nível da lista	Alterar Nível da Lista	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 227		Change Picture	Alterar imagem	Alterar Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -76,6 +79,7 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 237		Check Accessibility	Verificar acessibilidade	Verificar Acessibilidade	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 238		Check Compatibility	Verificar compatibilidade	Verificar Compatibilidade	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 239		Check for Errors	Verificar erros	Verificar Erros	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+241		Check\nAccessibility	Verificar\nacessibilidade	Verificar\nAcessibilidade	maiuscula	É um botão da faixa Revisão.
 242		Citation Style	Estilo de citação	Estilo de Citação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 243		Citations & Bibliography	Citações e bibliografia	Citações e Bibliografia	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 245		Clear All Formatting	Limpar toda a formatação	Limpar Toda a Formatação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -143,10 +147,12 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 367		Double Strikethrough	Tachado duplo	Tachado Duplo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 368		Double Underline	Sublinhado duplo	Sublinhado Duplo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 372		Drawing Tools	Ferramentas de desenho	Ferramentas de Desenho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+373		Drawing\nCanvas	Tela de\ndesenho	Tela de\nDesenho	maiuscula	É um botão da faixa Inserir.
 374		Drop Cap	Capitular	Letra Capitular	termo-word	O Word pt-BR chama Drop Cap de Letra Capitular.
 375		Edit Footer	Editar rodapé	Editar Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 376		Edit Header	Editar cabeçalho	Editar Cabeçalho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 377		Edit Recipient List	Editar lista de destinatários	Editar Lista de Destinatários	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+378		Edit\nRecipient List	Editar lista\nde destinatários	Editar Lista\nde Destinatários	maiuscula	É um botão da faixa de Correspondências.
 382		Editing — edit the document directly	Edição — edite o documento diretamente	Edição: edite o documento diretamente	gramatica	A mensagem usa pontuação simples e mantém o sentido do modo.
 386		Encrypt with Password	Criptografar com senha	Criptografar com Senha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 393		Even Page	Página par	Página Par	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -170,17 +176,23 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 430		Format Page Numbers…	Formatar números de página…	Formatar Números de Página…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 431		Format Painter	Pincel de formatação	Pincel de Formatação	maiuscula	É o nome oficial do comando da Área de Transferência.
 439		Greeting Line	Linha de saudação	Linha de Saudação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+440		Greeting\nLine	Linha de\nsaudação	Linha de\nSaudação	maiuscula	É um botão da faixa de Correspondências.
 443		Grow Font 1 Point	Aumentar fonte em 1 ponto	Aumentar Fonte em 1 Ponto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 444		Hanging Indent	Recuo deslocado	Recuo Deslocado	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 446		Header & Footer	Cabeçalho e rodapé	Cabeçalho e Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 447		Header Row	Linha de cabeçalho	Linha de Cabeçalho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 448		Header/Footer Position	Posição do cabeçalho/rodapé	Posição do Cabeçalho/Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 456		Highlight Merge Fields	Realçar campos de mesclagem	Realçar Campos de Mesclagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+457		Highlight\nMerge Fields	Realçar campos\nde mesclagem	Realçar Campos\nde Mesclagem	maiuscula	É um botão da faixa de Correspondências.
 459		Home	Início	Página Inicial	termo-word	É o nome da aba correspondente ao Home do Word pt-BR.
 461		Horizontal Line	Linha horizontal	Linha Horizontal	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 467		Immersive Reader	Leitor imersivo	Leitor Imersivo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+468		Immersive\nReader	Leitor\nimersivo	Leitor\nImersivo	maiuscula	É um botão da faixa Exibir.
 469		Increase Font Size	Aumentar tamanho da fonte	Aumentar Tamanho da Fonte	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 470		Increase Indent	Aumentar recuo	Aumentar Recuo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+476		Ink to\nMath	Tinta para\nequação	Tinta para\nEquação	maiuscula	É um botão da faixa Desenhar.
+477		Ink to\nShape	Tinta para\nforma	Tinta para\nForma	maiuscula	É um botão da faixa Desenhar.
+478		Ink\nReplay	Reproduzir\ntinta	Reproduzir\nTinta	maiuscula	É um botão da faixa Desenhar.
 480		Insert Above	Inserir acima	Inserir Acima	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 481		Insert Below	Inserir abaixo	Inserir Abaixo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 482		Insert Caption	Inserir legenda	Inserir Legenda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -192,12 +204,17 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 488		Insert Index	Inserir índice	Inserir Índice	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 489		Insert Left	Inserir à esquerda	Inserir à Esquerda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 490		Insert Merge Field	Inserir campo de mesclagem	Inserir Campo de Mesclagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+491		Insert Merge\nField	Inserir campo\nde mesclagem	Inserir Campo\nde Mesclagem	maiuscula	É um botão da faixa de Correspondências.
 492		Insert Right	Inserir à direita	Inserir à Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 493		Insert Shapes	Inserir formas	Inserir Formas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 494		Insert Table	Inserir tabela	Inserir Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 495		Insert Table of Authorities	Inserir índice de autoridades	Inserir Índice de Autoridades	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 496		Insert Table of Figures	Inserir índice de figuras	Inserir Índice de Ilustrações	termo-word	O comando segue o nome oficial Índice de Ilustrações.
 497		Insert Table…	Inserir tabela…	Inserir Tabela…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+498		Insert\nAbove	Inserir\nacima	Inserir\nAcima	maiuscula	É um botão da faixa contextual da tabela.
+499		Insert\nCaption	Inserir\nlegenda	Inserir\nLegenda	maiuscula	É um botão da faixa Referências.
+500		Insert\nCitation	Inserir\ncitação	Inserir\nCitação	maiuscula	É um botão da faixa Referências.
+501		Insert\nFootnote	Inserir\nnota de rodapé	Inserir\nNota de Rodapé	maiuscula	É um botão da faixa Referências.
 502		Inside Borders	Bordas internas	Bordas Internas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 503		Inspect Document	Inspecionar documento	Inspecionar Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 509		Keep Lines Together	Manter linhas juntas	Manter Linhas Juntas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -221,6 +238,8 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 550		Many pages	Muitas páginas	Várias Páginas	termo-word	É a opção do diálogo de Zoom correspondente ao Word pt-BR.
 552		Mark Citation	Marcar citação	Marcar Citação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 553		Mark Entry	Marcar entrada	Marcar Entrada	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+554		Mark\nCitation	Marcar\ncitação	Marcar\nCitação	maiuscula	É um botão da faixa Referências.
+555		Mark\nEntry	Marcar\nentrada	Marcar\nEntrada	maiuscula	É um botão da faixa Referências.
 558		Match Fields	Corresponder campos	Coincidir Campos	termo-word	É o nome do comando de Correspondências no Word pt-BR.
 561		Merge Cells	Mesclar células	Mesclar Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 562		Merge Formatting	Mesclar formatação	Mesclar Formatação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -235,6 +254,8 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 580		New Paragraph	Novo parágrafo	Novo Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 581		New Style…	Novo estilo…	Novo Estilo…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 582		New Window	Nova janela	Nova Janela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+583		New\nComment	Novo\ncomentário	Novo\nComentário	maiuscula	É um botão da faixa Revisão.
+584		New\nWindow	Nova\njanela	Nova\nJanela	maiuscula	É um botão da faixa Exibir.
 586		Next Change	Próxima alteração	Próxima Alteração	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 587		Next Comment	Próximo comentário	Próximo Comentário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 588		Next Footnote	Próxima nota de rodapé	Próxima Nota de Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -269,6 +290,9 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 647		Page Setup	Configuração da página	Configurar Página	termo-word	É o nome do comando de configuração da página.
 648		Page Up	Página acima	Página Acima	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 649		Page Width	Largura da página	Largura da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+654		Page\nBorders	Bordas da\npágina	Bordas da\nPágina	maiuscula	É um botão da faixa Design.
+655		Page\nColor	Cor da\npágina	Cor da\nPágina	maiuscula	É um botão da faixa Design.
+656		Page\nNumber	Número da\npágina	Número da\nPágina	maiuscula	É um botão da faixa Inserir.
 659		Paragraph Details	Detalhes do parágrafo	Detalhes do Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 660		Paragraph Down	Parágrafo abaixo	Parágrafo Abaixo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 661		Paragraph Settings	Configurações do parágrafo	Configurações do Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -279,11 +303,13 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 674		Picture Format	Formato da imagem	Formato da Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 675		Picture Styles	Estilos de imagem	Estilos de Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 680		Preview Results	Visualizar resultados	Visualizar Resultados	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+681		Preview\nResults	Visualizar\nresultados	Visualizar\nResultados	maiuscula	É um botão da faixa de Correspondências.
 683		Previous Change	Alteração anterior	Alteração Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 684		Previous Comment	Comentário anterior	Comentário Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 685		Previous Record	Registro anterior	Registro Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 686		Previous Section	Seção anterior	Seção Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 688		Print Layout	Layout de impressão	Layout de Impressão	maiuscula	É um modo de exibição do Word.
+689		Print\nLayout	Layout de\nimpressão	Layout de\nImpressão	maiuscula	É um botão da faixa Exibir.
 690		Proofing	Correção de texto	Revisor de Texto	termo-word	É o nome da categoria de opções conforme o vocabulário do Word pt-BR.
 691		Proofing Issues	Problemas de correção	Problemas do Revisor de Texto	termo-word	A área de revisão usa o termo Revisor de Texto.
 694		Protect Document	Proteger documento	Proteger Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -292,6 +318,8 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 697		Quick Tables	Tabelas rápidas	Tabelas Rápidas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 698		Read Aloud	Ler em voz alta	Ler em Voz Alta	maiuscula	É o comando da aba Revisão.
 699		Read Mode	Modo de leitura	Modo de Leitura	maiuscula	É um modo da aba Exibir.
+700		Read\nAloud	Ler em\nvoz alta	Ler em\nVoz Alta	maiuscula	É um botão da faixa Revisão.
+701		Read\nMode	Modo de\nleitura	Modo de\nLeitura	maiuscula	É um botão da faixa Exibir.
 703		Record Macro	Gravar macro	Gravar Macro	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 704		Recover Unsaved Documents	Recuperar documentos não salvos	Recuperar Documentos Não Salvos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 707		Reduce Hanging Indent	Reduzir recuo deslocado	Reduzir Recuo Deslocado	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -311,6 +339,7 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 735		Restart Each Page	Reiniciar a cada página	Reiniciar a Cada Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 736		Restart Each Section	Reiniciar a cada seção	Reiniciar a Cada Seção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 737		Restrict Editing	Restringir edição	Restringir Edição	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+738		Restrict\nEditing	Restringir\nedição	Restringir\nEdição	maiuscula	É um botão da faixa Revisão.
 743		Reviewing Pane	Painel de revisão	Painel de Revisão	maiuscula	É o painel da aba Revisão.
 744		Reviewing — edits become suggestions	Revisão — as edições viram sugestões	Revisão: as edições viram sugestões	gramatica	A mensagem usa pontuação simples e mantém o sentido do modo.
 747		Right Border	Borda direita	Borda Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -335,6 +364,7 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 779		Select Text	Selecionar texto	Selecionar Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 780		Select Text with Similar Formatting	Selecionar texto com formatação semelhante	Selecionar Texto com Formatação Semelhante	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 781		Select Word	Selecionar palavra	Selecionar Palavra	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+782		Select\nRecipients	Selecionar\ndestinatários	Selecionar\nDestinatários	maiuscula	É um botão da faixa de Correspondências.
 784		Selection Pane	Painel de seleção	Painel de Seleção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 785		Send Backward	Enviar para trás	Enviar para Trás	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 787		Set as Default	Definir como padrão	Definir como Padrão	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -345,21 +375,26 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 804		Show Comments	Mostrar comentários	Mostrar Comentários	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 805		Show Markup	Mostrar marcação	Mostrar Marcação	maiuscula	É um comando da área de controle de alterações.
 806		Show Notes	Mostrar notas	Mostrar Notas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+815		Show\nComments	Mostrar\ncomentários	Mostrar\nComentários	maiuscula	É um botão da faixa Revisão.
 816		Shrink Font 1 Point	Diminuir fonte em 1 ponto	Diminuir Fonte em 1 Ponto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 817		Side to Side	Lado a lado	Lado a Lado	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+818		Side\nto Side	Lado\na lado	Lado\na Lado	maiuscula	É um botão da faixa Exibir.
 819		Signature Line	Linha de assinatura	Linha de Assinatura	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 821		Single Spacing	Espaçamento simples	Espaçamento Simples	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 825		Small Caps	Versaletes	Versalete	termo-word	O efeito tipográfico do Word é Versalete no singular.
 826		Small caps	Versaletes	Versalete	termo-word	O efeito tipográfico do Word é Versalete no singular.
 835		Spelling & Grammar	Ortografia e gramática	Ortografia e Gramática	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+836		Spelling &\nGrammar	Ortografia e\ngramática	Ortografia e\nGramática	maiuscula	É um botão da faixa Revisão.
 837		Spelling Suggestions	Sugestões de ortografia	Sugestões de Ortografia	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 839		Split Cells	Dividir células	Dividir Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 840		Split Table	Dividir tabela	Dividir Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 845		Start Mail Merge	Iniciar mala direta	Iniciar Mala Direta	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+846		Start Mail\nMerge	Iniciar mala\ndireta	Iniciar Mala\nDireta	maiuscula	É um botão da faixa de Correspondências.
 848		Status Bar	Barra de status	Barra de Status	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 854		Style Set	Conjunto de estilos	Conjunto de Estilos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 857		Styles Pane	Painel de estilos	Painel de Estilos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 860		Switch Modes	Alternar modos	Alternar Modos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+861		Switch\nModes	Alternar\nmodos	Alternar\nModos	maiuscula	É um botão da faixa Exibir.
 868		Table Column Width	Largura da coluna da tabela	Largura da Coluna da Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 869		Table Design	Design da tabela	Design da Tabela	maiuscula	É a aba contextual da tabela.
 870		Table Layout	Layout de tabela	Layout da Tabela	termo-word	É a aba contextual da tabela no Word pt-BR.
@@ -376,6 +411,8 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 887		Text from File	Texto de arquivo	Texto de Arquivo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 888		Text Highlight Color	Cor de realce do texto	Cor do Realce do Texto	termo-word	É o nome usado pelo Word pt-BR para o realce.
 891		Text Wrapping	Quebra de texto	Quebra Automática de Texto	termo-word	É o nome usado no grupo Organizar do Word pt-BR.
+893		Text\nBox	Caixa de\ntexto	Caixa de\nTexto	maiuscula	É um botão da faixa Inserir.
+894		Text\nDirection	Direção do\ntexto	Direção do\nTexto	maiuscula	É um botão da faixa Layout.
 904		Top Border	Borda superior	Borda Superior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 905		Top Margin	Margem superior	Margem Superior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 906		Top of Page	Topo da página	Topo da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
@@ -401,67 +438,74 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 965		Word Right	Palavra à direita	Palavra à Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 966		WordArt	Texto artístico	WordArt	termo-word	O nome do recurso é WordArt no Word pt-BR.
 970		Wrap Text	Quebrar texto	Quebra Automática de Texto	termo-word	O Word pt-BR usa Quebra Automática de Texto.
+971		Wrap\nText	Quebrar\ntexto	Quebra Automática de\nTexto	termo-word	O Word pt-BR usa Quebra Automática de Texto no grupo Organizar.
 972		Write & Insert Fields	Escrever e inserir campos	Escrever e Inserir Campos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
 983		Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Mostra os documentos com as cores invertidas, como em Exibir › Alternar modos. Salvar, imprimir e PDFs não mudam.	Mostra os documentos com as cores invertidas, como em Exibir › Alternar modos. Salvar, imprimir e os PDFs não mudam.	gramatica	A frase usa o nome da aba Exibir e concordância natural.
-		1×2 Empty Matrix		Matriz Vazia 1×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		1×3 Empty Matrix		Matriz Vazia 1×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×1 Empty Matrix		Matriz Vazia 2×1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×2 Determinant		Determinante 2×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×2 Empty Matrix		Matriz Vazia 2×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×2 Identity Matrix		Matriz de Identidade 2×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×2 Identity Matrix (sparse)		Matriz de Identidade 2×2 (esparsa)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×2 Matrix in Brackets		Matriz 2×2 entre Colchetes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×2 Matrix in Double Bars		Matriz 2×2 entre Barras Duplas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×2 Matrix in Parentheses		Matriz 2×2 entre Parênteses	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		2×3 Empty Matrix		Matriz Vazia 2×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		3×1 Empty Matrix		Matriz Vazia 3×1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		3×2 Empty Matrix		Matriz Vazia 3×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		3×3 Empty Matrix		Matriz Vazia 3×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		3×3 Identity Matrix		Matriz de Identidade 3×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		3×3 Identity Matrix (sparse)		Matriz de Identidade 3×3 (esparsa)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		A xor B		A ou exclusivo B	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		APA		APA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		ASAP		O Quanto Antes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+996		Add/Edit\nCitation	Adicionar/editar\ncitação	Adicionar/Editar\nCitação	maiuscula	É um botão da faixa Zotero.
+997		Add\nNote	Adicionar\nnota	Adicionar\nNota	maiuscula	É um botão da faixa Zotero.
+998		Add/Edit\nBibliography	Adicionar/editar\nbibliografia	Adicionar/Editar\nBibliografia	maiuscula	É um botão da faixa Zotero.
+1000		Document\nPreferences	Preferências\ndo documento	Preferências\ndo Documento	maiuscula	É um botão da faixa Zotero.
+1001		Unlink\nCitations	Desvincular\ncitações	Desvincular\nCitações	maiuscula	É um botão da faixa Zotero.
+1009		Move Past\nCitation	Mover para depois\nda citação	Mover para Depois\nda Citação	maiuscula	É um botão da faixa Zotero.
+		1×2 Empty Matrix		Matriz vazia 1×2	nova	É um rótulo da galeria de equações.
+		1×3 Empty Matrix		Matriz vazia 1×3	nova	É um rótulo da galeria de equações.
+		2×1 Empty Matrix		Matriz vazia 2×1	nova	É um rótulo da galeria de equações.
+		2×2 Determinant		Determinante 2×2	nova	É um rótulo da galeria de equações.
+		2×2 Empty Matrix		Matriz vazia 2×2	nova	É um rótulo da galeria de equações.
+		2×2 Identity Matrix		Matriz de identidade 2×2	nova	É um rótulo da galeria de equações.
+		2×2 Identity Matrix (sparse)		Matriz de identidade 2×2 (esparsa)	nova	É um rótulo da galeria de equações.
+		2×2 Matrix in Brackets		Matriz 2×2 entre colchetes	nova	É um rótulo da galeria de equações.
+		2×2 Matrix in Double Bars		Matriz 2×2 entre barras duplas	nova	É um rótulo da galeria de equações.
+		2×2 Matrix in Parentheses		Matriz 2×2 entre parênteses	nova	É um rótulo da galeria de equações.
+		2×3 Empty Matrix		Matriz vazia 2×3	nova	É um rótulo da galeria de equações.
+		3×1 Empty Matrix		Matriz vazia 3×1	nova	É um rótulo da galeria de equações.
+		3×2 Empty Matrix		Matriz vazia 3×2	nova	É um rótulo da galeria de equações.
+		3×3 Empty Matrix		Matriz vazia 3×3	nova	É um rótulo da galeria de equações.
+		3×3 Identity Matrix		Matriz de identidade 3×3	nova	É um rótulo da galeria de equações.
+		3×3 Identity Matrix (sparse)		Matriz de identidade 3×3 (esparsa)	nova	É um rótulo da galeria de equações.
+		A xor B		A ou exclusivo B	nova	É um rótulo da galeria de equações.
+		APA		APA	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		ASAP		O QUANTO ANTES	nova	É uma opção de marca-d'água exibida em maiúsculas.
 		AaBbCcDd		AaBbCcDd	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Absolute value cases		Casos de Valor Absoluto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Absolute value cases		Casos de valor absoluto	nova	É um rótulo da galeria de equações.
 		Accents		Acentos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Acute		Acento Agudo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		All - Linear		Todas - Linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		All - Professional		Todas - Profissional	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Angle Brackets		Parênteses Angulares	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Angle Brackets with Separator		Parênteses Angulares com Separador	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Angle Brackets with Two Separators		Parênteses Angulares com Dois Separadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Annotation Reference		Referência de Anotação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Annotation Subject		Assunto da Anotação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Annotation Text		Texto da Anotação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Acute		Acento agudo	nova	É um rótulo da galeria de equações.
+		All - Linear		Tudo - Linear	nova	É uma opção do seletor de formato da aba Equação.
+		All - Professional		Tudo - Profissional	nova	É uma opção do seletor de formato da aba Equação.
+		Angle Brackets		Parênteses angulares	nova	É um rótulo da galeria de equações.
+		Angle Brackets with Separator		Parênteses angulares com separador	nova	É um rótulo da galeria de equações.
+		Angle Brackets with Two Separators		Parênteses angulares com dois separadores	nova	É um rótulo da galeria de equações.
+		Annotation Reference		Referência de anotação	nova	É um nome de estilo interno do Word.
+		Annotation Subject		Assunto da anotação	nova	É um nome de estilo interno do Word.
+		Annotation Text		Texto da anotação	nova	É um nome de estilo interno do Word.
 		B4 (JIS)   10.12" × 14.33"		B4 (JIS)   10,12" × 14,33"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		B5 (JIS)   7.17" × 10.12"		B5 (JIS)   7,17" × 10,12"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Baseline Dots		Pontos de Base	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Basic Math		Matemática Básica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Bayes' rule		Regra de Bayes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Binomial Coefficient		Coeficiente Binomial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Binomial Coefficient (angle)		Coeficiente Binomial (angular)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Binomial Coefficient with Angle Brackets		Coeficiente Binomial entre Parênteses Angulares	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Binomial expansion of (x+a)ⁿ		Expansão Binomial de (x+a)ⁿ	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Baseline Dots		Pontos de base	nova	É um rótulo da galeria de equações.
+		Basic Math		Matemática básica	nova	É um rótulo da galeria de equações.
+		Bayes' rule		Regra de Bayes	nova	É um rótulo da galeria de equações.
+		Binomial Coefficient		Coeficiente binomial	nova	É um rótulo da galeria de equações.
+		Binomial Coefficient (angle)		Coeficiente binomial (angular)	nova	É um rótulo da galeria de equações.
+		Binomial Coefficient with Angle Brackets		Coeficiente binomial entre parênteses angulares	nova	É um rótulo da galeria de equações.
+		Binomial expansion of (x+a)ⁿ		Expansão binomial de (x+a)ⁿ	nova	É um rótulo da galeria de equações.
 		Body text in a short paragraph to show spacing.		Texto do corpo em um parágrafo curto para mostrar o espaçamento.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Book Title		Título de Livro	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Boxed Formula		Fórmula em Caixa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Boxed Formula (example)		Fórmula em Caixa (exemplo)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Boxed Formulas		Fórmulas em Caixa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Braces		Chaves	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Braces with Separator		Chaves com Separador	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Brackets		Colchetes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Brackets with Separators		Colchetes com Separadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Breve		Breve	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Book Title		Título de livro	nova	É um nome de estilo interno do Word.
+		Boxed Formula		Fórmula em caixa	nova	É um rótulo da galeria de equações.
+		Boxed Formula (example)		Fórmula em caixa (exemplo)	nova	É um rótulo da galeria de equações.
+		Boxed Formulas		Fórmulas em caixa	nova	É um rótulo da galeria de equações.
+		Braces		Chaves	nova	É um rótulo da galeria de equações.
+		Braces with Separator		Chaves com separador	nova	É um rótulo da galeria de equações.
+		Brackets		Colchetes	nova	É um rótulo da galeria de equações.
+		Brackets with Separators		Colchetes com separadores	nova	É um rótulo da galeria de equações.
+		Breve		Breve	nova	É um rótulo da galeria de equações.
 		CONFIDENTIAL		CONFIDENCIAL	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Capitalize the first word of a sentence		Colocar em maiúscula a primeira palavra de uma frase	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cases (Three Conditions)		Casos (três Condições)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cases (Two Conditions)		Casos (duas Condições)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cases and Stacks		Casos e Empilhamentos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cases (Three Conditions)		Casos (três condições)	nova	É um rótulo da galeria de equações.
+		Cases (Two Conditions)		Casos (duas condições)	nova	É um rótulo da galeria de equações.
+		Cases and Stacks		Casos e empilhamentos	nova	É um rótulo da galeria de equações.
 		Category		Categoria	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Ceiling		Teto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Centered as Group		Centralizado como Grupo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Change in y over change in x		Variação de Y sobre Variação de X	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Ceiling		Teto	nova	É um rótulo da galeria de equações.
+		Centered as Group		Centralizado como grupo	nova	É uma opção de alinhamento na aba Equação.
+		Change in y over change in x		Variação de y sobre variação de x	nova	É um rótulo da galeria de equações.
 		Change to Level 1		Alterar para o Nível 1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Change to Level 2		Alterar para o Nível 2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Change to Level 3		Alterar para o Nível 3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
@@ -472,164 +516,164 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 		Change to Level 8		Alterar para o Nível 8	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Change to Level 9		Alterar para o Nível 9	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Check		Caron	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Chicago		Chicago	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Circle area from its radius		Área do Círculo a Partir do Raio	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Circled Dot		Ponto Circundado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Circled Plus		Mais Circundado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Circled Times		Vezes Circundado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Colon Equal		Dois-pontos Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Accent Objects		Objetos de Acento Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Brackets		Colchetes Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Fractions		Frações Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Functions		Funções Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Large Operators		Operadores Grandes Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Operator Structures		Estruturas de Operadores Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Operators		Operadores Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Radicals		Radicais Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Common Subscripts and Superscripts		Subscritos e Sobrescritos Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Contour Integral		Integral de Contorno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Contour Integral with Limits		Integral de Contorno com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Contour Integral with Stacked Limits		Integral de Contorno com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Contour Integrals		Integrais de Contorno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Chicago		Chicago	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		Circle area from its radius		Área do círculo a partir do raio	nova	É um rótulo da galeria de equações.
+		Circled Dot		Ponto em círculo	nova	É um rótulo da galeria de equações.
+		Circled Plus		Mais em círculo	nova	É um rótulo da galeria de equações.
+		Circled Times		Multiplicação em círculo	nova	É um rótulo da galeria de equações.
+		Colon Equal		Dois-pontos igual	nova	É um rótulo da galeria de equações.
+		Common Accent Objects		Objetos de acento comuns	nova	É um rótulo da galeria de equações.
+		Common Brackets		Colchetes comuns	nova	É um rótulo da galeria de equações.
+		Common Fractions		Frações comuns	nova	É um rótulo da galeria de equações.
+		Common Functions		Funções comuns	nova	É um rótulo da galeria de equações.
+		Common Large Operators		Operadores grandes comuns	nova	É um rótulo da galeria de equações.
+		Common Operator Structures		Estruturas de operadores comuns	nova	É um rótulo da galeria de equações.
+		Common Operators		Operadores comuns	nova	É um rótulo da galeria de equações.
+		Common Radicals		Radicais comuns	nova	É um rótulo da galeria de equações.
+		Common Subscripts and Superscripts		Subscritos e sobrescritos comuns	nova	É um rótulo da galeria de equações.
+		Contour Integral		Integral de contorno	nova	É um rótulo da galeria de equações.
+		Contour Integral with Limits		Integral de contorno com limites	nova	É um rótulo da galeria de equações.
+		Contour Integral with Stacked Limits		Integral de contorno com limites empilhados	nova	É um rótulo da galeria de equações.
+		Contour Integrals		Integrais de contorno	nova	É um rótulo da galeria de equações.
 		Contributors		Colaboradores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Convert between built-up and linear form		Converter entre a forma profissional e a forma linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Coproduct		Coproduto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Coproduct with Limits		Coproduto com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Coproduct with Lower Limit		Coproduto com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Coproduct with Subscript-Superscript Limits		Coproduto com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cosecant Function		Função Cossecante	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cosine 2x		Cosseno de 2x	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cosine Function		Função Cosseno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cotangent Function		Função Cotangente	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Cube Root		Raiz Cúbica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Coproduct		Coproduto	nova	É um rótulo da galeria de equações.
+		Coproduct with Limits		Coproduto com limites	nova	É um rótulo da galeria de equações.
+		Coproduct with Lower Limit		Coproduto com limite inferior	nova	É um rótulo da galeria de equações.
+		Coproduct with Subscript-Superscript Limits		Coproduto com limites em subscrito e sobrescrito	nova	É um rótulo da galeria de equações.
+		Cosecant Function		Função cossecante	nova	É um rótulo da galeria de equações.
+		Cosine 2x		Cosseno de 2x	nova	É um rótulo da galeria de equações.
+		Cosine Function		Função cosseno	nova	É um rótulo da galeria de equações.
+		Cotangent Function		Função cotangente	nova	É um rótulo da galeria de equações.
+		Cube Root		Raiz cúbica	nova	É um rótulo da galeria de equações.
 		Current - Linear		Atual - Linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Current - Professional		Atual - Profissional	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		DO NOT COPY		NÃO COPIAR	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		DRAFT		RASCUNHO	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Default Paragraph Font		Fonte do Parágrafo Padrão	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Delta Equal To		Delta Igual a	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Delta over arrow		Delta sobre Seta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Derivative as a limit		Derivada como Limite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Diagonal Dots		Pontos Diagonais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Differential		Diferencial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Differential theta		Diferencial de Teta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Differential x		Diferencial de X	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Differential y		Diferencial de Y	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Differentials		Diferenciais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Default Paragraph Font		Fonte do parágrafo padrão	nova	É um nome de estilo interno do Word.
+		Delta Equal To		Delta igual a	nova	É um rótulo da galeria de equações.
+		Delta over arrow		Delta sobre seta	nova	É um rótulo da galeria de equações.
+		Derivative as a limit		Derivada como limite	nova	É um rótulo da galeria de equações.
+		Diagonal Dots		Pontos diagonais	nova	É um rótulo da galeria de equações.
+		Differential		Diferencial	nova	É um rótulo da galeria de equações.
+		Differential theta		Diferencial de teta	nova	É um rótulo da galeria de equações.
+		Differential x		Diferencial de x	nova	É um rótulo da galeria de equações.
+		Differential y		Diferencial de y	nova	É um rótulo da galeria de equações.
+		Differentials		Diferenciais	nova	É um rótulo da galeria de equações.
 		Dot		Ponto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Dots		Pontos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Bar		Barra Dupla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Dot		Ponto Duplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Integral		Integral Dupla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Integral with Limits		Integral Dupla com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Integral with Stacked Limits		Integral Dupla com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Left Arrow with Text Above		Seta Dupla para a Esquerda com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Left Arrow with Text Below		Seta Dupla para a Esquerda com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Left Right Arrow with Text Above		Seta Dupla para a Esquerda e para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Left Right Arrow with Text Below		Seta Dupla para a Esquerda e para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Right Arrow with Text Above		Seta Dupla para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Right Arrow with Text Below		Seta Dupla para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Square Brackets		Colchetes Quadrados Duplos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double Vertical Bars		Barras Verticais Duplas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Double summation		Soma Dupla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Dots		Pontos	nova	É um rótulo da galeria de equações.
+		Double Bar		Barra dupla	nova	É um rótulo da galeria de equações.
+		Double Dot		Ponto duplo	nova	É um rótulo da galeria de equações.
+		Double Integral		Integral dupla	nova	É um rótulo da galeria de equações.
+		Double Integral with Limits		Integral dupla com limites	nova	É um rótulo da galeria de equações.
+		Double Integral with Stacked Limits		Integral dupla com limites empilhados	nova	É um rótulo da galeria de equações.
+		Double Left Arrow with Text Above		Seta dupla para a esquerda com texto acima	nova	É um rótulo da galeria de equações.
+		Double Left Arrow with Text Below		Seta dupla para a esquerda com texto abaixo	nova	É um rótulo da galeria de equações.
+		Double Left Right Arrow with Text Above		Seta dupla para a esquerda e para a direita com texto acima	nova	É um rótulo da galeria de equações.
+		Double Left Right Arrow with Text Below		Seta dupla para a esquerda e para a direita com texto abaixo	nova	É um rótulo da galeria de equações.
+		Double Right Arrow with Text Above		Seta dupla para a direita com texto acima	nova	É um rótulo da galeria de equações.
+		Double Right Arrow with Text Below		Seta dupla para a direita com texto abaixo	nova	É um rótulo da galeria de equações.
+		Double Square Brackets		Colchetes quadrados duplos	nova	É um rótulo da galeria de equações.
+		Double Vertical Bars		Barras verticais duplas	nova	É um rótulo da galeria de equações.
+		Double summation		Soma dupla	nova	É um rótulo da galeria de equações.
 		Emphasis		Ênfase	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Empty Matrices		Matrizes Vazias	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Endnote Reference		Referência de Nota de Fim	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Endnote Text		Texto da Nota de Fim	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Enter bookmark name:		Digite o Nome do Indicador:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Envelope #10   4.12" × 9.50"		Envelope Nº 10   4,12" × 9,50"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Envelope Address		Endereço do Envelope	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Empty Matrices		Matrizes vazias	nova	É um rótulo da galeria de equações.
+		Endnote Reference		Referência de nota de fim	nova	É um nome de estilo interno do Word.
+		Endnote Text		Texto da nota de fim	nova	É um nome de estilo interno do Word.
+		Enter bookmark name:		Digite o nome do indicador:	nova	É um rótulo de diálogo.
+		Envelope #10   4.12" × 9.50"		Envelope nº 10   4,12" × 9,50"	nova	É um rótulo da galeria de equações.
+		Envelope Address		Endereço do envelope	nova	É um nome de estilo interno do Word.
 		Envelope DL   4.33" × 8.66"		Envelope DL   4,33" × 8,66"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Envelope Return		Remetente do Envelope	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Equal Equal		Igual Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Equal by Definition		Igual por Definição	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Euler's identity		Identidade de Euler	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Envelope Return		Remetente do envelope	nova	É um nome de estilo interno do Word.
+		Equal Equal		Igual igual	nova	É um rótulo da galeria de equações.
+		Equal by Definition		Igual por definição	nova	É um rótulo da galeria de equações.
+		Euler's identity		Identidade de Euler	nova	É um rótulo da galeria de equações.
 		Executive   7.25" × 10.50"		Executivo   7,25" × 10,50"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Exponential		Exponencial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Exponential series		Série Exponencial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Extra space		Espaço Extra	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Exponential		Exponencial	nova	É um rótulo da galeria de equações.
+		Exponential series		Série exponencial	nova	É um rótulo da galeria de equações.
+		Extra space		Espaço extra	nova	É uma mensagem do revisor de texto.
 		Find “{text}” in the document		Localizar “{text}” no documento	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Floor		Piso	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Footnote Reference		Referência de Nota de Rodapé	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Footnote Text		Texto da Nota de Rodapé	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		For which item:		Para Qual Item:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Functions		Funções	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		GB/T 7714		GB/T 7714	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		GOST (name sort)		GOST (ordenação por Nome)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		GOST (title sort)		GOST (ordenação por Título)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Floor		Piso	nova	É um rótulo da galeria de equações.
+		Footnote Reference		Referência de nota de rodapé	nova	É um nome de estilo interno do Word.
+		Footnote Text		Texto da nota de rodapé	nova	É um nome de estilo interno do Word.
+		For which item:		Para qual item:	nova	É um rótulo de diálogo.
+		Functions		Funções	nova	É um rótulo da galeria de equações.
+		GB/T 7714		GB/T 7714	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		GOST (name sort)		GOST (ordenação por Nome)	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		GOST (title sort)		GOST (ordenação por Título)	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
 		Geometry		Geometria	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Good afternoon		Boa tarde	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Good evening		Boa noite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Good morning		Bom dia	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grave		Acento Grave	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Greek Letters		Letras Gregas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grid Table 1 Light		Tabela de Grade 1 Clara	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grid Table 4 – Blue		Tabela de Grade 4 – Azul	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grid Table 4 – Green		Tabela de Grade 4 – Verde	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grid Table 4 – Orange		Tabela de Grade 4 – Laranja	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grid Table 4 – Purple		Tabela de Grade 4 – Roxa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grouping Character Above		Caractere de Agrupamento Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Grouping Character Below		Caractere de Agrupamento Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Harvard (Anglia)		Harvard (Anglia)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hat		Acento Circunflexo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grave		Acento grave	nova	É um rótulo da galeria de equações.
+		Greek Letters		Letras gregas	nova	É um rótulo da galeria de equações.
+		Grid Table 1 Light		Tabela de grade 1 clara	nova	É um nome de estilo interno do Word.
+		Grid Table 4 – Blue		Tabela de grade 4 – azul	nova	É um nome de estilo interno do Word.
+		Grid Table 4 – Green		Tabela de grade 4 – verde	nova	É um nome de estilo interno do Word.
+		Grid Table 4 – Orange		Tabela de grade 4 – laranja	nova	É um nome de estilo interno do Word.
+		Grid Table 4 – Purple		Tabela de grade 4 – roxa	nova	É um nome de estilo interno do Word.
+		Grouping Character Above		Caractere de agrupamento acima	nova	É um rótulo da galeria de equações.
+		Grouping Character Below		Caractere de agrupamento abaixo	nova	É um rótulo da galeria de equações.
+		Harvard (Anglia)		Harvard (Anglia)	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		Hat		Acento circunflexo	nova	É um rótulo da galeria de equações.
 		Heading		Título	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Heading text		Texto do Título	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hyperbolic Cosecant Function		Função Cossecante Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hyperbolic Cosine Function		Função Cosseno Hiperbólico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hyperbolic Cotangent Function		Função Cotangente Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hyperbolic Functions		Funções Hiperbólicas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hyperbolic Secant Function		Função Secante Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hyperbolic Sine Function		Função Seno Hiperbólico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hyperbolic Tangent Function		Função Tangente Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Heading text		Texto do título	nova	É um rótulo do diálogo de referências.
+		Hyperbolic Cosecant Function		Função cossecante hiperbólica	nova	É um rótulo da galeria de equações.
+		Hyperbolic Cosine Function		Função cosseno hiperbólico	nova	É um rótulo da galeria de equações.
+		Hyperbolic Cotangent Function		Função cotangente hiperbólica	nova	É um rótulo da galeria de equações.
+		Hyperbolic Functions		Funções hiperbólicas	nova	É um rótulo da galeria de equações.
+		Hyperbolic Secant Function		Função secante hiperbólica	nova	É um rótulo da galeria de equações.
+		Hyperbolic Sine Function		Função seno hiperbólico	nova	É um rótulo da galeria de equações.
+		Hyperbolic Tangent Function		Função tangente hiperbólica	nova	É um rótulo da galeria de equações.
 		Hyperlink		Hiperlink	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Hypotenuse		Hipotenusa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		IEEE		IEEE	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		ISO 690 (author-date)		ISO 690 (autor-data)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		ISO 690 (numerical)		ISO 690 (numérico)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Identity Matrices		Matrizes de Identidade	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Index Heading		Título do Índice	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hypotenuse		Hipotenusa	nova	É um rótulo da galeria de equações.
+		IEEE		IEEE	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		ISO 690 (author-date)		ISO 690 (autor-data)	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		ISO 690 (numerical)		ISO 690 (numérico)	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		Identity Matrices		Matrizes de identidade	nova	É um rótulo da galeria de equações.
+		Index Heading		Título do índice	nova	É um nome de estilo interno do Word.
 		Index {n}		Índice {n}	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Insert reference to:		Inserir Referência A:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Integral of e^(−x²)		Integral de E^(−x²)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Integral with Limits		Integral com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Integral with Stacked Limits		Integral com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Integrals		Integrais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Intense Emphasis		Ênfase Intensa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Intense Quote		Citação Intensa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Intense Reference		Referência Intensa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Intersection		Interseção	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Intersection with Limits		Interseção com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Intersection with Lower Limit		Interseção com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Intersection with Subscript-Superscript Limits		Interseção com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Cosecant Function		Função Cossecante Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Cosine Function		Função Cosseno Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Cotangent Function		Função Cotangente Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Functions		Funções Inversas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Hyperbolic Cosecant Function		Função Cossecante Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Hyperbolic Cosine Function		Função Cosseno Hiperbólico Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Hyperbolic Cotangent Function		Função Cotangente Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Hyperbolic Functions		Funções Hiperbólicas Inversas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Hyperbolic Secant Function		Função Secante Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Hyperbolic Sine Function		Função Seno Hiperbólico Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Hyperbolic Tangent Function		Função Tangente Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Secant Function		Função Secante Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Sine Function		Função Seno Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Inverse Tangent Function		Função Tangente Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Insert reference to:		Inserir referência a:	nova	É um rótulo de diálogo.
+		Integral of e^(−x²)		Integral de e^(−x²)	nova	É um rótulo da galeria de equações.
+		Integral with Limits		Integral com limites	nova	É um rótulo da galeria de equações.
+		Integral with Stacked Limits		Integral com limites empilhados	nova	É um rótulo da galeria de equações.
+		Integrals		Integrais	nova	É um rótulo da galeria de equações.
+		Intense Emphasis		Ênfase intensa	nova	É um nome de estilo interno do Word.
+		Intense Quote		Citação intensa	nova	É um nome de estilo interno do Word.
+		Intense Reference		Referência intensa	nova	É um nome de estilo interno do Word.
+		Intersection		Interseção	nova	É um rótulo da galeria de equações.
+		Intersection with Limits		Interseção com limites	nova	É um rótulo da galeria de equações.
+		Intersection with Lower Limit		Interseção com limite inferior	nova	É um rótulo da galeria de equações.
+		Intersection with Subscript-Superscript Limits		Interseção com limites em subscrito e sobrescrito	nova	É um rótulo da galeria de equações.
+		Inverse Cosecant Function		Função cossecante inversa	nova	É um rótulo da galeria de equações.
+		Inverse Cosine Function		Função cosseno inversa	nova	É um rótulo da galeria de equações.
+		Inverse Cotangent Function		Função cotangente inversa	nova	É um rótulo da galeria de equações.
+		Inverse Functions		Funções inversas	nova	É um rótulo da galeria de equações.
+		Inverse Hyperbolic Cosecant Function		Função cossecante hiperbólica inversa	nova	É um rótulo da galeria de equações.
+		Inverse Hyperbolic Cosine Function		Função cosseno hiperbólico inversa	nova	É um rótulo da galeria de equações.
+		Inverse Hyperbolic Cotangent Function		Função cotangente hiperbólica inversa	nova	É um rótulo da galeria de equações.
+		Inverse Hyperbolic Functions		Funções hiperbólicas inversas	nova	É um rótulo da galeria de equações.
+		Inverse Hyperbolic Secant Function		Função secante hiperbólica inversa	nova	É um rótulo da galeria de equações.
+		Inverse Hyperbolic Sine Function		Função seno hiperbólico inversa	nova	É um rótulo da galeria de equações.
+		Inverse Hyperbolic Tangent Function		Função tangente hiperbólica inversa	nova	É um rótulo da galeria de equações.
+		Inverse Secant Function		Função secante inversa	nova	É um rótulo da galeria de equações.
+		Inverse Sine Function		Função seno inversa	nova	É um rótulo da galeria de equações.
+		Inverse Tangent Function		Função tangente inversa	nova	É um rótulo da galeria de equações.
 		Justification of a display equation		Justificação de uma equação exibida	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Keywords		Palavras-chave	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Large		Grande	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Left Arrow with Text Above		Seta para a Esquerda com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Left Arrow with Text Below		Seta para a Esquerda com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Left Bracket Twice		Colchete Esquerdo Duplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Left Right Arrow Above		Seta para a Esquerda e para a Direita Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Left Right Arrow with Text Above		Seta para a Esquerda e para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Left Right Arrow with Text Below		Seta para a Esquerda e para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Left Subscript-Superscript		Subscrito e Sobrescrito à Esquerda	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Leftwards Arrow Above		Seta para a Esquerda Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Leftwards Harpoon Above		Arpão para a Esquerda Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Arrow with Text Above		Seta para a esquerda com texto acima	nova	É um rótulo da galeria de equações.
+		Left Arrow with Text Below		Seta para a esquerda com texto abaixo	nova	É um rótulo da galeria de equações.
+		Left Bracket Twice		Colchete esquerdo duplo	nova	É um rótulo da galeria de equações.
+		Left Right Arrow Above		Seta para a esquerda e para a direita acima	nova	É um rótulo da galeria de equações.
+		Left Right Arrow with Text Above		Seta para a esquerda e para a direita com texto acima	nova	É um rótulo da galeria de equações.
+		Left Right Arrow with Text Below		Seta para a esquerda e para a direita com texto abaixo	nova	É um rótulo da galeria de equações.
+		Left Subscript-Superscript		Subscrito e sobrescrito à esquerda	nova	É um rótulo da galeria de equações.
+		Leftwards Arrow Above		Seta para a esquerda acima	nova	É um rótulo da galeria de equações.
+		Leftwards Harpoon Above		Arpão para a esquerda acima	nova	É um rótulo da galeria de equações.
 		Legal   8.50" × 14.00"		Ofício   8,50" × 14,00"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Letter   8.50" × 11.00"		Carta   8,50" × 11,00"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Letter-Like Symbols		Símbolos Semelhantes a Letras	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Letter-Like Symbols		Símbolos semelhantes a letras	nova	É um rótulo da galeria de equações.
 		Level 1		Nível 1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Level 2		Nível 2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Level 3		Nível 3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
@@ -640,198 +684,198 @@ linha	contexto	inglês	tradução atual	proposta	categoria	motivo
 		Level 8		Nível 8	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Level 9		Nível 9	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Limit		Limite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Limit Example		Exemplo de Limite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Limit and		Limite e	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Line Number		Número de Linha	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Linear Fraction		Fração Linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		List Paragraph		Parágrafo de Lista	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		List Table 3 – Blue		Tabela de Lista 3 – Azul	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		List Table 3 – Green		Tabela de Lista 3 – Verde	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		List Table 3 – Orange		Tabela de Lista 3 – Laranja	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		List Table 3 – Purple		Tabela de Lista 3 – Roxa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Limit Example		Exemplo de limite	nova	É um rótulo da galeria de equações.
+		Limit and		Limite e	nova	É um rótulo da galeria de equações.
+		Line Number		Número de linha	nova	É um nome de estilo interno do Word.
+		Linear Fraction		Fração linear	nova	É um rótulo da galeria de equações.
+		List Paragraph		Parágrafo de lista	nova	É um nome de estilo interno do Word.
+		List Table 3 – Blue		Tabela de lista 3 – azul	nova	É um nome de estilo interno do Word.
+		List Table 3 – Green		Tabela de lista 3 – verde	nova	É um nome de estilo interno do Word.
+		List Table 3 – Orange		Tabela de lista 3 – laranja	nova	É um nome de estilo interno do Word.
+		List Table 3 – Purple		Tabela de lista 3 – roxa	nova	É um nome de estilo interno do Word.
 		Log		Log	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Logarithm		Logaritmo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Logarithm with Base		Logaritmo com Base	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Logical AND		E Lógico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Logical AND with Limits		E Lógico com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Logical OR		OU Lógico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Logical OR with Limits		OU Lógico com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		MLA		MLA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Matrices with Brackets		Matrizes com Colchetes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Maximum		Máximo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Maximum Example		Exemplo de Máximo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Measured By		Medido por	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Midline Dots		Pontos na Linha Média	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Minimum		Mínimo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Minus Equal		Menos Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Logarithm		Logaritmo	nova	É um rótulo da galeria de equações.
+		Logarithm with Base		Logaritmo com base	nova	É um rótulo da galeria de equações.
+		Logical AND		E lógico	nova	É um rótulo da galeria de equações.
+		Logical AND with Limits		E lógico com limites	nova	É um rótulo da galeria de equações.
+		Logical OR		OU lógico	nova	É um rótulo da galeria de equações.
+		Logical OR with Limits		OU lógico com limites	nova	É um rótulo da galeria de equações.
+		MLA		MLA	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		Matrices with Brackets		Matrizes com colchetes	nova	É um rótulo da galeria de equações.
+		Maximum		Máximo	nova	É um rótulo da galeria de equações.
+		Maximum Example		Exemplo de máximo	nova	É um rótulo da galeria de equações.
+		Measured By		Medido por	nova	É um rótulo da galeria de equações.
+		Midline Dots		Pontos na linha média	nova	É um rótulo da galeria de equações.
+		Minimum		Mínimo	nova	É um rótulo da galeria de equações.
+		Minus Equal		Menos igual	nova	É um rótulo da galeria de equações.
 		Models		Modelos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Natural Logarithm		Logaritmo Natural	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Negated Relations		Relações Negadas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		No Spacing		Sem Espaçamento	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Natural Logarithm		Logaritmo natural	nova	É um rótulo da galeria de equações.
+		Negated Relations		Relações negadas	nova	É um rótulo da galeria de equações.
+		No Spacing		Sem espaçamento	nova	É um nome de estilo interno do Word.
 		Normal		Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Normal Indent		Recuo Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Normal Table		Tabela Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Normal probability density		Densidade de Probabilidade Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Normal Indent		Recuo normal	nova	É um nome de estilo interno do Word.
+		Normal Table		Tabela normal	nova	É um nome de estilo interno do Word.
+		Normal probability density		Densidade de probabilidade normal	nova	É um rótulo da galeria de equações.
 		Number the equation; the number sits at the right margin (or type # then the number)		Numere a equação. O número fica na margem direita. Você também pode digitar # e o número.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		One half		Um Meio	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Operator Structures		Estruturas de Operadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Operators		Operadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Other Large Operators		Outros Operadores Grandes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Outward Brackets		Colchetes Externos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Overbar		Barra Superior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Overbars and Underbars		Barras Superiores e Inferiores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Overbrace		Chave Superior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Parentheses		Parênteses	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Parentheses with Separator		Parênteses com Separador	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Partial Differential		Diferencial Parcial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Pi Over 2		Pi sobre 2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Plain Table 1		Tabela Simples 1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Plus Equal		Mais Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Possible spelling mistake		Possível Erro de Ortografia	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Power series of (1+x)ⁿ		Série de Potências de (1+x)ⁿ	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Product		Produto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Product of A		Produto de a	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Product with Limits		Produto com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Product with Lower Limit		Produto com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Product with Subscript-Superscript Limits		Produto com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Products and Coproducts		Produtos e Coprodutos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Quadratic Root		Raiz Quadrática	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		One half		Um meio	nova	É um rótulo da galeria de equações.
+		Operator Structures		Estruturas de operadores	nova	É um rótulo da galeria de equações.
+		Operators		Operadores	nova	É um rótulo da galeria de equações.
+		Other Large Operators		Outros operadores grandes	nova	É um rótulo da galeria de equações.
+		Outward Brackets		Colchetes externos	nova	É um rótulo da galeria de equações.
+		Overbar		Barra superior	nova	É um rótulo da galeria de equações.
+		Overbars and Underbars		Barras superiores e inferiores	nova	É um rótulo da galeria de equações.
+		Overbrace		Chave superior	nova	É um rótulo da galeria de equações.
+		Parentheses		Parênteses	nova	É um rótulo da galeria de equações.
+		Parentheses with Separator		Parênteses com separador	nova	É um rótulo da galeria de equações.
+		Partial Differential		Diferencial parcial	nova	É um rótulo da galeria de equações.
+		Pi Over 2		Pi sobre 2	nova	É um rótulo da galeria de equações.
+		Plain Table 1		Tabela simples 1	nova	É um nome de estilo interno do Word.
+		Plus Equal		Mais igual	nova	É um rótulo da galeria de equações.
+		Possible spelling mistake		Possível erro de ortografia	nova	É uma mensagem do revisor de texto.
+		Power series of (1+x)ⁿ		Série de potências de (1+x)ⁿ	nova	É um rótulo da galeria de equações.
+		Product		Produto	nova	É um rótulo da galeria de equações.
+		Product of A		Produto de A	nova	É um rótulo da galeria de equações.
+		Product with Limits		Produto com limites	nova	É um rótulo da galeria de equações.
+		Product with Lower Limit		Produto com limite inferior	nova	É um rótulo da galeria de equações.
+		Product with Subscript-Superscript Limits		Produto com limites em subscrito e sobrescrito	nova	É um rótulo da galeria de equações.
+		Products and Coproducts		Produtos e coprodutos	nova	É um rótulo da galeria de equações.
+		Quadratic Root		Raiz quadrática	nova	É um rótulo da galeria de equações.
 		Quote		Citação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Radical with Degree		Radical com Índice	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Radicals		Radicais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Reference type:		Tipo de Referência:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Radical with Degree		Radical com índice	nova	É um rótulo da galeria de equações.
+		Radicals		Radicais	nova	É um rótulo da galeria de equações.
+		Reference type:		Tipo de referência:	nova	É um rótulo de diálogo.
 		Remove the space before the punctuation		Remover o espaço antes da pontuação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Right Arrow with Text Above		Seta para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Right Arrow with Text Below		Seta para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Right Bracket Twice		Colchete Direito Duplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Rightwards Arrow Above		Seta para a Direita Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Rightwards Harpoon Above		Arpão para a Direita Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Roots of ax²+bx+c		Raízes de Ax²+bx+c	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Right Arrow with Text Above		Seta para a direita com texto acima	nova	É um rótulo da galeria de equações.
+		Right Arrow with Text Below		Seta para a direita com texto abaixo	nova	É um rótulo da galeria de equações.
+		Right Bracket Twice		Colchete direito duplo	nova	É um rótulo da galeria de equações.
+		Rightwards Arrow Above		Seta para a direita acima	nova	É um rótulo da galeria de equações.
+		Rightwards Harpoon Above		Arpão para a direita acima	nova	É um rótulo da galeria de equações.
+		Roots of ax²+bx+c		Raízes de ax²+bx+c	nova	É um rótulo da galeria de equações.
 		SAMPLE		AMOSTRA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		SIST02		SIST02	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Scripts		Escritas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Secant Function		Função Secante	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		SIST02		SIST02	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
+		Scripts		Índices	nova	É um rótulo da galeria de equações.
+		Secant Function		Função secante	nova	É um rótulo da galeria de equações.
 		Show the equation in the line of text		Mostrar a equação na linha do texto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Show the equation on a line of its own		Mostrar a equação em uma linha própria	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Sides of a right triangle		Lados de um Triângulo Retângulo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Sine Function		Função Seno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Sine and cosine series of f(x)		Série de Seno e Cosseno de F(x)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Sine theta		Seno de Teta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Brackets		Colchetes Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Left Angle		Parêntese Angular Esquerdo Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Left Bar		Barra Esquerda Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Left Brace		Chave Esquerda Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Left Bracket		Colchete Esquerdo Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Left Parenthesis		Parêntese Esquerdo Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Right Brace		Chave Direita Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Right Bracket		Colchete Direito Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Single Right Parenthesis		Parêntese Direito Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Skewed Fraction		Fração Inclinada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Small change		Pequena Variação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Sparse Matrices		Matrizes Esparsas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Square Root		Raiz Quadrada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Square Root with Degree		Raiz Quadrada com Índice	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Square Union		União Quadrada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Stack Object		Objeto Empilhado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Stack Object (Three)		Objeto Empilhado (três)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Stacked Fraction		Fração Empilhada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Stacked, no bar		Empilhada, sem Barra	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sides of a right triangle		Lados de um triângulo retângulo	nova	É um rótulo da galeria de equações.
+		Sine Function		Função seno	nova	É um rótulo da galeria de equações.
+		Sine and cosine series of f(x)		Série de seno e cosseno de f(x)	nova	É um rótulo da galeria de equações.
+		Sine theta		Seno de teta	nova	É um rótulo da galeria de equações.
+		Single Brackets		Colchetes simples	nova	É um rótulo da galeria de equações.
+		Single Left Angle		Parêntese angular esquerdo simples	nova	É um rótulo da galeria de equações.
+		Single Left Bar		Barra esquerda simples	nova	É um rótulo da galeria de equações.
+		Single Left Brace		Chave esquerda simples	nova	É um rótulo da galeria de equações.
+		Single Left Bracket		Colchete esquerdo simples	nova	É um rótulo da galeria de equações.
+		Single Left Parenthesis		Parêntese esquerdo simples	nova	É um rótulo da galeria de equações.
+		Single Right Brace		Chave direita simples	nova	É um rótulo da galeria de equações.
+		Single Right Bracket		Colchete direito simples	nova	É um rótulo da galeria de equações.
+		Single Right Parenthesis		Parêntese direito simples	nova	É um rótulo da galeria de equações.
+		Skewed Fraction		Fração inclinada	nova	É um rótulo da galeria de equações.
+		Small change		Pequena variação	nova	É um rótulo da galeria de equações.
+		Sparse Matrices		Matrizes esparsas	nova	É um rótulo da galeria de equações.
+		Square Root		Raiz quadrada	nova	É um rótulo da galeria de equações.
+		Square Root with Degree		Raiz quadrada com índice	nova	É um rótulo da galeria de equações.
+		Square Union		União quadrada	nova	É um rótulo da galeria de equações.
+		Stack Object		Objeto empilhado	nova	É um rótulo da galeria de equações.
+		Stack Object (Three)		Objeto empilhado (três)	nova	É um rótulo da galeria de equações.
+		Stacked Fraction		Fração empilhada	nova	É um rótulo da galeria de equações.
+		Stacked, no bar		Empilhada, sem barra	nova	É um rótulo da galeria de equações.
 		Statement   5.50" × 8.50"		Declaração   5,50" × 8,50"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Strong		Forte	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Style: APA		Estilo: APA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Style: APA		Estilo: APA	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
 		Subject		Assunto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Subscript-Superscript		Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Subscripts and Superscripts		Subscritos e Sobrescritos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subscript-Superscript		Subscrito e sobrescrito	nova	É um rótulo da galeria de equações.
+		Subscripts and Superscripts		Subscritos e sobrescritos	nova	É um rótulo da galeria de equações.
 		Subtitle		Subtítulo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Subtle Emphasis		Ênfase Sutil	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Subtle Reference		Referência Sutil	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Sum of cosines		Soma de Cossenos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Sum or difference of sines		Soma ou Diferença de Senos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summation		Soma	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summation from 0 to n		Soma de 0 a N	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summation over binomials		Soma sobre Coeficientes Binomiais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summation with Limits		Soma com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summation with Lower Limit		Soma com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summation with Subscript Limit		Soma com Limite em Subscrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summation with Subscript-Superscript Limits		Soma com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Summations		Somas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Surface Integral		Integral de Superfície	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Surface Integral with Limits		Integral de Superfície com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Surface Integral with Stacked Limits		Integral de Superfície com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		TOA Heading		Título do Índice de Autoridades	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		TOC Heading		Título do Sumário	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subtle Emphasis		Ênfase sutil	nova	É um nome de estilo interno do Word.
+		Subtle Reference		Referência sutil	nova	É um nome de estilo interno do Word.
+		Sum of cosines		Soma de cossenos	nova	É um rótulo da galeria de equações.
+		Sum or difference of sines		Soma ou diferença de senos	nova	É um rótulo da galeria de equações.
+		Summation		Soma	nova	É um rótulo da galeria de equações.
+		Summation from 0 to n		Soma de 0 a n	nova	É um rótulo da galeria de equações.
+		Summation over binomials		Soma sobre coeficientes binomiais	nova	É um rótulo da galeria de equações.
+		Summation with Limits		Soma com limites	nova	É um rótulo da galeria de equações.
+		Summation with Lower Limit		Soma com limite inferior	nova	É um rótulo da galeria de equações.
+		Summation with Subscript Limit		Soma com limite em subscrito	nova	É um rótulo da galeria de equações.
+		Summation with Subscript-Superscript Limits		Soma com limites em subscrito e sobrescrito	nova	É um rótulo da galeria de equações.
+		Summations		Somas	nova	É um rótulo da galeria de equações.
+		Surface Integral		Integral de superfície	nova	É um rótulo da galeria de equações.
+		Surface Integral with Limits		Integral de superfície com limites	nova	É um rótulo da galeria de equações.
+		Surface Integral with Stacked Limits		Integral de superfície com limites empilhados	nova	É um rótulo da galeria de equações.
+		TOA Heading		Título do índice de autoridades	nova	É um nome de estilo interno do Word.
+		TOC Heading		Título do sumário	nova	É um nome de estilo interno do Word.
 		TOC {n}		Sumário {n}	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Table Grid		Grade da Tabela	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Table of Figures		Índice de Ilustrações	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Table Grid		Grade da tabela	nova	É um nome de estilo interno do Word.
+		Table of Figures		Índice de ilustrações	nova	É um nome de estilo interno do Word.
 		Tabloid   11.00" × 17.00"		Tabloide   11,00" × 17,00"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Tangent Function		Função Tangente	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Tangent formula		Fórmula da Tangente	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Text over Colon Equal		Texto sobre Dois-pontos Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Text over Equal		Texto sobre Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Tangent Function		Função tangente	nova	É um rótulo da galeria de equações.
+		Tangent formula		Fórmula da tangente	nova	É um rótulo da galeria de equações.
+		Text over Colon Equal		Texto sobre dois-pontos igual	nova	É um rótulo da galeria de equações.
+		Text over Equal		Texto sobre igual	nova	É um rótulo da galeria de equações.
 		The spelling and grammar check is complete.		A verificação ortográfica e gramatical foi concluída.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		This document has no bookmarks.		Este documento não tem indicadores.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Tilde		Til	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Tilde		Til	nova	É um rótulo da galeria de equações.
 		Track\nChanges		Controlar\nAlterações	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Track\nChanges ✓		Controlar\nAlterações ✓	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Trigonometric Functions		Funções Trigonométricas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Triple Dot		Ponto Triplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Triple Integral		Integral Tripla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Triple Integral with Limits		Integral Tripla com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Triple Integral with Stacked Limits		Integral Tripla com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Turabian		Turabian	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Trigonometric Functions		Funções trigonométricas	nova	É um rótulo da galeria de equações.
+		Triple Dot		Ponto triplo	nova	É um rótulo da galeria de equações.
+		Triple Integral		Integral tripla	nova	É um rótulo da galeria de equações.
+		Triple Integral with Limits		Integral tripla com limites	nova	É um rótulo da galeria de equações.
+		Triple Integral with Stacked Limits		Integral tripla com limites empilhados	nova	É um rótulo da galeria de equações.
+		Turabian		Turabian	nova	É um estilo bibliográfico exibido no gerenciador de fontes.
 		Type a page number, or +2 / -1.		Digite um número de página ou +2 / -1.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Type equations in LaTeX		Digite equações em LaTeX	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Type equations in the linear format (UnicodeMath)		Digite equações no formato linear (UnicodeMath)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Type normal (non-math) text in the equation		Digite texto normal (não matemático) na equação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Typing		Digitação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		URGENT		URGENTE	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Underbar		Barra Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Underbrace		Chave Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Union		União	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Union of intersections		União de Interseções	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Union with Limits		União com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Union with Lower Limit		União com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Union with Plus		União com Mais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Union with Subscript-Superscript Limits		União com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Unions and Intersections		Uniões e Interseções	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Up Diagonal Dots		Pontos Diagonais Ascendentes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Underbar		Barra inferior	nova	É um rótulo da galeria de equações.
+		Underbrace		Chave inferior	nova	É um rótulo da galeria de equações.
+		Union		União	nova	É um rótulo da galeria de equações.
+		Union of intersections		União de interseções	nova	É um rótulo da galeria de equações.
+		Union with Limits		União com limites	nova	É um rótulo da galeria de equações.
+		Union with Lower Limit		União com limite inferior	nova	É um rótulo da galeria de equações.
+		Union with Plus		União com mais	nova	É um rótulo da galeria de equações.
+		Union with Subscript-Superscript Limits		União com limites em subscrito e sobrescrito	nova	É um rótulo da galeria de equações.
+		Unions and Intersections		Uniões e interseções	nova	É um rótulo da galeria de equações.
+		Up Diagonal Dots		Pontos diagonais ascendentes	nova	É um rótulo da galeria de equações.
 		Use "a" before a consonant sound		Use "a" antes de som de consoante	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Use "an" before a vowel sound		Use "an" antes de som de vogal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Vector A		Vetor a	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Vector AB		Vetor AB	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Vertical Bars		Barras Verticais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Vertical Dots		Pontos Verticais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Volume Integral		Integral de Volume	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Volume Integral with Limits		Integral de Volume com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Volume Integral with Stacked Limits		Integral de Volume com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Vector A		Vetor A	nova	É um rótulo da galeria de equações.
+		Vector AB		Vetor AB	nova	É um rótulo da galeria de equações.
+		Vertical Bars		Barras verticais	nova	É um rótulo da galeria de equações.
+		Vertical Dots		Pontos verticais	nova	É um rótulo da galeria de equações.
+		Volume Integral		Integral de volume	nova	É um rótulo da galeria de equações.
+		Volume Integral with Limits		Integral de volume com limites	nova	É um rótulo da galeria de equações.
+		Volume Integral with Stacked Limits		Integral de volume com limites empilhados	nova	É um rótulo da galeria de equações.
 		Wait for the print job to finish submitting before closing.		Aguarde a conclusão do envio do trabalho de impressão antes de fechar.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Wildcards (regex)		Caracteres curinga (regex)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Yields		Resulta em	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		n×n Identity Matrix		Matriz de Identidade N×n	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		n×n Matrix		Matriz N×n	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		tOGGLE cASE		ALTERNAR MAIÚSCULAS/Minúsculas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		x bar		x com barra	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Yields		Resulta em	nova	É um rótulo da galeria de equações.
+		n×n Identity Matrix		Matriz de identidade n×n	nova	É um rótulo da galeria de equações.
+		n×n Matrix		Matriz n×n	nova	É um rótulo da galeria de equações.
+		tOGGLE cASE		aLTERNAR mAIÚSCULAS/minúsculas	nova	É um rótulo da galeria de equações.
+		x bar		x com barra	nova	É um rótulo da galeria de equações.
 		✓ None		✓ Nenhum	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		➕ New comment		➕ Novo Comentário	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		➕ New comment		➕ Novo comentário	nova	É um rótulo curto do comando de comentário.
 		📂  Browse…		📂  Procurar…	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 	preview	Title		Título	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 	template	Letter		Carta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Bookmarks		Indicadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Bookmarks		Indicadores	nova	É um texto da área de recuperação do Backstage.
 		Continue without restoring		Continuar sem restaurar	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Couldn't save {name}, so it is still open and nothing was lost: {error}		Não foi possível salvar {name}, então ele continua aberto e nada foi perdido: {error}	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Crop on the page works on unturned pictures: set Rotation to 0° first, or use the crop boxes		O recorte na página funciona em imagens sem rotação. Primeiro defina Rotação como 0° ou use as caixas de recorte	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Discard		Descartar	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Discard the recovery copy of {name}?		Descartar a cópia de recuperação de {name}?	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Discard		Descartar	nova	É um texto da área de recuperação do Backstage.
+		Discard the recovery copy of {name}?		Descartar a cópia de recuperação de {name}?	nova	É um texto da área de recuperação do Backstage.
 		Discard…		Descartar…	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Local recovery is unavailable or still loading.		A recuperação local está indisponível ou ainda carregando.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		No recovery copies.		Nenhuma cópia de recuperação.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Local recovery is unavailable or still loading.		A recuperação local está indisponível ou ainda carregando.	nova	É um texto da área de recuperação do Backstage.
+		No recovery copies.		Nenhuma cópia de recuperação.	nova	É um texto da área de recuperação do Backstage.
 		Nothing of this type in the document.		Não há nada desse tipo no documento.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Recover documents		Recuperar Documentos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Recovery copy		Cópia de Recuperação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Recovery is disabled while this document has a password.		A recuperação está desativada enquanto este documento tem uma senha.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Restore		Restaurar	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Recover documents		Recuperar documentos	nova	É um texto da área de recuperação do Backstage.
+		Recovery copy		Cópia de recuperação	nova	É um texto da área de recuperação do Backstage.
+		Recovery is disabled while this document has a password.		A recuperação está desativada enquanto este documento tem uma senha.	nova	É um texto da área de recuperação do Backstage.
+		Restore		Restaurar	nova	É um texto da área de recuperação do Backstage.
 		Restore opens an unsaved copy. Your original file stays unchanged.		Restaurar abre uma cópia não salva. O arquivo original permanece inalterado.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
-		Select a place in this document:		Selecione um local neste documento:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Select a place in this document:		Selecione um local neste documento:	nova	É um rótulo de diálogo.
 		This cannot be undone. Your original file stays unchanged.		Não é possível desfazer esta ação. O arquivo original permanece inalterado.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Top of the Document		Início do documento	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
 		Type a command, e.g. \"insert table\"		Digite um comando, por exemplo \"insert table\"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.

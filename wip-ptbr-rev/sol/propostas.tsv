@@ -91,7 +91,6 @@
 1447		Makes the ribbon, menus and dialogs larger or smaller. Auto follows your system's display scaling; 100% is one screen pixel per point. Document zoom is separate.	Aumenta ou diminui a faixa de opções, os menus e as caixas de diálogo. Auto segue a escala de exibição do sistema; 100% é um pixel da tela por ponto. O zoom do documento é separado.	Aumenta ou diminui a faixa de opções. A mesma escala vale para os menus e as caixas de diálogo. A opção Automático segue a escala de exibição do sistema. Em 100%, cada ponto equivale a um pixel da tela. O zoom do documento é separado.	gramatica	A descrição passa a usar o rótulo Automático e uma redação mais natural.
 1448		Resize Table by Dragging	Redimensionar tabela arrastando	Redimensionar Tabela Arrastando	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
 1449		Print Markup	Imprimir marcação	Imprimir Marcação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
-1466		Correct TWo INitial CApitals	Corrigir DUas INiciais MAiúsculas	Corrigir DUAS INICIAIS MAIÚSCULAS	gramatica	A opção de autocorreção precisa manter MAIÚSCULAS com acento.
 1467		Correct accidental usage of cAPS LOCK key	Corrigir o uso acidental da tecla cAPS LOCK	Corrigir o uso acidental da tecla CAPS LOCK	gramatica	CAPS LOCK é o nome correto da tecla.
 1469		Case changes	Alterações de maiúsculas	Alterações de maiúsculas e minúsculas	sentido	A opção trata das duas formas de uso de caixa.
 1472		Combine Documents	Combinar documentos	Combinar Documentos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
@@ -116,7 +115,7 @@
 1596		Alt\nText	Texto\nalternativo	Texto\nAlternativo	maiuscula	O botão da faixa usa o nome do recurso em duas linhas.
 1597		View Alt Text…	Exibir texto alternativo…	Exibir Texto Alternativo…	maiuscula	É o botão da faixa que abre o painel de texto alternativo.
 1608		Document Grid	Grade do documento	Grade do Documento	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
-1619		Rich Text Content Control	Controle de conteúdo de rich text	Controle de conteúdo de texto formatado	ingles	O nome do controle não deve deixar rich text em inglês.
+1619		Rich Text Content Control	Controle de conteúdo de rich text	Controle de Conteúdo de Texto Formatado	ingles	O nome do controle traduz rich text e segue a capitalização de um recurso da guia Desenvolvedor.
 1620		Plain Text Content Control	Controle de conteúdo de texto sem formatação	Controle de Conteúdo de Texto sem Formatação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
 1621		Picture Content Control	Controle de conteúdo de imagem	Controle de Conteúdo de Imagem	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
 1622		Building Block Gallery Content Control	Controle de conteúdo da galeria de blocos de construção	Controle de Conteúdo da Galeria de Blocos de Construção	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
