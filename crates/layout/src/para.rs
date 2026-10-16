@@ -1624,7 +1624,13 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
     let shrink_spaces = rp.align == Align::Justify && env.doc.settings.compat_mode >= wordcraft_doc::COMPAT_MODE_CURRENT;
     let hanging_at = if rp.indent_first < 0.0 { Some(rp.indent_left) } else { None };
     // Hyphenation Options: the zone, and how many lines in a row may end with a hyphen.
-    let zone = Some(env.doc.settings.hyphenation_zone).filter(|z| z.is_finite() && *z >= 0.0).unwrap_or(HYPHENATION_ZONE).min(1584.0);
+    // Word 2013+ (compatibility mode 15) has no zone: it hyphenates whenever the part before the
+    // hyphen fits (measured in Word for Mac: the same breaks with a zone of 18 pt and of 36 pt).
+    let zone = if env.doc.settings.compat_mode >= wordcraft_doc::COMPAT_MODE_CURRENT {
+        0.0
+    } else {
+        Some(env.doc.settings.hyphenation_zone).filter(|z| z.is_finite() && *z >= 0.0).unwrap_or(HYPHENATION_ZONE).min(1584.0)
+    };
     let hyph_limit = env.doc.settings.consecutive_hyphen_limit as usize;
     let n = pl.clusters.len();
     // A right-to-left paragraph is laid out from its start edge, as if mirrored: indents, tabs,
