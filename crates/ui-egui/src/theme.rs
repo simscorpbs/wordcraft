@@ -234,8 +234,11 @@ impl From<Animations> for String {
 pub struct Tokens {
     pub dark: bool,
     pub title_bar: Color32,
+    pub title_bar_inactive: Color32,
     pub ribbon: Color32,
+    pub ribbon_inactive: Color32,
     pub tab_strip: Color32,
+    pub tab_strip_inactive: Color32,
     pub canvas: Color32,
     pub panel: Color32,
     pub border: Color32,
@@ -282,12 +285,15 @@ impl Tokens {
     pub fn light() -> Self {
         Tokens {
             dark: false,
-            title_bar: Color32::from_rgb(0xF0, 0xF0, 0xF0),
-            ribbon: Color32::from_rgb(0xF9, 0xF9, 0xF9),
-            tab_strip: Color32::from_rgb(0xF0, 0xF0, 0xF0),
-            canvas: Color32::from_rgb(0xE6, 0xE6, 0xE6),
+            title_bar: Color32::from_rgb(0xF2, 0xF2, 0xF2),
+            title_bar_inactive: Color32::from_rgb(0xE3, 0xE3, 0xE3),
+            ribbon: Color32::from_rgb(0xF2, 0xF2, 0xF2),
+            ribbon_inactive: Color32::from_rgb(0xE3, 0xE3, 0xE3),
+            tab_strip: Color32::from_rgb(0xF2, 0xF2, 0xF2),
+            tab_strip_inactive: Color32::from_rgb(0xE3, 0xE3, 0xE3),
+            canvas: Color32::from_rgb(0xE7, 0xE7, 0xE7),
             panel: Color32::from_rgb(0xFA, 0xFA, 0xFA),
-            border: Color32::from_rgb(0xE1, 0xE1, 0xE1),
+            border: Color32::from_rgb(0xC1, 0xC1, 0xC1),
             border_strong: Color32::from_rgb(0xC8, 0xC8, 0xC8),
             text: Color32::from_rgb(0x24, 0x24, 0x24),
             text_dim: Color32::from_rgb(0x61, 0x61, 0x61),
@@ -295,7 +301,7 @@ impl Tokens {
             icon: Color32::from_rgb(0x42, 0x42, 0x42),
             hover: Color32::from_rgb(0xE6, 0xE6, 0xE6),
             pressed: Color32::from_rgb(0xD6, 0xD6, 0xD6),
-            checked: Color32::from_rgb(0xDD, 0xE3, 0xF8),
+            checked: Color32::from_rgb(0xB7, 0xB7, 0xB7),
             accent: APP_COLOR,
             accent_text: APP_INK,
             on_accent: Color32::WHITE,
@@ -303,9 +309,9 @@ impl Tokens {
             input_border: Color32::from_rgb(0x8A, 0x8A, 0x8A),
             group_label: Color32::from_rgb(0x70, 0x70, 0x70),
             ruler: Color32::from_rgb(0xFF, 0xFF, 0xFF),
-            ruler_margin: Color32::from_rgb(0xD4, 0xD4, 0xD4),
-            ruler_tick: Color32::from_rgb(0x70, 0x70, 0x70),
-            status_bar: Color32::from_rgb(0xF0, 0xF0, 0xF0),
+            ruler_margin: Color32::from_rgb(0xD9, 0xD9, 0xD9),
+            ruler_tick: Color32::from_rgb(0x63, 0x63, 0x63),
+            status_bar: Color32::from_rgb(0xF2, 0xF2, 0xF2),
             selection: Color32::from_rgba_unmultiplied(0x3B, 0x5B, 0xDB, 0x48),
             find_highlight: Color32::from_rgba_unmultiplied(0xFF, 0xE0, 0x3D, 0x90),
             page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x22),
@@ -325,8 +331,11 @@ impl Tokens {
         Tokens {
             dark: true,
             title_bar: Color32::from_rgb(0x1F, 0x1F, 0x1F),
+            title_bar_inactive: Color32::from_rgb(0x1F, 0x1F, 0x1F),
             ribbon: Color32::from_rgb(0x29, 0x29, 0x29),
+            ribbon_inactive: Color32::from_rgb(0x29, 0x29, 0x29),
             tab_strip: Color32::from_rgb(0x1F, 0x1F, 0x1F),
+            tab_strip_inactive: Color32::from_rgb(0x1F, 0x1F, 0x1F),
             canvas: Color32::from_rgb(0x14, 0x14, 0x14),
             panel: Color32::from_rgb(0x26, 0x26, 0x26),
             border: Color32::from_rgb(0x3A, 0x3A, 0x3A),
@@ -366,7 +375,13 @@ impl Tokens {
         }
     }
     pub fn get(ctx: &egui::Context) -> Tokens {
-        if ctx.global_style().visuals.dark_mode { Tokens::dark() } else { Tokens::light() }
+        let tokens = if ctx.global_style().visuals.dark_mode { Tokens::dark() } else { Tokens::light() };
+        let focused = ctx.input(|i| i.viewport().focused != Some(false));
+        if cfg!(target_os = "macos") && !focused {
+            Tokens { title_bar: tokens.title_bar_inactive, ribbon: tokens.ribbon_inactive, tab_strip: tokens.tab_strip_inactive, ..tokens }
+        } else {
+            tokens
+        }
     }
 }
 
@@ -765,6 +780,23 @@ mod tests {
             let r = contrast(t.ruler_tick, t.ruler);
             assert!(r >= 4.5, "dark={}: ruler numbers on the text area are {r:.2}:1", t.dark);
         }
+    }
+
+    #[test]
+    fn word_mac_light_palette_tokens_are_fixed() {
+        let t = super::Tokens::light();
+        assert_eq!(t.title_bar, egui::Color32::from_rgb(0xF2, 0xF2, 0xF2));
+        assert_eq!(t.title_bar_inactive, egui::Color32::from_rgb(0xE3, 0xE3, 0xE3));
+        assert_eq!(t.tab_strip, egui::Color32::from_rgb(0xF2, 0xF2, 0xF2));
+        assert_eq!(t.tab_strip_inactive, egui::Color32::from_rgb(0xE3, 0xE3, 0xE3));
+        assert_eq!(t.ribbon, egui::Color32::from_rgb(0xF2, 0xF2, 0xF2));
+        assert_eq!(t.ribbon_inactive, egui::Color32::from_rgb(0xE3, 0xE3, 0xE3));
+        assert_eq!(t.canvas, egui::Color32::from_rgb(0xE7, 0xE7, 0xE7));
+        assert_eq!(t.status_bar, egui::Color32::from_rgb(0xF2, 0xF2, 0xF2));
+        assert_eq!(t.ruler_margin, egui::Color32::from_rgb(0xD9, 0xD9, 0xD9));
+        assert_eq!(t.ruler_tick, egui::Color32::from_rgb(0x63, 0x63, 0x63));
+        assert_eq!(t.border, egui::Color32::from_rgb(0xC1, 0xC1, 0xC1));
+        assert_eq!(t.checked, egui::Color32::from_rgb(0xB7, 0xB7, 0xB7));
     }
 
     /// #565: the composition of an input method (Bangla through ibus) drew as boxes because only the
