@@ -432,6 +432,35 @@ pub fn now_iso() -> String {
     iso_from_unix_secs(now_unix())
 }
 
+/// The local time zone's offset from UTC, in seconds, at `unix` (seconds since 1970-01-01 UTC):
+/// the system time zone natively, the browser's on the web; 0 when it can't be told.
+pub fn local_offset_secs(unix: u64) -> i64 {
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let Ok(at) = jiff::Timestamp::from_second(i64::try_from(unix).unwrap_or(0)) else { return 0 };
+        i64::from(jiff::tz::TimeZone::system().to_offset(at).seconds())
+    }
+    #[cfg(target_arch = "wasm32")]
+    {
+        // `getTimezoneOffset` is UTC minus local, in minutes (now: the browser's clock is now).
+        let _ = unix;
+        let mins = js_sys::Date::new_0().get_timezone_offset();
+        if mins.is_finite() && mins.abs() <= 24.0 * 60.0 { -(mins as i64) * 60 } else { 0 }
+    }
+}
+
+/// Seconds since 1970-01-01 in local time (UTC shifted by the local offset): what date and time
+/// fields show, as Word's do.
+pub fn now_local_unix() -> u64 {
+    let now = now_unix();
+    now.saturating_add_signed(local_offset_secs(now))
+}
+
+/// ISO-8601 local date and time (no zone designator), for what the user reads as "now".
+pub fn now_local_iso() -> String {
+    iso_from_unix_secs(now_local_unix()).trim_end_matches('Z').to_string()
+}
+
 /// Days since 1970-01-01 → (year, month, day) (Howard Hinnant's algorithm).
 pub fn civil_from_days(z: i64) -> (i64, u32, u32) {
     let z = z + 719_468;

@@ -796,14 +796,14 @@ pub fn format_date(fmt: &str) -> String {
 /// Format today's date with a Word picture, month and weekday names in the language `lang` (a
 /// tag such as `pt-BR`; English when `None` or a language without names here).
 pub fn format_date_in(fmt: &str, lang: Option<&str>) -> String {
-    let iso = super::now_iso();
+    let iso = super::now_local_iso();
     let y: i64 = iso.get(0..4).and_then(|x| x.parse().ok()).unwrap_or(2026);
     let m: usize = iso.get(5..7).and_then(|x| x.parse().ok()).unwrap_or(1);
     let d: u32 = iso.get(8..10).and_then(|x| x.parse().ok()).unwrap_or(1);
     let hh: u32 = iso.get(11..13).and_then(|x| x.parse().ok()).unwrap_or(0);
     let mm: u32 = iso.get(14..16).and_then(|x| x.parse().ok()).unwrap_or(0);
     let ss: u32 = iso.get(17..19).and_then(|x| x.parse().ok()).unwrap_or(0);
-    format_date_parts_in(fmt, lang, y, m, d, (hh, mm, ss), (super::now_unix() / 86_400) as i64)
+    format_date_parts_in(fmt, lang, y, m, d, (hh, mm, ss), (super::now_local_unix() / 86_400) as i64)
 }
 
 /// Month and weekday names of a language, as Word writes them in date fields: full names, the
@@ -1224,5 +1224,17 @@ mod tests {
         assert_eq!(default_date_picture(None), "M/d/yyyy");
         // An unclosed quote runs to the end; two quotes inside are one.
         assert_eq!(f("d 'it''s"), "15 it's");
+    }
+
+    /// Date fields show local time, as Word's do (a field updated late in the evening in Brazil
+    /// showed tomorrow's UTC date): the offset is the system zone's, within a real zone's range.
+    #[test]
+    fn date_fields_use_local_time() {
+        let now = crate::cmd::now_unix();
+        let off = crate::cmd::local_offset_secs(now);
+        assert!(off.abs() <= 14 * 3600, "{off}");
+        let local = crate::cmd::now_local_iso();
+        assert_eq!(local.len(), 19, "{local}");
+        assert!(!local.ends_with('Z'));
     }
 }
