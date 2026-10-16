@@ -3481,6 +3481,62 @@ fn justified_lines_shrink_spaces_in_word_2013_mode() {
     }
 }
 
+/// Where `word` (the last word of `lead`) starts and ends, and the width of a space, on one
+/// natural left-aligned line; and the line (from 1) `word` lands on when `lead` + " seguinte
+/// linha de texto" is justified in mode 15 and `word` would reach `overhang` points past the
+/// right margin.
+fn justified_overhang(lead: &str, word: &str, overhang: f32) -> (f32, f32, usize) {
+    let ends = |d: &Document| {
+        let l = lay(d);
+        let mut out = Vec::new();
+        for it in l.pages.iter().flat_map(|p| p.items.iter()) {
+            if let Placed::Lines { para, x, .. } = it {
+                let at = lead.len() - word.len();
+                out = vec![para.x_of(0, at).unwrap() + x, para.x_of(0, lead.len()).unwrap() + x, para.x_of(0, at - 1).unwrap() + x];
+            }
+        }
+        out
+    };
+    let natural = ends(&Document::from_text(lead));
+    let (start, end, space) = (natural[0], natural[1], natural[0] - natural[2]);
+    let text = format!("{lead} seguinte linha de texto");
+    let mut d = Document::from_text(&text);
+    d.settings.compat_mode = 15;
+    let indent = 540.0 - end + overhang;
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| {
+        p.align = Some(Align::Justify);
+        p.indent_right = Some(indent);
+    })
+    .unwrap();
+    let at = lead.len() - word.len();
+    let l = lay(&d);
+    let line = l.pages.iter().flat_map(|p| p.items.iter()).find_map(|it| match it {
+        Placed::Lines { para, .. } => para.lines.iter().position(|li| li.start <= at && at < li.stop),
+        _ => None,
+    });
+    (end - start, space, line.unwrap() + 1)
+}
+
+#[test]
+fn justified_lines_keep_a_word_while_two_thirds_of_it_fit() {
+    // Many spaces: room to spare, so the word itself is the limit (Word for Mac: 0.341–0.345 of
+    // the word and the space before it may hang past the margin).
+    let lead = format!("{}mostre", "a ".repeat(40));
+    let (w, space, _) = justified_overhang(&lead, "mostre", 0.0);
+    assert_eq!(justified_overhang(&lead, "mostre", 0.30 * (w + space)).2, 1, "the word stays, squeezed in");
+    assert_eq!(justified_overhang(&lead, "mostre", 0.38 * (w + space)).2, 2, "more than a third hangs: the word drops");
+}
+
+#[test]
+fn justified_lines_shrink_spaces_to_three_quarters_at_most() {
+    // Few spaces: they may give up a quarter of their width, no more (Word for Mac).
+    let lead = "Excelência Requerida conduta mostre";
+    let (_, space, _) = justified_overhang(lead, "mostre", 0.0);
+    let room = 0.25 * 3.0 * space;
+    assert_eq!(justified_overhang(lead, "mostre", room - 0.1).2, 1, "spaces at 75%: the word stays");
+    assert_eq!(justified_overhang(lead, "mostre", room + 0.1).2, 2, "spaces below 75%: the word drops");
+}
+
 #[test]
 fn space_shrinking_is_only_for_justified_text() {
     let text = "We tie the spend to a pipe and to the books, so it is in an ad hoc view of all of it. ".repeat(40);
