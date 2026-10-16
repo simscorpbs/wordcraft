@@ -263,7 +263,7 @@ pub fn hyphen_points_in(word: &str, lim: &Limits, lang: ProofLang) -> Vec<usize>
         return pts;
     }
     let min_before = lim.after_first.max(1);
-    let min_after = lim.before_last.max(1);
+    let min_after = lim.before_last.max(min_after_hyphen(lang));
     // Counted once, so each point's checks take constant time however long the word: letters and
     // uppercase letters before each char, and the letter run (trimmed of apostrophes) of each char.
     let (mut letters, mut upper) = (Vec::with_capacity(chars.len() + 1), Vec::with_capacity(chars.len() + 1));
@@ -315,6 +315,17 @@ pub fn hyphen_points_in(word: &str, lim: &Limits, lang: ProofLang) -> Vec<usize>
             count(&letters, a, p) >= min_before && count(&letters, p, b) >= min_after
         })
         .collect()
+}
+
+/// The fewest letters a language's hyphenation leaves after the hyphen, whatever the paragraph's
+/// limits: Portuguese carries at least three letters to the next line (Word hyphenates
+/// "Hori-zonte", never "Horizon-te"; TeX's Portuguese patterns use the same minimum). One for
+/// the others, which the paragraph's limits then decide.
+pub fn min_after_hyphen(lang: ProofLang) -> usize {
+    match lang {
+        ProofLang::Pt => 3,
+        _ => 1,
+    }
 }
 
 /// `word` with `-` at every hyphenation point (tests and diagnostics).
@@ -736,8 +747,10 @@ mod tests {
         assert_eq!(p.exception("nigdy"), Some(&[2][..]));
     }
 
+    /// Every syllable break of a Portuguese word (before any limits).
     fn pt(w: &str) -> String {
-        hyphenate_word_in(w, &Limits::default(), ProofLang::Pt)
+        let (pts, _) = word_breaks_in(w, ProofLang::Pt);
+        w.chars().enumerate().flat_map(|(i, c)| if pts.contains(&i) { vec!['-', c] } else { vec![c] }).collect()
     }
 
     fn it(w: &str) -> String {
@@ -806,6 +819,21 @@ mod tests {
         ] {
             assert_eq!(pt(w), want, "{w}");
         }
+    }
+
+    /// Word never leaves fewer than three letters after the hyphen in Portuguese ("Belo
+    /// Hori-zonte", "Consti-tuição" in a pt-BR letter), whatever the paragraph allows.
+    #[test]
+    fn portuguese_hyphenation_carries_at_least_three_letters() {
+        let lim = Limits::default();
+        let w = |w: &str| hyphenate_word_in(w, &lim, ProofLang::Pt);
+        assert_eq!(w("Horizonte"), "Ho-ri-zonte");
+        assert_eq!(w("problema"), "pro-blema");
+        assert_eq!(w("Constituição"), "Cons-ti-tu-i-ção");
+        assert_eq!(w("Requerida"), "Re-que-rida");
+        // English keeps the paragraph's two.
+        assert_eq!(hyphenate_word_in("hyphenation", &lim, ProofLang::En), hyphenate_word("hyphenation", &lim));
+        assert_eq!(min_after_hyphen(ProofLang::En), 1);
     }
 
     #[test]
