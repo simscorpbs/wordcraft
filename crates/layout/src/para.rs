@@ -1748,6 +1748,10 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
         let mut pending_tab: Option<(usize, TabStop, f32)> = None; // tab cluster, stop, x where tab started
         let mut space_w = 0.0f32; // width of the spaces so far on this line
         let mut has_tab = false;
+        // The word being placed on a justified line: its last cluster and how far it may reach
+        // past the margin (`MAX_WORD_OVERHANG` of it and the space before it).
+        let mut word_end: Option<usize> = None;
+        let mut word_overhang = f32::MAX;
         while j < n {
             let Some(c) = pl.clusters.get(j).cloned() else { break };
             match c.kind {
@@ -1816,7 +1820,16 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
                     _ => false,
                 }
             });
-            let shrink = if shrink_spaces && !has_tab { space_w * MAX_SPACE_SHRINK } else { 0.0 };
+            let mut shrink = if shrink_spaces && !has_tab { space_w * MAX_SPACE_SHRINK } else { 0.0 };
+            if shrink > 0.0 && c.kind == ClKind::Text {
+                if word_end.is_none_or(|e| j > e) {
+                    let (end, w) = word_extent(pl, j);
+                    let before = j.checked_sub(1).and_then(|k| pl.clusters.get(k)).filter(|p| p.kind == ClKind::Space).map_or(0.0, |p| p.adv);
+                    word_end = Some(end);
+                    word_overhang = MAX_WORD_OVERHANG * (w + before);
+                }
+                shrink = shrink.min(word_overhang);
+            }
             let fits = absorbs || x + c.adv <= right_edge + shrink + 0.01 || c.kind == ClKind::Space || c.kind == ClKind::Marker;
             // A line's first item stays on it even when it doesn't fit; markers before it
             // (a content control's start, a bookmark) take no room and don't count (Word).
@@ -2365,8 +2378,34 @@ fn row_spans(exclusions: &[Exclusion], top: f32, h: f32, lo: f32, hi: f32) -> Re
 const HYPHENATION_ZONE: f32 = wordcraft_doc::DEFAULT_HYPHENATION_ZONE;
 
 /// How much of their width the spaces of a justified line may give up to fit more text (Word
-/// 2013+, compatibility mode 15).
-const MAX_SPACE_SHRINK: f32 = 0.2;
+/// 2013+, compatibility mode 15). Measured in Word for Mac: with few spaces on the line, the last
+/// word stays while the spaces keep 75% of their width, and drops when they'd need less.
+const MAX_SPACE_SHRINK: f32 = 0.25;
+
+/// How much of a word (with the space before it) may reach past the margin of a justified line
+/// for the spaces to pull it back in. Measured in Word for Mac: with many spaces on the line the
+/// last word stays only while roughly two thirds of it fit, whatever room the spaces have left
+/// (words of 7–61 pt on lines of 24–29 spaces all switch at 0.341–0.345).
+const MAX_WORD_OVERHANG: f32 = 0.344;
+
+/// The last cluster of the word starting at cluster `j`, and the word's width: it runs to the
+/// next space, tab, break or object, or through the next cluster after which a line may break
+/// (a hyphenation point doesn't end it).
+fn word_extent(pl: &ParaLayout, j: usize) -> (usize, f32) {
+    let mut end = j;
+    let mut w = 0.0;
+    for (k, c) in pl.clusters.iter().enumerate().skip(j) {
+        if !matches!(c.kind, ClKind::Text | ClKind::Marker) {
+            break;
+        }
+        end = k;
+        w += c.adv;
+        if c.break_after && pl.hyph_after.binary_search(&(k as u32)).is_err() {
+            break;
+        }
+    }
+    (end, w)
+}
 
 /// Take `-slack` (an overflow) out of the line's inner spaces, in proportion to their widths and
 /// never more than [`MAX_SPACE_SHRINK`] of them. Trailing spaces hang and are left alone.
