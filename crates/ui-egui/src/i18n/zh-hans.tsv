@@ -77,6 +77,22 @@
 	AutoSave	自动保存
 	AutoSave documents you have saved in WordCraft	自动保存在 WordCraft 中保存过的文档
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	自动保存失败：{error}。重新保存文档后将恢复自动保存。
+	{name} was moved or deleted elsewhere	{name} 已在其他位置移动或删除
+	{name} was changed on another device	{name} 已在其他设备上更改
+	AutoSave stopped so that neither version is lost.	自动保存已停止，以免丢失任何版本。
+	Keep both saves this version as a copy beside the other.	保留两个版本，将此版本作为副本保存在另一个版本旁边。
+	Save it here again	再次保存到此处
+	Keep both	保留两个版本
+	Keep this version	保留此版本
+	Open the other version	打开另一个版本
+	Decide later	稍后决定
+	Where should AutoSave keep this document?	自动保存应将此文档保留在哪里？
+	Other location…	其他位置…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	自动保存已暂停：此文件已在其他设备上更改。点击以选择要保留的版本。
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	自动保存已暂停：此文件已在其他位置移动或删除。点击以选择操作。
+	Cloud Status	云状态
+	Save to Cloud	保存到云端
+	Resolve Save Conflict	解决保存冲突
 	Balloons	批注框
 	Bottom Margin	下边距
 	Centimeters	厘米

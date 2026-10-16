@@ -982,6 +982,22 @@
 	Normal speed	Tốc độ bình thường
 	AutoSave documents you have saved in WordCraft	Tự động lưu các tài liệu bạn đã lưu trong WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Không thể tự động lưu: {error}. Hãy lưu tài liệu để bật lại tính năng này.
+	{name} was moved or deleted elsewhere	{name} đã được chuyển hoặc xóa ở nơi khác
+	{name} was changed on another device	{name} đã được thay đổi trên thiết bị khác
+	AutoSave stopped so that neither version is lost.	Đã dừng Tự động lưu để không mất phiên bản nào.
+	Keep both saves this version as a copy beside the other.	Giữ cả hai bằng cách lưu phiên bản này thành bản sao bên cạnh phiên bản kia.
+	Save it here again	Lưu lại tại đây
+	Keep both	Giữ cả hai
+	Keep this version	Giữ phiên bản này
+	Open the other version	Mở phiên bản kia
+	Decide later	Quyết định sau
+	Where should AutoSave keep this document?	Tự động lưu nên giữ tài liệu này ở đâu?
+	Other location…	Vị trí khác…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Tự động lưu đang tạm dừng: tệp này đã được thay đổi trên thiết bị khác. Nhấp để chọn phiên bản cần giữ.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Tự động lưu đang tạm dừng: tệp này đã được chuyển hoặc xóa ở nơi khác. Nhấp để chọn việc cần làm.
+	Cloud Status	Trạng thái đám mây
+	Save to Cloud	Lưu vào đám mây
+	Resolve Save Conflict	Giải quyết xung đột lưu
 	Couldn't download {name}: {error}	Không tải được {name}: {error}
 	Do you want to save changes to {name}?	Bạn có muốn lưu các thay đổi vào {name}?
 	Don't Save	Không lưu

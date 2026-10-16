@@ -1523,6 +1523,19 @@ fn apply_font(app: &mut WordApp, d: &Dialog) {
     }
 }
 
+/// Pick a non-conflicting `.docx` path in a provider's save folder.
+fn cloud_path(root: &wordcraft_engine::cloud::CloudRoot, name: &str) -> String {
+    let name = name.trim();
+    let stem = name.rsplit_once('.').filter(|(_, extension)| extension.eq_ignore_ascii_case("docx")).map_or(name, |(stem, _)| stem.trim());
+    let stem = if stem.is_empty() { "Document" } else { stem };
+    let dir = root.save_dir();
+    let path = match wordcraft_engine::cloud::unique_path(&dir, stem, "docx") {
+        Some(path) => path,
+        None => dir.join(format!("{stem}.docx")),
+    };
+    path.to_string_lossy().into_owned()
+}
+
 /// Returns true to close.
 fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     match d {
@@ -2488,7 +2501,8 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             });
             if let Some(root) = picked {
                 // The provider's folder this button names, even when an account has several.
-                let result = app.run("file.save", json!({"path": cloud_path(&root, name)})).and_then(|_| app.run("file.autosave", json!({"value": true})));
+                let result =
+                    app.run("file.save", json!({"path": cloud_path(&root, name)})).and_then(|_| app.run("file.autosave", json!({"value": true})));
                 if let Err(e) = &result {
                     app.status(e.clone());
                 }

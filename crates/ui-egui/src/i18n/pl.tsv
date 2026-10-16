@@ -886,6 +886,22 @@
 	Normal speed	Normalna szybkość
 	AutoSave documents you have saved in WordCraft	Zapisuj automatycznie dokumenty zapisane już w programie WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Autozapis nie powiódł się: {error}. Zapisz dokument, aby ponownie włączyć autozapis.
+	{name} was moved or deleted elsewhere	{name} został przeniesiony lub usunięty w innym miejscu
+	{name} was changed on another device	{name} został zmieniony na innym urządzeniu
+	AutoSave stopped so that neither version is lost.	Automatyczny zapis został zatrzymany, aby nie utracić żadnej wersji.
+	Keep both saves this version as a copy beside the other.	Zachowaj obie, zapisując tę wersję jako kopię obok drugiej.
+	Save it here again	Zapisz ponownie tutaj
+	Keep both	Zachowaj obie
+	Keep this version	Zachowaj tę wersję
+	Open the other version	Otwórz drugą wersję
+	Decide later	Zdecyduj później
+	Where should AutoSave keep this document?	Gdzie automatyczny zapis ma przechowywać ten dokument?
+	Other location…	Inna lokalizacja…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Automatyczny zapis jest wstrzymany: ten plik zmieniono na innym urządzeniu. Kliknij, aby wybrać wersję do zachowania.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Automatyczny zapis jest wstrzymany: ten plik przeniesiono lub usunięto w innym miejscu. Kliknij, aby wybrać działanie.
+	Cloud Status	Stan chmury
+	Save to Cloud	Zapisz w chmurze
+	Resolve Save Conflict	Rozwiąż konflikt zapisu
 	Couldn't download {name}: {error}	Nie udało się pobrać pliku {name}: {error}
 	Do you want to save changes to {name}?	Czy zapisać zmiany w dokumencie {name}?
 	Don't Save	Nie zapisuj

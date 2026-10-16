@@ -842,6 +842,22 @@
 	Apply Styles	Stílusok alkalmazása
 	AutoSave documents you have saved in WordCraft	A WordCraftban mentett dokumentumok automatikus mentése
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Az automatikus mentés sikertelen: {error}. Az újbóli bekapcsolásához mentsd a dokumentumot.
+	{name} was moved or deleted elsewhere	{name} máshová lett áthelyezve vagy törölve
+	{name} was changed on another device	{name} egy másik eszközön módosult
+	AutoSave stopped so that neither version is lost.	Az automatikus mentés leállt, hogy egyik verzió se vesszen el.
+	Keep both saves this version as a copy beside the other.	Tartsa meg mindkettőt, ezt a verziót másolatként a másik mellé mentve.
+	Save it here again	Mentse újra ide
+	Keep both	Mindkettő megtartása
+	Keep this version	Ennek a verziónak a megtartása
+	Open the other version	A másik verzió megnyitása
+	Decide later	Döntés később
+	Where should AutoSave keep this document?	Hol tartsa az automatikus mentés ezt a dokumentumot?
+	Other location…	Másik hely…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Az automatikus mentés szünetel: ezt a fájlt egy másik eszközön módosították. Kattintson a megtartandó verzió kiválasztásához.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Az automatikus mentés szünetel: ezt a fájlt máshová helyezték vagy törölték. Kattintson a művelet kiválasztásához.
+	Cloud Status	Felhőállapot
+	Save to Cloud	Mentés a felhőbe
+	Resolve Save Conflict	Mentési ütközés feloldása
 	Bottom Margin	Alsó margó
 	Edit Comment	Megjegyzés szerkesztése
 	Left Margin	Bal margó

@@ -116,16 +116,12 @@ fn save_to_cloud(s: &mut Session, v: &Value) -> CmdResult {
         Some(id) => Some(Provider::from_id(id).ok_or_else(|| CmdError::Params(format!("unknown provider `{id}`; use icloud, gdrive or onedrive")))?),
         None => None,
     };
-    let root = s
-        .cloud
-        .roots
-        .iter()
-        .find(|r| wanted.is_none_or(|p| r.provider == p))
-        .cloned()
-        .ok_or_else(|| CmdError::Failed(match wanted {
+    let root = s.cloud.roots.iter().find(|r| wanted.is_none_or(|p| r.provider == p)).cloned().ok_or_else(|| {
+        CmdError::Failed(match wanted {
             Some(p) => format!("No {} folder was found on this computer. Install and sign in to its app, then try again.", p.name()),
             None => "No iCloud Drive, Google Drive or OneDrive folder was found on this computer.".to_string(),
-        }))?;
+        })
+    })?;
     let stem = match p::str(v, "name") {
         Some(name) => name.to_string(),
         None => s

@@ -73,6 +73,22 @@
 	AutoSave	AutoSpeichern
 	AutoSave documents you have saved in WordCraft	In WordCraft gespeicherte Dokumente automatisch speichern
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	AutoSpeichern fehlgeschlagen: {error}. Speichern Sie das Dokument, um AutoSpeichern wieder zu aktivieren.
+	{name} was moved or deleted elsewhere	{name} wurde an einen anderen Ort verschoben oder dort gelöscht
+	{name} was changed on another device	{name} wurde auf einem anderen Gerät geändert
+	AutoSave stopped so that neither version is lost.	AutoSpeichern wurde angehalten, damit keine Version verloren geht.
+	Keep both saves this version as a copy beside the other.	Beide behalten und diese Version als Kopie neben der anderen speichern.
+	Save it here again	Hier erneut speichern
+	Keep both	Beide behalten
+	Keep this version	Diese Version behalten
+	Open the other version	Andere Version öffnen
+	Decide later	Später entscheiden
+	Where should AutoSave keep this document?	Wo soll AutoSpeichern dieses Dokument speichern?
+	Other location…	Anderer Speicherort…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	AutoSpeichern ist angehalten: Diese Datei wurde auf einem anderen Gerät geändert. Klicken Sie, um die zu behaltende Version auszuwählen.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	AutoSpeichern ist angehalten: Diese Datei wurde an einen anderen Ort verschoben oder dort gelöscht. Klicken Sie, um eine Aktion auszuwählen.
+	Cloud Status	Cloudstatus
+	Save to Cloud	In der Cloud speichern
+	Resolve Save Conflict	Speicherkonflikt lösen
 	Balloons	Sprechblasen
 	Bottom Margin	Unterer Rand
 	Click a border between two cells to merge them. Esc stops.	Klicken Sie auf eine Rahmenlinie zwischen zwei Zellen, um sie zu verbinden. Esc beendet.

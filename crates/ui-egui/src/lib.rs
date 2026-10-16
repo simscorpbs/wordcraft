@@ -2032,7 +2032,10 @@ impl WordApp {
                 Err(e) => {
                     log::warn!("AutoSave failed: {e}");
                     self.autosave_path = None;
-                    self.status(i18n::fmt(tl!("AutoSave failed: {error}. Save the document to turn AutoSave back on."), &[("error", &e.to_string())]));
+                    self.status(i18n::fmt(
+                        tl!("AutoSave failed: {error}. Save the document to turn AutoSave back on."),
+                        &[("error", &e.to_string())],
+                    ));
                 }
             }
         }
@@ -5698,27 +5701,35 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
     }
 
-    /// A failing AutoSave used to be silent (`let _ =`) and retried every 2.5 s.
+    /// A file that vanished (unplugged drive, network share gone, moved or deleted from another
+    /// device) used to be a silent failure retried every 2.5 s. AutoSave now stops and asks once.
     #[test]
-    fn autosave_failures_are_reported_once() {
+    fn autosave_stops_and_asks_once_when_the_file_disappears() {
         let dir = scratch("autosave-fail");
         let path = dir.join("gone").join("novel.docx");
         std::fs::create_dir_all(path.parent().unwrap()).unwrap();
         let mut a = typed();
         a.run("file.save", json!({"path": path.to_string_lossy()})).unwrap();
-        // The folder disappears (unplugged drive, network share gone).
         std::fs::remove_dir_all(path.parent().unwrap()).unwrap();
         a.run("text.insert", json!({"text": "More "})).unwrap();
-        a.status_msg = None;
         a.autosave_tick(now_ms() + 10_000.0);
-        let msg = a.status_msg.as_ref().map(|(m, _)| m.clone()).unwrap_or_default();
-        assert!(msg.contains("AutoSave"), "the failure shows in the status bar: {msg:?}");
+        assert!(matches!(a.dialog, Some(dialogs::Dialog::SaveConflict { missing: true, .. })), "AutoSave asks what to do");
+        assert_eq!(a.autosave_block(), Some(AutoSaveBlock::Conflict { missing: true }));
         assert!(a.session.dirty);
+        assert!(!path.exists(), "nothing was written");
 
-        // Not retried until the user saves again.
-        a.status_msg = None;
+        // Decide later: not retried, and not asked again, until the user chooses.
+        a.run("ui.saveConflict", json!({"answer": "later"})).unwrap();
         a.autosave_tick(now_ms() + 20_000.0);
-        assert!(a.status_msg.is_none());
+        assert!(a.dialog.is_none());
+        assert!(!path.exists());
+
+        // Save it here again.
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        a.show_save_conflict();
+        a.run("ui.saveConflict", json!({"answer": "mine"})).unwrap();
+        assert!(path.exists());
+        assert_eq!(a.autosave_block(), None);
         let _ = std::fs::remove_dir_all(&dir);
     }
 

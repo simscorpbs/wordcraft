@@ -52,7 +52,8 @@ and 16 generations per record during discovery. Ordinarily only two valid genera
 Copies are retained until saved or explicitly discarded; there is no automatic age-based deletion.
 Over-limit writes report an error and retain the previous valid copy. JSON stores binary parts
 as byte arrays, so it can be substantially larger than DOCX. This first version has a fixed
-interval, English fallback for new labels, and no cloud, version-history or browser recovery.
+interval, English fallback for new labels, and no version-history or browser recovery. Saving
+to iCloud Drive, Google Drive or OneDrive is AutoSave's job, not recovery's ([cloud.md](cloud.md)).
 
 ## Commands and verification
 

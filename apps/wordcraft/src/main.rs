@@ -439,6 +439,11 @@ fn main() -> eframe::Result {
                     log::warn!("local recovery unavailable: {e}");
                 }
             }
+            #[cfg(not(target_arch = "wasm32"))]
+            {
+                let ctx = cc.egui_ctx.clone();
+                app.discover_cloud(std::sync::Arc::new(move || ctx.request_repaint()));
+            }
             app.ui.window = restored;
             app.integrated_titlebar = cfg!(target_os = "macos");
             #[cfg(target_os = "macos")]

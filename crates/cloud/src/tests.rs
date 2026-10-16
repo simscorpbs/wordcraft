@@ -58,7 +58,11 @@ fn finds_the_windows_sync_folders() {
     let got: Vec<(Provider, &Path, Option<&str>)> = roots.iter().map(|r| (r.provider, r.path.as_path(), r.account.as_deref())).collect();
     assert_eq!(
         got,
-        [(Provider::ICloudDrive, icloud.as_path(), None), (Provider::GoogleDrive, drive.as_path(), None), (Provider::OneDrive, business.as_path(), Some("Contoso"))]
+        [
+            (Provider::ICloudDrive, icloud.as_path(), None),
+            (Provider::GoogleDrive, drive.as_path(), None),
+            (Provider::OneDrive, business.as_path(), Some("Contoso"))
+        ]
     );
     // A new Google Drive document goes in My Drive, by its local name.
     assert_eq!(roots[1].save_dir(), drive.join("Meu Drive"));

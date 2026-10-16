@@ -850,6 +850,22 @@ preview	Title	Пример
 	Apply Styles	Применить стили
 	AutoSave documents you have saved in WordCraft	Автосохранение документов, уже сохранённых в WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Ошибка автосохранения: {error}. Сохраните документ, чтобы снова включить автосохранение.
+	{name} was moved or deleted elsewhere	{name} был перемещён или удалён в другом месте
+	{name} was changed on another device	{name} был изменён на другом устройстве
+	AutoSave stopped so that neither version is lost.	Автосохранение остановлено, чтобы не потерять ни одну версию.
+	Keep both saves this version as a copy beside the other.	Сохраните обе версии, записав эту как копию рядом с другой.
+	Save it here again	Сохранить здесь ещё раз
+	Keep both	Сохранить обе
+	Keep this version	Сохранить эту версию
+	Open the other version	Открыть другую версию
+	Decide later	Решить позже
+	Where should AutoSave keep this document?	Где автосохранение должно хранить этот документ?
+	Other location…	Другое расположение…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Автосохранение приостановлено: этот файл изменён на другом устройстве. Нажмите, чтобы выбрать версию для сохранения.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Автосохранение приостановлено: этот файл перемещён или удалён в другом месте. Нажмите, чтобы выбрать действие.
+	Cloud Status	Состояние облака
+	Save to Cloud	Сохранить в облако
+	Resolve Save Conflict	Разрешить конфликт сохранения
 	Bottom Margin	Нижнее поле
 	Edit Comment	Изменить комментарий
 	Left Margin	Левое поле

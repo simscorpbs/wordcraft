@@ -65,6 +65,22 @@
 	AutoSave	自動保存
 	AutoSave documents you have saved in WordCraft	WordCraft で保存した文書を自動保存する
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	自動保存できませんでした: {error}。文書を保存し直すと、自動保存が再開します。
+	{name} was moved or deleted elsewhere	{name} は別の場所に移動または削除されました
+	{name} was changed on another device	{name} は別のデバイスで変更されました
+	AutoSave stopped so that neither version is lost.	どちらのバージョンも失われないよう、自動保存を停止しました。
+	Keep both saves this version as a copy beside the other.	両方を保持し、このバージョンをもう一方の横にコピーとして保存します。
+	Save it here again	ここにもう一度保存
+	Keep both	両方を保持
+	Keep this version	このバージョンを保持
+	Open the other version	もう一方のバージョンを開く
+	Decide later	後で決める
+	Where should AutoSave keep this document?	このドキュメントを自動保存する場所を選択してください。
+	Other location…	その他の場所…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	自動保存は一時停止中です。このファイルは別のデバイスで変更されました。保持するバージョンを選ぶにはクリックしてください。
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	自動保存は一時停止中です。このファイルは別の場所に移動または削除されました。操作を選ぶにはクリックしてください。
+	Cloud Status	クラウドの状態
+	Save to Cloud	クラウドに保存
+	Resolve Save Conflict	保存の競合を解決
 	Balloons	吹き出し
 	Bottom Margin	下余白
 	Centimeters	センチメートル

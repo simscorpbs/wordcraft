@@ -211,6 +211,22 @@
 	AutoSave	Automatsko spremanje
 	AutoSave documents you have saved in WordCraft	Automatsko spremanje dokumenata koje ste spremili u programu WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Automatsko spremanje nije uspjelo: {error}. Spremite dokument kako biste ponovno uključili automatsko spremanje.
+	{name} was moved or deleted elsewhere	{name} premješten je ili izbrisan drugdje
+	{name} was changed on another device	{name} promijenjen je na drugom uređaju
+	AutoSave stopped so that neither version is lost.	Automatsko spremanje zaustavljeno je kako se nijedna verzija ne bi izgubila.
+	Keep both saves this version as a copy beside the other.	Zadržite obje i spremite ovu verziju kao kopiju pokraj druge.
+	Save it here again	Ponovno spremi ovdje
+	Keep both	Zadrži obje
+	Keep this version	Zadrži ovu verziju
+	Open the other version	Otvori drugu verziju
+	Decide later	Odluči poslije
+	Where should AutoSave keep this document?	Gdje automatsko spremanje treba čuvati ovaj dokument?
+	Other location…	Drugo mjesto…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Automatsko spremanje pauzirano je: ova je datoteka promijenjena na drugom uređaju. Kliknite za odabir verzije koju želite zadržati.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Automatsko spremanje pauzirano je: ova je datoteka premještena ili izbrisana drugdje. Kliknite za odabir radnje.
+	Cloud Status	Status oblaka
+	Save to Cloud	Spremi u oblak
+	Resolve Save Conflict	Riješi sukob spremanja
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Automatsko spremanje nije dostupno u pregledniku: ne može pisati u vaše datoteke. Spremanje preuzima kopiju.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Automatsko spremanje čuva samo datoteke .docx, .odt i .rtf; {name} ne može sačuvati cijelo oblikovanje. Spremite kao .docx kako biste uključili automatsko spremanje.
 	AutoSave saves every change to the file (needs a saved document)	Automatsko spremanje sprema svaku promjenu u datoteku (potreban je spremljen dokument)
