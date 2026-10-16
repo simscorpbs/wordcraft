@@ -1,0 +1,1021 @@
+14		(no style)	(sem estilo)
+15		(no suggestions)	(sem sugestões)
+16		1.5 Line Spacing	Espaçamento de 1,5 linha
+17		A free, open-source word processor written from scratch in Rust.\nPart of the Crafting Apps from the ArtCraft team.	Um processador de texto gratuito e de código aberto, escrito do zero em Rust.\nFaz parte dos Crafting Apps da equipe ArtCraft.
+18		About	Sobre
+19		About WordCraft	Sobre o WordCraft
+20		Accept	Aceitar
+21		Accept All Changes	Aceitar todas as alterações
+22		Accept This Change	Aceitar esta alteração
+23		Accessibility	Acessibilidade
+24		Add	Adicionar
+25		Add a comment	Adicionar um comentário
+26		Add a Table	Adicionar uma tabela
+27		Add Object to Selection	Adicionar objeto à seleção
+28		Add Space Before Paragraph	Adicionar espaço antes do parágrafo
+29		Add space between Asian and Latin text	Adicionar espaço entre texto asiático e latino
+30		Add space between Asian text and numbers	Adicionar espaço entre texto asiático e números
+31		Add tab stop at:	Adicionar tabulação em:
+32		Add Text	Adicionar texto
+33		Add to Dictionary	Adicionar ao dicionário
+34		Add to Style Gallery	Adicionar à galeria de estilos
+35		Address Block	Bloco de endereço
+36		Address:	Endereço:
+37		Address\nBlock	Bloco de\nendereço
+38		Adjust	Ajustar
+39		Advanced	Avançado
+40		After:	Depois:
+41		Agents	Agentes
+42		Align	Alinhar
+43		Align Left	Alinhar à esquerda
+44		Align Right	Alinhar à direita
+45		Aligned at:	Alinhado em:
+46		Alignment	Alinhamento
+47		All Borders	Todas as bordas
+48		All Caps	Tudo em maiúsculas
+49		All caps	Tudo em maiúsculas
+50		All Markup	Todas as marcações
+51		Allow hanging punctuation	Permitir pontuação pendente
+52		Allow Latin text to wrap in the middle of a word	Permitir que o texto latino quebre no meio de uma palavra
+53		Alt Text	Texto alternativo
+54		Apply Asian line-breaking rules (kinsoku)	Aplicar as regras asiáticas de quebra de linha (kinsoku)
+55		Apply Character Style	Aplicar estilo de caractere
+56		Apply Style	Aplicar estilo
+57		Arrange	Organizar
+58		Arrange\nAll	Organizar\ntudo
+59		Arrow	Seta
+60		Artistic Effects	Efeitos artísticos
+61		As you type	Enquanto você digita
+62		Asian text font:	Fonte de texto asiático:
+63		Asian Typography	Tipografia asiática
+64		Author	Autor
+65		AutoCorrect Options	Opções de autocorreção
+66		AutoFit	Autoajuste
+67		AutoFit Contents	Autoajustar ao conteúdo
+68		AutoFit Window	Autoajustar à janela
+69		AutoSave writes your changes to the file a moment after you stop typing.	O salvamento automático grava suas alterações no arquivo pouco depois que você para de digitar.
+70		Automatic	Automático
+71		Automatic ({language})	Automático ({language})
+72		Automatic follows your system's language. Menus and commands change; your documents don't.	Automático segue o idioma do seu sistema. Menus e comandos mudam; seus documentos, não.
+73		Automatic Table 1 (3 levels)	Tabela automática 1 (3 níveis)
+74		Automatic Table 2 (2 levels)	Tabela automática 2 (2 níveis)
+75		AutoSave	Salvamento automático
+76		AutoSave saves every change to the file (needs a saved document)	O salvamento automático grava cada alteração no arquivo (requer um documento já salvo)
+77		AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	O salvamento automático não está disponível no navegador: ele não pode gravar nos seus arquivos. Salvar baixa uma cópia.
+78		AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	O salvamento automático só mantém arquivos .docx, .odt e .rtf; {name} não guarda toda a formatação. Salve como .docx para ativar o salvamento automático.
+79		Balloons	Balões
+80		Bullet	Marcador
+81		By author	Por autor
+82		Centimeters	Centímetros
+83		Changed lines:	Linhas alteradas:
+84		Check spelling as you type	Verificar a ortografia enquanto você digita
+85		Click level to modify:	Clique no nível a modificar:
+86		Click to switch back to inserting	Clique para voltar a inserir
+87		Color only	Somente cor
+88		Custom dictionary	Dicionário personalizado
+89		Define New Multilevel List	Definir nova lista de vários níveis
+90		Define New Multilevel List…	Definir nova lista de vários níveis…
+91		Deletions:	Exclusões:
+92		Enter formatting for number:	Formatação do número:
+93		Follow number with:	Após o número:
+94		Formatting	Formatação
+95		Formatting marks	Marcas de formatação
+96		Hidden text	Texto oculto
+97		Ignore web and file addresses	Ignorar endereços da Web e de arquivos
+98		Ignore words in capitals	Ignorar palavras em maiúsculas
+99		Ignore words with numbers	Ignorar palavras com números
+100		In the margin	Na margem
+101		Inches	Polegadas
+102		Formatting exceptions	Exceções de formatação
+103		Include level number from:	Incluir número do nível:
+104		Initials:	Iniciais:
+105		Ink	Tinta
+106		Insertions and Deletions	Inserções e exclusões
+107		Insertions:	Inserções:
+108		Interface	Interface
+109		Interface language	Idioma da interface
+110		Inside:	Interno:
+111		Latin text font:	Fonte de texto latino:
+112		Left border	Borda esquerda
+113		Legal style numbering	Numeração no estilo legal
+114		Link level to style:	Vincular nível ao estilo:
+115		List Definition	Definição da lista
+116		Mark grammar errors as you type	Marcar erros gramaticais enquanto você digita
+117		Measurement units:	Unidades de medida:
+118		Millimeters	Milímetros
+119		New comments and tracked changes are recorded under this name and these initials.	Novos comentários e alterações controladas são registrados com este nome e estas iniciais.
+120		New word	Nova palavra
+121		No document is open. Create a document or open one first.	Nenhum documento está aberto. Crie ou abra um documento primeiro.
+122		No words yet. Add to Dictionary on a misspelled word puts it here.	Ainda não há palavras. Adicionar ao dicionário em uma palavra com erro a coloca aqui.
+123		Mirror indents	Recuos espelhados
+124		Nothing	Nada
+125		Number alignment:	Alinhamento do número:
+126		Number format	Formato do número
+127		Number style for this level:	Estilo de número deste nível:
+128		Only for the selected text	Somente para o texto selecionado
+129		Outside border	Borda externa
+130		Overtype	Sobrescrever
+131		Overtype (typing replaces the characters after the caret)	Sobrescrever (o que você digita substitui os caracteres após o cursor)
+132		Show alignment guides when moving pictures and shapes	Mostrar guias de alinhamento ao mover imagens e formas
+133		Moved objects snap to the page's edges and centre, the margins and other objects. Hold Alt to move freely.	Os objetos movidos se encaixam nas bordas e no centro da página, nas margens e em outros objetos. Segure Alt para mover livremente.
+134		Page display	Exibição da página
+135		Paragraph marks	Marcas de parágrafo
+136		Personalize	Personalizar
+137		Picas	Paicas
+138		Points	Pontos
+139		Print the page color	Imprimir a cor da página
+140		Printing	Impressão
+141		Proofing language	Idioma de revisão
+142		Recent documents to show:	Documentos recentes a mostrar:
+143		Remove	Remover
+144		Outside:	Externo:
+145		Restart list after:	Reiniciar lista após:
+146		Right border	Borda direita
+147		Save documents	Salvar documentos
+148		Save the document to turn on AutoSave	Salve o documento para ativar o salvamento automático
+149		Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Salve o documento para ativar o salvamento automático (um arquivo que você apenas abriu não é regravado até você salvá-lo)
+150		AutoText	Autotexto
+151		Backspace	Backspace
+152		Banded Columns	Colunas listradas
+153		Banded Rows	Linhas listradas
+154		Base text:	Texto base:
+155		Before:	Antes:
+156		Bibliography	Bibliografia
+157		Binary assets added	Recursos binários adicionados
+158		Binary assets removed	Recursos binários removidos
+159		Blank	Em branco
+160		Blank (Three Columns)	Em branco (três colunas)
+161		Blank document	Documento em branco
+162		Blank Page	Página em branco
+163		Block\nAuthors	Bloquear\nautores
+164		Bold	Negrito
+165		Bookmark	Indicador
+166		Bookmark name:	Nome do indicador:
+167		Delete Bookmark	Excluir indicador
+168		Hidden bookmarks	Indicadores ocultos
+169		Sort by:	Classificar por:
+170		Border Painter	Pincel de bordas
+171		Border\nPainter	Pincel\nde bordas
+172		Borders	Bordas
+173		Search	Pesquisar
+174		Show the mini toolbar when text is selected	Mostrar a minibarra de ferramentas ao selecionar texto
+175		Spaces	Espaços
+176		Spelling	Ortografia
+177		Spelling and grammar are checked in English (United States).	A ortografia e a gramática são verificadas em inglês (Estados Unidos).
+178		Tab characters	Caracteres de tabulação
+179		Tab stop position:	Posição da tabulação:
+180		Default tab stops:	Tabulações padrão:
+181		Tab stops to be cleared:	Tabulações a remover:
+182		All	Todas
+183		Decimal	Decimal
+184		Bar	Barra
+185		Leader	Preenchimento
+186		Set	Definir
+187		Page Border	Borda da página
+188		Apply to:	Aplicar a:
+189		These marks show even when Show/Hide ¶ is off.	Estas marcas aparecem mesmo com Mostrar/ocultar ¶ desativado.
+190		Title Bar	Barra de título
+191		Typing replaces selected text	O que você digita substitui o texto selecionado
+192		Update fields before printing	Atualizar campos antes de imprimir
+193		Use the Insert key to switch overtype on and off	Usar a tecla Insert para ativar e desativar a sobrescrita
+194		Whole document	Documento inteiro
+195		This section	Esta seção
+196		Fill	Cor de fundo
+197		Setting:	Tipo:
+198		3-D	3D
+199		Custom	Personalizado
+200		Style:	Estilo:
+201		Dot dash	Traço e ponto
+202		Triple	Tripla
+203		Between	Entre parágrafos
+204		Borders and Shading	Bordas e sombreamento
+205		Tabs…	Tabulações…
+206		Borders and Shading…	Bordas e sombreamento…
+207		Bottom Border	Borda inferior
+208		Bottom Margin	Margem inferior
+209		Bottom of Page	Fim da página
+210		Bottom:	Inferior:
+211		Box	Caixa
+212		Breaks	Quebras
+213		Bring Forward	Trazer para frente
+214		Bullet Library	Biblioteca de marcadores
+215		Bullets	Marcadores
+216		Calendar	Calendário
+217		Cancel	Cancelar
+218		Capitalize Each Word	Capitalizar cada palavra
+219		Captions	Legendas
+220		Cell Margins	Margens das células
+221		Cell Size	Tamanho das células
+222		Cell\nMargins	Margens\ndas células
+223		Center	Centralizar
+224		Change	Alterar
+225		Change Case	Alterar maiúsculas/minúsculas
+226		Change List Level	Alterar nível da lista
+227		Change Picture	Alterar imagem
+228		Change Shape	Alterar forma
+229		Changes	Alterações
+230		Character Position	Posição de caracteres
+231		Character Scale	Escala de caracteres
+232		Character Shading	Sombreamento de caracteres
+233		Character Spacing	Espaçamento entre caracteres
+234		Characters (no spaces)	Caracteres (sem espaços)
+235		Characters (with spaces)	Caracteres (com espaços)
+236		Chart	Gráfico
+237		Check Accessibility	Verificar acessibilidade
+238		Check Compatibility	Verificar compatibilidade
+239		Check for Errors	Verificar erros
+240		Check Spelling as You Type	Verificar ortografia ao digitar
+241		Check\nAccessibility	Verificar\nacessibilidade
+242		Citation Style	Estilo de citação
+243		Citations & Bibliography	Citações e bibliografia
+244		Clear	Limpar
+245		Clear All Formatting	Limpar toda a formatação
+246		Click a border between two cells to merge them. Esc stops.	Clique em uma borda entre duas células para mesclá-las. Esc encerra.
+247		Clipboard	Área de transferência
+248		Clipboard Pane	Painel da área de transferência
+249		Clipboard Items	Itens da área de transferência
+250		Paste Clipboard Item	Colar item da área de transferência
+251		Paste All	Colar tudo
+252		Delete Clipboard Item	Excluir item da área de transferência
+253		Clear All	Limpar tudo
+254		Click an item to paste it.	Clique em um item para colá-lo.
+255		Nothing collected yet. Items you copy or cut appear here.	Nada coletado ainda. Os itens que você copiar ou recortar aparecem aqui.
+256		(picture or object)	(imagem ou objeto)
+257		Close	Fechar
+258		Close Header and Footer	Fechar cabeçalho e rodapé
+259		Collapse Selection	Recolher seleção
+260		Color	Cor
+261		Color:	Cor:
+262		Colors	Cores
+263		Column	Coluna
+264		Column Break	Quebra de coluna
+265		Columns	Colunas
+266		Combine	Combinar
+267		Commands	Comandos
+268		Comment	Comentário
+269		Comments	Comentários
+270		Comments Pane	Painel de comentários
+271		Community\nDiscord	Comunidade\nDiscord
+272		Compact	Compacto
+273		Compare	Comparar
+274		Compress Pictures	Compactar imagens
+275		Compress punctuation at the start of a line	Comprimir a pontuação no início da linha
+276		Continuous	Contínua
+277		Convert	Converter
+278		Convert Text to Table	Converter texto em tabela
+279		Convert Text to Table…	Converter texto em tabela…
+280		Convert to Text	Converter em texto
+281		Copy	Copiar
+282		Copy Formatting	Copiar formatação
+283		Corrections	Correções
+284		Couldn't make WordCraft the default: {error}	Não foi possível tornar o WordCraft o aplicativo padrão: {error}
+285		Count words in text boxes and notes	Contar palavras em caixas de texto e notas
+286		Cover Page	Capa
+287		Create	Criar
+288		Create a Style	Criar um estilo
+289		Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Crie uma estrutura de tópicos interativa do seu documento.\n\nÉ uma ótima maneira de acompanhar onde você está ou mover seu conteúdo rapidamente.\n\nPara começar, vá para a guia Início e aplique estilos de Título aos títulos do seu documento.
+290		Create New Style	Criar novo estilo
+291		Crop	Cortar
+292		Cross-reference	Referência cruzada
+293		Current Position	Posição atual
+294		Current style: {style}	Estilo atual: {style}
+295		Custom Margins…	Margens personalizadas…
+296		Custom Watermark	Marca-d'água personalizada
+297		Custom Watermark…	Marca-d'água personalizada…
+298		Customize Quick Access Toolbar	Personalizar barra de acesso rápido
+299		Cut	Recortar
+300		Dark Mode	Modo escuro
+301		Dashed	Tracejada
+302		Data	Dados
+303		Date & Time	Data e hora
+304		Decrease Font Size	Diminuir tamanho da fonte
+305		Decrease Indent	Diminuir recuo
+306		Default	Padrão
+307		Define New Bullet	Definir novo marcador
+308		Define New Number Format	Definir novo formato de numeração
+309		Delete	Excluir
+310		Delete Cells	Excluir células
+311		Delete Columns	Excluir colunas
+312		Delete Comment	Excluir comentário
+313		Delete Next Word	Excluir próxima palavra
+314		Delete Previous Word	Excluir palavra anterior
+315		Delete Rows	Excluir linhas
+316		Delete Style	Excluir estilo
+317		Delete Table	Excluir tabela
+318		Design	Design
+319		Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	Arraste um retângulo para desenhar uma tabela, ou uma linha sobre as células para dividi-las. Esc encerra.
+320		Draw Table	Desenhar tabela
+321		Edit Comment	Editar comentário
+322		In Default apps, choose WordCraft for the document types you want it to open.	Em Aplicativos padrão, escolha o WordCraft para os tipos de documento que você quer que ele abra.
+323		Left Margin	Margem esquerda
+324		Indents and Spacing	Recuos e espaçamento
+325		Line breaking	Quebra de linhas
+326		Make WordCraft the default for Word documents…	Tornar o WordCraft o aplicativo padrão para documentos do Word…
+327		More templates →	Mais modelos →
+328		No templates match your search.	Nenhum modelo corresponde à pesquisa.
+329		Opens .docx, .doc, .rtf and .odt files and Word templates with WordCraft from now on.	A partir de agora, arquivos .docx, .doc, .rtf e .odt e modelos do Word abrem no WordCraft.
+330		Opens Settings › Default apps, where you choose WordCraft for .docx and the other document types.	Abre Configurações › Aplicativos padrão, onde você escolhe o WordCraft para .docx e os outros tipos de documento.
+331		Reopen	Reabrir
+332		Right Margin	Margem direita
+333		Distribute letters	Distribuir letras
+334		Distribute spacing	Distribuir espaçamento
+335		Offset (pt):	Deslocamento (pt):
+336		Phonetic Guide	Guia fonético
+337		Right (vertical)	Direita (vertical)
+338		Ruby text:	Texto ruby:
+339		Search for templates	Pesquisar modelos
+340		To open Word documents with WordCraft by default: select one in Finder, choose File › Get Info, pick WordCraft under Open with, then click Change All.	Para abrir documentos do Word com o WordCraft por padrão: selecione um no Finder, escolha Arquivo › Obter Informações, selecione o WordCraft em “Abrir com” e clique em “Alterar Tudo”.
+341		WordCraft is now the default app for Word documents.	O WordCraft agora é o aplicativo padrão para documentos do Word.
+342		development build	versão de desenvolvimento
+343		Diagonal	Diagonal
+344		Diamond	Losango
+345		Dictate	Ditar
+346		Different First Page	Primeira página diferente
+347		Different Odd & Even Pages	Páginas ímpares e pares diferentes
+348		Discord	Discord
+349		Discord community	Comunidade do Discord
+350		Display	Exibição
+351		Display for Review	Exibir para revisão
+352		Distribute Columns	Distribuir colunas uniformemente
+353		Distribute Rows	Distribuir linhas uniformemente
+354		Distributed	Distribuído
+355		Do Not Show in TOC	Não mostrar no sumário
+356		Document End	Fim do documento
+357		Document Formatting	Formatação do documento
+358		Document Property	Propriedade do documento
+359		Document Start	Início do documento
+360		Document Text	Texto do documento
+361		Document Title	Título do documento
+362		Documents you open will show up here.	Os documentos que você abrir aparecerão aqui.
+363		Dot-dash	Ponto-traço
+364		Dotted	Pontilhada
+365		Double	Dupla
+366		Double Spacing	Espaçamento duplo
+367		Double Strikethrough	Tachado duplo
+368		Double Underline	Sublinhado duplo
+369		Down	Para baixo
+370		Draft	Rascunho
+371		Draw	Desenhar
+372		Drawing Tools	Ferramentas de desenho
+373		Drawing\nCanvas	Tela de\ndesenho
+374		Drop Cap	Capitular
+375		Edit Footer	Editar rodapé
+376		Edit Header	Editar cabeçalho
+377		Edit Recipient List	Editar lista de destinatários
+378		Edit\nRecipient List	Editar lista\nde destinatários
+379		Edited	Editado
+380		Editing	Edição
+381		Editing header/footer	Editando cabeçalho/rodapé
+382		Editing — edit the document directly	Edição — edite o documento diretamente
+383		Editor	Editor
+384		Effects	Efeitos
+385		Emboss	Em relevo
+386		Encrypt with Password	Criptografar com senha
+387		English (United States)	Inglês (Estados Unidos)
+388		Engrave	Gravado
+389		Enter page number:	Digite o número da página:
+390		Envelopes	Envelopes
+391		Equation	Equação
+392		Eraser	Borracha
+393		Even Page	Página par
+394		Every command is available to scripts and AI agents: run `wordcraft-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	Todo comando está disponível para scripts e agentes de IA: execute `wordcraft-cli mcp` para um servidor MCP, ou inicie o aplicativo com `--control <port>` para o canal de controle JSON.
+395		Export	Exportar
+396		Export a copy to share (PDF, Word document)	Exporte uma cópia para compartilhar (PDF, documento Word)
+397		Export Page as PNG	Exportar página como PNG
+398		Export PDF	Exportar PDF
+399		Exported {path}	Exportado {path}
+400		Extend Selection	Expandir seleção
+401		Extend Selection by Units	Expandir seleção por unidades
+402		Field	Campo
+403		File	Arquivo
+404		Find	Localizar
+405		Find and Replace	Localizar e substituir
+406		Find Next	Localizar próxima
+407		Find Previous	Localizar anterior
+408		Find Recipient	Localizar destinatário
+409		Find what:	Localizar:
+410		Finish	Concluir
+411		Finish & Merge	Concluir e mesclar
+412		Finish &\nMerge	Concluir e\nmesclar
+413		First Column	Primeira coluna
+414		First commit	Primeiro commit
+415		First line:	Primeira linha:
+416		Fixed Column Width	Largura de coluna fixa
+417		Focus	Foco
+418		Font	Fonte
+419		Font Color	Cor da fonte
+420		Font color:	Cor da fonte:
+421		Font Dialog	Diálogo de fonte
+422		Font Size	Tamanho da fonte
+423		Font:	Fonte:
+424		Fonts	Fontes
+425		Footer	Rodapé
+426		Footnote and Endnote	Nota de rodapé e nota de fim
+427		Footnotes	Notas de rodapé
+428		Format	Formatar
+429		Format Page Numbers	Formatar números de página
+430		Format Page Numbers…	Formatar números de página…
+431		Format Painter	Pincel de formatação
+432		Formatting at Selection	Formatação na seleção
+433		Formula	Fórmula
+434		General	Geral
+435		Go To	Ir para
+436		Go to	Ir para
+437		Go To (⌘⌥G)	Ir para (⌘⌥G)
+438		Grab bag	Diversos
+439		Greeting Line	Linha de saudação
+440		Greeting\nLine	Linha de\nsaudação
+441		Gridlines	Linhas de grade
+442		Group	Agrupar
+443		Grow Font 1 Point	Aumentar fonte em 1 ponto
+444		Hanging Indent	Recuo deslocado
+445		Header	Cabeçalho
+446		Header & Footer	Cabeçalho e rodapé
+447		Header Row	Linha de cabeçalho
+448		Header/Footer Position	Posição do cabeçalho/rodapé
+449		Heading 1	Título 1
+450		Heading 2	Título 2
+451		Heading 3	Título 3
+452		Headings	Títulos
+453		Heart	Coração
+454		Help	Ajuda
+455		Hidden	Oculto
+456		Highlight Merge Fields	Realçar campos de mesclagem
+457		Highlight\nMerge Fields	Realçar campos\nde mesclagem
+458		Highlighter	Marca-texto
+459		Home	Início
+460		Horizontal	Horizontal
+461		Horizontal Line	Linha horizontal
+462		Hyphenation	Hifenização
+463		Icons	Ícones
+464		Ignore All	Ignorar tudo
+465		Illustrations	Ilustrações
+466		Immersive	Imersivo
+467		Immersive Reader	Leitor imersivo
+468		Immersive\nReader	Leitor\nimersivo
+469		Increase Font Size	Aumentar tamanho da fonte
+470		Increase Indent	Aumentar recuo
+471		Indent	Recuo
+472		Indentation	Recuo
+473		Indents	Recuos
+474		Index	Índice
+475		Info	Informações
+476		Ink to\nMath	Tinta para\nequação
+477		Ink to\nShape	Tinta para\nforma
+478		Ink\nReplay	Reproduzir\ntinta
+479		Insert	Inserir
+480		Insert Above	Inserir acima
+481		Insert Below	Inserir abaixo
+482		Insert Caption	Inserir legenda
+483		Insert Caption…	Inserir legenda…
+484		Insert Citation	Inserir citação
+485		Insert Endnote	Inserir nota de fim
+486		Insert Footnote	Inserir nota de rodapé
+487		Insert Hyperlink	Inserir hiperlink
+488		Insert Index	Inserir índice
+489		Insert Left	Inserir à esquerda
+490		Insert Merge Field	Inserir campo de mesclagem
+491		Insert Merge\nField	Inserir campo\nde mesclagem
+492		Insert Right	Inserir à direita
+493		Insert Shapes	Inserir formas
+494		Insert Table	Inserir tabela
+495		Insert Table of Authorities	Inserir índice de autoridades
+496		Insert Table of Figures	Inserir índice de figuras
+497		Insert Table…	Inserir tabela…
+498		Insert\nAbove	Inserir\nacima
+499		Insert\nCaption	Inserir\nlegenda
+500		Insert\nCitation	Inserir\ncitação
+501		Insert\nFootnote	Inserir\nnota de rodapé
+502		Inside Borders	Bordas internas
+503		Inspect Document	Inspecionar documento
+504		Interface language:	Idioma da interface:
+505		Italic	Itálico
+506		Join the ArtCraft community on Discord	Junte-se à comunidade ArtCraft no Discord
+507		Join us on Discord: discord.gg/artcraft	Junte-se a nós no Discord: discord.gg/artcraft
+508		Justify	Justificar
+509		Keep Lines Together	Manter linhas juntas
+510		Keep lines together	Manter linhas juntas
+511		Keep Text Only	Manter somente o texto
+512		Keep with Next	Manter com o próximo
+513		Keep with next	Manter com o próximo
+514		Labels	Etiquetas
+515		Landscape	Paisagem
+516		Language	Idioma
+517		{language} (no dictionary)	{language} (sem dicionário)
+518		No spelling dictionary for {language} is installed, so it isn't checked. WordCraft looks for the Hunspell dictionary {name} in the WORDCRAFT_DICTIONARIES folder and in the usual system locations.	Não há dicionário ortográfico instalado para {language}, então o texto não é verificado. O WordCraft procura o dicionário Hunspell {name} na pasta WORDCRAFT_DICTIONARIES e nos locais habituais do sistema.
+519		Lasso	Laço
+520		Last Column	Última coluna
+521		Last commit	Último commit
+522		Layout	Layout
+523		Layout Summary	Resumo do layout
+524		Left	Esquerda
+525		Left Border	Borda esquerda
+526		Left:	Esquerda:
+527		Letter	Carta
+528		Line	Linha
+529		Line and Page Breaks	Quebras de linha e de página
+530		Line and Paragraph Spacing	Espaçamento entre linhas e parágrafos
+531		Line Break	Quebra de linha
+532		Line delta	Variação de linhas
+533		Line End	Fim da linha
+534		Line Numbers	Números de linha
+535		Line Spacing	Espaçamento entre linhas
+536		Line Spacing Options…	Opções de espaçamento…
+537		Line spacing:	Espaçamento entre linhas:
+538		Line Start	Início da linha
+539		Lines	Linhas
+540		Lines added	Linhas adicionadas
+541		Lines deleted	Linhas excluídas
+542		Link	Link
+543		Link to Previous	Vincular ao anterior
+544		Links	Links
+545		Location: {path}	Local: {path}
+546		lowercase	minúsculas
+547		Macros	Macros
+548		Mailings	Correspondências
+549		Manage Sources	Gerenciar fontes
+550		Many pages	Muitas páginas
+551		Margins	Margens
+552		Mark Citation	Marcar citação
+553		Mark Entry	Marcar entrada
+554		Mark\nCitation	Marcar\ncitação
+555		Mark\nEntry	Marcar\nentrada
+556		Markdown (*.md)	Markdown (*.md)
+557		Match case	Diferenciar maiúsculas de minúsculas
+558		Match Fields	Corresponder campos
+559		Matrix	Matriz
+560		Merge	Mesclar
+561		Merge Cells	Mesclar células
+562		Merge Formatting	Mesclar formatação
+563		Merged PRs	PRs mesclados
+564		Mirrored	Espelhada
+565		MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team e os colaboradores do WordCraft.
+566		Moderate	Moderada
+567		Modify Style	Modificar estilo
+568		Modify…	Modificar…
+569		Move or Resize	Mover ou redimensionar
+570		Multilevel List	Lista de vários níveis
+571		Multiple Pages	Várias páginas
+572		Name (A–Z)	Nome (A–Z)
+573		Name:	Nome:
+574		Narrow  {size} all	Estreita  {size} em todas as margens
+575		Navigation	Navegação
+576		Navigation Pane	Painel de navegação
+577		New	Novo
+578		New Comment	Novo comentário
+579		New from Template	Novo a partir de modelo
+580		New Paragraph	Novo parágrafo
+581		New Style…	Novo estilo…
+582		New Window	Nova janela
+583		New\nComment	Novo\ncomentário
+584		New\nWindow	Nova\njanela
+585		Next	Próximo
+586		Next Change	Próxima alteração
+587		Next Comment	Próximo comentário
+588		Next Footnote	Próxima nota de rodapé
+589		Next Page	Próxima página
+590		Next Record	Próximo registro
+591		Next Section	Próxima seção
+592		No Border	Sem borda
+593		No Color	Sem cor
+594		No contributor data was built into this copy.	Nenhum dado de colaboradores foi compilado nesta cópia.
+595		No Markup	Sem marcação
+596		No model credits were built into this copy.	Nenhum crédito de modelos foi compilado nesta cópia.
+597		No Paragraph Space	Sem espaço entre parágrafos
+598		Nonbreaking Hyphen	Hífen inseparável
+599		Nonbreaking Space	Espaço inseparável
+600		None	Nenhuma
+601		Normal  {size} all	Normal  {size} em todas as margens
+602		Normal Style	Estilo Normal
+603		Not available right now	Indisponível no momento
+604		Not saved	Não salvo
+605		Not saved yet	Ainda não salvo
+606		Nudge	Deslocar ligeiramente
+607		Number of columns:	Número de colunas:
+608		Number of rows:	Número de linhas:
+609		Numbering	Numeração
+610		Object	Objeto
+611		Odd Page	Página ímpar
+612		Office 2003 Default	Padrão do Office 2003
+613		OK	OK
+614		One	Uma
+615		One Page	Uma página
+616		Open	Abrir
+617		OpenDocument Text (*.odt)	Texto OpenDocument (*.odt)
+618		Optional Hyphen	Hífen opcional
+619		Copyright Sign	Sinal de copyright
+620		Ellipsis	Reticências
+621		Em Dash	Travessão
+622		Insert Date Field	Inserir campo de data
+623		Insert Page Field	Inserir campo de página
+624		Insert Time Field	Inserir campo de hora
+625		Registered Sign	Sinal de marca registrada
+626		Reset Character Formatting	Redefinir formatação de caracteres
+627		Reset Paragraph Formatting	Redefinir formatação de parágrafo
+628		Trademark Sign	Sinal de marca comercial
+629		Options	Opções
+630		Orientation	Orientação
+631		Outline	Estrutura de tópicos
+632		Outline Level	Nível de tópicos
+633		Outside Borders	Bordas externas
+634		Oval	Oval
+635		Page	Página
+636		Page Background	Plano de fundo da página
+637		Page Borders	Bordas da página
+638		Page Break	Quebra de página
+639		Page Break Before	Quebra de página antes
+640		Page break before	Quebra de página antes
+641		Page Breaks	Quebras de página
+642		Page Color	Cor da página
+643		Page Down	Página abaixo
+644		Page image (*.png)	Imagem de página (*.png)
+645		Page Movement	Movimentação entre páginas
+646		Page Number	Número da página
+647		Page Setup	Configuração da página
+648		Page Up	Página acima
+649		Page Width	Largura da página
+650		Page width	Largura da página
+651		Page X of Y	Página X de Y
+652		Page {page}	Página {page}
+653		Page {page} of {pages}	Página {page} de {pages}
+654		Page\nBorders	Bordas da\npágina
+655		Page\nColor	Cor da\npágina
+656		Page\nNumber	Número da\npágina
+657		Pages	Páginas
+658		Paragraph	Parágrafo
+659		Paragraph Details	Detalhes do parágrafo
+660		Paragraph Down	Parágrafo abaixo
+661		Paragraph Settings	Configurações do parágrafo
+662		Paragraph Spacing	Espaçamento entre parágrafos
+663		Paragraph Up	Parágrafo acima
+664		Paragraphs	Parágrafos
+665		Paste	Colar
+666		Paste (⌘V)	Colar (⌘V)
+667		Paste Formatting	Colar formatação
+668		Paste: Keep Text Only	Colar: manter somente o texto
+669		Paste: Merge Formatting	Colar: mesclar formatação
+670		PDF document (*.pdf)	Documento PDF (*.pdf)
+671		Pen	Caneta
+672		Pencil	Lápis
+673		Picture Border	Borda da imagem
+674		Picture Format	Formato da imagem
+675		Picture Styles	Estilos de imagem
+676		Pictures	Imagens
+677		Plain text (*.txt)	Texto simples (*.txt)
+678		Portrait	Retrato
+679		Position	Posição
+680		Preview Results	Visualizar resultados
+681		Preview\nResults	Visualizar\nresultados
+682		Previous	Anterior
+683		Previous Change	Alteração anterior
+684		Previous Comment	Comentário anterior
+685		Previous Record	Registro anterior
+686		Previous Section	Seção anterior
+687		Print	Imprimir
+688		Print Layout	Layout de impressão
+689		Print\nLayout	Layout de\nimpressão
+690		Proofing	Correção de texto
+691		Proofing Issues	Problemas de correção
+692		Properties	Propriedades
+693		Protect	Proteger
+694		Protect Document	Proteger documento
+695		Quick Access Toolbar	Barra de acesso rápido
+696		Quick Parts	Partes rápidas
+697		Quick Tables	Tabelas rápidas
+698		Read Aloud	Ler em voz alta
+699		Read Mode	Modo de leitura
+700		Read\nAloud	Ler em\nvoz alta
+701		Read\nMode	Modo de\nleitura
+702		Recent	Recentes
+703		Record Macro	Gravar macro
+704		Recover Unsaved Documents	Recuperar documentos não salvos
+705		Rectangle	Retângulo
+706		Redo	Refazer
+707		Reduce Hanging Indent	Reduzir recuo deslocado
+708		References	Referências
+709		Reject	Rejeitar
+710		Reject All Changes	Rejeitar todas as alterações
+711		Reject Change	Rejeitar alteração
+712		Relaxed	Relaxado
+713		Remove Background	Remover plano de fundo
+714		Remove Footer	Remover rodapé
+715		Remove Header	Remover cabeçalho
+716		Remove Hyperlink	Remover hiperlink
+717		Remove Space After Paragraph	Remover espaço depois do parágrafo
+718		Remove Table of Contents	Remover sumário
+719		Remove Watermark	Remover marca-d'água
+720		Repeat	Repetir
+721		Repeat Header Rows	Repetir linhas de cabeçalho
+722		Replace	Substituir
+723		Replace All	Substituir tudo
+724		Replace Document Text	Substituir texto do documento
+725		Replace with:	Substituir por:
+726		Replay	Reproduzir
+727		Reply	Responder
+728		Report	Relatório
+729		Research	Pesquisa
+730		Researcher	Pesquisador
+731		Reset Picture	Redefinir imagem
+732		Resolve	Resolver
+733		Resolved	Resolvido
+734		Restart at 1	Reiniciar em 1
+735		Restart Each Page	Reiniciar a cada página
+736		Restart Each Section	Reiniciar a cada seção
+737		Restrict Editing	Restringir edição
+738		Restrict\nEditing	Restringir\nedição
+739		Results	Resultados
+740		Reverse the order	Inverter a ordem
+741		Review	Revisão
+742		Reviewing	Revisão
+743		Reviewing Pane	Painel de revisão
+744		Reviewing — edits become suggestions	Revisão — as edições viram sugestões
+745		Rich Text Format (*.rtf)	Formato Rich Text (*.rtf)
+746		Right	Direita
+747		Right Border	Borda direita
+748		Right-to-Left Text Direction	Direção do texto da direita para a esquerda
+749		Left-to-Right Text Direction	Direção do texto da esquerda para a direita
+750		Right:	Direita:
+751		Rotate	Girar
+752		Rounded Rectangle	Retângulo arredondado
+753		Rows & Columns	Linhas e colunas
+754		Ruler	Régua
+755		Rules	Regras
+756		Résumé	Currículo
+757		Save	Salvar
+758		Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Salve uma cópia em outro formato. A impressão passa por um PDF que você pode imprimir em qualquer visualizador.
+759		Save As	Salvar como
+760		Save as Template	Salvar como modelo
+761		Saved	Salvo
+762		Search Commands	Pesquisar comandos
+763		Search commands and help	Pesquisar comandos e ajuda
+764		Search document	Pesquisar no documento
+765		Section Breaks	Quebras de seção
+766		Section Properties	Propriedades da seção
+767		Sections	Seções
+768		Select	Selecionar
+769		Select All	Selecionar tudo
+770		Select Cell	Selecionar célula
+771		Select Line	Selecionar linha
+772		Select Objects	Selecionar objetos
+773		Select Paragraph	Selecionar parágrafo
+774		Select Range	Selecionar intervalo
+775		Select Recipients	Selecionar destinatários
+776		Select Row	Selecionar linha
+777		Select Sentence	Selecionar frase
+778		Select Table	Selecionar tabela
+779		Select Text	Selecionar texto
+780		Select Text with Similar Formatting	Selecionar texto com formatação semelhante
+781		Select Word	Selecionar palavra
+782		Select\nRecipients	Selecionar\ndestinatários
+783		Selection	Seleção
+784		Selection Pane	Painel de seleção
+785		Send Backward	Enviar para trás
+786		Sentence case.	Primeira letra maiúscula.
+787		Set as Default	Definir como padrão
+788		Set Caret	Definir ponto de inserção
+789		Set Character Formatting	Definir formatação de caracteres
+790		Set Numbering Value	Definir valor da numeração
+791		Set Paragraph Formatting	Definir formatação de parágrafo
+792		Shading	Sombreamento
+793		Shadow	Sombra
+794		Shape Fill	Preenchimento da forma
+795		Shape Format	Formato da forma
+796		Shape Outline	Contorno da forma
+797		Shape Styles	Estilos de forma
+798		Shapes	Formas
+799		Share	Compartilhar
+800		Shift+Tab	Shift+Tab
+801		Show	Mostrar
+802		Show all formatting marks	Mostrar todas as marcas de formatação
+803		Show all revisions inline	Mostrar todas as revisões no texto
+804		Show Comments	Mostrar comentários
+805		Show Markup	Mostrar marcação
+806		Show Notes	Mostrar notas
+807		Show only comments and formatting in balloons	Mostrar apenas comentários e formatação em balões
+808		Show revisions in balloons	Mostrar revisões em balões
+809		Show rulers	Mostrar réguas
+810		Animation	Animação
+811		Animate the caret (it glides and fades)	Animar o ponto de inserção (desliza e esmaece)
+812		On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Ativado: o ponto de inserção desliza até a nova posição quando você digita ou usa as setas, e o piscar é suave. Desativado: ele salta e pisca de forma brusca.
+813		Show the community button in the title bar	Mostrar o botão da comunidade na barra de título
+814		Show/Hide ¶	Mostrar/ocultar ¶
+815		Show\nComments	Mostrar\ncomentários
+816		Shrink Font 1 Point	Diminuir fonte em 1 ponto
+817		Side to Side	Lado a lado
+818		Side\nto Side	Lado\na lado
+819		Signature Line	Linha de assinatura
+820		Single	Simples
+821		Single Spacing	Espaçamento simples
+822		Size	Tamanho
+823		Size (pt):	Tamanho (pt):
+824		Size:	Tamanho:
+825		Small Caps	Versaletes
+826		Small caps	Versaletes
+827		SmartArt	SmartArt
+828		Sort	Classificar
+829		Source code: github.com/storytold/wordcraft	Código-fonte: github.com/storytold/wordcraft
+830		Space	Espaço
+831		Space before/after:	Espaço antes/depois:
+832		Spacing	Espaçamento
+833		Spacing (pt):	Espaçamento (pt):
+834		Speech	Fala
+835		Spelling & Grammar	Ortografia e gramática
+836		Spelling &\nGrammar	Ortografia e\ngramática
+837		Spelling Suggestions	Sugestões de ortografia
+838		Split	Dividir
+839		Split Cells	Dividir células
+840		Split Table	Dividir tabela
+841		Spreadsheet Table	Tabela de planilha
+842		Standard Colors	Cores padrão
+843		Star	Estrela
+844		Start at:	Iniciar em:
+845		Start Mail Merge	Iniciar mala direta
+846		Start Mail\nMerge	Iniciar mala\ndireta
+847		Statistics	Estatísticas
+848		Status Bar	Barra de status
+849		Strikethrough	Tachado
+850		Studio cover	Capa do Studio
+851		Studio handbook (sample)	Manual do Studio (exemplo)
+852		Style	Estilo
+853		Style based on:	Estilo baseado em:
+854		Style Set	Conjunto de estilos
+855		Style: {style}	Estilo: {style}
+856		Styles	Estilos
+857		Styles Pane	Painel de estilos
+858		Subscript	Subscrito
+859		Superscript	Sobrescrito
+860		Switch Modes	Alternar modos
+861		Switch\nModes	Alternar\nmodos
+862		Symbol	Símbolo
+863		Symbols	Símbolos
+864		Synonyms	Sinônimos
+865		Tab	Tab
+866		Tab character	Caractere de tabulação
+867		Table	Tabela
+868		Table Column Width	Largura da coluna da tabela
+869		Table Design	Design da tabela
+870		Table Layout	Layout de tabela
+871		Table of Authorities	Índice de autoridades
+872		Table of Contents	Sumário
+873		Table of\nContents	Sumário
+874		Table Properties	Propriedades da tabela
+875		Table Properties…	Propriedades da tabela…
+876		Table Row Height	Altura da linha da tabela
+877		Table Style Options	Opções de estilo de tabela
+878		Table Styles	Estilos de tabela
+879		Tables	Tabelas
+880		Tabs	Tabulações
+881		Tabular List	Lista tabular
+882		Text	Texto
+883		Text Box	Caixa de texto
+884		Text Direction	Direção do texto
+885		Text Effects	Efeitos de texto
+886		Text Effects and Typography	Efeitos de texto e tipografia
+887		Text from File	Texto de arquivo
+888		Text Highlight Color	Cor de realce do texto
+889		Text indent at:	Recuo do texto em:
+890		Text to display:	Texto a ser exibido:
+891		Text Wrapping	Quebra de texto
+892		Text:	Texto:
+893		Text\nBox	Caixa de\ntexto
+894		Text\nDirection	Direção do\ntexto
+895		The new style takes the formatting of the current paragraph.	O novo estilo assume a formatação do parágrafo atual.
+896		Theme Colors	Cores do tema
+897		Theme Fonts	Fontes do tema
+898		Theme List	Lista do tema
+899		Themes	Temas
+900		Thesaurus	Dicionário de sinônimos
+901		Thick	Grossa
+902		Three	Três
+903		Tight	Estreito
+904		Top Border	Borda superior
+905		Top Margin	Margem superior
+906		Top of Page	Topo da página
+907		Top:	Superior:
+908		Total Row	Linha de totais
+909		Track Changes	Controlar alterações
+910		Track Changes Options	Opções de controle de alterações
+911		Track Changes: On	Controlar alterações: ativado
+912		Track formatting	Controlar formatação
+913		Tracking	Controle
+914		Translate	Traduzir
+915		Transparency	Transparência
+916		Triangle	Triângulo
+917		Two	Duas
+918		Type a command, e.g. "insert table"	Digite um comando, por exemplo "insert table"
+919		Type Text	Digitar texto
+920		Underline	Sublinhado
+921		Underline Words Only	Sublinhar somente palavras
+922		Undo	Desfazer
+923		Undo {action}	Desfazer {action}
+924		Undo Actions	Desfazer ações
+925		Undo History	Histórico de desfazer
+926		Undo 1 Action	Desfazer 1 ação
+927		Undo {n} Actions	Desfazer {n} ações
+928		Ungroup	Desagrupar
+929		Up	Para cima
+930		Update Field	Atualizar campo
+931		Update Index	Atualizar índice
+932		Update Style to Match Selection	Atualizar estilo para corresponder à seleção
+933		Update Table	Atualizar sumário
+934		Update Table of Figures	Atualizar índice de figuras
+935		Update to Match	Atualizar para corresponder
+936		Update to Match Selection	Atualizar para corresponder à seleção
+937		UPPERCASE	MAIÚSCULAS
+938		User Name	Nome de usuário
+939		User name:	Nome de usuário:
+940		Version History	Histórico de versões
+941		Version {version} ({build})	Versão {version} ({build})
+942		Vertical	Vertical
+943		Vertical Alignment	Alinhamento vertical
+944		View	Exibir
+945		View Gridlines	Exibir linhas de grade
+946		View State	Estado da exibição
+947		Views	Exibições
+948		Voice	Voz
+949		Watermark	Marca-d'água
+950		Wave	Ondulada
+951		Web Layout	Layout da Web
+952		Web page (*.html)	Página Web (*.html)
+953		Web\nLayout	Layout\nda Web
+954		Whole page	Página inteira
+955		Whole words	Palavras inteiras
+956		Wide	Ampla
+957		Widow/Orphan Control	Controle de viúvas e órfãs
+958		Widow/Orphan control	Controle de viúvas e órfãs
+959		Window	Janela
+960		Word Count	Contagem de palavras
+961		Word document (*.docx)	Documento Word (*.docx)
+962		Word XML Document (*.xml)	Documento XML do Word (*.xml)
+963		Word 2003 XML Document (*.xml)	Documento XML do Word 2003 (*.xml)
+964		Word Left	Palavra à esquerda
+965		Word Right	Palavra à direita
+966		WordArt	Texto artístico
+967		WordCraft	WordCraft
+968		Words	Palavras
+969		Words only	Somente palavras
+970		Wrap Text	Quebrar texto
+971		Wrap\nText	Quebrar\ntexto
+972		Write & Insert Fields	Escrever e inserir campos
+973		Write a reply	Escrever uma resposta
+974		Zoom	Zoom
+975		Zoom In	Ampliar
+976		Zoom Out	Reduzir
+977		{group} settings	Configurações de {group}
+978		{key}+Click to follow link	{key}+clique para seguir o link
+979		Browse…	Procurar…
+980		{words} words	Palavras: {words}
+981		{selected} of {words} words	Palavras: {words}; seleção: {selected}
+982		Dark page (white text on black)	Página escura (texto branco sobre preto)
+983		Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Mostra os documentos com as cores invertidas, como em Exibir › Alternar modos. Salvar, imprimir e PDFs não mudam.
+984		Only web (http, https) and email (mailto) links can be followed	Só é possível seguir links da web (http, https) e de e-mail (mailto)
+985		Direction:	Direção:
+986		Right-to-left	Da direita para a esquerda
+987		Left-to-right	Da esquerda para a direita
+988		Apply Styles	Aplicar estilos
+989		Scroll ribbon left	Rolar a faixa de opções para a esquerda
+990		Scroll ribbon right	Rolar a faixa de opções para a direita
+991		Character Border	Borda de caractere
+993		Zotero	Zotero
+994		Citations	Citações
+995		Document	Documento
+996		Add/Edit\nCitation	Adicionar/editar\ncitação
+997		Add\nNote	Adicionar\nnota
+998		Add/Edit\nBibliography	Adicionar/editar\nbibliografia
+999		Refresh	Atualizar
+1000		Document\nPreferences	Preferências\ndo documento
+1001		Unlink\nCitations	Desvincular\ncitações
+1002		Waiting for Zotero…	Aguardando o Zotero…
+1003		Zotero: done	Zotero: concluído
+1004		Zotero: cancelled	Zotero: cancelado
+1005		Yes	Sim
+1006		No	Não
+1008		Move Past Citation	Mover para depois da citação
+1009		Move Past\nCitation	Mover para depois\nda citação
+1010		Next Sentence	Próxima frase
+1011		Previous Sentence	Frase anterior
+1012		Next sentence	Próxima frase
+1013		Previous sentence	Frase anterior
+1014		Play/Pause	Reproduzir/pausar
+1015		Read Aloud Status	Status da leitura em voz alta
+1016		Reading Speed	Velocidade de leitura
+1017		Skip Citations and Bibliography	Ignorar citações e bibliografia
+1018		Skip citations & bibliography	Ignorar citações e bibliografia
+1019		Stop Reading	Parar leitura
+1020		Don't read Zotero, Mendeley or EndNote citations and bibliographies	Não ler citações e bibliografias do Zotero, Mendeley ou EndNote
+1021		Play	Reproduzir
+1022		Pause	Pausar
+1023		Stop	Parar
+1024		Sentence	Frase
+1025		Paused	Pausado
+1026		Finished	Concluído
+1027		Stopped	Parado
+1028		Speed	Velocidade
+1029		Normal speed	Velocidade normal
+1030		AutoSave documents you have saved in WordCraft	Salvar automaticamente documentos que você salvou no WordCraft
+1031		AutoSave failed: {error}. Save the document to turn AutoSave back on.	Falha no salvamento automático: {error}. Salve o documento para reativar o salvamento automático.
+1032		Couldn't download {name}: {error}	Não foi possível baixar {name}: {error}
+1033		Do you want to save changes to {name}?	Deseja salvar as alterações em {name}?
+1034		Don't Save	Não Salvar
+1035		That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	Esse formato não preserva tudo, então o documento continua aberto. Salve-o como documento do Word (.docx) para continuar.
+1036		Your changes will be lost if you don't save them.	Suas alterações serão perdidas se você não salvá-las.

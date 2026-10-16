@@ -1,0 +1,265 @@
+1038		Change Structure	Alterar estrutura	Alterar Estrutura	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1039		Change to Display	Alterar para exibição	Alterar para Exibição	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1040		Change to Inline	Alterar para embutida	Alterar para em linha	termo-word	O comando da equação usa o termo do modo inline no Word.
+1042		Delete Back in Equation	Excluir para trás na equação	Excluir para Trás na Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1043		Delete in Equation	Excluir na equação	Excluir na Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1044		Edit Equation	Editar equação	Editar Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1045		Enter in Equation	Enter na equação	Enter na Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1046		Equation Gallery	Galeria de equações	Galeria de Equações	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1047		Equation Info	Informações da equação	Informações da Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1048		Equation Number	Número da equação	Número da Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1049		Input Format	Formato de entrada	Formato de Entrada	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1050		Insert Structure	Inserir estrutura	Inserir Estrutura	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1051		Insert Symbol	Inserir símbolo	Inserir Símbolo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1053		Leave Equation	Sair da equação	Sair da Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1054		Move in Equation	Mover na equação	Mover na Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1055		Normal Text	Texto normal	Texto Normal	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1056		Set Equation	Definir equação	Definir Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1057		Structure Actions	Ações de estrutura	Ações de Estrutura	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1060		Type in Equation	Digitar na equação	Digitar na Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1061		Inline	Embutida	Em linha	termo-word	É a opção de exibição inline da equação.
+1063		Close Equation	Fechar equação	Fechar Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1064		Insert New Equation	Inserir nova equação	Inserir Nova Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1078		Equation Options	Opções de equação	Opções de Equação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1085		Column Selection	Seleção de coluna	Seleção de Coluna	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1086		Style Inspector	Inspetor de estilos	Inspetor de Estilos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1087		Inspect Styles at Selection	Inspecionar estilos na seleção	Inspecionar Estilos na Seleção	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1088		Clear Formatting Level	Limpar nível de formatação	Limpar Nível de Formatação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1094		Clear Character Formatting	Limpar formatação de caractere	Limpar formatação de caracteres	consistencia	A tradução fica consistente com a forma usada para Character Formatting.
+1095		Paste Special	Colar especial	Colar Especial	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1096		Paste Special…	Colar especial…	Colar Especial…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1100		Rich Text Format (RTF)	Rich Text Format (RTF)	Formato Rich Text (RTF)	ingles	O nome do formato na caixa Colar Especial recebe redação em português.
+1105		Reads the clipboard's rich text and keeps its formatting.	Lê o rich text da área de transferência e mantém a formatação.	Lê o texto formatado da área de transferência e mantém a formatação.	ingles	A dica descreve texto formatado, sem deixar rich text em inglês.
+1106		Reads the clipboard's web content and keeps its formatting.	Lê o conteúdo web da área de transferência e mantém a formatação.	Lê o conteúdo da Web da área de transferência e mantém a formatação.	termo-word	A dica usa a grafia adotada para conteúdo da Web.
+1110		Advanced Find	Localização avançada	Pesquisa avançada	termo-word	O menu Localizar usa Pesquisa avançada como nome do recurso.
+1111		Advanced Find…	Localização avançada…	Pesquisa avançada…	termo-word	O menu Localizar usa Pesquisa avançada como nome do recurso.
+1114		New Table Style	Novo estilo de tabela	Novo Estilo de Tabela	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1115		Modify Table Style	Modificar estilo de tabela	Modificar Estilo de Tabela	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1116		New Table Style…	Novo estilo de tabela…	Novo Estilo de Tabela…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1125		Body Text	Corpo do texto	Corpo do Texto	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1155		Merge Record #	Nº do registro de mesclagem	Nº do Registro de Mesclagem	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1156		Skip Record If…	Ignorar registro se…	Ignorar Registro se…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1157		Skip Record If	Ignorar registro se	Ignorar Registro se	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1173		Select recipients first to match their fields.	Selecione os destinatários primeiro para corresponder os campos.	Selecione primeiro os destinatários para associar os campos.	gramatica	A frase da mala direta fica natural e preserva a ação de associar campos.
+1178		Add Field	Adicionar campo	Adicionar Campo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1185		New Entry	Nova entrada	Nova Entrada	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1186		Recipient List	Lista de destinatários	Lista de Destinatários	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1191		Type a New List…	Digitar uma nova lista…	Digitar uma Nova Lista…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1194		Use an Existing List…	Usar uma lista existente…	Usar uma Lista Existente…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1196		First row of data contains column headers	A primeira linha de dados contém cabeçalhos de coluna	A primeira linha de dados contém os cabeçalhos das colunas	gramatica	A opção da lista de destinatários pede o artigo definido antes de cabeçalhos.
+1199		Interface Theme	Tema da interface	Tema da Interface	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1224		Reset Crop	Redefinir corte	Redefinir Corte	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1229		Draw Ink	Desenhar tinta	Desenhar com tinta	termo-word	É o comando da guia Desenhar para ativar o desenho à mão livre.
+1230		Erase Ink	Apagar tinta	Apagar Tinta	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1231		Hide Ink	Ocultar tinta	Ocultar Tinta	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1259		Field Codes	Códigos de campo	Códigos de Campo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1271		Mail Merge	Mala direta	Mala Direta	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1272		More Columns…	Mais colunas…	Mais Colunas…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1273		More Symbols…	Mais símbolos…	Mais Símbolos…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1274		No-Width Non Break	Junção sem largura	Sem largura, sem quebra	sentido	O item de caracteres especiais representa um caractere sem largura e sem quebra.
+1281		Registered	Registrado	Marca registrada	termo-word	O símbolo ® é apresentado como marca registrada.
+1300		Number of the page the field sits on	O número da página atual	O número da página em que o campo está	sentido	A descrição do campo PAGE indica a página que contém o campo.
+1301		Number of the section the field sits in	O número da seção atual	O número da seção em que o campo está	sentido	A descrição do campo SECTION indica a seção que contém o campo.
+1313		Shape Effects	Efeitos de forma	Efeitos de Forma	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1315		Soft Edges	Bordas suaves	Bordas Suaves	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1316		No Shadow	Sem sombra	Sem Sombra	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1317		No Glow	Sem brilho	Sem Brilho	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1318		No Soft Edges	Sem bordas suaves	Sem Bordas Suaves	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1319		Glow Colors	Cores do brilho	Cores do Brilho	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1331		Manage Styles	Gerenciar estilos	Gerenciar Estilos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1332		Show or Hide Style	Mostrar ou ocultar estilo	Mostrar ou Ocultar Estilo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1333		Manage Styles…	Gerenciar estilos…	Gerenciar Estilos…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1351		Delete Table Style	Excluir estilo de tabela	Excluir Estilo de Tabela	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1357		Remove Password	Remover senha	Remover Senha	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1423		Rotate Right 90°	Girar 90° para a direita	Girar 90° para a Direita	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1424		Rotate Left 90°	Girar 90° para a esquerda	Girar 90° para a Esquerda	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1425		Flip Vertical	Inverter verticalmente	Inverter Verticalmente	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1426		Flip Horizontal	Inverter horizontalmente	Inverter Horizontalmente	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1427		Move Paragraph Up	Mover parágrafo para cima	Mover Parágrafo para Cima	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1428		Move Paragraph Down	Mover parágrafo para baixo	Mover Parágrafo para Baixo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1432		Toggle Unicode Character	Alternar caractere Unicode	Alternar Caractere Unicode	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1433		Type Character Code	Digitar código de caractere	Digitar Código de Caractere	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1434		Toggle Field Codes	Alternar códigos de campo	Alternar Códigos de Campo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1435		Edit Field Code	Editar código de campo	Editar Código de Campo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1436		Unlink Fields	Desvincular campos	Desvincular Campos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1437		Lock Fields	Bloquear campos	Bloquear Campos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1438		Unlock Fields	Desbloquear campos	Desbloquear Campos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1439		Next Field	Próximo campo	Próximo Campo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1440		Previous Field	Campo anterior	Campo Anterior	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1441		Selected Fields	Campos selecionados	Campos Selecionados	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1446		Auto ({percent}%)	Auto ({percent}%)	Automático ({percent}%)	termo-word	A escala da interface usa Automático como opção do Word.
+1447		Makes the ribbon, menus and dialogs larger or smaller. Auto follows your system's display scaling; 100% is one screen pixel per point. Document zoom is separate.	Aumenta ou diminui a faixa de opções, os menus e as caixas de diálogo. Auto segue a escala de exibição do sistema; 100% é um pixel da tela por ponto. O zoom do documento é separado.	Aumenta ou diminui a faixa de opções. A mesma escala vale para os menus e as caixas de diálogo. A opção Automático segue a escala de exibição do sistema. Em 100%, cada ponto equivale a um pixel da tela. O zoom do documento é separado.	gramatica	A descrição passa a usar o rótulo Automático e uma redação mais natural.
+1448		Resize Table by Dragging	Redimensionar tabela arrastando	Redimensionar Tabela Arrastando	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1449		Print Markup	Imprimir marcação	Imprimir Marcação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1466		Correct TWo INitial CApitals	Corrigir DUas INiciais MAiúsculas	Corrigir DUAS INICIAIS MAIÚSCULAS	gramatica	A opção de autocorreção precisa manter MAIÚSCULAS com acento.
+1467		Correct accidental usage of cAPS LOCK key	Corrigir o uso acidental da tecla cAPS LOCK	Corrigir o uso acidental da tecla CAPS LOCK	gramatica	CAPS LOCK é o nome correto da tecla.
+1469		Case changes	Alterações de maiúsculas	Alterações de maiúsculas e minúsculas	sentido	A opção trata das duas formas de uso de caixa.
+1472		Combine Documents	Combinar documentos	Combinar Documentos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1473		Compare Documents	Comparar documentos	Comparar Documentos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1475		Comparing with another file needs the desktop app.	Para comparar com outro arquivo é preciso o aplicativo para desktop.	Para comparar com outro arquivo, é preciso o aplicativo para computador.	termo-word	A mensagem se refere ao aplicativo instalado no computador.
+1485		Find Next Editable Region	Localizar a próxima região editável	Localizar a Próxima Região Editável	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1493		Label changes with:	Rotular alterações com:	Identificar alterações com:	termo-word	O rótulo do diálogo de comparação indica como identificar as alterações.
+1504		Ordinals (1st) as superscript	Ordinais (1st) sobrescritos	Ordinais (1º) como sobrescrito	gramatica	O exemplo deve usar o ordinal em português e a construção correta.
+1517		Stop Protection	Parar proteção	Parar Proteção	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1525		With:	Por:	Com:	sentido	O campo da substituição indica o valor usado com a opção anterior.
+1533		Wrap Text Sides	Lados da quebra	Lados da quebra automática de texto	termo-word	O diálogo de layout usa o nome completo da opção de quebra de texto.
+1538		Customize Keyboard	Personalizar teclado	Personalizar Teclado	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1546		Not used by any command	Nenhum comando usa	Não usado por nenhum comando	gramatica	A mensagem informa que o atalho não está atribuído.
+1568		Ribbon tabs	Guias da faixa	Guias da Faixa de Opções	termo-word	O diálogo de personalização usa o nome completo da Faixa de Opções.
+1572		Ribbon and Quick Access Toolbar:	Faixa de Opções e Barra de Acesso Rápido:	Faixa de Opções e Barra de Ferramentas de Acesso Rápido:	termo-word	O título do diálogo deve trazer o nome completo da barra do Word.
+1573		Add Font…	Adicionar fonte…	Adicionar Fonte…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1574		Added Fonts	Fontes adicionadas	Fontes Adicionadas	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1575		Remove Added Font	Remover fonte adicionada	Remover Fonte Adicionada	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1576		Load System Installed Fonts…	Carregar fontes do sistema instaladas…	Carregar fontes instaladas pelo sistema…	gramatica	A ordem dos termos deixa claro que as fontes foram instaladas pelo sistema.
+1594		Accessibility Pane	Painel de acessibilidade	Painel de Acessibilidade	maiuscula	É o nome do painel contextual de acessibilidade.
+1595		Alt Text Pane	Painel de texto alternativo	Painel de Texto Alternativo	maiuscula	É o nome do painel contextual de texto alternativo.
+1596		Alt\nText	Texto\nalternativo	Texto\nAlternativo	maiuscula	O botão da faixa usa o nome do recurso em duas linhas.
+1597		View Alt Text…	Exibir texto alternativo…	Exibir Texto Alternativo…	maiuscula	É o botão da faixa que abre o painel de texto alternativo.
+1608		Document Grid	Grade do documento	Grade do Documento	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1619		Rich Text Content Control	Controle de conteúdo de rich text	Controle de conteúdo de texto formatado	ingles	O nome do controle não deve deixar rich text em inglês.
+1620		Plain Text Content Control	Controle de conteúdo de texto sem formatação	Controle de Conteúdo de Texto sem Formatação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1621		Picture Content Control	Controle de conteúdo de imagem	Controle de Conteúdo de Imagem	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1622		Building Block Gallery Content Control	Controle de conteúdo da galeria de blocos de construção	Controle de Conteúdo da Galeria de Blocos de Construção	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1623		Check Box Content Control	Controle de conteúdo de caixa de seleção	Controle de Conteúdo de Caixa de Seleção	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1624		Combo Box Content Control	Controle de conteúdo de caixa de combinação	Controle de Conteúdo de Caixa de Combinação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1625		Drop-Down List Content Control	Controle de conteúdo de lista suspensa	Controle de Conteúdo de Lista Suspensa	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1626		Date Picker Content Control	Controle de conteúdo de seletor de data	Controle de Conteúdo de Seletor de Data	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1627		Repeating Section Content Control	Controle de conteúdo de seção repetida	Controle de Conteúdo de Seção Repetida	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1629		Content Control at Selection	Controle de conteúdo na seleção	Controle de Conteúdo na Seleção	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1630		Toggle Check Box	Alternar caixa de seleção	Alternar Caixa de Seleção	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1631		Choose List Item	Escolher item da lista	Escolher Item da Lista	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1632		Set Date	Definir data	Definir Data	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1633		Remove Content Control	Remover controle de conteúdo	Remover Controle de Conteúdo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1634		Content Control Properties	Propriedades do controle de conteúdo	Propriedades do Controle de Conteúdo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1650		Right-to-Left Table	Tabela da direita para a esquerda	Tabela da Direita para a Esquerda	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1651		Right-to-Left Section	Seção da direita para a esquerda	Seção da Direita para a Esquerda	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1654		Drawing Canvas	Tela de desenho	Tela de Desenho	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1655		New Drawing Canvas	Nova tela de desenho	Nova Tela de Desenho	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1658		Scale Drawing	Dimensionar desenho	Dimensionar Desenho	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1659		Canvas Member	Item da tela	Item da Tela	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1672		Enclose Characters	Envolver caracteres	Envolver Caracteres	maiuscula	É o nome do recurso da fonte no Word.
+1685		Attach Template	Anexar modelo	Anexar Modelo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1686		Detach Template	Desanexar modelo	Desanexar Modelo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1687		Automatically Update Document Styles	Atualizar automaticamente os estilos do documento	Atualizar Automaticamente os Estilos do Documento	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1688		Update Styles from Template	Atualizar estilos a partir do modelo	Atualizar Estilos a Partir do Modelo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1690		Copy Styles	Copiar estilos	Copiar Estilos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1691		Rename Style	Renomear estilo	Renomear Estilo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1696		Change Chart Type	Alterar tipo de gráfico	Alterar Tipo de Gráfico	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1697		Chart Design	Design do gráfico	Design do Gráfico	maiuscula	É o nome da guia contextual de gráfico.
+1699		Edit Data	Editar dados	Editar Dados	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1700		Chart Title	Título do gráfico	Título do Gráfico	maiuscula	É o item de título do grupo da guia Design do Gráfico.
+1701		Chart Layouts	Layouts do gráfico	Layouts de Gráfico	maiuscula	É o nome do grupo da guia Design do Gráfico.
+1702		Add Chart Element	Adicionar elemento ao gráfico	Adicionar Elemento de Gráfico	maiuscula	É o nome do menu de elementos da guia de gráfico.
+1704		Data Labels	Rótulos de dados	Rótulos de Dados	maiuscula	É o nome do recurso de gráfico no Word.
+1705		Above Chart	Acima do gráfico	Acima do Gráfico	maiuscula	É a posição do título no menu do gráfico.
+1706		Insert Chart	Inserir gráfico	Inserir Gráfico	maiuscula	É o comando de inserção de gráfico.
+1718		Type the categories down the side and a column of values per series.	Digite as categorias na lateral e uma coluna de valores por série.	Digite as categorias na lateral e uma coluna de valores para cada série.	gramatica	A frase explica que cada série recebe uma coluna de valores.
+1727		Align Text	Alinhar texto	Alinhar Texto	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1728		Create Link	Criar link	Criar Vínculo	termo-word	O comando liga uma caixa de texto a outra e usa vínculo no Word.
+1729		Break Link	Quebrar link	Quebrar Vínculo	termo-word	O comando desfaz o vínculo entre caixas de texto.
+1736		Show KeyTips (Alt or F10)	Mostrar dicas de teclas (Alt ou F10)	Mostrar Dicas de Teclas (Alt ou F10)	maiuscula	É o nome da opção que exibe as dicas de teclas.
+1748		Convert Notes	Converter notas	Converter Notas	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1750		Reading Column Width	Largura da coluna de leitura	Largura da Coluna de Leitura	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1751		Reading Line Spacing	Espaçamento entre linhas na leitura	Espaçamento entre Linhas na Leitura	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1752		Reading Text Size	Tamanho do texto na leitura	Tamanho do Texto na Leitura	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1762		The system file dialog isn't available, so WordCraft shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	A caixa de diálogo de arquivos do sistema não está disponível, então o WordCraft mostra a sua própria. Para usar a do sistema, instale um portal seletor de arquivos (como xdg-desktop-portal-gtk) ou o zenity.	A caixa de diálogo de arquivos do sistema não está disponível, então o WordCraft mostra a sua própria. Para usar a caixa do sistema, instale um portal de seleção de arquivos (como xdg-desktop-portal-gtk) ou o zenity.	gramatica	A mensagem corrige a expressão portal seletor de arquivos.
+1772		Hide White Space	Ocultar espaço em branco	Ocultar Espaço em Branco	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1788		Add Shape	Adicionar forma	Adicionar Forma	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1789		Change Colors	Alterar cores	Alterar Cores	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1790		Change Layout	Alterar layout	Alterar Layout	maiuscula	É o comando de layout da galeria SmartArt.
+1791		Create Graphic	Criar gráfico	Criar Gráfico	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1792		Edit Items	Editar itens	Editar Itens	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1794		Reset Graphic	Redefinir gráfico	Redefinir Gráfico	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1797		Text Pane	Painel de texto	Painel de Texto	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1811		Shows items of equal weight as blocks in rows.	Mostra itens de mesmo peso como blocos em linhas.	Mostra itens de igual importância como blocos em linhas.	sentido	A descrição do SmartArt fala de importância equivalente, não de peso físico.
+1827		Demote to Body Text	Rebaixar a corpo do texto	Rebaixar para Corpo de Texto	termo-word	É o comando da Estrutura de Tópicos para rebaixar um título.
+1828		Move Up	Mover para cima	Mover para Cima	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1829		Move Down	Mover para baixo	Mover para Baixo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1831		Expand or Collapse Heading	Expandir ou recolher título	Expandir ou Recolher Título	maiuscula	É o comando da Estrutura de Tópicos.
+1832		Select Heading and Content	Selecionar título e conteúdo	Selecionar Título e Conteúdo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1833		Show Level	Mostrar nível	Mostrar Nível	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1834		Show Level 1	Mostrar nível 1	Mostrar Nível 1	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1835		Show Level 2	Mostrar nível 2	Mostrar Nível 2	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1836		Show Level 3	Mostrar nível 3	Mostrar Nível 3	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1837		Show Level 4	Mostrar nível 4	Mostrar Nível 4	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1838		Show Level 5	Mostrar nível 5	Mostrar Nível 5	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1839		Show Level 6	Mostrar nível 6	Mostrar Nível 6	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1840		Show Level 7	Mostrar nível 7	Mostrar Nível 7	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1841		Show Level 8	Mostrar nível 8	Mostrar Nível 8	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1842		Show Level 9	Mostrar nível 9	Mostrar Nível 9	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1843		Show All Levels	Mostrar todos os níveis	Mostrar Todos os Níveis	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1845		Show First Line Only	Mostrar só a primeira linha	Mostrar somente a primeira linha	gramatica	A frase usa a forma mais natural para a opção de exibição.
+1846		Show Text Formatting	Mostrar formatação do texto	Mostrar Formatação do Texto	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1847		Close Outline View	Fechar estrutura de tópicos	Fechar Estrutura de Tópicos	maiuscula	É o botão que fecha a exibição de Estrutura de Tópicos.
+1848		Outline State	Estado da estrutura de tópicos	Estado da Estrutura de Tópicos	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1849		Outlining	Estrutura de tópicos	Estrutura de Tópicos	maiuscula	É o nome da guia contextual da exibição de tópicos.
+1850		Outline Tools	Ferramentas de tópicos	Ferramentas de Estrutura de Tópicos	termo-word	O grupo reúne ferramentas da Estrutura de Tópicos.
+1851		Close Outline\nView	Fechar estrutura\nde tópicos	Fechar Estrutura\nde Tópicos	maiuscula	É o botão em duas linhas que fecha a Estrutura de Tópicos.
+1855		Add New Source…	Adicionar nova fonte…	Adicionar Nova Fonte…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1862		Caption Numbering	Numeração de legendas	Numeração de Legendas	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1872		Create Source	Criar fonte	Criar Fonte	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1874		Custom Table of Contents…	Sumário personalizado…	Sumário Personalizado…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1878		Edit Source	Editar fonte	Editar Fonte	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1893		Journal	Periódico científico	Periódico	termo-word	No formulário bibliográfico, Journal é o campo Periódico. Dúvida por haver também Periodical.
+1897		Letter headings	Cabeçalhos de letra	Cabeçalhos de letras	gramatica	O recurso trabalha com cabeçalhos formados por letras.
+1900		Made from the author and year when empty	Se vazio, é formado pelo autor e ano	Quando estiver vazio, será formado pelo autor e pelo ano	gramatica	A dica do campo de citação explicita a condição de preenchimento.
+1905		Mark Entry…	Marcar entrada…	Marcar Entrada…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1906		Mark Index Entry	Marcar entrada de índice	Marcar Entrada de Índice	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1909		New Label	Novo rótulo	Novo Rótulo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1910		New Label…	Novo rótulo…	Novo Rótulo…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1911		New…	Nova…	Novo…	gramatica	O botão cria uma nova fonte, portanto o adjetivo concorda com fonte.
+1916		Other styles and their TOC level:	Outros estilos e seu nível no sumário:	Outros estilos e seus níveis no sumário:	gramatica	A lista apresenta os níveis correspondentes a vários estilos.
+1930		Source Manager	Gerenciador de fontes	Gerenciador de Fontes	maiuscula	É o título do diálogo de fontes bibliográficas.
+1937		Table of Contents Options	Opções do sumário	Opções do Sumário	maiuscula	É o título do diálogo de opções do Sumário.
+1938		Table of Contents Styles	Estilos do sumário	Estilos do Sumário	maiuscula	É o título do diálogo de estilos do Sumário.
+1948		Lasso Select	Seleção com laço	Seleção com Laço	maiuscula	É o nome da ferramenta de seleção da guia Desenhar.
+1949		Move Selected Ink	Mover a tinta selecionada	Mover a Tinta Selecionada	maiuscula	É um comando da ferramenta de tinta selecionada.
+1950		Delete Selected Ink	Excluir a tinta selecionada	Excluir a Tinta Selecionada	maiuscula	É um comando da ferramenta de tinta selecionada.
+1951		Recolor Selected Ink	Mudar a cor da tinta selecionada	Mudar a Cor da Tinta Selecionada	maiuscula	É um comando da ferramenta de tinta selecionada.
+1952		Add Pen	Adicionar caneta	Adicionar Caneta	maiuscula	É o comando que cria uma caneta na galeria de desenho.
+1953		Remove Pen	Remover caneta	Remover Caneta	maiuscula	É o comando que remove uma caneta da galeria de desenho.
+1954		Ink to Shape	Tinta para forma	Tinta em Forma	termo-word	O comando converte tinta em uma forma e segue o termo do Word.
+1955		Convert to Shapes	Converter em formas	Converter em Formas	maiuscula	É o comando de conversão da tinta na guia Desenhar.
+1956		Ink Replay	Reproduzir tinta	Reproduzir Tinta	maiuscula	É o nome do recurso que repete os traços da tinta.
+1957		Add\nPen	Adicionar\ncaneta	Adicionar\nCaneta	maiuscula	É o botão em duas linhas que adiciona uma caneta.
+1973		Caret Character	Acento circunflexo	Caractere de circunflexo	sentido	O código ^^ representa o caractere de circunflexo, não o acento aplicado.
+1974		Section Character	Símbolo de seção	Caractere de seção	sentido	O código ^% representa o caractere de seção.
+1975		Paragraph Character	Símbolo de parágrafo	Caractere de parágrafo	sentido	O código ^v representa o caractere de parágrafo.
+1982		Find What Text	Texto localizado	Texto a localizar	sentido	O item representa o texto usado no campo Localizar.
+1983		Find What Expression	Expressão localizada	Expressão a localizar	sentido	O item representa a expressão usada no campo Localizar.
+1992		Move with Text	Mover com o texto	Mover com o Texto	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1993		Fix Position on Page	Fixar posição na página	Fixar Posição na Página	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1997		Text Fill	Preenchimento do texto	Preenchimento do Texto	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+1998		Text Outline	Contorno do texto	Contorno do Texto	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2000		No Fill	Sem preenchimento	Sem Preenchimento	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2001		No Outline	Sem contorno	Sem Contorno	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2003		No Reflection	Sem reflexo	Sem Reflexo	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2004		No Transform	Sem transformação	Sem Transformação	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2005		Connect Shapes	Conectar formas	Conectar Formas	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2033		Auto	Auto	Automático	consistencia	A opção Auto tem o mesmo sentido de Automático no diálogo de numeração.
+2038		Count by:	Intervalo:	Contar por:	termo-word	O diálogo de numeração de linhas define o incremento com Contar por.
+2056		Hyphenation Options…	Opções de hifenização…	Opções de Hifenização…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2063		Line Numbering Options…	Opções de numeração de linhas…	Opções de Numeração de Linhas…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2064		Manual Hyphenation	Hifenização manual	Hifenização Manual	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2082		Set As Default	Definir como padrão	Definir como Padrão	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2106		Odd Banded Rows	Linhas listradas ímpares	Linhas em Tiras Ímpares	termo-word	É o nome da parte de tabela usado no Word pt-BR.
+2107		Even Banded Rows	Linhas listradas pares	Linhas em Tiras Pares	termo-word	É o nome da parte de tabela usado no Word pt-BR.
+2108		Odd Banded Columns	Colunas listradas ímpares	Colunas em Tiras Ímpares	termo-word	É o nome da parte de tabela usado no Word pt-BR.
+2109		Even Banded Columns	Colunas listradas pares	Colunas em Tiras Pares	termo-word	É o nome da parte de tabela usado no Word pt-BR.
+2119		Filter Recipients	Filtrar destinatários	Filtrar Destinatários	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2120		Sort Recipients	Classificar destinatários	Classificar Destinatários	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2126		Add Condition	Adicionar condição	Adicionar Condição	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2155		Rename Document	Renomear documento	Renomear Documento	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2159		Privacy Options	Opções de privacidade	Opções de Privacidade	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2160		Trust Center	Central de confiabilidade	Central de Confiabilidade	maiuscula	É o nome do recurso de segurança nas opções do Word.
+2165		Privacy Settings	Configurações de privacidade atuais	Configurações de privacidade	sentido	A entrada descreve configurações, sem indicar que sejam atuais.
+2173		Full Screen	Tela inteira	Tela Inteira	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2182		Researcher needs an online service; WordCraft keeps your documents offline.	O Pesquisador precisa de um serviço online; o WordCraft mantém seus documentos offline.	O Pesquisador precisa de um serviço conectado à Internet. O WordCraft mantém seus documentos sem conexão.	ingles	A mensagem traduz online e offline para expressões naturais em português.
+2191		Reading Mode	Modo de leitura	Modo de Leitura	maiuscula	É o nome do modo de exibição do Word.
+2194		Edit Document	Editar documento	Editar Documento	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2196		Type +2 or -1 to move from the page you are on.	Digite +2 ou -1 para se mover a partir da página atual.	Digite +2 ou -1 para mover-se a partir da página atual.	gramatica	A regência correta do verbo é mover-se a partir da página.
+2198		Set Proofing Language…	Definir idioma de revisão…	Definir Idioma de Revisão…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2199		Language Preferences…	Preferências de idioma…	Preferências de Idioma…	maiuscula	É um nome de recurso exibido em comando, menu ou diálogo.
+2205		One-sided	Somente frente	Somente um lado	termo-word	A configuração de impressão usa lado, não frente, para indicar impressão simples.
+2223		Hunspell .aff and .dic files here (pl_PL, pt_BR, it_IT, hr_HR, tr_TR) are used before the system's.	Os arquivos .aff e .dic do Hunspell nesta pasta (pl_PL, pt_BR, it_IT, hr_HR, tr_TR) são usados antes dos do sistema.	Os arquivos .aff e .dic do Hunspell nesta pasta (pl_PL, pt_BR, it_IT, hr_HR, tr_TR) são priorizados em relação aos do sistema.	sentido	A frase explica a precedência dos dicionários desta pasta.
+2234		Existing File or Web Page	Página da Web ou arquivo existente	Arquivo ou Página da Web Existente	termo-word	É a opção de hiperlink com a ordem usada no Word pt-BR.

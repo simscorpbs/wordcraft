@@ -1,0 +1,839 @@
+linha	contexto	inglês	tradução atual	proposta	categoria	motivo
+21		Accept All Changes	Aceitar todas as alterações	Aceitar Todas as Alterações	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+22		Accept This Change	Aceitar esta alteração	Aceitar Esta Alteração	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+25		Add a comment	Adicionar um comentário	Adicionar um Comentário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+26		Add a Table	Adicionar uma tabela	Adicionar uma Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+27		Add Object to Selection	Adicionar objeto à seleção	Adicionar Objeto à Seleção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+28		Add Space Before Paragraph	Adicionar espaço antes do parágrafo	Adicionar Espaço Antes do Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+32		Add Text	Adicionar texto	Adicionar Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+33		Add to Dictionary	Adicionar ao dicionário	Adicionar ao Dicionário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+34		Add to Style Gallery	Adicionar à galeria de estilos	Adicionar à Galeria de Estilos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+35		Address Block	Bloco de endereço	Bloco de Endereço	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+43		Align Left	Alinhar à esquerda	Alinhar à Esquerda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+44		Align Right	Alinhar à direita	Alinhar à Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+47		All Borders	Todas as bordas	Todas as Bordas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+48		All Caps	Tudo em maiúsculas	Todas em Maiúsculas	termo-word	É uma opção de efeito da Fonte no Word pt-BR.
+49		All caps	Tudo em maiúsculas	Todas em maiúsculas	gramatica	É a caixa de seleção do diálogo Fonte, portanto é uma frase curta.
+50		All Markup	Todas as marcações	Toda a Marcação	termo-word	Display for Review usa a opção oficial Toda a Marcação.
+53		Alt Text	Texto alternativo	Texto Alternativo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+55		Apply Character Style	Aplicar estilo de caractere	Aplicar Estilo de Caractere	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+56		Apply Style	Aplicar estilo	Aplicar Estilo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+60		Artistic Effects	Efeitos artísticos	Efeitos Artísticos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+63		Asian Typography	Tipografia asiática	Tipografia Asiática	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+65		AutoCorrect Options	Opções de autocorreção	Opções de Autocorreção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+67		AutoFit Contents	Autoajustar ao conteúdo	Autoajustar ao Conteúdo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+68		AutoFit Window	Autoajustar à janela	Autoajustar à Janela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+69		AutoSave writes your changes to the file a moment after you stop typing.	O salvamento automático grava suas alterações no arquivo pouco depois que você para de digitar.	O Salvamento Automático grava suas alterações no arquivo pouco depois que você para de digitar.	gramatica	A mensagem usa o nome oficial do recurso.
+72		Automatic follows your system's language. Menus and commands change; your documents don't.	Automático segue o idioma do seu sistema. Menus e comandos mudam; seus documentos, não.	O modo Automático segue o idioma do sistema. Os menus e comandos mudam. Os documentos não mudam.	gramatica	A redação corrige a concordância da mensagem.
+76		AutoSave saves every change to the file (needs a saved document)	O salvamento automático grava cada alteração no arquivo (requer um documento já salvo)	O Salvamento Automático grava cada alteração no arquivo. É necessário que o documento esteja salvo.	gramatica	A mensagem separa a condição do efeito.
+77		AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	O salvamento automático não está disponível no navegador: ele não pode gravar nos seus arquivos. Salvar baixa uma cópia.	O Salvamento Automático não está disponível no navegador porque não pode gravar nos arquivos. Salvar baixa uma cópia.	gramatica	A mensagem evita a construção literal e mantém a ação do botão.
+78		AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	O salvamento automático só mantém arquivos .docx, .odt e .rtf; {name} não guarda toda a formatação. Salve como .docx para ativar o salvamento automático.	O Salvamento Automático mantém apenas arquivos .docx, .odt e .rtf. {name} não preserva toda a formatação. Salve como .docx para ativá-lo.	gramatica	A mensagem separa as condições e mantém o placeholder.
+85		Click level to modify:	Clique no nível a modificar:	Clique no nível que deseja modificar:	gramatica	A instrução fica natural no diálogo de listas.
+86		Click to switch back to inserting	Clique para voltar a inserir	Clique para voltar ao modo de inserção	gramatica	A dica descreve a alternância entre inserção e sobrescrita.
+89		Define New Multilevel List	Definir nova lista de vários níveis	Definir Nova Lista de Vários Níveis	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+90		Define New Multilevel List…	Definir nova lista de vários níveis…	Definir Nova Lista de Vários Níveis…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+93		Follow number with:	Após o número:	Seguir número com:	termo-word	É o rótulo usado no diálogo de listas.
+103		Include level number from:	Incluir número do nível:	Incluir número do nível de:	termo-word	É o rótulo usado no diálogo de listas.
+106		Insertions and Deletions	Inserções e exclusões	Inserções e Exclusões	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+110		Inside:	Interno:	Interna:	gramatica	O rótulo se refere à margem interna, no feminino singular.
+115		List Definition	Definição da lista	Definição da Lista	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+121		No document is open. Create a document or open one first.	Nenhum documento está aberto. Crie ou abra um documento primeiro.	Nenhum documento está aberto. Crie um documento ou abra um antes.	gramatica	A ordem da instrução fica natural.
+122		No words yet. Add to Dictionary on a misspelled word puts it here.	Ainda não há palavras. Adicionar ao dicionário em uma palavra com erro a coloca aqui.	Ainda não há palavras. Use Adicionar ao dicionário em uma palavra com erro para incluí-la aqui.	gramatica	A frase explica como o botão preenche a lista.
+133		Moved objects snap to the page's edges and centre, the margins and other objects. Hold Alt to move freely.	Os objetos movidos se encaixam nas bordas e no centro da página, nas margens e em outros objetos. Segure Alt para mover livremente.	Os objetos movidos se ajustam às bordas e ao centro da página, às margens e a outros objetos. Mantenha Alt pressionada para mover livremente.	gramatica	A dica usa a regência natural e o nome da tecla.
+142		Recent documents to show:	Documentos recentes a mostrar:	Documentos recentes a exibir:	gramatica	A opção fica direta e natural em português.
+144		Outside:	Externo:	Externa:	gramatica	O rótulo se refere à margem externa, no feminino singular.
+147		Save documents	Salvar documentos	Salvar Documentos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+150		AutoText	Autotexto	Texto Automático	termo-word	O recurso do Word pt-BR chama-se Texto Automático.
+152		Banded Columns	Colunas listradas	Colunas em Tiras	termo-word	A opção de estilo de tabela usa Tiras no Word pt-BR.
+153		Banded Rows	Linhas listradas	Linhas em Tiras	termo-word	A opção de estilo de tabela usa Tiras no Word pt-BR.
+162		Blank Page	Página em branco	Página em Branco	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+163		Block\nAuthors	Bloquear\nautores	Bloquear\nAutores	maiuscula	É o comando da aba Revisão.
+167		Delete Bookmark	Excluir indicador	Excluir Indicador	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+170		Border Painter	Pincel de bordas	Pincel de Bordas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+187		Page Border	Borda da página	Borda da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+189		These marks show even when Show/Hide ¶ is off.	Estas marcas aparecem mesmo com Mostrar/ocultar ¶ desativado.	Estas marcas aparecem mesmo quando Mostrar/Ocultar ¶ está desativado.	gramatica	A mensagem usa o nome do comando e concordância natural.
+190		Title Bar	Barra de título	Barra de Título	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+196		Fill	Cor de fundo	Preenchimento	termo-word	É o preenchimento do diálogo de bordas e sombreamento.
+197		Setting:	Tipo:	Definição:	termo-word	No diálogo Bordas e Sombreamento, o Word usa Definição para os presets de borda.
+201		Dot dash	Traço e ponto	Ponto-traço	consistencia	É o mesmo estilo de borda traduzido como Dot-dash em outra entrada.
+204		Borders and Shading	Bordas e sombreamento	Bordas e Sombreamento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+206		Borders and Shading…	Bordas e sombreamento…	Bordas e Sombreamento…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+207		Bottom Border	Borda inferior	Borda Inferior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+209		Bottom of Page	Fim da página	Fim da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+213		Bring Forward	Trazer para frente	Trazer para a Frente	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+214		Bullet Library	Biblioteca de marcadores	Biblioteca de Marcadores	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+218		Capitalize Each Word	Capitalizar cada palavra	Capitalizar Cada Palavra	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+220		Cell Margins	Margens das células	Margens das Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+221		Cell Size	Tamanho das células	Tamanho das Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+225		Change Case	Alterar maiúsculas/minúsculas	Alterar Maiúsculas e Minúsculas	termo-word	O Word pt-BR usa Maiúsculas e Minúsculas.
+226		Change List Level	Alterar nível da lista	Alterar Nível da Lista	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+227		Change Picture	Alterar imagem	Alterar Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+228		Change Shape	Alterar forma	Alterar Forma	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+230		Character Position	Posição de caracteres	Posição de Caracteres	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+231		Character Scale	Escala de caracteres	Escala de Caracteres	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+232		Character Shading	Sombreamento de caracteres	Sombreamento de Caracteres	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+233		Character Spacing	Espaçamento entre caracteres	Espaçamento entre Caracteres	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+237		Check Accessibility	Verificar acessibilidade	Verificar Acessibilidade	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+238		Check Compatibility	Verificar compatibilidade	Verificar Compatibilidade	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+239		Check for Errors	Verificar erros	Verificar Erros	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+242		Citation Style	Estilo de citação	Estilo de Citação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+243		Citations & Bibliography	Citações e bibliografia	Citações e Bibliografia	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+245		Clear All Formatting	Limpar toda a formatação	Limpar Toda a Formatação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+247		Clipboard	Área de transferência	Área de Transferência	termo-word	É o nome do grupo da Página Inicial.
+248		Clipboard Pane	Painel da área de transferência	Painel da Área de Transferência	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+249		Clipboard Items	Itens da área de transferência	Itens da Área de Transferência	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+250		Paste Clipboard Item	Colar item da área de transferência	Colar Item da Área de Transferência	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+251		Paste All	Colar tudo	Colar Tudo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+252		Delete Clipboard Item	Excluir item da área de transferência	Excluir Item da Área de Transferência	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+253		Clear All	Limpar tudo	Limpar Tudo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+258		Close Header and Footer	Fechar cabeçalho e rodapé	Fechar Cabeçalho e Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+259		Collapse Selection	Recolher seleção	Recolher Seleção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+264		Column Break	Quebra de coluna	Quebra de Coluna	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+270		Comments Pane	Painel de comentários	Painel de Comentários	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+274		Compress Pictures	Compactar imagens	Compactar Imagens	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+278		Convert Text to Table	Converter texto em tabela	Converter Texto em Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+279		Convert Text to Table…	Converter texto em tabela…	Converter Texto em Tabela…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+280		Convert to Text	Converter em texto	Converter em Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+282		Copy Formatting	Copiar formatação	Copiar Formatação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+286		Cover Page	Capa	Folha de Rosto	termo-word	O Word pt-BR chama Cover Page de Folha de Rosto.
+288		Create a Style	Criar um estilo	Criar um Estilo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+289		Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Crie uma estrutura de tópicos interativa do seu documento.\n\nÉ uma ótima maneira de acompanhar onde você está ou mover seu conteúdo rapidamente.\n\nPara começar, vá para a guia Início e aplique estilos de Título aos títulos do seu documento.	Crie uma estrutura de tópicos interativa do seu documento.\n\nEla ajuda a acompanhar sua posição e mover o conteúdo com rapidez.\n\nPara começar, abra a aba Página Inicial e aplique estilos de Título aos títulos do documento.	gramatica	A dica usa os nomes da aba e dos estilos do Word pt-BR.
+290		Create New Style	Criar novo estilo	Criar Novo Estilo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+293		Current Position	Posição atual	Posição Atual	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+295		Custom Margins…	Margens personalizadas…	Margens Personalizadas…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+296		Custom Watermark	Marca-d'água personalizada	Marca-d'água Personalizada	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+297		Custom Watermark…	Marca-d'água personalizada…	Marca-d'água Personalizada…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+298		Customize Quick Access Toolbar	Personalizar barra de acesso rápido	Personalizar Barra de Ferramentas de Acesso Rápido	termo-word	O comando usa o nome oficial da barra.
+300		Dark Mode	Modo escuro	Modo Escuro	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+303		Date & Time	Data e hora	Data e Hora	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+304		Decrease Font Size	Diminuir tamanho da fonte	Diminuir Tamanho da Fonte	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+305		Decrease Indent	Diminuir recuo	Diminuir Recuo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+307		Define New Bullet	Definir novo marcador	Definir Novo Marcador	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+308		Define New Number Format	Definir novo formato de numeração	Definir Novo Formato de Numeração	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+310		Delete Cells	Excluir células	Excluir Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+311		Delete Columns	Excluir colunas	Excluir Colunas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+312		Delete Comment	Excluir comentário	Excluir Comentário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+313		Delete Next Word	Excluir próxima palavra	Excluir Próxima Palavra	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+314		Delete Previous Word	Excluir palavra anterior	Excluir Palavra Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+315		Delete Rows	Excluir linhas	Excluir Linhas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+316		Delete Style	Excluir estilo	Excluir Estilo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+317		Delete Table	Excluir tabela	Excluir Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+320		Draw Table	Desenhar tabela	Desenhar Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+321		Edit Comment	Editar comentário	Editar Comentário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+323		Left Margin	Margem esquerda	Margem Esquerda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+324		Indents and Spacing	Recuos e espaçamento	Recuos e Espaçamento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+325		Line breaking	Quebra de linhas	Quebra de linha	termo-word	É o título da seção de tipografia asiática.
+327		More templates →	Mais modelos →	Mais Modelos →	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+328		No templates match your search.	Nenhum modelo corresponde à pesquisa.	Nenhum modelo corresponde à sua pesquisa.	gramatica	A frase fica natural em português brasileiro.
+329		Opens .docx, .doc, .rtf and .odt files and Word templates with WordCraft from now on.	A partir de agora, arquivos .docx, .doc, .rtf e .odt e modelos do Word abrem no WordCraft.	A partir de agora, o WordCraft abrirá arquivos .docx, .doc, .rtf e .odt e modelos do Word.	gramatica	A frase fica direta e mantém os formatos.
+332		Right Margin	Margem direita	Margem Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+336		Phonetic Guide	Guia fonético	Guia Fonético	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+346		Different First Page	Primeira página diferente	Primeira Página Diferente	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+347		Different Odd & Even Pages	Páginas ímpares e pares diferentes	Páginas Ímpares e Pares Diferentes	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+351		Display for Review	Exibir para revisão	Exibir para Revisão	maiuscula	É o menu de exibição das alterações.
+352		Distribute Columns	Distribuir colunas uniformemente	Distribuir Colunas Uniformemente	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+353		Distribute Rows	Distribuir linhas uniformemente	Distribuir Linhas Uniformemente	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+356		Document End	Fim do documento	Fim do Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+357		Document Formatting	Formatação do documento	Formatação do Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+358		Document Property	Propriedade do documento	Propriedade do Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+359		Document Start	Início do documento	Início do Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+360		Document Text	Texto do documento	Texto do Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+361		Document Title	Título do documento	Título do Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+366		Double Spacing	Espaçamento duplo	Espaçamento Duplo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+367		Double Strikethrough	Tachado duplo	Tachado Duplo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+368		Double Underline	Sublinhado duplo	Sublinhado Duplo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+372		Drawing Tools	Ferramentas de desenho	Ferramentas de Desenho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+374		Drop Cap	Capitular	Letra Capitular	termo-word	O Word pt-BR chama Drop Cap de Letra Capitular.
+375		Edit Footer	Editar rodapé	Editar Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+376		Edit Header	Editar cabeçalho	Editar Cabeçalho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+377		Edit Recipient List	Editar lista de destinatários	Editar Lista de Destinatários	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+382		Editing — edit the document directly	Edição — edite o documento diretamente	Edição: edite o documento diretamente	gramatica	A mensagem usa pontuação simples e mantém o sentido do modo.
+386		Encrypt with Password	Criptografar com senha	Criptografar com Senha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+393		Even Page	Página par	Página Par	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+396		Export a copy to share (PDF, Word document)	Exporte uma cópia para compartilhar (PDF, documento Word)	Exporte uma cópia para compartilhar (PDF, documento do Word)	gramatica	A expressão documento do Word é natural em português.
+397		Export Page as PNG	Exportar página como PNG	Exportar Página como PNG	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+400		Extend Selection	Expandir seleção	Expandir Seleção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+401		Extend Selection by Units	Expandir seleção por unidades	Expandir Seleção por Unidades	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+405		Find and Replace	Localizar e substituir	Localizar e Substituir	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+406		Find Next	Localizar próxima	Localizar Próxima	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+407		Find Previous	Localizar anterior	Localizar Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+408		Find Recipient	Localizar destinatário	Localizar Destinatário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+411		Finish & Merge	Concluir e mesclar	Concluir e Mesclar	maiuscula	É o comando de Correspondências.
+412		Finish &\nMerge	Concluir e\nmesclar	Concluir e\nMesclar	maiuscula	É a versão quebrada do comando de Correspondências.
+413		First Column	Primeira coluna	Primeira Coluna	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+416		Fixed Column Width	Largura de coluna fixa	Largura de Coluna Fixa	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+419		Font Color	Cor da fonte	Cor da Fonte	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+421		Font Dialog	Diálogo de fonte	Caixa de diálogo Fonte	termo-word	O nome do comando identifica a caixa de diálogo Fonte.
+422		Font Size	Tamanho da fonte	Tamanho da Fonte	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+426		Footnote and Endnote	Nota de rodapé e nota de fim	Nota de Rodapé e Nota de Fim	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+429		Format Page Numbers	Formatar números de página	Formatar Números de Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+430		Format Page Numbers…	Formatar números de página…	Formatar Números de Página…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+431		Format Painter	Pincel de formatação	Pincel de Formatação	maiuscula	É o nome oficial do comando da Área de Transferência.
+439		Greeting Line	Linha de saudação	Linha de Saudação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+443		Grow Font 1 Point	Aumentar fonte em 1 ponto	Aumentar Fonte em 1 Ponto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+444		Hanging Indent	Recuo deslocado	Recuo Deslocado	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+446		Header & Footer	Cabeçalho e rodapé	Cabeçalho e Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+447		Header Row	Linha de cabeçalho	Linha de Cabeçalho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+448		Header/Footer Position	Posição do cabeçalho/rodapé	Posição do Cabeçalho/Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+456		Highlight Merge Fields	Realçar campos de mesclagem	Realçar Campos de Mesclagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+459		Home	Início	Página Inicial	termo-word	É o nome da aba correspondente ao Home do Word pt-BR.
+461		Horizontal Line	Linha horizontal	Linha Horizontal	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+467		Immersive Reader	Leitor imersivo	Leitor Imersivo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+469		Increase Font Size	Aumentar tamanho da fonte	Aumentar Tamanho da Fonte	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+470		Increase Indent	Aumentar recuo	Aumentar Recuo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+480		Insert Above	Inserir acima	Inserir Acima	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+481		Insert Below	Inserir abaixo	Inserir Abaixo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+482		Insert Caption	Inserir legenda	Inserir Legenda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+483		Insert Caption…	Inserir legenda…	Inserir Legenda…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+484		Insert Citation	Inserir citação	Inserir Citação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+485		Insert Endnote	Inserir nota de fim	Inserir Nota de Fim	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+486		Insert Footnote	Inserir nota de rodapé	Inserir Nota de Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+487		Insert Hyperlink	Inserir hiperlink	Inserir Hiperlink	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+488		Insert Index	Inserir índice	Inserir Índice	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+489		Insert Left	Inserir à esquerda	Inserir à Esquerda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+490		Insert Merge Field	Inserir campo de mesclagem	Inserir Campo de Mesclagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+492		Insert Right	Inserir à direita	Inserir à Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+493		Insert Shapes	Inserir formas	Inserir Formas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+494		Insert Table	Inserir tabela	Inserir Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+495		Insert Table of Authorities	Inserir índice de autoridades	Inserir Índice de Autoridades	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+496		Insert Table of Figures	Inserir índice de figuras	Inserir Índice de Ilustrações	termo-word	O comando segue o nome oficial Índice de Ilustrações.
+497		Insert Table…	Inserir tabela…	Inserir Tabela…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+502		Inside Borders	Bordas internas	Bordas Internas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+503		Inspect Document	Inspecionar documento	Inspecionar Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+509		Keep Lines Together	Manter linhas juntas	Manter Linhas Juntas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+511		Keep Text Only	Manter somente o texto	Manter Somente o Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+512		Keep with Next	Manter com o próximo	Manter com o Próximo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+520		Last Column	Última coluna	Última Coluna	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+523		Layout Summary	Resumo do layout	Resumo do Layout	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+525		Left Border	Borda esquerda	Borda Esquerda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+529		Line and Page Breaks	Quebras de linha e de página	Quebras de Linha e de Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+530		Line and Paragraph Spacing	Espaçamento entre linhas e parágrafos	Espaçamento entre Linhas e Parágrafos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+531		Line Break	Quebra de linha	Quebra de Linha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+533		Line End	Fim da linha	Fim da Linha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+534		Line Numbers	Números de linha	Números de Linha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+535		Line Spacing	Espaçamento entre linhas	Espaçamento entre Linhas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+536		Line Spacing Options…	Opções de espaçamento…	Opções de Espaçamento…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+538		Line Start	Início da linha	Início da Linha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+540		Lines added	Linhas adicionadas	Linhas Adicionadas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+541		Lines deleted	Linhas excluídas	Linhas Excluídas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+543		Link to Previous	Vincular ao anterior	Vincular ao Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+549		Manage Sources	Gerenciar fontes	Gerenciar Fontes Bibliográficas	termo-word	O comando de Referências gerencia fontes bibliográficas.
+550		Many pages	Muitas páginas	Várias Páginas	termo-word	É a opção do diálogo de Zoom correspondente ao Word pt-BR.
+552		Mark Citation	Marcar citação	Marcar Citação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+553		Mark Entry	Marcar entrada	Marcar Entrada	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+558		Match Fields	Corresponder campos	Coincidir Campos	termo-word	É o nome do comando de Correspondências no Word pt-BR.
+561		Merge Cells	Mesclar células	Mesclar Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+562		Merge Formatting	Mesclar formatação	Mesclar Formatação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+565		MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team e os colaboradores do WordCraft.	MIT ou Apache-2.0. Direitos autorais (c) 2026 ArtCraft Team e colaboradores do WordCraft.	ingles	O aviso de licença é texto visível e a parte comum deve estar em português.
+567		Modify Style	Modificar estilo	Modificar Estilo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+569		Move or Resize	Mover ou redimensionar	Mover ou Redimensionar	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+570		Multilevel List	Lista de vários níveis	Lista de Vários Níveis	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+571		Multiple Pages	Várias páginas	Várias Páginas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+576		Navigation Pane	Painel de navegação	Painel de Navegação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+578		New Comment	Novo comentário	Novo Comentário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+579		New from Template	Novo a partir de modelo	Novo a partir de Modelo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+580		New Paragraph	Novo parágrafo	Novo Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+581		New Style…	Novo estilo…	Novo Estilo…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+582		New Window	Nova janela	Nova Janela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+586		Next Change	Próxima alteração	Próxima Alteração	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+587		Next Comment	Próximo comentário	Próximo Comentário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+588		Next Footnote	Próxima nota de rodapé	Próxima Nota de Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+589		Next Page	Próxima página	Próxima Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+590		Next Record	Próximo registro	Próximo Registro	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+591		Next Section	Próxima seção	Próxima Seção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+592		No Border	Sem borda	Sem Borda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+593		No Color	Sem cor	Sem Cor	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+595		No Markup	Sem marcação	Sem Marcação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+597		No Paragraph Space	Sem espaço entre parágrafos	Sem Espaço entre Parágrafos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+602		Normal Style	Estilo Normal	Normal	termo-word	O estilo interno padrão do Word pt-BR aparece como Normal.
+611		Odd Page	Página ímpar	Página Ímpar	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+615		One Page	Uma página	Uma Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+618		Optional Hyphen	Hífen opcional	Hífen Opcional	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+622		Insert Date Field	Inserir campo de data	Inserir Campo de Data	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+623		Insert Page Field	Inserir campo de página	Inserir Campo de Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+624		Insert Time Field	Inserir campo de hora	Inserir Campo de Hora	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+626		Reset Character Formatting	Redefinir formatação de caracteres	Redefinir Formatação de Caracteres	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+627		Reset Paragraph Formatting	Redefinir formatação de parágrafo	Redefinir Formatação de Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+631		Outline	Estrutura de tópicos	Estrutura de Tópicos	maiuscula	É um modo de exibição do Word.
+632		Outline Level	Nível de tópicos	Nível de Tópicos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+633		Outside Borders	Bordas externas	Bordas Externas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+636		Page Background	Plano de fundo da página	Plano de Fundo da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+637		Page Borders	Bordas da página	Bordas da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+638		Page Break	Quebra de página	Quebra de Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+639		Page Break Before	Quebra de página antes	Quebra de Página Antes	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+641		Page Breaks	Quebras de página	Quebras de Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+642		Page Color	Cor da página	Cor da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+643		Page Down	Página abaixo	Página Abaixo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+645		Page Movement	Movimentação entre páginas	Movimentação entre Páginas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+646		Page Number	Número da página	Número de Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+647		Page Setup	Configuração da página	Configurar Página	termo-word	É o nome do comando de configuração da página.
+648		Page Up	Página acima	Página Acima	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+649		Page Width	Largura da página	Largura da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+659		Paragraph Details	Detalhes do parágrafo	Detalhes do Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+660		Paragraph Down	Parágrafo abaixo	Parágrafo Abaixo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+661		Paragraph Settings	Configurações do parágrafo	Configurações do Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+662		Paragraph Spacing	Espaçamento entre parágrafos	Espaçamento entre Parágrafos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+663		Paragraph Up	Parágrafo acima	Parágrafo Acima	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+667		Paste Formatting	Colar formatação	Colar Formatação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+673		Picture Border	Borda da imagem	Borda da Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+674		Picture Format	Formato da imagem	Formato da Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+675		Picture Styles	Estilos de imagem	Estilos de Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+680		Preview Results	Visualizar resultados	Visualizar Resultados	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+683		Previous Change	Alteração anterior	Alteração Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+684		Previous Comment	Comentário anterior	Comentário Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+685		Previous Record	Registro anterior	Registro Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+686		Previous Section	Seção anterior	Seção Anterior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+688		Print Layout	Layout de impressão	Layout de Impressão	maiuscula	É um modo de exibição do Word.
+690		Proofing	Correção de texto	Revisor de Texto	termo-word	É o nome da categoria de opções conforme o vocabulário do Word pt-BR.
+691		Proofing Issues	Problemas de correção	Problemas do Revisor de Texto	termo-word	A área de revisão usa o termo Revisor de Texto.
+694		Protect Document	Proteger documento	Proteger Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+695		Quick Access Toolbar	Barra de acesso rápido	Barra de Ferramentas de Acesso Rápido	termo-word	É o nome oficial da barra no Word pt-BR.
+696		Quick Parts	Partes rápidas	Partes Rápidas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+697		Quick Tables	Tabelas rápidas	Tabelas Rápidas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+698		Read Aloud	Ler em voz alta	Ler em Voz Alta	maiuscula	É o comando da aba Revisão.
+699		Read Mode	Modo de leitura	Modo de Leitura	maiuscula	É um modo da aba Exibir.
+703		Record Macro	Gravar macro	Gravar Macro	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+704		Recover Unsaved Documents	Recuperar documentos não salvos	Recuperar Documentos Não Salvos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+707		Reduce Hanging Indent	Reduzir recuo deslocado	Reduzir Recuo Deslocado	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+710		Reject All Changes	Rejeitar todas as alterações	Rejeitar Todas as Alterações	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+711		Reject Change	Rejeitar alteração	Rejeitar Alteração	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+713		Remove Background	Remover plano de fundo	Remover Plano de Fundo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+714		Remove Footer	Remover rodapé	Remover Rodapé	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+715		Remove Header	Remover cabeçalho	Remover Cabeçalho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+716		Remove Hyperlink	Remover hiperlink	Remover Hiperlink	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+717		Remove Space After Paragraph	Remover espaço depois do parágrafo	Remover Espaço Depois do Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+718		Remove Table of Contents	Remover sumário	Remover Sumário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+719		Remove Watermark	Remover marca-d'água	Remover Marca-d'água	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+721		Repeat Header Rows	Repetir linhas de cabeçalho	Repetir Linhas de Cabeçalho	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+723		Replace All	Substituir tudo	Substituir Tudo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+724		Replace Document Text	Substituir texto do documento	Substituir Texto do Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+731		Reset Picture	Redefinir imagem	Redefinir Imagem	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+735		Restart Each Page	Reiniciar a cada página	Reiniciar a Cada Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+736		Restart Each Section	Reiniciar a cada seção	Reiniciar a Cada Seção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+737		Restrict Editing	Restringir edição	Restringir Edição	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+743		Reviewing Pane	Painel de revisão	Painel de Revisão	maiuscula	É o painel da aba Revisão.
+744		Reviewing — edits become suggestions	Revisão — as edições viram sugestões	Revisão: as edições viram sugestões	gramatica	A mensagem usa pontuação simples e mantém o sentido do modo.
+747		Right Border	Borda direita	Borda Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+753		Rows & Columns	Linhas e colunas	Linhas e Colunas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+758		Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Salve uma cópia em outro formato. A impressão passa por um PDF que você pode imprimir em qualquer visualizador.	Salve uma cópia em outro formato. A impressão usa um PDF que pode ser impresso em qualquer visualizador.	gramatica	A mensagem explica o fluxo de impressão sem tradução literal.
+760		Save as Template	Salvar como modelo	Salvar como Modelo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+762		Search Commands	Pesquisar comandos	Pesquisar Comandos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+763		Search commands and help	Pesquisar comandos e ajuda	Pesquisar Comandos e Ajuda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+764		Search document	Pesquisar no documento	Pesquisar no Documento	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+765		Section Breaks	Quebras de seção	Quebras de Seção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+766		Section Properties	Propriedades da seção	Propriedades da Seção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+769		Select All	Selecionar tudo	Selecionar Tudo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+770		Select Cell	Selecionar célula	Selecionar Célula	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+771		Select Line	Selecionar linha	Selecionar Linha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+772		Select Objects	Selecionar objetos	Selecionar Objetos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+773		Select Paragraph	Selecionar parágrafo	Selecionar Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+774		Select Range	Selecionar intervalo	Selecionar Intervalo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+775		Select Recipients	Selecionar destinatários	Selecionar Destinatários	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+776		Select Row	Selecionar linha	Selecionar Linha	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+777		Select Sentence	Selecionar frase	Selecionar Frase	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+778		Select Table	Selecionar tabela	Selecionar Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+779		Select Text	Selecionar texto	Selecionar Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+780		Select Text with Similar Formatting	Selecionar texto com formatação semelhante	Selecionar Texto com Formatação Semelhante	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+781		Select Word	Selecionar palavra	Selecionar Palavra	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+784		Selection Pane	Painel de seleção	Painel de Seleção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+785		Send Backward	Enviar para trás	Enviar para Trás	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+787		Set as Default	Definir como padrão	Definir como Padrão	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+788		Set Caret	Definir ponto de inserção	Definir Ponto de Inserção	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+789		Set Character Formatting	Definir formatação de caracteres	Definir Formatação de Caracteres	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+790		Set Numbering Value	Definir valor da numeração	Definir Valor da Numeração	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+791		Set Paragraph Formatting	Definir formatação de parágrafo	Definir Formatação de Parágrafo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+804		Show Comments	Mostrar comentários	Mostrar Comentários	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+805		Show Markup	Mostrar marcação	Mostrar Marcação	maiuscula	É um comando da área de controle de alterações.
+806		Show Notes	Mostrar notas	Mostrar Notas	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+816		Shrink Font 1 Point	Diminuir fonte em 1 ponto	Diminuir Fonte em 1 Ponto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+817		Side to Side	Lado a lado	Lado a Lado	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+819		Signature Line	Linha de assinatura	Linha de Assinatura	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+821		Single Spacing	Espaçamento simples	Espaçamento Simples	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+825		Small Caps	Versaletes	Versalete	termo-word	O efeito tipográfico do Word é Versalete no singular.
+826		Small caps	Versaletes	Versalete	termo-word	O efeito tipográfico do Word é Versalete no singular.
+835		Spelling & Grammar	Ortografia e gramática	Ortografia e Gramática	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+837		Spelling Suggestions	Sugestões de ortografia	Sugestões de Ortografia	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+839		Split Cells	Dividir células	Dividir Células	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+840		Split Table	Dividir tabela	Dividir Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+845		Start Mail Merge	Iniciar mala direta	Iniciar Mala Direta	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+848		Status Bar	Barra de status	Barra de Status	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+854		Style Set	Conjunto de estilos	Conjunto de Estilos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+857		Styles Pane	Painel de estilos	Painel de Estilos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+860		Switch Modes	Alternar modos	Alternar Modos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+868		Table Column Width	Largura da coluna da tabela	Largura da Coluna da Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+869		Table Design	Design da tabela	Design da Tabela	maiuscula	É a aba contextual da tabela.
+870		Table Layout	Layout de tabela	Layout da Tabela	termo-word	É a aba contextual da tabela no Word pt-BR.
+871		Table of Authorities	Índice de autoridades	Índice de Autoridades	maiuscula	É o nome do recurso da aba Referências.
+874		Table Properties	Propriedades da tabela	Propriedades da Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+875		Table Properties…	Propriedades da tabela…	Propriedades da Tabela…	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+876		Table Row Height	Altura da linha da tabela	Altura da Linha da Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+877		Table Style Options	Opções de estilo de tabela	Opções de Estilo de Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+878		Table Styles	Estilos de tabela	Estilos de Tabela	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+883		Text Box	Caixa de texto	Caixa de Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+884		Text Direction	Direção do texto	Direção do Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+885		Text Effects	Efeitos de texto	Efeitos de Texto	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+886		Text Effects and Typography	Efeitos de texto e tipografia	Efeitos de Texto e Tipografia	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+887		Text from File	Texto de arquivo	Texto de Arquivo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+888		Text Highlight Color	Cor de realce do texto	Cor do Realce do Texto	termo-word	É o nome usado pelo Word pt-BR para o realce.
+891		Text Wrapping	Quebra de texto	Quebra Automática de Texto	termo-word	É o nome usado no grupo Organizar do Word pt-BR.
+904		Top Border	Borda superior	Borda Superior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+905		Top Margin	Margem superior	Margem Superior	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+906		Top of Page	Topo da página	Topo da Página	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+908		Total Row	Linha de totais	Linha de Totais	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+909		Track Changes	Controlar alterações	Controlar Alterações	maiuscula	É o nome oficial do comando da aba Revisão.
+910		Track Changes Options	Opções de controle de alterações	Opções de Controle de Alterações	maiuscula	É o nome do grupo de opções da Revisão.
+911		Track Changes: On	Controlar alterações: ativado	Controlar Alterações: Ativado	maiuscula	É o estado exibido do comando Controlar Alterações.
+912		Track formatting	Controlar formatação	Controlar Formatação	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+918		Type a command, e.g. "insert table"	Digite um comando, por exemplo "insert table"	Digite um comando, por exemplo "inserir tabela"	gramatica	A frase da dica fica em português e o exemplo acompanha a interface.
+924		Undo Actions	Desfazer ações	Desfazer Ações	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+925		Undo History	Histórico de desfazer	Histórico de Desfazer	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+930		Update Field	Atualizar campo	Atualizar Campo	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+931		Update Index	Atualizar índice	Atualizar Índice	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+933		Update Table	Atualizar sumário	Atualizar Sumário	maiuscula	Neste trecho o comando atualiza o sumário.
+934		Update Table of Figures	Atualizar índice de figuras	Atualizar Índice de Ilustrações	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+938		User Name	Nome de usuário	Nome de Usuário	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+940		Version History	Histórico de versões	Histórico de Versões	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+945		View Gridlines	Exibir linhas de grade	Exibir Linhas de Grade	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+954		Whole page	Página inteira	Página Inteira	maiuscula	É uma opção do diálogo de Zoom.
+960		Word Count	Contagem de palavras	Contagem de Palavras	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+961		Word document (*.docx)	Documento Word (*.docx)	Documento do Word (*.docx)	termo-word	O formato é mostrado como documento do Word no português brasileiro.
+964		Word Left	Palavra à esquerda	Palavra à Esquerda	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+965		Word Right	Palavra à direita	Palavra à Direita	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+966		WordArt	Texto artístico	WordArt	termo-word	O nome do recurso é WordArt no Word pt-BR.
+970		Wrap Text	Quebrar texto	Quebra Automática de Texto	termo-word	O Word pt-BR usa Quebra Automática de Texto.
+972		Write & Insert Fields	Escrever e inserir campos	Escrever e Inserir Campos	maiuscula	É um nome de recurso exibido na faixa, em um menu ou em um diálogo.
+983		Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Mostra os documentos com as cores invertidas, como em Exibir › Alternar modos. Salvar, imprimir e PDFs não mudam.	Mostra os documentos com as cores invertidas, como em Exibir › Alternar modos. Salvar, imprimir e os PDFs não mudam.	gramatica	A frase usa o nome da aba Exibir e concordância natural.
+		1×2 Empty Matrix		Matriz Vazia 1×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		1×3 Empty Matrix		Matriz Vazia 1×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×1 Empty Matrix		Matriz Vazia 2×1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×2 Determinant		Determinante 2×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×2 Empty Matrix		Matriz Vazia 2×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×2 Identity Matrix		Matriz de Identidade 2×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×2 Identity Matrix (sparse)		Matriz de Identidade 2×2 (esparsa)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×2 Matrix in Brackets		Matriz 2×2 entre Colchetes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×2 Matrix in Double Bars		Matriz 2×2 entre Barras Duplas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×2 Matrix in Parentheses		Matriz 2×2 entre Parênteses	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		2×3 Empty Matrix		Matriz Vazia 2×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		3×1 Empty Matrix		Matriz Vazia 3×1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		3×2 Empty Matrix		Matriz Vazia 3×2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		3×3 Empty Matrix		Matriz Vazia 3×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		3×3 Identity Matrix		Matriz de Identidade 3×3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		3×3 Identity Matrix (sparse)		Matriz de Identidade 3×3 (esparsa)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		A xor B		A ou exclusivo B	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		APA		APA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		ASAP		O Quanto Antes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		AaBbCcDd		AaBbCcDd	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Absolute value cases		Casos de Valor Absoluto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Accents		Acentos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Acute		Acento Agudo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		All - Linear		Todas - Linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		All - Professional		Todas - Profissional	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Angle Brackets		Parênteses Angulares	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Angle Brackets with Separator		Parênteses Angulares com Separador	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Angle Brackets with Two Separators		Parênteses Angulares com Dois Separadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Annotation Reference		Referência de Anotação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Annotation Subject		Assunto da Anotação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Annotation Text		Texto da Anotação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		B4 (JIS)   10.12" × 14.33"		B4 (JIS)   10,12" × 14,33"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		B5 (JIS)   7.17" × 10.12"		B5 (JIS)   7,17" × 10,12"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Baseline Dots		Pontos de Base	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Basic Math		Matemática Básica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Bayes' rule		Regra de Bayes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Binomial Coefficient		Coeficiente Binomial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Binomial Coefficient (angle)		Coeficiente Binomial (angular)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Binomial Coefficient with Angle Brackets		Coeficiente Binomial entre Parênteses Angulares	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Binomial expansion of (x+a)ⁿ		Expansão Binomial de (x+a)ⁿ	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Body text in a short paragraph to show spacing.		Texto do corpo em um parágrafo curto para mostrar o espaçamento.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Book Title		Título de Livro	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Boxed Formula		Fórmula em Caixa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Boxed Formula (example)		Fórmula em Caixa (exemplo)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Boxed Formulas		Fórmulas em Caixa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Braces		Chaves	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Braces with Separator		Chaves com Separador	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Brackets		Colchetes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Brackets with Separators		Colchetes com Separadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Breve		Breve	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		CONFIDENTIAL		CONFIDENCIAL	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Capitalize the first word of a sentence		Colocar em maiúscula a primeira palavra de uma frase	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cases (Three Conditions)		Casos (três Condições)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cases (Two Conditions)		Casos (duas Condições)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cases and Stacks		Casos e Empilhamentos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Category		Categoria	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Ceiling		Teto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Centered as Group		Centralizado como Grupo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change in y over change in x		Variação de Y sobre Variação de X	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 1		Alterar para o Nível 1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 2		Alterar para o Nível 2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 3		Alterar para o Nível 3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 4		Alterar para o Nível 4	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 5		Alterar para o Nível 5	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 6		Alterar para o Nível 6	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 7		Alterar para o Nível 7	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 8		Alterar para o Nível 8	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Change to Level 9		Alterar para o Nível 9	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Check		Caron	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Chicago		Chicago	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Circle area from its radius		Área do Círculo a Partir do Raio	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Circled Dot		Ponto Circundado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Circled Plus		Mais Circundado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Circled Times		Vezes Circundado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Colon Equal		Dois-pontos Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Accent Objects		Objetos de Acento Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Brackets		Colchetes Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Fractions		Frações Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Functions		Funções Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Large Operators		Operadores Grandes Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Operator Structures		Estruturas de Operadores Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Operators		Operadores Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Radicals		Radicais Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Common Subscripts and Superscripts		Subscritos e Sobrescritos Comuns	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Contour Integral		Integral de Contorno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Contour Integral with Limits		Integral de Contorno com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Contour Integral with Stacked Limits		Integral de Contorno com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Contour Integrals		Integrais de Contorno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Contributors		Colaboradores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Convert between built-up and linear form		Converter entre a forma profissional e a forma linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Coproduct		Coproduto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Coproduct with Limits		Coproduto com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Coproduct with Lower Limit		Coproduto com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Coproduct with Subscript-Superscript Limits		Coproduto com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cosecant Function		Função Cossecante	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cosine 2x		Cosseno de 2x	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cosine Function		Função Cosseno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cotangent Function		Função Cotangente	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Cube Root		Raiz Cúbica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Current - Linear		Atual - Linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Current - Professional		Atual - Profissional	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		DO NOT COPY		NÃO COPIAR	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		DRAFT		RASCUNHO	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Default Paragraph Font		Fonte do Parágrafo Padrão	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Delta Equal To		Delta Igual a	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Delta over arrow		Delta sobre Seta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Derivative as a limit		Derivada como Limite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Diagonal Dots		Pontos Diagonais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Differential		Diferencial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Differential theta		Diferencial de Teta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Differential x		Diferencial de X	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Differential y		Diferencial de Y	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Differentials		Diferenciais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Dot		Ponto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Dots		Pontos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Bar		Barra Dupla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Dot		Ponto Duplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Integral		Integral Dupla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Integral with Limits		Integral Dupla com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Integral with Stacked Limits		Integral Dupla com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Left Arrow with Text Above		Seta Dupla para a Esquerda com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Left Arrow with Text Below		Seta Dupla para a Esquerda com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Left Right Arrow with Text Above		Seta Dupla para a Esquerda e para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Left Right Arrow with Text Below		Seta Dupla para a Esquerda e para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Right Arrow with Text Above		Seta Dupla para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Right Arrow with Text Below		Seta Dupla para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Square Brackets		Colchetes Quadrados Duplos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double Vertical Bars		Barras Verticais Duplas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Double summation		Soma Dupla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Emphasis		Ênfase	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Empty Matrices		Matrizes Vazias	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Endnote Reference		Referência de Nota de Fim	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Endnote Text		Texto da Nota de Fim	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Enter bookmark name:		Digite o Nome do Indicador:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Envelope #10   4.12" × 9.50"		Envelope Nº 10   4,12" × 9,50"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Envelope Address		Endereço do Envelope	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Envelope DL   4.33" × 8.66"		Envelope DL   4,33" × 8,66"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Envelope Return		Remetente do Envelope	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Equal Equal		Igual Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Equal by Definition		Igual por Definição	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Euler's identity		Identidade de Euler	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Executive   7.25" × 10.50"		Executivo   7,25" × 10,50"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Exponential		Exponencial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Exponential series		Série Exponencial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Extra space		Espaço Extra	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Find “{text}” in the document		Localizar “{text}” no documento	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Floor		Piso	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Footnote Reference		Referência de Nota de Rodapé	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Footnote Text		Texto da Nota de Rodapé	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		For which item:		Para Qual Item:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Functions		Funções	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		GB/T 7714		GB/T 7714	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		GOST (name sort)		GOST (ordenação por Nome)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		GOST (title sort)		GOST (ordenação por Título)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Geometry		Geometria	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Good afternoon		Boa tarde	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Good evening		Boa noite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Good morning		Bom dia	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grave		Acento Grave	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Greek Letters		Letras Gregas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grid Table 1 Light		Tabela de Grade 1 Clara	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grid Table 4 – Blue		Tabela de Grade 4 – Azul	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grid Table 4 – Green		Tabela de Grade 4 – Verde	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grid Table 4 – Orange		Tabela de Grade 4 – Laranja	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grid Table 4 – Purple		Tabela de Grade 4 – Roxa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grouping Character Above		Caractere de Agrupamento Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Grouping Character Below		Caractere de Agrupamento Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Harvard (Anglia)		Harvard (Anglia)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hat		Acento Circunflexo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Heading		Título	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Heading text		Texto do Título	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperbolic Cosecant Function		Função Cossecante Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperbolic Cosine Function		Função Cosseno Hiperbólico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperbolic Cotangent Function		Função Cotangente Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperbolic Functions		Funções Hiperbólicas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperbolic Secant Function		Função Secante Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperbolic Sine Function		Função Seno Hiperbólico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperbolic Tangent Function		Função Tangente Hiperbólica	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hyperlink		Hiperlink	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Hypotenuse		Hipotenusa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		IEEE		IEEE	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		ISO 690 (author-date)		ISO 690 (autor-data)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		ISO 690 (numerical)		ISO 690 (numérico)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Identity Matrices		Matrizes de Identidade	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Index Heading		Título do Índice	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Index {n}		Índice {n}	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Insert reference to:		Inserir Referência A:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Integral of e^(−x²)		Integral de E^(−x²)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Integral with Limits		Integral com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Integral with Stacked Limits		Integral com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Integrals		Integrais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Intense Emphasis		Ênfase Intensa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Intense Quote		Citação Intensa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Intense Reference		Referência Intensa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Intersection		Interseção	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Intersection with Limits		Interseção com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Intersection with Lower Limit		Interseção com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Intersection with Subscript-Superscript Limits		Interseção com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Cosecant Function		Função Cossecante Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Cosine Function		Função Cosseno Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Cotangent Function		Função Cotangente Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Functions		Funções Inversas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Hyperbolic Cosecant Function		Função Cossecante Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Hyperbolic Cosine Function		Função Cosseno Hiperbólico Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Hyperbolic Cotangent Function		Função Cotangente Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Hyperbolic Functions		Funções Hiperbólicas Inversas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Hyperbolic Secant Function		Função Secante Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Hyperbolic Sine Function		Função Seno Hiperbólico Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Hyperbolic Tangent Function		Função Tangente Hiperbólica Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Secant Function		Função Secante Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Sine Function		Função Seno Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Inverse Tangent Function		Função Tangente Inversa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Justification of a display equation		Justificação de uma equação exibida	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Keywords		Palavras-chave	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Large		Grande	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Arrow with Text Above		Seta para a Esquerda com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Arrow with Text Below		Seta para a Esquerda com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Bracket Twice		Colchete Esquerdo Duplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Right Arrow Above		Seta para a Esquerda e para a Direita Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Right Arrow with Text Above		Seta para a Esquerda e para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Right Arrow with Text Below		Seta para a Esquerda e para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Left Subscript-Superscript		Subscrito e Sobrescrito à Esquerda	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Leftwards Arrow Above		Seta para a Esquerda Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Leftwards Harpoon Above		Arpão para a Esquerda Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Legal   8.50" × 14.00"		Ofício   8,50" × 14,00"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Letter   8.50" × 11.00"		Carta   8,50" × 11,00"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Letter-Like Symbols		Símbolos Semelhantes a Letras	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 1		Nível 1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 2		Nível 2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 3		Nível 3	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 4		Nível 4	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 5		Nível 5	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 6		Nível 6	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 7		Nível 7	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 8		Nível 8	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Level 9		Nível 9	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Limit		Limite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Limit Example		Exemplo de Limite	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Limit and		Limite e	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Line Number		Número de Linha	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Linear Fraction		Fração Linear	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		List Paragraph		Parágrafo de Lista	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		List Table 3 – Blue		Tabela de Lista 3 – Azul	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		List Table 3 – Green		Tabela de Lista 3 – Verde	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		List Table 3 – Orange		Tabela de Lista 3 – Laranja	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		List Table 3 – Purple		Tabela de Lista 3 – Roxa	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Log		Log	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Logarithm		Logaritmo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Logarithm with Base		Logaritmo com Base	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Logical AND		E Lógico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Logical AND with Limits		E Lógico com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Logical OR		OU Lógico	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Logical OR with Limits		OU Lógico com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		MLA		MLA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Matrices with Brackets		Matrizes com Colchetes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Maximum		Máximo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Maximum Example		Exemplo de Máximo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Measured By		Medido por	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Midline Dots		Pontos na Linha Média	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Minimum		Mínimo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Minus Equal		Menos Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Models		Modelos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Natural Logarithm		Logaritmo Natural	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Negated Relations		Relações Negadas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		No Spacing		Sem Espaçamento	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Normal		Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Normal Indent		Recuo Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Normal Table		Tabela Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Normal probability density		Densidade de Probabilidade Normal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Number the equation; the number sits at the right margin (or type # then the number)		Numere a equação. O número fica na margem direita. Você também pode digitar # e o número.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		One half		Um Meio	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Operator Structures		Estruturas de Operadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Operators		Operadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Other Large Operators		Outros Operadores Grandes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Outward Brackets		Colchetes Externos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Overbar		Barra Superior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Overbars and Underbars		Barras Superiores e Inferiores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Overbrace		Chave Superior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Parentheses		Parênteses	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Parentheses with Separator		Parênteses com Separador	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Partial Differential		Diferencial Parcial	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Pi Over 2		Pi sobre 2	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Plain Table 1		Tabela Simples 1	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Plus Equal		Mais Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Possible spelling mistake		Possível Erro de Ortografia	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Power series of (1+x)ⁿ		Série de Potências de (1+x)ⁿ	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Product		Produto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Product of A		Produto de a	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Product with Limits		Produto com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Product with Lower Limit		Produto com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Product with Subscript-Superscript Limits		Produto com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Products and Coproducts		Produtos e Coprodutos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Quadratic Root		Raiz Quadrática	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Quote		Citação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Radical with Degree		Radical com Índice	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Radicals		Radicais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Reference type:		Tipo de Referência:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Remove the space before the punctuation		Remover o espaço antes da pontuação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Right Arrow with Text Above		Seta para a Direita com Texto Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Right Arrow with Text Below		Seta para a Direita com Texto Abaixo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Right Bracket Twice		Colchete Direito Duplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Rightwards Arrow Above		Seta para a Direita Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Rightwards Harpoon Above		Arpão para a Direita Acima	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Roots of ax²+bx+c		Raízes de Ax²+bx+c	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		SAMPLE		AMOSTRA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		SIST02		SIST02	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Scripts		Escritas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Secant Function		Função Secante	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Show the equation in the line of text		Mostrar a equação na linha do texto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Show the equation on a line of its own		Mostrar a equação em uma linha própria	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sides of a right triangle		Lados de um Triângulo Retângulo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sine Function		Função Seno	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sine and cosine series of f(x)		Série de Seno e Cosseno de F(x)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sine theta		Seno de Teta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Brackets		Colchetes Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Left Angle		Parêntese Angular Esquerdo Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Left Bar		Barra Esquerda Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Left Brace		Chave Esquerda Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Left Bracket		Colchete Esquerdo Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Left Parenthesis		Parêntese Esquerdo Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Right Brace		Chave Direita Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Right Bracket		Colchete Direito Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Single Right Parenthesis		Parêntese Direito Simples	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Skewed Fraction		Fração Inclinada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Small change		Pequena Variação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sparse Matrices		Matrizes Esparsas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Square Root		Raiz Quadrada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Square Root with Degree		Raiz Quadrada com Índice	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Square Union		União Quadrada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Stack Object		Objeto Empilhado	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Stack Object (Three)		Objeto Empilhado (três)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Stacked Fraction		Fração Empilhada	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Stacked, no bar		Empilhada, sem Barra	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Statement   5.50" × 8.50"		Declaração   5,50" × 8,50"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Strong		Forte	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Style: APA		Estilo: APA	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subject		Assunto	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subscript-Superscript		Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subscripts and Superscripts		Subscritos e Sobrescritos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subtitle		Subtítulo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subtle Emphasis		Ênfase Sutil	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Subtle Reference		Referência Sutil	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sum of cosines		Soma de Cossenos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Sum or difference of sines		Soma ou Diferença de Senos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summation		Soma	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summation from 0 to n		Soma de 0 a N	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summation over binomials		Soma sobre Coeficientes Binomiais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summation with Limits		Soma com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summation with Lower Limit		Soma com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summation with Subscript Limit		Soma com Limite em Subscrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summation with Subscript-Superscript Limits		Soma com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Summations		Somas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Surface Integral		Integral de Superfície	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Surface Integral with Limits		Integral de Superfície com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Surface Integral with Stacked Limits		Integral de Superfície com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		TOA Heading		Título do Índice de Autoridades	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		TOC Heading		Título do Sumário	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		TOC {n}		Sumário {n}	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Table Grid		Grade da Tabela	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Table of Figures		Índice de Ilustrações	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Tabloid   11.00" × 17.00"		Tabloide   11,00" × 17,00"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Tangent Function		Função Tangente	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Tangent formula		Fórmula da Tangente	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Text over Colon Equal		Texto sobre Dois-pontos Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Text over Equal		Texto sobre Igual	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		The spelling and grammar check is complete.		A verificação ortográfica e gramatical foi concluída.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		This document has no bookmarks.		Este documento não tem indicadores.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Tilde		Til	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Track\nChanges		Controlar\nAlterações	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Track\nChanges ✓		Controlar\nAlterações ✓	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Trigonometric Functions		Funções Trigonométricas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Triple Dot		Ponto Triplo	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Triple Integral		Integral Tripla	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Triple Integral with Limits		Integral Tripla com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Triple Integral with Stacked Limits		Integral Tripla com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Turabian		Turabian	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Type a page number, or +2 / -1.		Digite um número de página ou +2 / -1.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Type equations in LaTeX		Digite equações em LaTeX	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Type equations in the linear format (UnicodeMath)		Digite equações no formato linear (UnicodeMath)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Type normal (non-math) text in the equation		Digite texto normal (não matemático) na equação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Typing		Digitação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		URGENT		URGENTE	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Underbar		Barra Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Underbrace		Chave Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Union		União	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Union of intersections		União de Interseções	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Union with Limits		União com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Union with Lower Limit		União com Limite Inferior	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Union with Plus		União com Mais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Union with Subscript-Superscript Limits		União com Limites em Subscrito e Sobrescrito	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Unions and Intersections		Uniões e Interseções	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Up Diagonal Dots		Pontos Diagonais Ascendentes	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Use "a" before a consonant sound		Use "a" antes de som de consoante	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Use "an" before a vowel sound		Use "an" antes de som de vogal	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Vector A		Vetor a	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Vector AB		Vetor AB	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Vertical Bars		Barras Verticais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Vertical Dots		Pontos Verticais	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Volume Integral		Integral de Volume	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Volume Integral with Limits		Integral de Volume com Limites	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Volume Integral with Stacked Limits		Integral de Volume com Limites Empilhados	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Wait for the print job to finish submitting before closing.		Aguarde a conclusão do envio do trabalho de impressão antes de fechar.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Wildcards (regex)		Caracteres curinga (regex)	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Yields		Resulta em	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		n×n Identity Matrix		Matriz de Identidade N×n	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		n×n Matrix		Matriz N×n	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		tOGGLE cASE		ALTERNAR MAIÚSCULAS/Minúsculas	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		x bar		x com barra	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		✓ None		✓ Nenhum	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		➕ New comment		➕ Novo Comentário	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		📂  Browse…		📂  Procurar…	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+	preview	Title		Título	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+	template	Letter		Carta	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Bookmarks		Indicadores	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Continue without restoring		Continuar sem restaurar	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Couldn't save {name}, so it is still open and nothing was lost: {error}		Não foi possível salvar {name}, então ele continua aberto e nada foi perdido: {error}	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Crop on the page works on unturned pictures: set Rotation to 0° first, or use the crop boxes		O recorte na página funciona em imagens sem rotação. Primeiro defina Rotação como 0° ou use as caixas de recorte	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Discard		Descartar	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Discard the recovery copy of {name}?		Descartar a cópia de recuperação de {name}?	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Discard…		Descartar…	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Local recovery is unavailable or still loading.		A recuperação local está indisponível ou ainda carregando.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		No recovery copies.		Nenhuma cópia de recuperação.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Nothing of this type in the document.		Não há nada desse tipo no documento.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Recover documents		Recuperar Documentos	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Recovery copy		Cópia de Recuperação	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Recovery is disabled while this document has a password.		A recuperação está desativada enquanto este documento tem uma senha.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Restore		Restaurar	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Restore opens an unsaved copy. Your original file stays unchanged.		Restaurar abre uma cópia não salva. O arquivo original permanece inalterado.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Select a place in this document:		Selecione um local neste documento:	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		This cannot be undone. Your original file stays unchanged.		Não é possível desfazer esta ação. O arquivo original permanece inalterado.	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Top of the Document		Início do documento	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		Type a command, e.g. \"insert table\"		Digite um comando, por exemplo \"insert table\"	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		select a picture first		selecione uma imagem primeiro	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.
+		{paper}   {width} × {height}		{paper}   {width} × {height}	nova	Texto novo da interface. A tradução foi escolhida conforme o contexto do código.

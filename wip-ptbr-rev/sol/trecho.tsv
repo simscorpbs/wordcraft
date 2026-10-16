@@ -1,0 +1,1182 @@
+1038		Change Structure	Alterar estrutura
+1039		Change to Display	Alterar para exibição
+1040		Change to Inline	Alterar para embutida
+1041		Conversions	Conversões
+1042		Delete Back in Equation	Excluir para trás na equação
+1043		Delete in Equation	Excluir na equação
+1044		Edit Equation	Editar equação
+1045		Enter in Equation	Enter na equação
+1046		Equation Gallery	Galeria de equações
+1047		Equation Info	Informações da equação
+1048		Equation Number	Número da equação
+1049		Input Format	Formato de entrada
+1050		Insert Structure	Inserir estrutura
+1051		Insert Symbol	Inserir símbolo
+1052		Justification	Alinhamento
+1053		Leave Equation	Sair da equação
+1054		Move in Equation	Mover na equação
+1055		Normal Text	Texto normal
+1056		Set Equation	Definir equação
+1057		Structure Actions	Ações de estrutura
+1058		Structures	Estruturas
+1059		Tools	Ferramentas
+1060		Type in Equation	Digitar na equação
+1061		Inline	Embutida
+1062		Number	Número
+1063		Close Equation	Fechar equação
+1064		Insert New Equation	Inserir nova equação
+1065		Built-In	Internas
+1066		Professional	Profissional
+1067		Linear	Linear
+1068		Fraction	Fração
+1069		Script	Índice
+1070		Radical	Radical
+1071		Integral	Integral
+1072		Large\nOperator	Operador\ngrande
+1073		Bracket	Colchete
+1074		Function	Função
+1075		Accent	Acento
+1076		Limit and\nLog	Limite e\nlogaritmo
+1077		Operator	Operador
+1078		Equation Options	Opções de equação
+1079		All symbol sets	Todos os conjuntos de símbolos
+1080		Send the document straight to the system print dialog, or save a copy in another format below.	Envie o documento direto para a caixa de diálogo de impressão do sistema ou salve uma cópia em outro formato abaixo.
+1081		Or save a copy in another format:	Ou salve uma cópia em outro formato:
+1082		Opening print dialog…	Abrindo a caixa de diálogo de impressão…
+1083		Print failed: {error}	Falha na impressão: {error}
+1084		Couldn't open {path}: {error}	Não foi possível abrir {path}: {error}
+1085		Column Selection	Seleção de coluna
+1086		Style Inspector	Inspetor de estilos
+1087		Inspect Styles at Selection	Inspecionar estilos na seleção
+1088		Clear Formatting Level	Limpar nível de formatação
+1089		Characters	Caracteres
+1090		Direct formatting	Formatação direta
+1091		Reset to Normal	Redefinir para Normal
+1092		Clear Paragraph Formatting	Limpar formatação do parágrafo
+1093		Clear Character Style	Limpar estilo de caractere
+1094		Clear Character Formatting	Limpar formatação de caractere
+1095		Paste Special	Colar especial
+1096		Paste Special…	Colar especial…
+1097		Paste as:	Colar como:
+1098		The clipboard is empty.	A área de transferência está vazia.
+1099		Formatted Text	Texto formatado
+1100		Rich Text Format (RTF)	Rich Text Format (RTF)
+1101		HTML Format	Formato HTML
+1102		Unformatted Text	Texto sem formatação
+1103		Result	Resultado
+1104		Keeps the fonts and formatting of the copied text.	Mantém as fontes e a formatação do texto copiado.
+1105		Reads the clipboard's rich text and keeps its formatting.	Lê o rich text da área de transferência e mantém a formatação.
+1106		Reads the clipboard's web content and keeps its formatting.	Lê o conteúdo web da área de transferência e mantém a formatação.
+1107		Picture	Imagem
+1108		Pastes the clipboard's picture.	Cola a imagem da área de transferência.
+1109		Drops all formatting and pastes plain text.	Remove toda a formatação e cola texto simples.
+1110		Advanced Find	Localização avançada
+1111		Advanced Find…	Localização avançada…
+1112		Go To…	Ir para…
+1113		Reading Highlight	Realçar resultados
+1114		New Table Style	Novo estilo de tabela
+1115		Modify Table Style	Modificar estilo de tabela
+1116		New Table Style…	Novo estilo de tabela…
+1117		Modify Table Style…	Modificar estilo de tabela…
+1118		Apply formatting to:	Aplicar formatação a:
+1119		Whole Table	Tabela inteira
+1120		Fill color:	Cor de preenchimento:
+1121		{count} items highlighted	{count} itens realçados
+1122		{n} pt	{n} pt
+1123		Not {name}	Sem {name}
+1124		Level {n}	Nível {n}
+1125		Body Text	Corpo do texto
+1126		{n} lines	{n} linhas
+1127		At least {n}	Pelo menos {n}
+1128		Exactly {n}	Exatamente {n}
+1129		Centered	Centralizado
+1130		Character spacing	Espaçamento entre caracteres
+1131		Don't add space between paragraphs of the same style	Não adicionar espaço entre parágrafos do mesmo estilo
+1132		Don't hyphenate	Não hifenizar
+1133		Double strikethrough	Tachado duplo
+1134		Drop cap	Capitular
+1135		First line	Primeira linha
+1136		Font color	Cor da fonte
+1137		Highlight	Realce
+1138		Justified	Justificado
+1139		Left indent	Recuo à esquerda
+1140		Line spacing	Espaçamento entre linhas
+1141		Outline level	Nível de tópicos
+1142		Raised/lowered	Elevado/rebaixado
+1143		Right indent	Recuo à direita
+1144		Scale	Escala
+1145		Space after	Espaço depois
+1146		Space before	Espaço antes
+1147		Suppress line numbers	Suprimir números de linha
+1148		Underline color	Cor do sublinhado
+1149		Letters	Cartas
+1150		E-mail Messages	Mensagens de email
+1151		Directory	Diretório
+1152		Normal Word Document	Documento normal
+1153		If…Then…Else…	Se…Então…Senão…
+1154		If…Then…Else	Se…Então…Senão
+1155		Merge Record #	Nº do registro de mesclagem
+1156		Skip Record If…	Ignorar registro se…
+1157		Skip Record If	Ignorar registro se
+1158		Equals:	É igual a:
+1159		Then insert:	Então inserir:
+1160		Otherwise insert:	Senão, inserir:
+1161		Courtesy Title	Pronome de tratamento
+1162		First Name	Nome
+1163		Last Name	Sobrenome
+1164		Company	Empresa
+1165		Address	Endereço
+1166		City	Cidade
+1167		State	Estado
+1168		Postal Code	CEP
+1169		Country	País
+1170		(not matched)	(sem correspondência)
+1171		Leave a recipient out of the merge when a field has this value.	Deixar um destinatário fora da mesclagem quando um campo tiver este valor.
+1172		Insert one text or another, depending on a field's value.	Inserir um texto ou outro, conforme o valor de um campo.
+1173		Select recipients first to match their fields.	Selecione os destinatários primeiro para corresponder os campos.
+1174		The recipient-list field that fills each part of an address block and greeting line.	O campo da lista de destinatários que preenche cada parte do bloco de endereço e da linha de saudação.
+1175		No errors found: every merge field is in the recipient list.	Nenhum erro encontrado: todos os campos de mesclagem estão na lista de destinatários.
+1176		These merge fields aren't in the recipient list:	Estes campos de mesclagem não estão na lista de destinatários:
+1177		Add at least one field.	Adicione pelo menos um campo.
+1178		Add Field	Adicionar campo
+1179		Every field needs a name.	Todo campo precisa de um nome.
+1180		Field name	Nome do campo
+1181		Field names must be different.	Os nomes dos campos devem ser diferentes.
+1182		Fields:	Campos:
+1183		Field:	Campo:
+1184		Find:	Localizar:
+1185		New Entry	Nova entrada
+1186		Recipient List	Lista de destinatários
+1187		Recipients: {count}	Destinatários: {count}
+1188		Remove field	Remover campo
+1189		Remove recipient	Remover destinatário
+1190		Select recipients first to choose from their fields.	Selecione os destinatários primeiro para escolher entre os campos.
+1191		Type a New List…	Digitar uma nova lista…
+1192		Type at least one recipient.	Digite pelo menos um destinatário.
+1193		Type the recipients, or load them from a file.	Digite os destinatários ou carregue-os de um arquivo.
+1194		Use an Existing List…	Usar uma lista existente…
+1195		Choose the sheet that holds the recipients.	Escolha a planilha que contém os destinatários.
+1196		First row of data contains column headers	A primeira linha de dados contém cabeçalhos de coluna
+1197		Interface theme:	Tema da interface:
+1198		Interface\nTheme	Tema da\ninterface
+1199		Interface Theme	Tema da interface
+1200		Light	Claro
+1201		Dark	Escuro
+1202		Use system setting	Usar a configuração do sistema
+1203		A file dialog is already open.	Já há uma caixa de diálogo de arquivo aberta.
+1204		Height:	Altura:
+1205		Width:	Largura:
+1206		Row	Linha
+1207		Cell	Célula
+1208		Preferred width:	Largura preferencial:
+1209		Alignment:	Alinhamento:
+1210		Indent from left:	Recuo à esquerda:
+1211		Specify height:	Especificar altura:
+1212		Exactly	Exatamente
+1213		At least	Pelo menos
+1214		Allow row to break across pages	Permitir quebra de linha entre páginas
+1215		Repeat as header row on each page	Repetir como linha de cabeçalho em cada página
+1216		Vertical alignment:	Alinhamento vertical:
+1217		Top	Superior
+1218		Bottom	Inferior
+1219		Alt text	Texto alternativo
+1220		Alt:	Alt.:
+1221		W:	L:
+1222		H:	A:
+1223		Reset	Redefinir
+1224		Reset Crop	Redefinir corte
+1225		Insert a new equation (Alt+=)	Inserir uma nova equação (Alt+=)
+1226		Leave the equation (Esc)	Sair da equação (Esc)
+1227		Preview	Visualizar
+1228		getartcraft.com/apps/wordcraft	getartcraft.com/apps/wordcraft
+1229		Draw Ink	Desenhar tinta
+1230		Erase Ink	Apagar tinta
+1231		Hide Ink	Ocultar tinta
+1232		Hide\nInk	Ocultar\ntinta
+1233		Pens	Canetas
+1234		Thickness	Espessura
+1237		(All)	(Todos)
+1238		(none)	(nenhum)
+1239		(normal text)	(texto normal)
+1240		1/4 Em Space	Espaço de 1/4 de eme
+1241		A mail merge field	Um campo de mesclagem
+1242		A numbered sequence (figures, tables…)	Uma sequência numerada (figuras, tabelas…)
+1243		A table of contents	Um sumário
+1244		Categories:	Categorias:
+1245		Character	Caractere
+1246		Character code:	Código do caractere:
+1247		Col #:	Col. nº:
+1248		Copyright	Copyright
+1249		Date and Time	Data e hora
+1250		Date formats:	Formatos de data:
+1251		Description:	Descrição:
+1252		Document Information	Informações do documento
+1253		Double Closing Quote	Aspas duplas de fechamento
+1254		Double Opening Quote	Aspas duplas de abertura
+1255		En Dash	Meia-risca
+1256		Em Space	Espaço eme
+1257		En Space	Espaço ene
+1258		Equal column width	Colunas de largura igual
+1259		Field Codes	Códigos de campo
+1260		Field code:	Código de campo:
+1261		Field codes:	Códigos de campo:
+1262		Field name:	Nome do campo:
+1263		Field names:	Nomes de campo:
+1264		Field properties	Propriedades do campo
+1265		Field…	Campo…
+1266		Format:	Formato:
+1267		Hide Codes	Ocultar códigos
+1268		Index and Tables	Índices e tabelas
+1269		Line between	Linha entre colunas
+1270		Links and References	Links e referências
+1271		Mail Merge	Mala direta
+1272		More Columns…	Mais colunas…
+1273		More Symbols…	Mais símbolos…
+1274		No-Width Non Break	Junção sem largura
+1275		No-Width Optional Break	Quebra opcional sem largura
+1276		Paragraph Mark	Marca de parágrafo
+1277		Pick a field from the list	Escolha um campo
+1278		Preserve formatting during updates	Preservar a formatação ao atualizar
+1279		Presets	Predefinições
+1280		Recently used symbols:	Símbolos usados recentemente:
+1281		Registered	Registrado
+1282		Section Mark	Marca de seção
+1283		Sequence name:	Nome da sequência:
+1284		Shortcut key:	Tecla de atalho:
+1285		Single Closing Quote	Aspas simples de fechamento
+1286		Single Opening Quote	Aspas simples de abertura
+1287		Spacing:	Espaçamento:
+1288		Special Characters	Caracteres especiais
+1289		Subset:	Subconjunto:
+1290		The time right now	A hora atual
+1291		When this document was first created	A data em que o documento foi criado
+1292		When this document was most recently printed	A data em que o documento foi impresso pela última vez
+1293		When this document was most recently saved	A data em que o documento foi salvo pela última vez
+1294		The document has no bookmarks yet.	O documento ainda não tem indicadores.
+1295		Who the document properties name as author	O autor do documento
+1296		Name of the file this document is saved as	O nome do arquivo do documento
+1297		Title from the document properties	O título do documento
+1298		How many pages the whole document has	O número de páginas do documento
+1299		How many pages this section has	O número de páginas da seção
+1300		Number of the page the field sits on	O número da página atual
+1301		Number of the section the field sits in	O número da seção atual
+1302		How many words the document holds	O número de palavras do documento
+1303		Page on which a bookmarked passage falls	O número da página de um indicador
+1304		Copy of the text a bookmark marks	O texto de um indicador
+1305		This field has no options.	Este campo não tem opções.
+1306		This font has no characters to show.	Esta fonte não tem caracteres para mostrar.
+1307		This point forward	Deste ponto em diante
+1308		The date it is today	A data de hoje
+1309		Trademark	Marca comercial
+1310		Type the field's name and its switches, for example PAGE \\* roman.	Digite o nome do campo e suas opções, por exemplo PAGE \\* roman.
+1311		Width and spacing	Largura e espaçamento
+1312		from Unicode (hex)	do Unicode (hex)
+1313		Shape Effects	Efeitos de forma
+1314		Glow	Brilho
+1315		Soft Edges	Bordas suaves
+1316		No Shadow	Sem sombra
+1317		No Glow	Sem brilho
+1318		No Soft Edges	Sem bordas suaves
+1319		Glow Colors	Cores do brilho
+1320		Weight	Espessura
+1321		Shadow, glow and soft edges	Sombra, brilho e bordas suaves
+1322		Offset: Bottom Right	Deslocamento: inferior direito
+1323		Offset: Bottom	Deslocamento: inferior
+1324		Offset: Bottom Left	Deslocamento: inferior esquerdo
+1325		Offset: Right	Deslocamento: direita
+1326		Offset: Center	Deslocamento: centro
+1327		Offset: Left	Deslocamento: esquerda
+1328		Offset: Top Right	Deslocamento: superior direito
+1329		Offset: Top	Deslocamento: superior
+1330		Offset: Top Left	Deslocamento: superior esquerdo
+1331		Manage Styles	Gerenciar estilos
+1332		Show or Hide Style	Mostrar ou ocultar estilo
+1333		Manage Styles…	Gerenciar estilos…
+1334		Sort order:	Ordem:
+1335		As Recommended	Recomendada
+1336		Alphabetical	Alfabética
+1337		Font: {font}	Fonte: {font}
+1338		{size} pt	{size} pt
+1339		Color: {color}	Cor: {color}
+1340		Space before: {pt} pt	Espaço antes: {pt} pt
+1341		Space after: {pt} pt	Espaço depois: {pt} pt
+1342		Based on: {style}	Baseado em: {style}
+1343		Paragraph style	Estilo de parágrafo
+1344		Character style	Estilo de caractere
+1345		Linked style (paragraph and character)	Estilo vinculado (parágrafo e caractere)
+1346		Table style	Estilo de tabela
+1347		Built-in style	Estilo integrado
+1348		Show in the Styles gallery	Mostrar na galeria de estilos
+1349		Hide from style lists	Ocultar das listas de estilos
+1350		Built-in styles can't be deleted.	Estilos integrados não podem ser excluídos.
+1351		Delete Table Style	Excluir estilo de tabela
+1352		Password	Senha
+1353		Password:	Senha:
+1354		Confirm password:	Confirmar senha:
+1355		Encrypt with Password…	Criptografar com senha…
+1356		Change Password…	Alterar senha…
+1357		Remove Password	Remover senha
+1358		A password is required to open this document.	É necessária uma senha para abrir este documento.
+1359		Anyone can open this document. Encrypt it with a password to keep it private.	Qualquer pessoa pode abrir este documento. Criptografe-o com uma senha para mantê-lo privado.
+1360		Anyone who opens the document will need this password.	Quem abrir o documento precisará desta senha.
+1361		{name} is protected with a password.	{name} está protegido por senha.
+1362		That password isn't right. Check it (passwords are case-sensitive) and try again.	A senha está incorreta. Verifique-a (as senhas diferenciam maiúsculas de minúsculas) e tente novamente.
+1363		The document will be saved with a password. Save it to protect it.	O documento será salvo com senha. Salve-o para protegê-lo.
+1364		The password is removed. Save the document to keep the change.	A senha foi removida. Salve o documento para manter a alteração.
+1365		The passwords don't match.	As senhas não coincidem.
+1366		Keep the password somewhere safe: without it nobody, WordCraft included, can open the document. Leave both boxes empty to remove the password.	Guarde a senha em um lugar seguro: sem ela, ninguém, nem o WordCraft, consegue abrir o documento. Deixe as duas caixas vazias para remover a senha.
+1369		Align Top Left	Alinhar acima à esquerda
+1370		Align Top Center	Alinhar acima ao centro
+1371		Align Top Right	Alinhar acima à direita
+1372		Align Center Left	Alinhar ao meio à esquerda
+1373		Align Center	Alinhar ao centro
+1374		Align Center Right	Alinhar ao meio à direita
+1375		Align Bottom Left	Alinhar abaixo à esquerda
+1376		Align Bottom Center	Alinhar abaixo ao centro
+1377		Align Bottom Right	Alinhar abaixo à direita
+1378		{contributors} contributors · {commits} commits	{contributors} colaboradores · {commits} commits
+1379		{cols}×{rows} Table	Tabela {cols}×{rows}
+1380		AaBbYyZz	AaBbYyZz ÇçÃã
+1381		pt	pt
+1382		Document1	Documento1
+1383		Username	Nome de usuário
+1384		Display name	Nome de exibição
+1385		Real name	Nome real
+1386		Name	Nome
+1387		PRs	PRs
+1388		Commits	Commits
+1389		First	Primeiro
+1390		Last	Último
+1391		Model	Modelo
+1392		Version	Versão
+1393		% of all commits	% de todos os commits
+1394		Lines +/−	Linhas +/−
+1395		Craft	Artesanal
+1396		Studio	Estúdio
+1397		Atelier	Ateliê
+1398		Darkroom	Câmara escura
+1399		Gallery	Galeria
+1400		Sketchbook	Caderno de esboços
+1401		Change Picture…	Alterar imagem…
+1402		Font…	Fonte…
+1403		Paragraph…	Parágrafo…
+1404		Link…	Link…
+1405		Size and Crop…	Tamanho e corte…
+1406		Insert Columns to the Left	Inserir colunas à esquerda
+1407		Insert Columns to the Right	Inserir colunas à direita
+1408		Insert Rows Above	Inserir linhas acima
+1409		Insert Rows Below	Inserir linhas abaixo
+1410		Mon	Seg
+1411		Tue	Ter
+1412		Wed	Qua
+1413		Sum	Soma
+1414		North	Norte
+1415		South	Sul
+1416		West	Oeste
+1417		Total	Total
+1420		Draw\nTable	Desenhar\ntabela
+1421		Rotation	Rotação
+1422		Rotation:	Rotação:
+1423		Rotate Right 90°	Girar 90° para a direita
+1424		Rotate Left 90°	Girar 90° para a esquerda
+1425		Flip Vertical	Inverter verticalmente
+1426		Flip Horizontal	Inverter horizontalmente
+1427		Move Paragraph Up	Mover parágrafo para cima
+1428		Move Paragraph Down	Mover parágrafo para baixo
+1429		Promote	Promover
+1430		Demote	Rebaixar
+1431		Go Back	Voltar
+1432		Toggle Unicode Character	Alternar caractere Unicode
+1433		Type Character Code	Digitar código de caractere
+1434		Toggle Field Codes	Alternar códigos de campo
+1435		Edit Field Code	Editar código de campo
+1436		Unlink Fields	Desvincular campos
+1437		Lock Fields	Bloquear campos
+1438		Unlock Fields	Desbloquear campos
+1439		Next Field	Próximo campo
+1440		Previous Field	Campo anterior
+1441		Selected Fields	Campos selecionados
+1442		Edit Field…	Editar campo…
+1443		Formatted	Formatado
+1444		Deleted	Excluído
+1445		Interface size:	Tamanho da interface:
+1446		Auto ({percent}%)	Auto ({percent}%)
+1447		Makes the ribbon, menus and dialogs larger or smaller. Auto follows your system's display scaling; 100% is one screen pixel per point. Document zoom is separate.	Aumenta ou diminui a faixa de opções, os menus e as caixas de diálogo. Auto segue a escala de exibição do sistema; 100% é um pixel da tela por ponto. O zoom do documento é separado.
+1448		Resize Table by Dragging	Redimensionar tabela arrastando
+1449		Print Markup	Imprimir marcação
+1450		Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Comentários ao lado de cada página e alterações controladas em PDFs, impressões e imagens; uma lista de comentários no final de páginas da web, Markdown e texto.
+1453		1. Formatting restrictions	1. Restrições de formatação
+1454		2. Editing restrictions	2. Restrições de edição
+1455		3. Start enforcement	3. Aplicar a proteção
+1456		<< Less	<< Menos
+1457		Another file	Outro arquivo
+1458		Apply as you type	Aplicar ao digitar
+1459		AutoCorrect	Autocorreção
+1460		AutoFormat As You Type	AutoFormatação ao digitar
+1461		Automatic bulleted lists	Listas com marcadores automáticas
+1462		Automatic numbered lists	Listas numeradas automáticas
+1463		Border lines	Linhas de borda
+1464		Capitalize first letter of sentences	Primeira letra das frases em maiúscula
+1465		Capitalize first letter of table cells	Primeira letra das células em maiúscula
+1466		Correct TWo INitial CApitals	Corrigir DUas INiciais MAiúsculas
+1467		Correct accidental usage of cAPS LOCK key	Corrigir o uso acidental da tecla cAPS LOCK
+1468		Capitalize names of days	Nomes dos dias em maiúscula
+1469		Case changes	Alterações de maiúsculas
+1470		Character level	Nível de caractere
+1471		Checked styles are allowed:	Os estilos marcados são permitidos:
+1472		Combine Documents	Combinar documentos
+1473		Compare Documents	Comparar documentos
+1474		Compared: {changes} changes	Comparado: {changes} alterações
+1475		Comparing with another file needs the desktop app.	Para comparar com outro arquivo é preciso o aplicativo para desktop.
+1476		Comparison settings	Configurações de comparação
+1477		Don't capitalize after:	Não colocar maiúscula depois de:
+1478		Editing in this document is restricted.	A edição deste documento está restrita.
+1479		Every change is recorded as a tracked change.	Cada alteração é registrada como alteração controlada.
+1480		Everyone	Todos
+1481		Exceptions (optional)	Exceções (opcional)
+1482		Exceptions…	Exceções…
+1483		Fields	Campos
+1484		Filling in forms	Preenchimento de formulários
+1485		Find Next Editable Region	Localizar a próxima região editável
+1486		Footnotes and endnotes	Notas de rodapé e notas de fim
+1487		Formatting, case changes, white space and tables are compared; the other settings are kept for later.	Formatação, maiúsculas, espaços em branco e tabelas são comparados; as outras configurações ficam para depois.
+1488		Fractions (1/2) as fraction characters (½)	Frações (1/2) como caracteres de fração (½)
+1489		Headers and footers	Cabeçalhos e rodapés
+1490		Hyphens (--) as dashes (—)	Hífens (--) como travessões (—)
+1491		In equations, typing a name after a backslash replaces it with its symbol.	Nas equações, digitar um nome após uma barra invertida o substitui pelo símbolo.
+1492		Internet addresses as links	Endereços da Internet como links
+1493		Label changes with:	Rotular alterações com:
+1494		Limit formatting to a selection of styles	Limitar a formatação a uma seleção de estilos
+1495		Math AutoCorrect	Autocorreção de matemática
+1496		More >>	Mais >>
+1497		Moves	Movimentações
+1498		New document	Novo documento
+1499		No changes (read only)	Sem alterações (somente leitura)
+1500		Only allow this kind of editing:	Permitir somente este tipo de edição:
+1501		Only comments can be added, except in regions marked editable.	Somente comentários podem ser adicionados, exceto nas regiões marcadas como editáveis.
+1502		Only form fields can be filled in.	Somente os campos de formulário podem ser preenchidos.
+1503		Only the allowed styles can be applied.	Somente os estilos permitidos podem ser aplicados.
+1504		Ordinals (1st) as superscript	Ordinais (1st) sobrescritos
+1505		Original document	Documento original
+1506		This password type isn't supported.	Este tipo de senha não é compatível.
+1507		Replace as you type	Substituir ao digitar
+1508		Replace text as you type	Substituir texto ao digitar
+1509		Replace:	Substituir:
+1510		Revised document	Documento revisado
+1511		Select text, then tick who can still edit it.	Selecione o texto e marque quem ainda pode editá-lo.
+1512		Settings…	Configurações…
+1513		Show changes at:	Mostrar alterações no nível de:
+1514		Show changes in:	Mostrar alterações em:
+1515		Smart quotes instead of straight quotes	Aspas inteligentes em vez de retas
+1516		Start Enforcing Protection	Aplicar a proteção
+1517		Stop Protection	Parar proteção
+1518		Text boxes	Caixas de texto
+1519		The document is read only, except for regions marked editable.	O documento é somente leitura, exceto nas regiões marcadas como editáveis.
+1520		The password is optional; without it anyone can stop the protection.	A senha é opcional; sem ela, qualquer pessoa pode parar a proteção.
+1521		This document	Este documento
+1522		Tracked changes	Alterações controladas
+1523		Type the password to stop the protection.	Digite a senha para parar a proteção.
+1524		White space	Espaços em branco
+1525		With:	Por:
+1526		Word level	Nível de palavra
+1527		In Line with Text	Alinhado ao texto
+1528		Square	Quadrado
+1529		Through	Através
+1530		Top and Bottom	Acima e abaixo
+1531		Behind Text	Atrás do texto
+1532		In Front of Text	Na frente do texto
+1533		Wrap Text Sides	Lados da quebra
+1534		Both Sides	Ambos os lados
+1535		Left Only	Somente à esquerda
+1536		Right Only	Somente à direita
+1537		Largest Only	Somente o lado mais largo
+1538		Customize Keyboard	Personalizar teclado
+1539		Choose a command	Escolha um comando
+1540		Choose a shortcut	Escolha um atalho
+1541		All Commands	Todos os comandos
+1542		Commands:	Comandos:
+1543		Keys for this command:	Teclas deste comando:
+1544		New shortcut:	Novo atalho:
+1545		Now used by {command}	Usado agora por {command}
+1546		Not used by any command	Nenhum comando usa
+1547		Remove every custom shortcut and restore the built-in keys?	Remover todos os atalhos personalizados e restaurar as teclas padrão?
+1548		Assign	Atribuir
+1549		Reset All…	Redefinir tudo…
+1550		Press a key combination	Pressione uma combinação de teclas
+1551		Customize	Personalizar
+1552		Keyboard shortcuts:	Atalhos de teclado:
+1553		Customize…	Personalizar…
+1554		Customize Ribbon	Personalizar Faixa de Opções
+1555		Add to Quick Access Toolbar	Adicionar à Barra de Ferramentas de Acesso Rápido
+1556		Remove from Quick Access Toolbar	Remover da Barra de Ferramentas de Acesso Rápido
+1557		Customize the Ribbon…	Personalizar a Faixa de Opções…
+1558		Customize Quick Access Toolbar…	Personalizar Barra de Ferramentas de Acesso Rápido…
+1559		More Commands…	Mais Comandos…
+1560		Ribbon	Faixa de Opções
+1561		(Custom)	(Personalizado)
+1562		Remove every custom tab and group and show all tabs again?	Remover todas as guias e grupos personalizados e mostrar todas as guias de novo?
+1563		Put the default commands back on the Quick Access Toolbar?	Colocar de volta os comandos padrão na Barra de Ferramentas de Acesso Rápido?
+1564		Reset…	Redefinir…
+1565		Add >>	Adicionar >>
+1566		<< Remove	<< Remover
+1567		Pick a custom group (New Group makes one)	Escolha um grupo personalizado (Novo Grupo cria um)
+1568		Ribbon tabs	Guias da faixa
+1569		New Tab	Nova Guia
+1570		New Group	Novo Grupo
+1571		Rename…	Renomear…
+1572		Ribbon and Quick Access Toolbar:	Faixa de Opções e Barra de Acesso Rápido:
+1573		Add Font…	Adicionar fonte…
+1574		Added Fonts	Fontes adicionadas
+1575		Remove Added Font	Remover fonte adicionada
+1576		Load System Installed Fonts…	Carregar fontes do sistema instaladas…
+1577		All system fonts are already available.	Todas as fontes do sistema já estão disponíveis.
+1578		Local font access is not supported by your browser.	O acesso a fontes locais não é compatível com seu navegador.
+1579		Local font access was denied.	O acesso a fontes locais foi negado.
+1580		Loaded {count} system fonts.	{count} fontes do sistema carregadas.
+1581		Recent Colors	Cores recentes
+1582		More Colors…	Mais cores…
+1583		Standard	Padrão
+1584		Current	Atual
+1585		Colors:	Cores:
+1586		Color model:	Modelo de cor:
+1587		Red:	Vermelho:
+1588		Green:	Verde:
+1589		Blue:	Azul:
+1590		Hue:	Matiz:
+1591		Sat:	Sat.:
+1592		Lum:	Lum.:
+1593		Hex:	Hex.:
+1594		Accessibility Pane	Painel de acessibilidade
+1595		Alt Text Pane	Painel de texto alternativo
+1596		Alt\nText	Texto\nalternativo
+1597		View Alt Text…	Exibir texto alternativo…
+1598		Mark as decorative	Marcar como decorativo
+1599		Title:	Título:
+1600		Errors ({n})	Erros ({n})
+1601		Warnings ({n})	Avisos ({n})
+1602		Tips ({n})	Dicas ({n})
+1603		No accessibility issues found.	Nenhum problema de acessibilidade encontrado.
+1604		Describe what this object shows, for people who can't see it.	Descreva o que este objeto mostra, para quem não pode vê-lo.
+1605		Decorative objects only add visual interest: screen readers skip them.	Objetos decorativos só acrescentam interesse visual: os leitores de tela os ignoram.
+1606		Describe what this table shows, for people who can't see it.	Descreva o que esta tabela mostra, para quem não pode vê-la.
+1607		Select a picture, shape, chart or table to describe it.	Selecione uma imagem, forma, gráfico ou tabela para descrevê-lo.
+1608		Document Grid	Grade do documento
+1609		No grid	Sem grade
+1610		Lines only	Somente linhas
+1611		Lines and characters	Linhas e caracteres
+1612		Text snaps to characters	O texto se ajusta aos caracteres
+1613		Characters per line:	Caracteres por linha:
+1614		Lines per page:	Linhas por página:
+1615		Moved from	Movido de
+1616		Moved to	Movido para
+1617		Developer	Desenvolvedor
+1618		Controls	Controles
+1619		Rich Text Content Control	Controle de conteúdo de rich text
+1620		Plain Text Content Control	Controle de conteúdo de texto sem formatação
+1621		Picture Content Control	Controle de conteúdo de imagem
+1622		Building Block Gallery Content Control	Controle de conteúdo da galeria de blocos de construção
+1623		Check Box Content Control	Controle de conteúdo de caixa de seleção
+1624		Combo Box Content Control	Controle de conteúdo de caixa de combinação
+1625		Drop-Down List Content Control	Controle de conteúdo de lista suspensa
+1626		Date Picker Content Control	Controle de conteúdo de seletor de data
+1627		Repeating Section Content Control	Controle de conteúdo de seção repetida
+1628		Design Mode	Modo de Design
+1629		Content Control at Selection	Controle de conteúdo na seleção
+1630		Toggle Check Box	Alternar caixa de seleção
+1631		Choose List Item	Escolher item da lista
+1632		Set Date	Definir data
+1633		Remove Content Control	Remover controle de conteúdo
+1634		Content Control Properties	Propriedades do controle de conteúdo
+1635		Title	Título
+1636		Tag	Marca
+1637		Placeholder text	Texto do espaço reservado
+1638		Can't be deleted	Não pode ser excluído
+1639		Contents can't be edited	O conteúdo não pode ser editado
+1640		Remove the control once edited	Remover o controle após a edição
+1641		Allow line breaks	Permitir quebras de linha
+1642		Date format	Formato da data
+1643		Checked symbol	Símbolo marcado
+1644		Unchecked symbol	Símbolo desmarcado
+1645		List entries	Itens da lista
+1646		Display text	Texto exibido
+1647		Value	Valor
+1648		Today	Hoje
+1649		Put the caret in a content control first.	Coloque primeiro o cursor em um controle de conteúdo.
+1650		Right-to-Left Table	Tabela da direita para a esquerda
+1651		Right-to-Left Section	Seção da direita para a esquerda
+1652		Table direction:	Direção da tabela:
+1653		Section direction:	Direção da seção:
+1654		Drawing Canvas	Tela de desenho
+1655		New Drawing Canvas	Nova tela de desenho
+1656		Fit	Ajustar
+1657		Expand	Expandir
+1658		Scale Drawing	Dimensionar desenho
+1659		Canvas Member	Item da tela
+1660		Arrows	Setas
+1661		Communication	Comunicação
+1662		Office	Escritório
+1663		People	Pessoas
+1664		Nature	Natureza
+1665		Weather	Clima
+1666		Technology	Tecnologia
+1667		Transport	Transporte
+1668		Icon Color	Cor do Ícone
+1669		Search icons	Pesquisar ícones
+1670		No icons match your search.	Nenhum ícone corresponde à pesquisa.
+1671		Recolor a one-color picture, such as an icon	Mudar a cor de uma imagem de uma só cor, como um ícone
+1672		Enclose Characters	Envolver caracteres
+1673		Shrink text	Reduzir texto
+1674		Enlarge symbol	Ampliar símbolo
+1675		Enclosure	Contorno
+1676		Circle	Círculo
+1677		Numerals:	Numerais:
+1678		Numerals	Numerais
+1679		Arabic	Arábico
+1680		Hindi	Hindi
+1681		Context	Contexto
+1682		System	Sistema
+1683		Templates	Modelos
+1684		Templates and Add-ins	Modelos e suplementos
+1685		Attach Template	Anexar modelo
+1686		Detach Template	Desanexar modelo
+1687		Automatically Update Document Styles	Atualizar automaticamente os estilos do documento
+1688		Update Styles from Template	Atualizar estilos a partir do modelo
+1689		Organizer	Organizador
+1690		Copy Styles	Copiar estilos
+1691		Rename Style	Renomear estilo
+1692		Document template:	Modelo do documento:
+1693		Attach…	Anexar…
+1694		Automatically update document styles	Atualizar automaticamente os estilos do documento
+1695		Organizer…	Organizador…
+1696		Change Chart Type	Alterar tipo de gráfico
+1697		Chart Design	Design do gráfico
+1698		Type	Tipo
+1699		Edit Data	Editar dados
+1700		Chart Title	Título do gráfico
+1701		Chart Layouts	Layouts do gráfico
+1702		Add Chart Element	Adicionar elemento ao gráfico
+1703		Legend	Legenda
+1704		Data Labels	Rótulos de dados
+1705		Above Chart	Acima do gráfico
+1706		Insert Chart	Inserir gráfico
+1707		Clustered Column	Colunas agrupadas
+1708		Stacked Column	Colunas empilhadas
+1709		Clustered Bar	Barras agrupadas
+1710		Stacked Bar	Barras empilhadas
+1711		Area	Área
+1712		Pie	Pizza
+1713		Doughnut	Rosca
+1714		Scatter	Dispersão
+1715		“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) não é um número.
+1716		Category {n}	Categoria {n}
+1717		Series {n}	Série {n}
+1718		Type the categories down the side and a column of values per series.	Digite as categorias na lateral e uma coluna de valores por série.
+1719		Categories	Categorias
+1720		Series name	Nome da série
+1721		Remove series	Remover série
+1722		Remove row	Remover linha
+1723		Add Row	Adicionar linha
+1724		Add Series	Adicionar série
+1725		Edit\nData	Editar\ndados
+1726		Change\nChart Type	Alterar tipo\nde gráfico
+1727		Align Text	Alinhar texto
+1728		Create Link	Criar link
+1729		Break Link	Quebrar link
+1730		Rotate all text 90°	Girar todo o texto 90°
+1731		Rotate all text 270°	Girar todo o texto 270°
+1732		Stacked	Empilhado
+1733		Middle	Meio
+1734		Click the empty text box the text should continue in (Esc cancels)	Clique na caixa de texto vazia em que o texto deve continuar (Esc cancela)
+1735		Not linked: click a text box	Não vinculado: clique em uma caixa de texto
+1736		Show KeyTips (Alt or F10)	Mostrar dicas de teclas (Alt ou F10)
+1737		Location	Local
+1738		Endnotes	Notas de fim
+1739		Below text	Abaixo do texto
+1740		End of section	Fim da seção
+1741		End of document	Fim do documento
+1742		Footnotes to endnotes	Notas de rodapé em notas de fim
+1743		Endnotes to footnotes	Notas de fim em notas de rodapé
+1744		Swap footnotes and endnotes	Trocar notas de rodapé e notas de fim
+1745		Custom mark:	Marca personalizada:
+1746		Continuous numbering	Numeração contínua
+1747		Apply	Aplicar
+1748		Convert Notes	Converter notas
+1749		Reading	Leitura
+1750		Reading Column Width	Largura da coluna de leitura
+1751		Reading Line Spacing	Espaçamento entre linhas na leitura
+1752		Reading Text Size	Tamanho do texto na leitura
+1753		English (United Kingdom)	Inglês (Reino Unido)
+1754		Polish	Polonês
+1755		Do Not Check Spelling or Grammar	Não verificar ortografia nem gramática
+1758		Documents	Documentos
+1759		Word document	Documento do Word
+1760		All files	Todos os arquivos
+1761		Recipient lists	Listas de destinatários
+1762		The system file dialog isn't available, so WordCraft shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	A caixa de diálogo de arquivos do sistema não está disponível, então o WordCraft mostra a sua própria. Para usar a do sistema, instale um portal seletor de arquivos (como xdg-desktop-portal-gtk) ou o zenity.
+1763		Up one level	Subir um nível
+1764		Home folder	Pasta pessoal
+1765		{name} wasn't found.	{name} não foi encontrado.
+1766		{name} already exists. Choose Save again to replace it.	{name} já existe. Escolha Salvar novamente para substituí-lo.
+1767		This folder can't be read: {error}	Não é possível ler esta pasta: {error}
+1768		Showing the first {count} items.	Mostrando os primeiros {count} itens.
+1769		File name:	Nome do arquivo:
+1770		Browse in WordCraft…	Procurar no WordCraft…
+1771		Open a file with WordCraft's own browser when the system file dialog doesn't appear.	Abra um arquivo com o navegador próprio do WordCraft quando a caixa de diálogo de arquivos do sistema não aparecer.
+1772		Hide White Space	Ocultar espaço em branco
+1773		All pages	Todas as páginas
+1774		Current page	Página atual
+1775		Selected pages	Páginas selecionadas
+1776		Custom range	Intervalo personalizado
+1777		All pages in the range	Todas as páginas do intervalo
+1778		Odd pages only	Somente páginas ímpares
+1779		Even pages only	Somente páginas pares
+1780		Copies	Cópias
+1781		Collate copies	Agrupar cópias
+1782		Pages like 1-3, 5	Páginas como 1-3, 5
+1783		{count} of {total} pages will print	{count} de {total} páginas serão impressas
+1784		Save these pages as PDF…	Salvar estas páginas como PDF…
+1785		The printer, two-sided printing and pages per sheet are chosen in that dialog.	A impressora, a impressão frente e verso e as páginas por folha são escolhidas nessa caixa de diálogo.
+1786		Previous Page	Página anterior
+1787		Print to PDF	Imprimir em PDF
+1788		Add Shape	Adicionar forma
+1789		Change Colors	Alterar cores
+1790		Change Layout	Alterar layout
+1791		Create Graphic	Criar gráfico
+1792		Edit Items	Editar itens
+1793		Layouts	Layouts
+1794		Reset Graphic	Redefinir gráfico
+1795		SmartArt Design	Design do SmartArt
+1796		SmartArt Styles	Estilos de SmartArt
+1797		Text Pane	Painel de texto
+1798		List	Lista
+1799		Process	Processo
+1800		Cycle	Ciclo
+1801		Hierarchy	Hierarquia
+1802		Relationship	Relação
+1803		Pyramid	Pirâmide
+1804		Basic List	Lista básica
+1805		Basic Process	Processo básico
+1806		Basic Cycle	Ciclo básico
+1807		Basic Pyramid	Pirâmide básica
+1808		Basic Radial	Radial básico
+1809		Basic Matrix	Matriz básica
+1810		Basic Venn	Venn básico
+1811		Shows items of equal weight as blocks in rows.	Mostra itens de mesmo peso como blocos em linhas.
+1812		Shows steps in order, left to right, with arrows between them.	Mostra etapas em ordem, da esquerda para a direita, com setas entre elas.
+1813		Shows steps that repeat, around a circle.	Mostra etapas que se repetem, ao redor de um círculo.
+1814		Shows a tree: each item below the item it belongs to.	Mostra uma árvore: cada item abaixo do item ao qual pertence.
+1815		Shows parts that build on each other, largest at the bottom.	Mostra partes que se apoiam umas nas outras, a maior embaixo.
+1816		Shows items around a central idea: the first item is the centre.	Mostra itens ao redor de uma ideia central: o primeiro item é o centro.
+1817		Shows parts of a whole as quadrants.	Mostra as partes de um todo como quadrantes.
+1818		Shows overlapping ideas as overlapping circles.	Mostra ideias sobrepostas como círculos sobrepostos.
+1819		Accent {n}	Ênfase {n}
+1820		Colorful	Colorido
+1821		Insert SmartArt	Inserir SmartArt
+1822		One line per item. Enter adds an item.	Uma linha por item. Enter adiciona um item.
+1823		Add\nShape	Adicionar\nforma
+1824		Change\nColors	Alterar\ncores
+1825		Reset\nGraphic	Redefinir\ngráfico
+1826		Promote to Heading 1	Promover a Título 1
+1827		Demote to Body Text	Rebaixar a corpo do texto
+1828		Move Up	Mover para cima
+1829		Move Down	Mover para baixo
+1830		Collapse	Recolher
+1831		Expand or Collapse Heading	Expandir ou recolher título
+1832		Select Heading and Content	Selecionar título e conteúdo
+1833		Show Level	Mostrar nível
+1834		Show Level 1	Mostrar nível 1
+1835		Show Level 2	Mostrar nível 2
+1836		Show Level 3	Mostrar nível 3
+1837		Show Level 4	Mostrar nível 4
+1838		Show Level 5	Mostrar nível 5
+1839		Show Level 6	Mostrar nível 6
+1840		Show Level 7	Mostrar nível 7
+1841		Show Level 8	Mostrar nível 8
+1842		Show Level 9	Mostrar nível 9
+1843		Show All Levels	Mostrar todos os níveis
+1844		All Levels	Todos os níveis
+1845		Show First Line Only	Mostrar só a primeira linha
+1846		Show Text Formatting	Mostrar formatação do texto
+1847		Close Outline View	Fechar estrutura de tópicos
+1848		Outline State	Estado da estrutura de tópicos
+1849		Outlining	Estrutura de tópicos
+1850		Outline Tools	Ferramentas de tópicos
+1851		Close Outline\nView	Fechar estrutura\nde tópicos
+1852		A, B, C, …	A, B, C, …
+1853		Above the item	Acima do item
+1854		Accessed on	Acessado em
+1855		Add New Source…	Adicionar nova fonte…
+1856		Add the chapter number	Adicionar o número do capítulo
+1857		Atmosphere	Atmosfera
+1858		Below the item	Abaixo do item
+1859		Book	Livro
+1860		Book title	Título do livro
+1861		Caption	Legenda
+1862		Caption Numbering	Numeração de legendas
+1863		Caption text	Texto da legenda
+1864		Caption:	Legenda:
+1865		Chapter in a book	Capítulo de livro
+1866		Chapters begin at:	Os capítulos começam em:
+1867		Collect entries from:	Coletar entradas de:
+1868		Columns:	Colunas:
+1869		Conference	Conferência
+1870		Conference paper	Artigo de conferência
+1871		Container Title	Título do contêiner
+1872		Create Source	Criar fonte
+1873		Cross-reference:	Referência cruzada:
+1874		Custom Table of Contents…	Sumário personalizado…
+1875		DOI	DOI
+1876		Day	Dia
+1877		Delete Label	Excluir rótulo
+1878		Edit Source	Editar fonte
+1879		Edition	Edição
+1880		Edit…	Editar…
+1881		Entry marked.	Entrada marcada.
+1882		Example: {sample}	Exemplo: {sample}
+1883		Figure	Figura
+1884		Film	Filme
+1885		Heading styles (levels 1–{n})	Estilos de título (níveis 1–{n})
+1886		Heading {n}	Título {n}
+1887		I, II, III, …	I, II, III, …
+1888		Include page numbers	Incluir números de página
+1889		Indented	Recuado
+1890		Institution	Instituição
+1891		Ionosphere	Ionosfera
+1892		Issue	Número
+1893		Journal	Periódico científico
+1894		Label:	Rótulo:
+1895		Last, First; Last, First	Sobrenome, Nome; Sobrenome, Nome
+1896		Leave the label out of the caption	Omitir o rótulo na legenda
+1897		Letter headings	Cabeçalhos de letra
+1898		Levels:	Níveis:
+1899		Link entries to their headings	Vincular as entradas aos títulos
+1900		Made from the author and year when empty	Se vazio, é formado pelo autor e ano
+1901		Magazine or newspaper article	Artigo de revista ou jornal
+1902		Main entry:	Entrada principal:
+1903		Mark	Marcar
+1904		Mark All	Marcar todas
+1905		Mark Entry…	Marcar entrada…
+1906		Mark Index Entry	Marcar entrada de índice
+1907		Mesosphere	Mesosfera
+1908		Month	Mês
+1909		New Label	Novo rótulo
+1910		New Label…	Novo rótulo…
+1911		New…	Nova…
+1912		No sources yet.	Ainda não há fontes.
+1913		Numbering…	Numeração…
+1914		Options…	Opções…
+1915		Other	Outro
+1916		Other styles and their TOC level:	Outros estilos e seu nível no sumário:
+1917		Outline levels	Níveis de estrutura de tópicos
+1918		Page number style	Estilo do número de página
+1919		Page numbers at the right margin	Números de página na margem direita
+1920		Page title	Título da página
+1921		Pages of bookmark:	Páginas do indicador:
+1922		Periodical	Periódico
+1923		Position:	Posição:
+1924		Publisher	Editora
+1925		Run-in	Contínuo
+1926		See	Ver
+1927		Separator:	Separador:
+1928		Show every bibliography field	Mostrar todos os campos bibliográficos
+1929		Site name	Nome do site
+1930		Source Manager	Gerenciador de fontes
+1931		Source type:	Tipo de fonte:
+1932		Sources in this document:	Fontes deste documento:
+1933		Styles:	Estilos:
+1934		Subentry:	Subentrada:
+1935		TC entry fields	Campos de entrada TC
+1936		Tab leader:	Preenchimento de tabulação:
+1937		Table of Contents Options	Opções do sumário
+1938		Table of Contents Styles	Estilos do sumário
+1939		This page	Esta página
+1940		Type:	Tipo:
+1941		URL	URL
+1942		Volume	Volume
+1943		Website	Site
+1944		Year	Ano
+1945		a, b, c, …	a, b, c, …
+1946		i, ii, iii, …	i, ii, iii, …
+1947		{n} entries marked.	Entradas marcadas: {n}.
+1948		Lasso Select	Seleção com laço
+1949		Move Selected Ink	Mover a tinta selecionada
+1950		Delete Selected Ink	Excluir a tinta selecionada
+1951		Recolor Selected Ink	Mudar a cor da tinta selecionada
+1952		Add Pen	Adicionar caneta
+1953		Remove Pen	Remover caneta
+1954		Ink to Shape	Tinta para forma
+1955		Convert to Shapes	Converter em formas
+1956		Ink Replay	Reproduzir tinta
+1957		Add\nPen	Adicionar\ncaneta
+1958		Rewind	Retroceder
+1959		Forward	Avançar
+1960		Stroke {n} of {total}	Traço {n} de {total}
+1961		Use wildcards	Usar caracteres curinga
+1962		Special	Especial
+1963		Match prefix	Coincidir prefixo
+1964		Match suffix	Coincidir sufixo
+1965		Ignore punctuation characters	Ignorar sinais de pontuação
+1966		Ignore white-space characters	Ignorar espaços em branco
+1967		Regular expressions	Expressões regulares
+1968		Search Options	Opções de pesquisa
+1969		Tab Character	Caractere de tabulação
+1970		Any Character	Qualquer caractere
+1971		Any Digit	Qualquer dígito
+1972		Any Letter	Qualquer letra
+1973		Caret Character	Acento circunflexo
+1974		Section Character	Símbolo de seção
+1975		Paragraph Character	Símbolo de parágrafo
+1976		Graphic	Gráfico
+1977		Manual Line Break	Quebra de linha manual
+1978		Manual Page Break	Quebra de página manual
+1979		Section Break	Quebra de seção
+1980		White Space	Espaço em branco
+1981		Clipboard Contents	Conteúdo da área de transferência
+1982		Find What Text	Texto localizado
+1983		Find What Expression	Expressão localizada
+1984		Character in Range	Caractere no intervalo
+1985		Beginning of Word	Início da palavra
+1986		End of Word	Fim da palavra
+1987		Expression	Expressão
+1988		Not	Não
+1989		Num Occurrences	Número de ocorrências
+1990		Previous 1 or More	Anterior 1 ou mais vezes
+1991		0 or More Characters	0 ou mais caracteres
+1992		Move with Text	Mover com o texto
+1993		Fix Position on Page	Fixar posição na página
+1996		WordArt Styles	Estilos de WordArt
+1997		Text Fill	Preenchimento do texto
+1998		Text Outline	Contorno do texto
+1999		Transform	Transformar
+2000		No Fill	Sem preenchimento
+2001		No Outline	Sem contorno
+2002		Reflection	Reflexo
+2003		No Reflection	Sem reflexo
+2004		No Transform	Sem transformação
+2005		Connect Shapes	Conectar formas
+2006		Straight Connector	Conector reto
+2007		Straight Arrow Connector	Conector reto com seta
+2008		Elbow Connector	Conector angular
+2009		Elbow Arrow Connector	Conector angular com seta
+2010		Curved Connector	Conector curvo
+2011		Curved Arrow Connector	Conector curvo com seta
+2012		Arch Up	Arco para cima
+2013		Arch Down	Arco para baixo
+2014		Slant Up	Inclinação para cima
+2015		Slant Down	Inclinação para baixo
+2016		Inflate	Inflar
+2017		Deflate	Desinflar
+2018		Chevron Up	Divisa para cima
+2019		Chevron Down	Divisa para baixo
+2020		Triangle Up	Triângulo para cima
+2021		Triangle Down	Triângulo para baixo
+2022		Solid Accent	Destaque sólido
+2023		Light with Outline	Claro com contorno
+2024		Hollow	Vazado
+2025		Accent Gradient	Gradiente de destaque
+2026		Dark with Shadow	Escuro com sombra
+2027		Soft Glow	Brilho suave
+2028		Accent with Reflection	Destaque com reflexo
+2029		Warm Gradient with Outline	Gradiente quente com contorno
+2030		Add line numbering	Adicionar numeração de linhas
+2031		Add to Document	Adicionar ao documento
+2032		Address labels	Etiquetas de endereço
+2033		Auto	Auto
+2034		Automatically hyphenate document	Hifenizar o documento automaticamente
+2035		Chinese (Simplified)	Chinês (simplificado)
+2036		Chinese (Traditional)	Chinês (tradicional)
+2037		Column:	Coluna:
+2038		Count by:	Intervalo:
+2039		Czech	Tcheco
+2040		Danish	Dinamarquês
+2041		Delivery address:	Endereço de entrega:
+2042		Detect language automatically	Detectar o idioma automaticamente
+2043		Do not check spelling or grammar	Não verificar ortografia nem gramática
+2044		Dutch	Holandês
+2045		Envelope size:	Tamanho do envelope:
+2046		Estonian	Estoniano
+2047		Finnish	Finlandês
+2048		French (France)	Francês (França)
+2049		From text:	Distância do texto:
+2050		Full page of the same label	Página inteira da mesma etiqueta
+2051		German (Germany)	Alemão (Alemanha)
+2052		Greek	Grego
+2053		Hebrew	Hebraico
+2054		Hyphenate at:	Hifenizar em:
+2055		Hyphenate words in CAPS	Hifenizar palavras em MAIÚSCULAS
+2056		Hyphenation Options…	Opções de hifenização…
+2057		Hyphenation zone:	Zona de hifenização:
+2058		Italian	Italiano
+2059		Croatian	Croata
+2060		Japanese	Japonês
+2061		Korean	Coreano
+2062		Limit consecutive hyphens to:	Limitar hífens consecutivos a:
+2063		Line Numbering Options…	Opções de numeração de linhas…
+2064		Manual Hyphenation	Hifenização manual
+2065		Manual hyphenation is complete.	A hifenização manual foi concluída.
+2066		Manual…	Manual…
+2067		Mark selected text as:	Marcar o texto selecionado como:
+2068		New Document	Novo documento
+2069		No limit	Sem limite
+2070		Norwegian (Bokmål)	Norueguês (bokmål)
+2071		Numbering:	Numeração:
+2072		Omit	Omitir
+2073		One label per recipient	Uma etiqueta por destinatário
+2074		Portuguese (Brazil)	Português (Brasil)
+2075		Portuguese (Portugal)	Português (Portugal)
+2076		Return address labels	Etiquetas de remetente
+2077		Return address:	Endereço do remetente:
+2078		Row:	Linha:
+2079		Russian	Russo
+2080		Serbian (Cyrillic)	Sérvio (cirílico)
+2081		Serbian (Latin)	Sérvio (latino)
+2082		Set As Default	Definir como padrão
+2083		Shipping labels	Etiquetas de envio
+2084		Single label	Etiqueta única
+2085		Spanish (Mexico)	Espanhol (México)
+2086		Spanish (Spain)	Espanhol (Espanha)
+2087		Swedish	Sueco
+2088		Turkish	Turco
+2089		Ukrainian	Ucraniano
+2090		{language} is now the document's default language.	{language} agora é o idioma padrão do documento.
+2091		Visual effects	Efeitos visuais
+2092		Animation effects:	Efeitos de animação:
+2093		On	Ativado
+2094		Off	Desativado
+2095		Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	Rolagem e zoom suaves, e menus e botões que aparecem gradualmente. Com “Desativado”, cada alteração é mostrada de imediato.
+2096		Your system has animation effects turned on.	Seu sistema está com os efeitos de animação ativados.
+2097		Your system has animation effects turned off.	Seu sistema está com os efeitos de animação desativados.
+2098		Your system doesn't report an animation setting, so animation effects stay on.	Seu sistema não informa uma configuração de animação, então os efeitos de animação continuam ativados.
+2099		Select Column	Selecionar coluna
+2100		Select Table Cells by Clicking	Selecionar células da tabela clicando
+2101		Insert Row or Column by Clicking	Inserir linha ou coluna clicando
+2102		Move Table by Dragging	Mover tabela arrastando
+2103		AutoFit Column by Double-Clicking	Autoajustar coluna com clique duplo
+2104		Region:	Região:
+2105		Automatic ({region})	Automático ({region})
+2106		Odd Banded Rows	Linhas listradas ímpares
+2107		Even Banded Rows	Linhas listradas pares
+2108		Odd Banded Columns	Colunas listradas ímpares
+2109		Even Banded Columns	Colunas listradas pares
+2110		Top Left Cell	Célula superior esquerda
+2111		Top Right Cell	Célula superior direita
+2112		Bottom Left Cell	Célula inferior esquerda
+2113		Bottom Right Cell	Célula inferior direita
+2114		Inside Horizontal Border	Borda horizontal interna
+2115		Inside Vertical Border	Borda vertical interna
+2116		Text of the nearest paragraph with a given style (running headers)	Texto do parágrafo mais próximo com um determinado estilo (cabeçalhos dinâmicos)
+2117		Style name:	Nome do estilo:
+2119		Filter Recipients	Filtrar destinatários
+2120		Sort Recipients	Classificar destinatários
+2121		Filter and Sort	Filtrar e classificar
+2122		And	E
+2123		Or	Ou
+2124		Comparison	Comparação
+2125		Compare to	Comparar com
+2126		Add Condition	Adicionar condição
+2127		Remove condition	Remover condição
+2128		Sort by	Classificar por
+2129		Then by	Depois por
+2130		Ascending	Crescente
+2131		Descending	Decrescente
+2132		Equal to	Igual a
+2133		Not equal to	Diferente de
+2134		Less than	Menor que
+2135		Greater than	Maior que
+2136		Less than or equal	Menor ou igual a
+2137		Greater than or equal	Maior ou igual a
+2138		Is blank	Está em branco
+2139		Is not blank	Não está em branco
+2140		Contains	Contém
+2141		Does not contain	Não contém
+2142		{count} of {total} recipients will be merged.	{count} de {total} destinatários serão mesclados.
+2143		Take the last match on the page	Usar a última ocorrência da página
+2144		Show its list number	Mostrar seu número na lista
+2145		Show its number relative to this field	Mostrar seu número em relação a este campo
+2146		Show its number with all higher levels	Mostrar seu número com todos os níveis acima
+2147		Number only, without the label's words	Só o número, sem as palavras do rótulo
+2148		Add whether it is above or below	Acrescentar se está acima ou abaixo
+2149		Start-up	Inicialização
+2150		Show the Start screen when WordCraft starts	Mostrar a tela inicial ao abrir o WordCraft
+2151		On: WordCraft opens on File › Home, with a blank document, the templates and your recent documents. Off: it opens a blank document.	Ativado: o WordCraft abre em Arquivo › Início, com um documento em branco, os modelos e seus documentos recentes. Desativado: abre um documento em branco.
+2152		Copy to	Copiar para
+2155		Rename Document	Renomear documento
+2156		Document name	Nome do documento
+2157		Rename	Renomear
+2158		Account	Conta
+2159		Privacy Options	Opções de privacidade
+2160		Trust Center	Central de confiabilidade
+2161		Privacy for this document	Privacidade deste documento
+2162		Remove my name from comments, changes and file properties when saving	Remover meu nome dos comentários, alterações e propriedades do arquivo ao salvar
+2163		Leave out the date and time of comments and tracked changes when saving	Omitir a data e a hora dos comentários e das alterações controladas ao salvar
+2164		The document you are editing keeps the names and dates; only the saved file leaves them out.	O documento que você está editando mantém os nomes e as datas; só o arquivo salvo os omite.
+2165		Privacy Settings	Configurações de privacidade atuais
+2166		Waiting for the save to finish…	Aguardando o término do salvamento…
+2167		Saving {name} was cancelled, so it is still open and nothing was lost.	O salvamento de {name} foi cancelado; ele continua aberto e nada foi perdido.
+2168		Paper	Papel
+2169		Paper size:	Tamanho do papel:
+2170		Custom size	Tamanho personalizado
+2171		More Paper Sizes…	Mais tamanhos de papel…
+2172		The margins don't fit on a page this size; make the margins smaller first.	As margens não cabem em uma página deste tamanho; reduza as margens primeiro.
+2173		Full Screen	Tela inteira
+2174		Full\nScreen	Tela\ninteira
+2175		Use the browser's full screen (F11)	Use a tela inteira do navegador (F11)
+2178		{name}   {height} × {width} in	{name}   {height} × {width} pol.
+2179		{name}   {height} × {width} mm	{name}   {height} × {width} mm
+2180		{width} × {height} mm	{width} × {height} mm
+2181		{kind}, {columns} × {rows}, {size} ({paper})	{kind}, {columns} × {rows}, {size} ({paper})
+2182		Researcher needs an online service; WordCraft keeps your documents offline.	O Pesquisador precisa de um serviço online; o WordCraft mantém seus documentos offline.
+2183		These settings will be used for new documents.	Essas configurações serão usadas nos novos documentos.
+2184		can't split at the first row	não é possível dividir a tabela na primeira linha
+2185		select two or more cells to merge	selecione duas ou mais células para mesclar
+2186		there is no ink to replay	não há tinta para reproduzir
+2187		there's no citation after the caret	não há citação depois do cursor
+2188		this item is already at the top level	este item já está no nível superior
+2189		Envelope #10	Envelope nº 10
+2190		Envelope DL	Envelope DL
+2191		Reading Mode	Modo de leitura
+2192		Column width	Largura da coluna
+2193		Text size	Tamanho do texto
+2194		Edit Document	Editar documento
+2195		Go to what:	Ir para:
+2196		Type +2 or -1 to move from the page you are on.	Digite +2 ou -1 para se mover a partir da página atual.
+2197		Suggested	Sugestões
+2198		Set Proofing Language…	Definir idioma de revisão…
+2199		Language Preferences…	Preferências de idioma…
+2200		Printer	Impressora
+2201		Select a printer	Selecione uma impressora
+2202		Refresh printers	Atualizar impressoras
+2203		Two-sided printing	Impressão frente e verso
+2204		Printer default	Padrão da impressora
+2205		One-sided	Somente frente
+2206		Two-sided: long edge	Frente e verso: borda longa
+2207		Two-sided: short edge	Frente e verso: borda curta
+2208		Grayscale	Tons de cinza
+2209		Finding printers…	Localizando impressoras…
+2210		No printers found. Configure a system printer or export a PDF.	Nenhuma impressora encontrada. Configure uma impressora no sistema ou exporte um PDF.
+2211		Printer discovery failed.	Falha ao localizar impressoras.
+2212		Submitting print job…	Enviando trabalho de impressão…
+2213		Print job submitted.	Trabalho de impressão enviado.
+2214		Print job submitted: {receipt}	Trabalho de impressão enviado: {receipt}
+2215		Print failed: the printing worker stopped.	A impressão falhou: o processo de impressão parou.
+2216		Print settings	Configurações de impressão
+2217		Submit print job	Enviar trabalho de impressão
+2220		Dictionaries	Dicionários
+2221		Dictionaries folder:	Pasta de dicionários:
+2222		Not set: the system's usual places	Não definida: os locais habituais do sistema
+2223		Hunspell .aff and .dic files here (pl_PL, pt_BR, it_IT, hr_HR, tr_TR) are used before the system's.	Os arquivos .aff e .dic do Hunspell nesta pasta (pl_PL, pt_BR, it_IT, hr_HR, tr_TR) são usados antes dos do sistema.
+2224		{language}: {file}	{language}: {file}
+2225		{language}: no dictionary found	{language}: nenhum dicionário encontrado
+2228		Recover	Recuperar
+2231		Mirror margins	Margens espelho
+2234		Existing File or Web Page	Página da Web ou arquivo existente
+2235		Link to:	Vincular a:
+2236		Place in This Document	Colocar neste documento
+2238		Column {n}	Coluna {n}
+2239		Header row	Linha de cabeçalho
+2240		No header row	Sem linha de cabeçalho
+2241		My list has	Minha lista tem
+2243		Formula:	Fórmula:
+2244		Paste function:	Colar função:
+2246		Narrow	Estreita
+2247		Medium	Média
