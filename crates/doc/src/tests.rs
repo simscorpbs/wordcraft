@@ -13,7 +13,21 @@ fn new_document_is_valid() {
 fn word_count() {
     let d = Document::from_text("Hello, world!\nThis is — a test 42.\n\n");
     assert_eq!(d.word_count(), 7);
-    assert_eq!(count_words(" -- "), 0);
+    assert_eq!(count_words(" -- "), 1);
+}
+
+#[test]
+fn word_count_counts_symbols_like_word() {
+    // Measured in Word: in "alfa X beta" every X below makes three words…
+    for x in ["§", "§§", "(§§", "-", "--", "&", "|", "...", "!", "*", "%", "$", "(", ")", "«", "»", "\"", "/", "1", "a)", "R$", "@", "#"] {
+        assert_eq!(count_words(&format!("alfa {x} beta")), 3, "{x}");
+    }
+    // …but a dash or bullet on its own isn't a word.
+    for x in ["\u{2014}", "\u{2013}", "\u{2022}"] {
+        assert_eq!(count_words(&format!("alfa {x} beta")), 2, "{x}");
+    }
+    assert_eq!(count_words("Art. 5º, § 2º  da Lei"), 6);
+    assert_eq!(count_words("  \n\t "), 0);
 }
 
 #[test]

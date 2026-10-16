@@ -1382,9 +1382,16 @@ impl PermRange {
     }
 }
 
-/// Words in `s` (tokens separated by whitespace that contain at least one alphanumeric char).
+/// Words in `s`, counted as Word counts them: every run of characters between spaces is a
+/// word — "§", "(§§", "&", "-", "--" and "..." each count — except a dash or bullet standing
+/// alone ("—", "–", "•"), which Word leaves out.
 pub fn count_words(s: &str) -> usize {
-    s.split(|c: char| c.is_whitespace() || c == para::OBJ).filter(|w| w.chars().any(char::is_alphanumeric)).count()
+    s.split(|c: char| c.is_whitespace() || c == para::OBJ).filter(|w| is_counted_word(w)).count()
+}
+
+/// Is this whitespace-free token a word for [`count_words`]?
+fn is_counted_word(w: &str) -> bool {
+    !w.is_empty() && !w.chars().all(|c| matches!(c, '\u{2014}' | '\u{2013}' | '\u{2022}'))
 }
 
 fn walk(bl: &Blocks, prefix: &mut Vec<u32>, out: &mut Vec<Path>, depth: usize) {
