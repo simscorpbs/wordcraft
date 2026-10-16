@@ -239,14 +239,22 @@ pub struct Tokens {
     pub canvas: Color32,
     pub panel: Color32,
     pub border: Color32,
+    /// Status-bar rule colour; kept separate from the general UI border.
+    pub status_border: Color32,
     pub border_strong: Color32,
     pub text: Color32,
     pub text_dim: Color32,
+    /// Status-bar labels; kept separate from the general dim text token.
+    pub status_text: Color32,
     pub text_disabled: Color32,
     pub icon: Color32,
     pub hover: Color32,
     pub pressed: Color32,
     pub checked: Color32,
+    /// Neutral fill for a selected status-bar view button.
+    pub status_checked: Color32,
+    /// Neutral icon colour for a selected status-bar view button.
+    pub status_checked_icon: Color32,
     pub accent: Color32,
     pub accent_text: Color32,
     /// Text/icon colour drawn on top of `accent` (e.g. keytip badge letters).
@@ -288,14 +296,18 @@ impl Tokens {
             canvas: Color32::from_rgb(0xE6, 0xE6, 0xE6),
             panel: Color32::from_rgb(0xFA, 0xFA, 0xFA),
             border: Color32::from_rgb(0xE1, 0xE1, 0xE1),
+            status_border: Color32::from_rgb(0xB4, 0xB4, 0xB4),
             border_strong: Color32::from_rgb(0xC8, 0xC8, 0xC8),
             text: Color32::from_rgb(0x24, 0x24, 0x24),
             text_dim: Color32::from_rgb(0x61, 0x61, 0x61),
+            status_text: Color32::from_rgb(0x4E, 0x4E, 0x4E),
             text_disabled: Color32::from_rgb(0xA8, 0xA8, 0xA8),
             icon: Color32::from_rgb(0x42, 0x42, 0x42),
             hover: Color32::from_rgb(0xE6, 0xE6, 0xE6),
             pressed: Color32::from_rgb(0xD6, 0xD6, 0xD6),
             checked: Color32::from_rgb(0xDD, 0xE3, 0xF8),
+            status_checked: Color32::from_rgb(0xA9, 0xA9, 0xA9),
+            status_checked_icon: Color32::from_rgb(0x33, 0x33, 0x33),
             accent: APP_COLOR,
             accent_text: APP_INK,
             on_accent: Color32::WHITE,
@@ -330,14 +342,18 @@ impl Tokens {
             canvas: Color32::from_rgb(0x14, 0x14, 0x14),
             panel: Color32::from_rgb(0x26, 0x26, 0x26),
             border: Color32::from_rgb(0x3A, 0x3A, 0x3A),
+            status_border: Color32::from_rgb(0x6A, 0x6A, 0x6A),
             border_strong: Color32::from_rgb(0x55, 0x55, 0x55),
             text: Color32::from_rgb(0xEE, 0xEE, 0xEE),
             text_dim: Color32::from_rgb(0xC8, 0xC8, 0xC8),
+            status_text: Color32::from_rgb(0xC8, 0xC8, 0xC8),
             text_disabled: Color32::from_rgb(0x6A, 0x6A, 0x6A),
             icon: Color32::from_rgb(0xDD, 0xDD, 0xDD),
             hover: Color32::from_rgb(0x3D, 0x3D, 0x3D),
             pressed: Color32::from_rgb(0x4A, 0x4A, 0x4A),
             checked: Color32::from_rgb(0x2E, 0x3A, 0x66),
+            status_checked: Color32::from_rgb(0xA9, 0xA9, 0xA9),
+            status_checked_icon: Color32::from_rgb(0x33, 0x33, 0x33),
             accent: Color32::from_rgb(0x7A, 0x93, 0xF0),
             accent_text: Color32::from_rgb(0x9C, 0xB0, 0xF5),
             // Dark text on the light dark-theme accent: white on #7a93f0 is only 2.9:1 (#655).
@@ -753,6 +769,18 @@ mod tests {
                 assert!(r >= 3.0, "dark={}: input_border on {name} is {r:.2}:1", t.dark);
             }
         }
+    }
+
+    #[test]
+    fn status_bar_tokens_keep_the_word_mac_values() {
+        let light = super::Tokens::light();
+        assert_eq!(light.status_border, egui::Color32::from_rgb(0xB4, 0xB4, 0xB4));
+        assert_eq!(light.status_text, egui::Color32::from_rgb(0x4E, 0x4E, 0x4E));
+        assert_eq!(light.status_checked, egui::Color32::from_rgb(0xA9, 0xA9, 0xA9));
+        assert_eq!(light.status_checked_icon, egui::Color32::from_rgb(0x33, 0x33, 0x33));
+        assert_eq!(light.checked, egui::Color32::from_rgb(0xDD, 0xE3, 0xF8));
+        assert_eq!(light.text_dim, egui::Color32::from_rgb(0x61, 0x61, 0x61));
+        assert_eq!(light.border, egui::Color32::from_rgb(0xE1, 0xE1, 0xE1));
     }
 
     /// #1148: on both rulers the text area is lighter than the margins in both themes, as in the
