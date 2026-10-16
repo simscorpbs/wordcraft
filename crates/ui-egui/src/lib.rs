@@ -179,6 +179,13 @@ enum PromptSave {
     Later(u64),
 }
 
+/// The result of the AutoSave attempt made before a user action replaces or closes a document.
+enum AutoSaveBeforeDiscard {
+    Saved,
+    Conflict,
+    NotAttempted,
+}
+
 /// Web: a save the browser's picker hasn't finished ([`async_saves`]).
 struct SaveInFlight {
     ticket: u64,
@@ -520,9 +527,8 @@ pub struct WordApp {
     /// Read Aloud: the start of the sentence the caret was last moved to, and the last error shown.
     pub(crate) read_aloud_at: Option<wordcraft_engine::doc::Pos>,
     pub(crate) read_aloud_error: Option<String>,
-    /// The file the document was last explicitly saved to in this session; AutoSave writes only
-    /// there. A file that was merely opened isn't rewritten until the user saves it: saving drops
-    /// whatever WordCraft can't represent (content controls, charts, macros…).
+    /// The file AutoSave is allowed to cover. Local files are added after an explicit save; files
+    /// opened from a discovered cloud root are covered as soon as their disk stamp is available.
     autosave_path: Option<std::path::PathBuf>,
     /// The cloud folders being looked for in the background ([`Self::discover_cloud`]).
     cloud_discovery: Option<std::sync::mpsc::Receiver<Vec<wordcraft_engine::cloud::CloudRoot>>>,
@@ -766,15 +772,21 @@ impl WordApp {
             return Ok(json!({"pending": name}));
         }
         if (self.session.dirty || self.save_unconfirmed()) && discards_document(id, &params) {
-            let name = self.prompt_name();
-            self.dialog = Some(dialogs::Dialog::SaveChanges {
-                name,
-                then: id.to_string(),
-                params,
-                document: self.session.document_id(),
-                message: String::new(),
-            });
-            return Ok(json!({"pending": "saveChanges"}));
+            match self.autosave_before_discard() {
+                AutoSaveBeforeDiscard::Saved => {}
+                AutoSaveBeforeDiscard::Conflict => return Ok(json!({"pending": "saveConflict"})),
+                AutoSaveBeforeDiscard::NotAttempted => {
+                    let name = self.prompt_name();
+                    self.dialog = Some(dialogs::Dialog::SaveChanges {
+                        name,
+                        then: id.to_string(),
+                        params,
+                        document: self.session.document_id(),
+                        message: String::new(),
+                    });
+                    return Ok(json!({"pending": "saveChanges"}));
+                }
+            }
         }
         // The ribbon and context-menu Paste commands send no text: read the system clipboard's, as
         // Ctrl+V's paste event carries it (#584), and its HTML and RTF, which egui's paste event
@@ -914,6 +926,7 @@ impl WordApp {
             }
             crate::table_pen::stop(self);
         }
+        self.cover_opened_cloud_file();
         // An explicit save to the document's own file lets AutoSave keep writing there.
         if let Ok(v) = &r
             && matches!(id, "file.save" | "file.saveAs" | "file.saveToCloud" | "file.resolveConflict")
@@ -1063,6 +1076,75 @@ impl WordApp {
         self.saves_in_flight.iter().any(|s| s.marked_saved && s.document == document)
     }
 
+    /// AutoSave may cover a file opened from a discovered cloud folder without an explicit save.
+    /// A local file keeps the session's existing opt-in rule.
+    fn cover_opened_cloud_file(&mut self) {
+        if self.autosave_path.is_some() {
+            return;
+        }
+        let Some(path) = self.session.path.as_ref() else { return };
+        if self.session.cloud.stamp.is_some() && wordcraft_engine::cloud::locate(path, &self.session.cloud.roots).is_some() {
+            self.autosave_path = Some(path.clone());
+        }
+    }
+
+    /// Try the Word-style AutoSave flush before a user action replaces or closes the document.
+    /// Errors leave the existing Save Changes prompt in charge.
+    fn autosave_before_discard(&mut self) -> AutoSaveBeforeDiscard {
+        if !self.session.dirty || !self.autosave {
+            return AutoSaveBeforeDiscard::NotAttempted;
+        }
+        self.cover_opened_cloud_file();
+        if matches!(self.autosave_block(), Some(AutoSaveBlock::Conflict { .. })) {
+            self.show_save_conflict();
+            return AutoSaveBeforeDiscard::Conflict;
+        }
+        if !self.autosaves() {
+            return AutoSaveBeforeDiscard::NotAttempted;
+        }
+        match self.session.run("file.save", &json!({"ifUnchanged": true})) {
+            Ok(v) if v.get("conflict").is_some() => {
+                self.show_save_conflict();
+                AutoSaveBeforeDiscard::Conflict
+            }
+            Ok(v) if v.get("saved").and_then(Value::as_bool) == Some(true) => {
+                self.clear_recovery_after_save();
+                AutoSaveBeforeDiscard::Saved
+            }
+            Ok(_) | Err(_) => AutoSaveBeforeDiscard::NotAttempted,
+        }
+    }
+
+    fn clear_recovery_after_save(&mut self) {
+        if let Err(e) = self.session.clear_recovery_if_clean() {
+            log::warn!("local recovery cleanup failed: {e}");
+        }
+    }
+
+    /// An AutoSave flush can finish while Save Changes is on screen. Continue the held-back
+    /// command only for the same, now-clean document.
+    fn continue_after_autosave(&mut self) {
+        let current = self.session.document_id();
+        let Some(dialog) = self.dialog.take() else { return };
+        let (then, params, document) = match dialog {
+            dialogs::Dialog::SaveChanges { then, params, document, .. } => (then, params, document),
+            other => {
+                self.dialog = Some(other);
+                return;
+            }
+        };
+        if document != current {
+            return;
+        }
+        if self.session.dirty {
+            self.dialog = Some(dialogs::Dialog::SaveChanges { name: self.prompt_name(), then, params, document, message: String::new() });
+            return;
+        }
+        if let Err(e) = self.execute_user(&then, params) {
+            self.status(e);
+        }
+    }
+
     /// The document's name as the Save Changes prompt shows it: its file's name, else its title.
     fn prompt_name(&self) -> String {
         self.session.path.as_ref().and_then(|p| p.file_name()).map(|n| n.to_string_lossy().to_string()).unwrap_or_else(|| self.title_stem())
@@ -1168,10 +1250,18 @@ impl WordApp {
         }
         // No document open (#1129): nothing to save.
         if self.quit_requested || !self.session.dirty || !self.has_document() {
+            if !self.session.dirty {
+                self.clear_recovery_after_save();
+            }
             return true;
         }
         let _ = self.run("file.close", json!({}));
-        false
+        if self.quit_requested {
+            self.clear_recovery_after_save();
+            true
+        } else {
+            false
+        }
     }
 
     fn after_command(&mut self, id: &str) {
@@ -1858,6 +1948,7 @@ impl WordApp {
             && let Ok(roots) = rx.try_recv()
         {
             self.session.cloud.roots = roots;
+            self.cover_opened_cloud_file();
             self.cloud_discovery = None;
         }
         self.autosave_tick(now_ms());
@@ -1929,14 +2020,14 @@ impl WordApp {
         }
     }
 
-    /// Whether the document's file is one the user saved to in this session.
+    /// Whether the document's file is one AutoSave is allowed to write.
     pub fn saved_here(&self) -> bool {
         self.session.path.is_some() && self.session.path == self.autosave_path
     }
 
-    /// Why AutoSave can't cover the document, or `None` when it can: it writes only a file the
-    /// user saved to in this session, in a format that keeps everything, and never in the browser
-    /// (a page can't write to the user's files; saving there is a download, #176).
+    /// Why AutoSave can't cover the document, or `None` when it can: local files need an explicit
+    /// save in this session, while a file opened inside a discovered cloud root is covered after
+    /// its disk stamp is read. Formats must keep everything, and the browser cannot write files.
     pub fn autosave_block(&self) -> Option<AutoSaveBlock> {
         if self.services.download.is_some() {
             return Some(AutoSaveBlock::Browser);
@@ -1946,7 +2037,8 @@ impl WordApp {
             let name = path.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
             return Some(AutoSaveBlock::Format { name });
         }
-        if !self.saved_here() {
+        let in_cloud = self.session.cloud.stamp.is_some() && wordcraft_engine::cloud::locate(path, &self.session.cloud.roots).is_some();
+        if !self.saved_here() && !in_cloud {
             return Some(AutoSaveBlock::NotSavedHere);
         }
         if let Some(conflict) = self.session.cloud.conflict {
@@ -2018,15 +2110,20 @@ impl WordApp {
     /// AutoSave: write a saved document a couple of seconds after the last change. A failure is
     /// shown in the status bar and turns AutoSave off for the file until the user saves it again.
     fn autosave_tick(&mut self, now: f64) {
+        self.cover_opened_cloud_file();
         if self.autosaves() && self.session.dirty && now - self.last_autosave > 2500.0 && now - self.canvas.caret_visible_since > 1500.0 {
             self.last_autosave = now;
             // `ifUnchanged`: never over a version another device saved meanwhile.
             match self.session.run("file.save", &json!({"ifUnchanged": true})) {
                 Ok(v) if v.get("conflict").is_some() => {
                     log::warn!("AutoSave paused: {} was changed elsewhere", self.title_stem());
-                    if self.dialog.is_none() {
+                    if self.dialog.is_none() || matches!(self.dialog, Some(dialogs::Dialog::SaveChanges { .. })) {
                         self.show_save_conflict();
                     }
+                }
+                Ok(v) if v.get("saved").and_then(Value::as_bool) == Some(true) => {
+                    self.clear_recovery_after_save();
+                    self.continue_after_autosave();
                 }
                 Ok(_) => {}
                 Err(e) => {
@@ -4177,22 +4274,64 @@ mod tests {
         assert!(body_text(&a).contains(UNSAVED), "nothing was replaced on the way out");
     }
 
-    /// #1445: the window's X on an edited document with a file → Save writes the file and lets
-    /// the window close.
+    /// AutoSave writes an edited document before the window closes, without opening Save Changes.
     #[test]
-    fn window_close_save_writes_the_file_and_quits() {
+    fn window_close_autosave_writes_the_file_and_quits() {
         let dir = scratch("close-save");
         let path = docx_on_disk(&dir, "Draft");
         let mut a = app();
         a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        a.run("file.save", json!({})).unwrap();
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
-        assert!(!a.close_requested());
-        assert_eq!(prompt(&a), Some("saveChanges"));
-        a.run("ui.saveChanges", json!({"answer": "save"})).unwrap();
+        assert!(a.close_requested());
+        assert_eq!(prompt(&a), None);
         let on_disk = wordcraft_engine::io::open_path(&path).unwrap().plain_text(wordcraft_doc::StoryRef::Body);
         assert!(on_disk.contains("Revised Draft"), "the edit is on disk: {on_disk:?}");
         assert!(a.quit_requested, "the app may close");
         assert!(a.close_requested(), "the close that follows goes ahead");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn window_close_autosave_conflict_opens_save_conflict_and_stays_open() {
+        let dir = scratch("close-conflict");
+        let path = docx_on_disk(&dir, "Draft");
+        let mut a = app();
+        a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        a.run("file.save", json!({})).unwrap();
+        let mut other = app();
+        other.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        other.run("text.insert", json!({"text": "Other "})).unwrap();
+        other.run("file.save", json!({})).unwrap();
+        a.run("text.insert", json!({"text": "Mine "})).unwrap();
+
+        assert!(!a.close_requested());
+        assert!(matches!(a.dialog, Some(dialogs::Dialog::SaveConflict { .. })));
+        assert!(a.session.dirty);
+        assert!(!a.quit_requested);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn autosave_closes_save_changes_and_runs_the_pending_action() {
+        let dir = scratch("savechanges-autosave");
+        let path = docx_on_disk(&dir, "Draft");
+        let mut a = app();
+        a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        a.run("file.save", json!({})).unwrap();
+        a.autosave = false;
+        a.session.autosave = false;
+        a.run("text.insert", json!({"text": "Revised "})).unwrap();
+        a.run("file.new", json!({})).unwrap();
+        assert_eq!(prompt(&a), Some("saveChanges"));
+        a.autosave = true;
+        a.session.autosave = true;
+        a.autosave_tick(now_ms() + 10_000.0);
+        assert_eq!(prompt(&a), None);
+        assert_eq!(a.session.path, None);
+        assert!(!a.session.dirty);
+        let saved = wordcraft_engine::io::open_path(&path).unwrap();
+        assert!(saved.plain_text(wordcraft_doc::StoryRef::Body).contains("Revised Draft"));
         let _ = std::fs::remove_dir_all(&dir);
     }
 
@@ -5606,8 +5745,7 @@ mod tests {
         }
     }
 
-    /// Surfaces finding 3: AutoSave rewrote any opened .docx ~2.5 s after the first keystroke,
-    /// deleting whatever the reader doesn't model (content controls, charts, macros…).
+    /// A local file that was only opened remains protected until the user's explicit save.
     #[test]
     fn opened_files_are_not_autosaved_until_the_user_saves() {
         let dir = scratch("autosave");
@@ -5628,6 +5766,45 @@ mod tests {
         assert!(!a.session.dirty);
         let saved = wordcraft_engine::io::open_path(&path).unwrap();
         assert!(saved.plain_text(wordcraft_doc::StoryRef::Body).contains("Typed More Original"));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn opened_cloud_files_are_autosaved_but_local_files_stay_blocked() {
+        let dir = scratch("autosave-cloud-open");
+        let cloud_dir = dir.join("OneDrive");
+        std::fs::create_dir_all(&cloud_dir).unwrap();
+        let cloud_path = docx_on_disk(&cloud_dir, "Cloud draft");
+        let local_dir = dir.join("local");
+        std::fs::create_dir_all(&local_dir).unwrap();
+        let local_path = docx_on_disk(&local_dir, "Local draft");
+        let root = wordcraft_engine::cloud::CloudRoot {
+            provider: wordcraft_engine::cloud::Provider::OneDrive,
+            path: cloud_dir,
+            account: Some("Personal".into()),
+        };
+
+        let mut cloud = app();
+        cloud.session.cloud.roots = vec![root.clone()];
+        cloud.run("file.open", json!({"path": cloud_path.to_string_lossy()})).unwrap();
+        assert!(cloud.saved_here());
+        assert!(cloud.autosaves());
+        cloud.run("text.insert", json!({"text": "Edited "})).unwrap();
+        cloud.autosave_tick(now_ms() + 10_000.0);
+        assert!(!cloud.session.dirty);
+        let saved = wordcraft_engine::io::open_path(&cloud_path).unwrap();
+        assert!(saved.plain_text(wordcraft_doc::StoryRef::Body).contains("Edited Cloud draft"));
+
+        let before = std::fs::read(&local_path).unwrap();
+        let mut local = app();
+        local.session.cloud.roots = vec![root];
+        local.run("file.open", json!({"path": local_path.to_string_lossy()})).unwrap();
+        assert!(!local.saved_here());
+        assert_eq!(local.autosave_block(), Some(AutoSaveBlock::NotSavedHere));
+        local.run("text.insert", json!({"text": "Edited "})).unwrap();
+        local.autosave_tick(now_ms() + 10_000.0);
+        assert!(local.session.dirty);
+        assert_eq!(std::fs::read(&local_path).unwrap(), before);
         let _ = std::fs::remove_dir_all(&dir);
     }
 

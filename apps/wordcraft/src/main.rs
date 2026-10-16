@@ -77,7 +77,7 @@ impl eframe::App for App {
             {
                 ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
                 self.0.quit_requested = false;
-                schedule_macos_terminate(&self.0, self.2.as_ref());
+                schedule_macos_terminate(&mut self.0, self.2.as_ref());
             }
             #[cfg(not(target_os = "macos"))]
             if self.0.quit_requested {
@@ -94,6 +94,9 @@ impl eframe::App for App {
     }
     fn on_exit(&mut self) {
         print::finish_pending_jobs();
+        if let Err(e) = self.0.session.clear_recovery_if_clean() {
+            log::warn!("local recovery cleanup failed: {e}");
+        }
         save_prefs(&self.0);
         if let Some(key_file) = &self.2 {
             key_file.remove();
@@ -109,7 +112,7 @@ impl eframe::App for App {
 /// removed first, as `on_exit` does, because a fallback [`std::process::exit`]
 /// skips `on_exit`. A second close while a quit is already scheduled is ignored.
 #[cfg(target_os = "macos")]
-fn schedule_macos_terminate(app: &WordApp, key_file: Option<&control_server::KeyFile>) {
+fn schedule_macos_terminate(app: &mut WordApp, key_file: Option<&control_server::KeyFile>) {
     use std::sync::atomic::{AtomicBool, Ordering};
     if app.printing.busy() {
         return;
@@ -121,6 +124,9 @@ fn schedule_macos_terminate(app: &WordApp, key_file: Option<&control_server::Key
     log::info!("window close: quitting");
     // This path can bypass on_exit. Join the owned workers before termination and cleanup.
     print::finish_pending_jobs();
+    if let Err(e) = app.session.clear_recovery_if_clean() {
+        log::warn!("local recovery cleanup failed: {e}");
+    }
     save_prefs(app);
     if let Some(key_file) = key_file {
         key_file.remove();

@@ -91,14 +91,31 @@ impl Session {
     /// Only an explicit protect/save action waits for the worker and removes plaintext copies.
     /// A failure prevents applying the password; typing never waits.
     pub(crate) fn clear_recovery_before_password(&mut self) -> Result<(), CmdError> {
+        let document = self.document_id();
+        self.clear_recovery_for_document(document).map_err(CmdError::Failed)
+    }
+
+    /// Remove the current document's recovery generations once it has been saved.
+    ///
+    /// Recovery records for another document remain available. The worker is allowed to finish a
+    /// pending snapshot before it removes the record, so a save followed by close cannot leave a
+    /// stale copy behind.
+    pub fn clear_recovery_if_clean(&mut self) -> Result<(), String> {
+        if self.dirty {
+            return Ok(());
+        }
+        let document = self.document_id();
+        self.clear_recovery_for_document(document)
+    }
+
+    fn clear_recovery_for_document(&mut self, document: u64) -> Result<(), String> {
+        #[cfg(target_arch = "wasm32")]
+        let _ = document;
         #[cfg(not(target_arch = "wasm32"))]
+        if let Some(r) = &mut self.recovery
+            && r.document_is(document)
         {
-            let document = self.document_id();
-            if let Some(r) = &mut self.recovery
-                && r.document_is(document)
-            {
-                r.purge().map_err(CmdError::Failed)?;
-            }
+            r.purge()?;
         }
         Ok(())
     }
@@ -131,5 +148,51 @@ impl Session {
         Ok(
             json!({"enabled": self.recovery_ready(), "busy": self.recovery_busy(), "documents": self.recovery_documents(), "error": self.recovery_error()}),
         )
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use super::*;
+    use serde_json::json;
+    use std::sync::Arc;
+    use std::time::{Duration, Instant};
+
+    fn settle(session: &mut Session) {
+        let end = Instant::now() + Duration::from_secs(5);
+        loop {
+            session.recovery_tick();
+            if session.recovery_ready() && !session.recovery_busy() {
+                return;
+            }
+            assert!(Instant::now() < end, "recovery did not settle");
+            std::thread::sleep(Duration::from_millis(2));
+        }
+    }
+
+    #[test]
+    fn clean_document_recovery_is_removed_but_dirty_document_is_kept() {
+        let root = std::env::temp_dir().join(format!("wordcraft-recovery-clean-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        let mut session = Session::new(wordcraft_doc::Document::new());
+        session.enable_recovery(root.clone(), Arc::new(|| {})).unwrap();
+        settle(&mut session);
+        session.run("text.insert", &json!({"text": "recover me"})).unwrap();
+
+        let mut recovery = session.recovery.take().unwrap();
+        recovery.tick(&session, Instant::now() + Duration::from_secs(11)).unwrap();
+        session.recovery = Some(recovery);
+        settle(&mut session);
+        assert_eq!(session.recovery_documents().len(), 1);
+
+        session.clear_recovery_if_clean().unwrap();
+        assert_eq!(session.recovery_documents().len(), 1);
+        let saved = root.join("draft.docx");
+        session.run("file.save", &json!({"path": saved.to_string_lossy()})).unwrap();
+        assert!(!session.dirty);
+        session.clear_recovery_if_clean().unwrap();
+        settle(&mut session);
+        assert!(session.recovery_documents().is_empty());
+        let _ = std::fs::remove_dir_all(root);
     }
 }

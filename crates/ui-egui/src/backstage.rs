@@ -22,7 +22,6 @@ const PAGES: [(&str, &str); 11] = [
 
 pub fn show(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
-    let recovery = app.ui.backstage_page == "recover";
     // No document open (#1129): only the pages that open or create one, and Options.
     let has_document = app.has_document();
     if !has_document && !works_without_document(&app.ui.backstage_page) {
@@ -33,12 +32,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         .exact_size(200.0)
         // Fixed width, as in Word: without this egui shows a resize handle that does nothing (#502).
         .resizable(false)
-        .frame(egui::Frame::NONE.fill(if recovery { egui::Color32::BLACK } else { APP_COLOR }).inner_margin(egui::Margin {
-            left: 0,
-            right: 0,
-            top: if mac { 0 } else { 12 },
-            bottom: 12,
-        }))
+        .frame(egui::Frame::NONE.fill(APP_COLOR).inner_margin(egui::Margin { left: 0, right: 0, top: if mac { 0 } else { 12 }, bottom: 12 }))
         .show(ui, |ui| {
             let back = if mac {
                 // macOS (#222): the Backstage covers the title bar, so its top band is the title
@@ -135,31 +129,28 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                 }
             });
         });
-    egui::CentralPanel::default()
-        .frame(egui::Frame::NONE.fill(if recovery { egui::Color32::BLACK } else { t.ribbon }).inner_margin(egui::Margin::symmetric(40, 30)))
-        .show(ui, |ui| {
-            // The Print page fills the pane and scrolls its settings and its preview itself (#1156).
-            if app.ui.backstage_page == "print" {
-                export_page(app, ui);
-                return;
-            }
-            egui::ScrollArea::vertical().show(ui, |ui| match app.ui.backstage_page.as_str() {
-                "home" => home_page(app, ui),
-                "new" => new_page(app, ui),
-                "open" => open_page(app, ui),
-                "saveAs" => save_as_page(app, ui),
-                "info" => info_page(app, ui),
-                "recover" => recovery_page(app, ui),
-                "print" | "export" => export_page(app, ui),
-                "options" => crate::options::page(app, ui),
-                _ => home_page(app, ui),
-            });
+    egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.ribbon).inner_margin(egui::Margin::symmetric(40, 30))).show(ui, |ui| {
+        // The Print page fills the pane and scrolls its settings and its preview itself (#1156).
+        if app.ui.backstage_page == "print" {
+            export_page(app, ui);
+            return;
+        }
+        egui::ScrollArea::vertical().show(ui, |ui| match app.ui.backstage_page.as_str() {
+            "home" => home_page(app, ui),
+            "new" => new_page(app, ui),
+            "open" => open_page(app, ui),
+            "saveAs" => save_as_page(app, ui),
+            "info" => info_page(app, ui),
+            "recover" => recovery_page(app, ui),
+            "print" | "export" => export_page(app, ui),
+            "options" => crate::options::page(app, ui),
+            _ => home_page(app, ui),
         });
+    });
 }
 
 /// Recovery is a separate copy. Leaving this page never discards it.
 fn recovery_page(app: &mut WordApp, ui: &mut Ui) {
-    ui.visuals_mut().override_text_color = Some(egui::Color32::WHITE);
     heading(ui, "Recover documents");
     ui.label(tl!("Restore opens an unsaved copy. Your original file stays unchanged."));
     ui.add_space(20.0);
@@ -484,7 +475,7 @@ mod tests {
     use egui_kittest::kittest::Queryable;
     use serde_json::json;
 
-    use super::matching_templates;
+    use super::{matching_templates, recovery_page};
     use crate::{Services, WordApp};
 
     #[cfg(not(target_arch = "wasm32"))]
@@ -596,6 +587,17 @@ mod tests {
         assert!(!root.join("must-not-write.docx").exists());
         drop(h);
         let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn recovery_page_does_not_force_white_text() {
+        let mut app = WordApp::new(wordcraft_engine::Session::new(wordcraft_doc::Document::new()), Services::default());
+        let ctx = egui::Context::default();
+        let output = ctx.run_ui(egui::RawInput::default(), |ui| {
+            recovery_page(&mut app, ui);
+            assert_eq!(ui.visuals().override_text_color, None);
+        });
+        output.drop_without_applying_deltas();
     }
 
     #[test]
