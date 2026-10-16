@@ -5,6 +5,30 @@ use wordcraft_doc::Document;
 #[cfg(not(target_arch = "wasm32"))]
 mod safe_save;
 
+#[cfg(not(target_arch = "wasm32"))]
+thread_local! {
+    static LAST_SAVED_BYTES: std::cell::RefCell<Option<(std::path::PathBuf, Vec<u8>)>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Take the exact bytes most recently written by [`save_path_stamped`] on this thread.
+/// `Session::run` uses this handoff immediately after a successful save, before another command
+/// can replace it.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn take_last_saved_bytes(path: &std::path::Path) -> Option<Vec<u8>> {
+    LAST_SAVED_BYTES.with(|slot| {
+        let matches = slot
+            .borrow()
+            .as_ref()
+            .is_some_and(|saved| saved.0 == path || crate::versions::canonical_path(&saved.0) == crate::versions::canonical_path(path));
+        if matches { slot.borrow_mut().take().map(|(_, bytes)| bytes) } else { None }
+    })
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn take_last_saved_bytes(_path: &std::path::Path) -> Option<Vec<u8>> {
+    None
+}
+
 /// Formats WordCraft opens.
 pub const OPEN_EXTS: &[&str] = &[
     "docx",
@@ -585,10 +609,26 @@ pub fn save_path_stamped(
     password: Option<&str>,
     opts: &ExportOptions,
 ) -> Result<Option<wordcraft_cloud::DiskStamp>, String> {
+    save_path_stamped_bytes(path, doc, password, opts).map(|(stamp, _)| stamp)
+}
+
+/// [`save_path_stamped`], retaining the exact bytes that were atomically written. The engine's
+/// local version history consumes these bytes so it never serializes a second, potentially
+/// different copy of the document.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn save_path_stamped_bytes(
+    path: &std::path::Path,
+    doc: &Document,
+    password: Option<&str>,
+    opts: &ExportOptions,
+) -> Result<(Option<wordcraft_cloud::DiskStamp>, Vec<u8>), String> {
+    LAST_SAVED_BYTES.with(|slot| *slot.borrow_mut() = None);
     crate::file_access::check_write(&path.to_string_lossy())?;
     let bytes = save_bytes_with(&path.to_string_lossy(), doc, password, opts)?;
     safe_save::write(path, &bytes).map_err(|e| format!("{}: {e}", path.display()))?;
-    Ok(wordcraft_cloud::DiskStamp::of_bytes(path, &bytes).ok())
+    let stamp = wordcraft_cloud::DiskStamp::of_bytes(path, &bytes).ok();
+    LAST_SAVED_BYTES.with(|slot| *slot.borrow_mut() = Some((path.to_path_buf(), bytes.clone())));
+    Ok((stamp, bytes))
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -603,6 +643,16 @@ pub fn save_path_stamped(
     _password: Option<&str>,
     _opts: &ExportOptions,
 ) -> Result<Option<wordcraft_cloud::DiskStamp>, String> {
+    Err(format!("{}: files are saved through the browser on the web", path.display()))
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn save_path_stamped_bytes(
+    path: &std::path::Path,
+    _doc: &Document,
+    _password: Option<&str>,
+    _opts: &ExportOptions,
+) -> Result<(Option<wordcraft_cloud::DiskStamp>, Vec<u8>), String> {
     Err(format!("{}: files are saved through the browser on the web", path.display()))
 }
 

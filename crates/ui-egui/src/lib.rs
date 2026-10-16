@@ -79,6 +79,7 @@ pub mod table_pen;
 pub mod table_resize;
 pub mod table_ruler;
 pub mod theme;
+pub mod versions_pane;
 pub mod widgets;
 pub mod window_geometry;
 pub mod wordart_menus;
@@ -230,6 +231,9 @@ pub struct UiState {
     pub tab: String,
     pub backstage: bool,
     pub backstage_page: String,
+    /// File › Info › Version History, shown beside the document.
+    #[serde(skip)]
+    pub versions_pane: bool,
     /// File › Print settings (#641); not saved.
     #[serde(skip)]
     pub print: print_page::PrintSettings,
@@ -340,6 +344,7 @@ impl Default for UiState {
             tab: DEFAULT_TAB.into(),
             backstage: false,
             backstage_page: "home".into(),
+            versions_pane: false,
             print: print_page::PrintSettings::default(),
             ribbon_collapsed: false,
             recent: Vec::new(),
@@ -754,6 +759,9 @@ impl WordApp {
     /// Close, Envelopes, Labels and Finish & Merge on a document with unsaved changes first ask
     /// Save / Don't Save / Cancel, and the command runs once that is answered (`ui.saveChanges`).
     pub fn run(&mut self, id: &str, params: Value) -> Result<Value, String> {
+        if id == "file.versions" && params.get("open").is_none() && params.get("restore").is_none() {
+            self.ui.versions_pane = true;
+        }
         if id == "file.recover" && params.as_object().is_none_or(|p| p.is_empty()) {
             self.ui.backstage = true;
             self.ui.backstage_page = "recover".into();
@@ -920,6 +928,9 @@ impl WordApp {
             && (v.get("saved").and_then(Value::as_bool) == Some(true) || id == "file.resolveConflict")
             && v.get("path").and_then(Value::as_str).map(std::path::Path::new) == self.session.path.as_deref()
         {
+            self.autosave_path = self.session.path.clone();
+        }
+        if r.is_ok() && id == "file.versions" && params.get("restore").is_some() {
             self.autosave_path = self.session.path.clone();
         }
         // A renamed file is the same file: AutoSave keeps covering it, and Recent drops the old name.
@@ -1838,6 +1849,7 @@ impl WordApp {
         self.watch_fonts(ctx);
         let document = self.session.document_id();
         self.session.recovery_tick();
+        self.session.versions_tick();
         if self.session.document_id() != document {
             self.autosave_path = None;
             self.dialog = None;
@@ -2097,10 +2109,14 @@ impl WordApp {
             egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |_| {});
         } else {
             chrome::title_bar(self, ui);
+            if self.session.previous_version().is_some() {
+                versions_pane::previous_bar(self, ui);
+            }
             if !self.session.view.focus_mode {
                 ribbon::show(self, ui);
                 chrome::status_bar(self, ui);
                 panes::show(self, ui);
+                versions_pane::show(self, ui);
             }
             egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| {
                 canvas::show(self, ui);

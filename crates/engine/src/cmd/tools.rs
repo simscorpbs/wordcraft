@@ -10,10 +10,144 @@ use wordcraft_doc::props::{CharProps, NumRef};
 use wordcraft_doc::{Block, Document, Paragraph, Pos, RevisionKind, StoryRef, para_block};
 
 use super::{delete_selection, sel_result};
+use crate::versions::{OpenedVersion, VersionInfo, VersionKind};
 use crate::{CmdError, CmdResult, CommandSpec, Selection, Session, p};
 
 /// Smileys replaced even when typed straight after a word ("ok:)"), as Word does.
 const SMILEYS: &[&str] = &[":-)", ":-(", ":)", ":(", ":|"];
+
+fn version_json(index: usize, info: &VersionInfo) -> Value {
+    json!({
+        "index": index,
+        "id": info.id.clone(),
+        "savedAt": info.saved_at.clone(),
+        "author": info.author.clone(),
+        "size": info.size,
+        "kind": info.kind.id(),
+        // Compatibility names used by the former in-memory command.
+        "date": info.saved_at.clone(),
+        "label": info.kind.id(),
+    })
+}
+
+fn persistent_versions(s: &Session) -> bool {
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        return s.version_store.is_some();
+    }
+    #[cfg(target_arch = "wasm32")]
+    {
+        let _ = s;
+        false
+    }
+}
+
+fn version_source(s: &Session) -> Option<std::path::PathBuf> {
+    s.opened_version.as_ref().map(|v| v.path.clone()).or_else(|| s.path.clone())
+}
+
+fn open_persisted_version(s: &mut Session, id: &str) -> CmdResult {
+    let source = version_source(s).ok_or_else(|| CmdError::Disabled("version history needs a saved document".into()))?;
+    let (info, bytes) = s.read_version(&source, id).map_err(CmdError::Failed)?;
+    let password = s.password.as_ref().map(|value| value.as_str().to_owned());
+    let (doc, encrypted) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password.as_deref()).map_err(CmdError::Failed)?;
+    let stem =
+        source.file_stem().map(|name| name.to_string_lossy().into_owned()).filter(|name| !name.is_empty()).unwrap_or_else(|| "Document".into());
+    let label = format!("{stem} (version {})", info.saved_at);
+    s.set_document(doc);
+    s.path = None;
+    s.file_name = Some(label);
+    if encrypted {
+        s.password = password.as_deref().map(crate::io::Password::new);
+    }
+    s.dirty = false;
+    s.opened_version = Some(OpenedVersion { path: source, info: info.clone() });
+    Ok(json!({"opened": info.id, "savedAt": info.saved_at, "name": s.file_name.clone()}))
+}
+
+fn restore_persisted_version(s: &mut Session, id: &str) -> CmdResult {
+    let source = version_source(s).ok_or_else(|| CmdError::Disabled("version history needs a saved document".into()))?;
+    let (info, bytes) = s.read_version(&source, id).map_err(CmdError::Failed)?;
+    let password = s.password.as_ref().map(crate::io::Password::as_str);
+    let (doc, _) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password).map_err(CmdError::Failed)?;
+    let was_previous = s.opened_version.is_some();
+    s.checkpoint("Restore Version");
+    s.doc = doc;
+    s.doc.ensure_nonempty();
+    s.touch();
+    s.relayout();
+    s.clamp_selection();
+    if was_previous {
+        s.path = Some(source);
+        s.file_name = None;
+        s.opened_version = None;
+    }
+    s.version_next_kind = Some(VersionKind::Restore);
+    Ok(json!({"restored": info.id, "savedAt": info.saved_at}))
+}
+
+fn versions_command(s: &mut Session, v: &Value) -> CmdResult {
+    let Some(object) = v.as_object() else {
+        return Err(CmdError::Params("file.versions parameters must be an object".into()));
+    };
+    for key in object.keys() {
+        if !matches!(key.as_str(), "open" | "restore" | "save") {
+            return Err(CmdError::Params(format!("unknown file.versions parameter `{key}`")));
+        }
+    }
+    let has_open = v.get("open").is_some();
+    let has_restore = v.get("restore").is_some();
+    if (has_open && has_restore) || (has_open && v.get("save").is_some()) || (has_restore && v.get("save").is_some()) {
+        return Err(CmdError::Params("choose one of open, restore or save".into()));
+    }
+    if let Some(label) = v.get("save") {
+        let label = label.as_str().ok_or_else(|| CmdError::Params("`save` must be a label string".into()))?;
+        s.versions.push((label.to_string(), super::now_iso(), s.doc.clone()));
+        if s.versions.len() > 50 {
+            s.versions.remove(0);
+        }
+    }
+    if let Some(open) = v.get("open") {
+        let id = open.as_str().ok_or_else(|| CmdError::Params("`open` must be a version id string".into()))?;
+        if !persistent_versions(s) {
+            return Err(CmdError::Disabled("local version history is available on the desktop host".into()));
+        }
+        return open_persisted_version(s, id);
+    }
+    if let Some(restore) = v.get("restore") {
+        if let Some(index) = restore.as_u64() {
+            let (_, _, doc) = s
+                .versions
+                .get(usize::try_from(index).map_err(|_| CmdError::Params("no such version".into()))?)
+                .cloned()
+                .ok_or_else(|| CmdError::Params("no such version".into()))?;
+            s.checkpoint("Restore Version");
+            s.doc = doc;
+            s.doc.ensure_nonempty();
+            s.touch();
+            s.relayout();
+            s.clamp_selection();
+            return Ok(Value::Array(
+                s.versions.iter().enumerate().map(|(i, (label, date, _))| json!({"index": i, "label": label, "date": date})).collect(),
+            ));
+        }
+        let id = restore.as_str().ok_or_else(|| CmdError::Params("`restore` must be a version id string or index".into()))?;
+        if !persistent_versions(s) {
+            return Err(CmdError::Disabled("local version history is available on the desktop host".into()));
+        }
+        return restore_persisted_version(s, id);
+    }
+    if v.get("save").is_some() {
+        return Ok(Value::Array(
+            s.versions.iter().enumerate().map(|(i, (label, date, _))| json!({"index": i, "label": label, "date": date})).collect(),
+        ));
+    }
+    if persistent_versions(s) {
+        let list = s.version_infos();
+        return Ok(Value::Array(list.iter().enumerate().map(version_json).collect()));
+    }
+    Ok(Value::Array(s.versions.iter().enumerate().map(|(i, (label, date, _))| json!({"index": i, "label": label, "date": date})).collect()))
+}
 
 /// Built-in AutoCorrect replacements (our own list of common typos and symbols).
 pub const AUTOCORRECT: &[(&str, &str)] = &[
@@ -394,23 +528,8 @@ pub fn specs() -> Vec<CommandSpec> {
             s.run("review.restrict", &json!({"mode": mode}))
         })
         .params(r#"{"mode": "none|readOnly|comments|trackedChanges"}"#),
-        CommandSpec::new("file.versions", "Version History", "File › Info", |s, v| {
-            if let Some(label) = p::str(v, "save") {
-                s.versions.push((label.to_string(), super::now_iso(), s.doc.clone()));
-                if s.versions.len() > 50 {
-                    s.versions.remove(0);
-                }
-            }
-            if let Some(i) = p::u64(v, "restore") {
-                let (_, _, d) = s.versions.get(i as usize).cloned().ok_or_else(|| CmdError::Params("no such version".into()))?;
-                s.checkpoint("Restore Version");
-                s.doc = d;
-                s.touch();
-                s.clamp_selection();
-            }
-            Ok(Value::Array(s.versions.iter().enumerate().map(|(i, (l, d, _))| json!({"index": i, "label": l, "date": d})).collect()))
-        })
-        .params(r#"{"save"?: label, "restore"?: index}"#)
+        CommandSpec::new("file.versions", "Version History", "File › Info", versions_command)
+        .params(r#"{} → [{id, savedAt, author, size, kind}] (newest first); {"open": id} opens an unsaved previous version; {"restore": id} restores it as one Undo step; legacy {"save": label} and {"restore": index} remain supported"#)
         .pure(),
         CommandSpec::new("file.recover", "Recover Unsaved Documents", "File › Info", |s, v| s.recover(v))
         .params(r#"{"restore"?: recoveryId, "discard"?: recoveryId, "refresh"?: true}; desktop only; returns {enabled,busy,documents,error}; restore loads asynchronously without a file path"#)

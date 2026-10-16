@@ -1,0 +1,45 @@
+# WIP notes: persistent version history like Word with OneDrive
+
+Snapshot taken 2026-10-16 ~17:20 UTC because the PC had to shut down. Nothing here has been compiled or tested yet (by rule, the interns don't run cargo; the coordinating session compiles once at the end).
+
+## Intern session
+- Model: Luna max (gpt-6-luna, effort max) via the `estagiario` command on Brenno's PC.
+- Session id: `20261016-122803-gpt-6-luna-max-38312`
+- Full log: `C:\Users\Brenno\estagiario-logs$2.log`
+- Resume (from a worktree on this branch, clean tree): `estagiario continuar 20261016-122803-gpt-6-luna-max-38312 "<what to fix or finish>"`
+- Status when snapshotted: still running, no final report yet.
+
+## Done (per the files on disk; not yet reviewed item by item)
+- New crates/engine/src/versions.rs and crates/ui-egui/src/versions_pane.rs; hooks in cmd/tools.rs (file.versions), io.rs, session.rs, engine lib.rs, ui-egui lib.rs, backstage.rs (File > Info), chrome.rs (title bar), apps/wordcraft/src/main.rs; versions-shot.jsonl for ui_shot. The intern was in static review after cargo fmt.
+
+## Missing
+- Final report; confirm storage, coalescing, pruning, open/restore, UI pane and tests against the brief; run ui_shot light and dark and look at the captures.
+- Then: review item by item, translations and docs (Sol), one `cargo xtask ci` (6 Windows-only failures known on base 86adfd34), commit "Cloud AutoSave: Word-like close, cloud files covered on open, version history", push feat/cloud-autosave, merge into fork main.
+
+## Last words in the log
+```
+Mapeamento concluído. Vou implementar primeiro o núcleo do engine: índice persistente e worker assíncrono, política de retenção/coalescência, captura dos bytes que `save_path_stamped` acabou de gravar e integração da sessão/comando. Depois conecto o painel e o host desktop, sem tocar nas áreas atribuídas ao outro agente.
+apply patch
+O núcleo e os ganchos de UI já estão escritos. Vou rodar apenas `cargo fmt` (permitido pela instrução), usar a saída para corrigir sintaxe/formatação e fazer revisão estática; não vou executar compilação, clippy ou testes.
+Vou retomar a revisão estática do histórico de versões já implementado, conferindo as assinaturas reais, os caminhos de WASM e os pontos de integração. Só farei `cargo fmt`; não vou compilar nem executar testes, conforme instrução.
+```
+
+## Brief given
+```
+# Contexto comum (WordCraft, AutoSave na nuvem, rodada 2)
+Repositório Rust: WordCraft, processador de texto open source que busca paridade com o Microsoft Word. Branch base: feat/cloud-autosave (HEAD a678885), que já tem o AutoSave nas pastas do iCloud Drive, Google Drive e OneDrive: crate `crates/cloud` (descoberta das pastas, `DiskStamp` para conflito), comandos do engine `file.cloud` / `file.saveToCloud` / `file.resolveConflict` (crates/engine/src/cmd/cloud.rs), `file.save` com `ifUnchanged`, a guarda de conflito no AutoSave e os diálogos SaveConflict / SaveToCloud na UI (crates/ui-egui/src/dialogs.rs e lib.rs). Veja `git diff 86adfd34 HEAD` e `docs/` para o contexto.
+O objetivo desta rodada é que o AutoSave se comporte como o Word com o OneDrive.
+Regras do repositório (leia o CLAUDE.md da raiz e siga-o): nenhum unwrap/expect/panic/unreachable fora de teste, erros por Result, nada de unsafe, número vindo de arquivo ou parâmetro é hostil (get(), aritmética checada, limites). Tudo o que o usuário vê é comando (CommandSpec) com teste. Nada abaixo da camada L6 depende de egui. Não quebre o wasm (código de disco e thread fica atrás de #[cfg(not(target_arch = "wasm32"))], como o resto do repo faz). Cores vêm de theme::Tokens. Textos de interface em inglês dentro de tl!(...); as traduções outro agente faz depois, não mexa em crates/ui-egui/src/i18n/*.tsv nem em docs/ ou ROADMAP.md.
+PROIBIDO rodar cargo build, check, clippy ou test, e qualquer compilação: o PC não aguenta compilações paralelas e quem compila sou eu, depois. Só `cargo fmt` é permitido. Escreva o código e os testes com cuidado redobrado com tipos e empréstimos, lendo as assinaturas reais no código antes de usar qualquer função.
+Trabalhe SOMENTE nos arquivos listados na sua tarefa. Não faça commit. No fim, liste cada arquivo alterado e o que mudou, os testes novos (nome e o que provam), e tudo o que você ficou em dúvida se compila.
+# Sua tarefa: histórico de versões como o Word com o OneDrive (prioridade máxima do dono)
+Pasta: C:\Users\Brenno\wc-e. Arquivos seus: um módulo novo no engine para o histórico (por exemplo crates/engine/src/versions.rs, registrado em lib.rs do engine), crates/engine/src/cmd/tools.rs (o comando `file.versions` já existente, perto da linha 397), crates/engine/src/io.rs e crates/engine/src/session.rs (só o necessário para pegar os bytes gravados e guardar o estado), crates/engine/src/catalog.rs (só se a entrada de Version History precisar), um arquivo novo na UI para o painel (por exemplo crates/ui-egui/src/versions_pane.rs) com os ganchos mínimos em crates/ui-egui/src/lib.rs, backstage.rs (File > Info) e onde fica a barra de título, e apps/wordcraft/src/main.rs (só para ligar o histórico no desktop, ao lado de `enable_recovery`). Outro agente mexe ao mesmo tempo em close_requested, Save Changes, autosave_block, recovery.rs e na página Recover do backstage: não toque nessas partes e mude o mínimo fora do que é seu.
+
+Hoje só existe um `file.versions` em memória em crates/engine/src/cmd/tools.rs. Construa um histórico local persistente (as APIs de versão dos serviços exigem conta; o iCloud, o Drive e o OneDrive continuam guardando as versões deles no servidor):
+1. Armazenamento: no perfil do desktop, como a recuperação: `<settings_dir>/versions/<hash estável do caminho canônico do arquivo>/`. Veja como `enable_recovery` recebe a pasta e como apps/wordcraft/src/main.rs a calcula, e faça igual (`enable_versions(dir)` ou parecido). Ligado só pelo host desktop; sessões headless e testes não têm histórico, salvo teste que ligue numa pasta temporária. Cada versão = os bytes exatos que o save gravou (reaproveite os bytes de io::save_path_stamped em vez de serializar de novo), mais um índice JSON com {id, savedAt (UTC ISO 8601), author, size, kind: save|autosave|restore}. Grave num worker em segundo plano (thread + canal, como a recuperação faz) para a digitação nunca esperar. Nunca entre em pânico; limite tamanhos; índice corrompido ou ilegível = histórico vazio, não erro fatal.
+2. Política como a do OneDrive: todo Save explícito vira versão (kind save). Gravações do AutoSave (`file.save` com `ifUnchanged`) se juntam em no máximo uma versão por 10 minutos de edição: se a versão mais nova é autosave e tem menos de 10 min, ela é substituída. Poda: tudo das últimas 24 h; depois, uma por dia até 30 dias; no máximo 100 versões e 500 MiB por documento. Deixe o relógio injetável nos testes.
+3. Comandos (estenda `file.versions` e mantenha funcionando os parâmetros e testes atuais de índice `save`/`restore`): `{}` lista as versões do documento atual, da mais nova para a mais antiga; `{"open": id}` abre aquela versão como documento separado, não salvo, rotulado como versão anterior, com o nome "Name (version <data e hora local>)"; `{"restore": id}` troca o conteúdo atual por aquela versão num único passo que se desfaz com Undo, e o AutoSave então salva (criando uma versão kind restore). Parâmetro inválido devolve erro, nunca pânico.
+4. UI: File > Info ganha "Version History", e clicar no nome do documento na barra de título também oferece o histórico. Ele abre um painel à direita com as versões agrupadas por dia (hora local, autor), cada uma com "Open version" e "Restore". Uma versão antiga aberta mostra uma barra "Previous version" com "Restore" e "Save a copy". Cores de theme::Tokens, legível no claro e no escuro. Todo texto em tl!(...).
+5. Testes: no engine, junção das gravações do AutoSave em 10 min, poda (24 h, uma por dia, 100 versões, 500 MiB), restore como um passo de Undo, open, e parâmetros lixo (`crates/engine/src/tests.rs::hostile_params_never_panic` precisa continuar passando); na UI, um teste do painel (abre, lista, Restore chama o comando).
+Antes de terminar, escreva um script jsonl para o exemplo headless `crates/ui-egui/examples/ui_shot.rs` (leia o cabeçalho dele) que abre o painel no tema claro e no escuro, e deixe o script em C:\Users\Brenno\wc-e\versions-shot.jsonl; eu rodo e olho as capturas.
+```
