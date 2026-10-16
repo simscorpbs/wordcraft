@@ -590,6 +590,52 @@ fn hyphenates_typography(compat_mode: u32, gap_after_ty: f32) -> bool {
         .unwrap()
 }
 
+/// Whether a justified mode-15 line of `words` short words followed by "typography" ends in
+/// "ty-", when the margin leaves room for " ty-" plus 2 pt after the last short word.
+fn justified_hyphenates(words: usize) -> bool {
+    let lead = format!("{}typography", "a ".repeat(words));
+    let at = lead.len() - "typography".len();
+    let l = lay(&Document::from_text(&lead));
+    let (space_at, ty_end) = l
+        .pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .find_map(|it| match it {
+            Placed::Lines { para, x, .. } => Some((para.x_of(0, at - 1).unwrap() + x, para.x_of(0, at + 2).unwrap() + x)),
+            _ => None,
+        })
+        .unwrap();
+    let mut d = Document::from_text(&format!("{lead} lesson and more words to fill a second line"));
+    d.settings.auto_hyphenation = true;
+    d.settings.compat_mode = 15;
+    // Room for " ty" and a hyphen (about a third of an em), with 2 pt to spare.
+    let right = ty_end + 4.0 + 2.0;
+    assert!(right - space_at < 30.0);
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| {
+        p.align = Some(Align::Justify);
+        p.indent_right = Some(540.0 - right);
+    })
+    .unwrap();
+    let l = lay(&d);
+    l.pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .find_map(|it| match it {
+            Placed::Lines { para, .. } => para.lines.first().map(|li| li.hyphen.is_some()),
+            _ => None,
+        })
+        .unwrap()
+}
+
+#[test]
+fn justified_lines_hyphenate_only_when_their_spaces_would_stretch_too_far() {
+    // Word 2013+ splits the next word on a justified line only when, without it, the spaces would
+    // have to stretch by more than about half their width (Word for Mac, lines of 6–28 spaces).
+    // The same gap spread over many spaces is fine, and the word moves down whole.
+    assert!(justified_hyphenates(4), "4 spaces would stretch a lot: \"ty-\" stays");
+    assert!(!justified_hyphenates(30), "30 spaces absorb the gap: \"typography\" moves down");
+}
+
 #[test]
 fn word_2013_mode_hyphenates_whatever_the_zone() {
     // Word 2013+ hyphenates whenever "ty-" fits, even inside the zone; older modes leave a gap up
