@@ -2008,7 +2008,7 @@ impl WordApp {
             chrome::title_bar(self, ui);
             ribbon::show(self, ui);
             chrome::status_bar(self, ui);
-            egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |_| {});
+            egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas_word)).show(ui, |_| {});
         } else {
             chrome::title_bar(self, ui);
             if !self.session.view.focus_mode {
@@ -2016,7 +2016,7 @@ impl WordApp {
                 chrome::status_bar(self, ui);
                 panes::show(self, ui);
             }
-            egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| {
+            egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas_word)).show(ui, |ui| {
                 canvas::show(self, ui);
             });
         }

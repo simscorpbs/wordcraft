@@ -126,15 +126,19 @@ pub(crate) fn selector(app: &mut WordApp, ui: &Ui, corner: Rect) {
     }
     let kind = app.canvas.tab_kind;
     let p = ui.painter_at(corner);
-    let b = Rect::from_center_size(corner.center(), vec2(14.0, 14.0));
-    p.rect(b, 2.0, if r.hovered() { t.hover } else { t.ruler }, Stroke::new(1.0, t.text_dim), egui::StrokeKind::Inside);
-    // Centre the glyph on its box: Left's foot runs right of its stem, Right's left.
+    // The selector is a small, original glyph with no enclosing box. Hover is indicated by a
+    // light rounded wash behind it, preserving the compact Word-style corner.
+    if r.hovered() {
+        p.rect_filled(corner.shrink2(vec2(2.0, 2.0)), 2.0, t.hover);
+    }
+    let center = corner.center();
+    // Centre the glyph in the corner: Left's foot runs right of its stem, Right's left.
     let nudge = match kind {
         TabAlign::Left => -2.0,
         TabAlign::Right => 2.0,
         _ => 0.0,
     };
-    draw_tab_glyph(&p, b.center().x + nudge, b.max.y - 4.0, kind, false, Stroke::new(1.5, t.text));
+    draw_tab_glyph(&p, center.x + nudge, center.y + 5.0, kind, false, Stroke::new(1.25, t.ruler_tick_word));
     r.on_hover_text(format!("{}: {}", tl!("Tabs"), tl!(kind_label(kind))));
 }
 

@@ -16,8 +16,12 @@ use crate::theme::{Tokens, regular, semibold};
 
 /// Points on screen per document point at 100% (96 px per inch, like a word processor).
 pub const PX_PER_PT: f32 = 96.0 / 72.0;
-const GAP: f32 = 18.0;
-const RULER: f32 = 22.0;
+pub(crate) const GAP: f32 = 11.5;
+pub(crate) const RULER: f32 = 17.0;
+pub(crate) const V_RULER: f32 = 16.0;
+pub(crate) const RULER_SHADOW_OUTER: f32 = 9.0;
+pub(crate) const RULER_SHADOW_MIDDLE: f32 = 5.0;
+pub(crate) const RULER_SHADOW_INNER: f32 = 2.0;
 /// Maximum device-pixel height of a tile on very tall Web/Draft pages.
 const TILE_HEIGHT_PX: usize = 1024;
 
@@ -840,9 +844,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     let dark_paper = wordcraft_render::DARK_PAPER;
     let show_ruler = app.session.view.ruler && app.session.view.mode == wordcraft_layout::ViewMode::Print && !app.session.view.read_mode;
     let (hruler, vruler, area) = if show_ruler {
-        let h = Rect::from_min_max(pos2(full.min.x + RULER, full.min.y), pos2(full.max.x, full.min.y + RULER));
-        let v = Rect::from_min_max(pos2(full.min.x, full.min.y + RULER), pos2(full.min.x + RULER, full.max.y));
-        (Some(h), Some(v), Rect::from_min_max(pos2(full.min.x + RULER, full.min.y + RULER), full.max))
+        let h = Rect::from_min_max(pos2(full.min.x + V_RULER, full.min.y), pos2(full.max.x, full.min.y + RULER));
+        let v = Rect::from_min_max(pos2(full.min.x, full.min.y + RULER), pos2(full.min.x + V_RULER, full.max.y));
+        (Some(h), Some(v), Rect::from_min_max(pos2(full.min.x + V_RULER, full.min.y + RULER), full.max))
     } else {
         (None, None, full)
     };
@@ -1106,7 +1110,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                 painter.with_clip_rect(painter.clip_rect().intersect(band))
             };
             // Shadow and paper.
-            painter.rect_filled(visual_sr.translate(vec2(0.0, 2.0)).expand(1.5), 1.0, t.page_shadow);
+            painter.rect_filled(visual_sr.translate(vec2(0.0, 2.0)).expand(RULER_SHADOW_OUTER), 1.0, t.page_shadow_outer_word);
+            painter.rect_filled(visual_sr.translate(vec2(0.0, 2.0)).expand(RULER_SHADOW_MIDDLE), 1.0, t.page_shadow_middle_word);
+            painter.rect_filled(visual_sr.translate(vec2(0.0, 1.0)).expand(RULER_SHADOW_INNER), 1.0, t.page_shadow_inner_word);
             painter.rect_filled(visual_sr, 0.0, if dark_page { Color32::from_gray(dark_paper) } else { Color32::WHITE });
             if tiled {
                 // Render before painting to keep the frame sharp immediately after an edit or
@@ -2391,9 +2397,9 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
     let t = Tokens::get(ui.ctx());
     let p = ui.painter();
     let corner = Rect::from_min_max(pos2(v.min.x, h.min.y), pos2(v.max.x, h.max.y));
-    p.rect_filled(corner, 0.0, t.canvas);
-    p.rect_filled(h, 0.0, t.canvas);
-    p.rect_filled(v, 0.0, t.canvas);
+    p.rect_filled(corner, 0.0, t.canvas_word);
+    p.rect_filled(h, 0.0, t.canvas_word);
+    p.rect_filled(v, 0.0, t.canvas_word);
     crate::ruler_tabs::selector(app, ui, corner);
     let pi = app.session.page_hint.min(layout.pages.len().saturating_sub(1));
     let (Some(page), Some(pr)) = (layout.pages.get(pi), rects.get(pi)) else { return };
@@ -2402,8 +2408,8 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
     // Horizontal.
     let hp = ui.painter_at(h);
     let x0 = pr.min.x;
-    let bar = Rect::from_min_max(pos2(x0, h.min.y + 4.0), pos2(x0 + page.w * scale, h.max.y - 3.0));
-    hp.rect_filled(bar, 0.0, t.ruler_margin);
+    let bar = Rect::from_min_max(pos2(x0, h.min.y + 1.0), pos2(x0 + page.w * scale, h.max.y - 1.0));
+    hp.rect_filled(bar, 0.0, t.ruler_margin_word);
     let text = Rect::from_min_max(pos2(x0 + page.body.x * scale, bar.min.y), pos2(x0 + page.body.right() * scale, bar.max.y));
     hp.rect_filled(text, 0.0, t.ruler);
     let rp = app.session.doc.para_at(&app.session.sel.focus).map(|para| app.session.doc.styles.resolve_para(&para.props));
@@ -2421,10 +2427,12 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
         let x = sx(d);
         match mark {
             RulerMark::Label(n) => {
-                hp.text(pos2(x, bar.center().y), egui::Align2::CENTER_CENTER, n.abs().to_string(), regular(9.5), t.ruler_tick);
+                hp.text(pos2(x, bar.center().y - 3.0), egui::Align2::CENTER_CENTER, n.abs().to_string(), regular(9.5), t.ruler_number_word);
             }
             RulerMark::Tick(len) => {
-                hp.line_segment([pos2(x, bar.center().y - len / 2.0), pos2(x, bar.center().y + len / 2.0)], Stroke::new(1.0, t.ruler_tick));
+                let (top, bottom) =
+                    if cfg!(target_os = "macos") { (bar.max.y - len, bar.max.y) } else { (bar.center().y - len / 2.0, bar.center().y + len / 2.0) };
+                hp.line_segment([pos2(x, top), pos2(x, bottom)], Stroke::new(1.0, t.ruler_tick_word));
             }
         }
     }
@@ -2450,29 +2458,25 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
         let first = px(rp.indent_left + rp.indent_first);
         let left = px(rp.indent_left);
         let right = px(w - rp.indent_right);
-        let c = t.text_dim;
+        let c = t.ruler_marker_word;
         hp.add(egui::Shape::convex_polygon(
-            vec![pos2(first - 4.5, bar.min.y), pos2(first + 4.5, bar.min.y), pos2(first, bar.min.y + 5.0)],
+            vec![pos2(first - 5.0, bar.min.y), pos2(first + 5.0, bar.min.y), pos2(first, bar.min.y + 6.0)],
             t.ruler,
             Stroke::new(1.0, c),
         ));
         hp.add(egui::Shape::convex_polygon(
-            vec![pos2(left - 4.5, bar.max.y - 3.0), pos2(left + 4.5, bar.max.y - 3.0), pos2(left, bar.max.y - 8.0)],
+            vec![pos2(left - 5.0, bar.max.y - 3.0), pos2(left + 5.0, bar.max.y - 3.0), pos2(left, bar.max.y - 9.0)],
             t.ruler,
             Stroke::new(1.0, c),
         ));
         hp.rect(
-            Rect::from_min_max(pos2(left - 4.5, bar.max.y - 3.0), pos2(left + 4.5, bar.max.y + 1.0)),
+            Rect::from_min_max(pos2(left - 5.0, bar.max.y - 3.0), pos2(left + 5.0, bar.max.y + 1.0)),
             0.0,
             t.ruler,
             Stroke::new(1.0, c),
             egui::StrokeKind::Inside,
         );
-        hp.add(egui::Shape::convex_polygon(
-            vec![pos2(right - 4.5, bar.max.y - 1.0), pos2(right + 4.5, bar.max.y - 1.0), pos2(right, bar.max.y - 6.0)],
-            t.ruler,
-            Stroke::new(1.0, c),
-        ));
+        hp.rect_filled(Rect::from_min_max(pos2(right - 5.0, bar.max.y - 8.5), pos2(right + 5.0, bar.max.y)), 3.0, c);
         // Tab stops: drawn and registered before the indent markers' drags, which win where they overlap.
         let step = unit / div as f32 / 2.0;
         let ruler = crate::ruler_tabs::Ruler { bar, text, width: w, step, rtl, x_of: &px, dist_at: &dist_at };
@@ -2521,8 +2525,8 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
     // Vertical.
     let vp = ui.painter_at(v);
     let y0 = pr.min.y;
-    let vbar = Rect::from_min_max(pos2(v.min.x + 4.0, y0), pos2(v.max.x - 3.0, y0 + page.h.min(20_000.0) * scale));
-    vp.rect_filled(vbar, 0.0, t.ruler_margin);
+    let vbar = Rect::from_min_max(pos2(v.min.x, y0), pos2(v.min.x + 15.0, y0 + page.h.min(20_000.0) * scale));
+    vp.rect_filled(vbar, 0.0, t.ruler_margin_word);
     let (te, be) = (y0 + page.body.y * scale, y0 + page.body.bottom() * scale);
     vp.rect_filled(Rect::from_min_max(pos2(vbar.min.x, te), pos2(vbar.max.x, be)), 0.0, t.ruler);
     for (edge, ey) in [(MarginEdge::Top, te), (MarginEdge::Bottom, be)] {
@@ -2537,16 +2541,13 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
             break;
         }
         if ypt >= 0.0 && k % div == 0 && k != 0 {
-            vp.text(
-                pos2(vbar.center().x, y0 + ypt * scale),
-                egui::Align2::CENTER_CENTER,
-                (k / div * step).abs().to_string(),
-                regular(9.5),
-                t.ruler_tick,
-            );
+            let galley = vp.layout_no_wrap((k / div * step).abs().to_string(), regular(9.5), t.ruler_vertical_number_word);
+            let text = egui::epaint::TextShape::new(pos2(vbar.center().x, y0 + ypt * scale), galley, t.ruler_vertical_number_word)
+                .with_angle_and_anchor(std::f32::consts::FRAC_PI_2, egui::Align2::CENTER_CENTER);
+            vp.add(text);
         } else if ypt >= 0.0 && k % (div / 2) == 0 {
             let sy = y0 + ypt * scale;
-            vp.line_segment([pos2(vbar.center().x - 2.5, sy), pos2(vbar.center().x + 2.5, sy)], Stroke::new(1.0, t.ruler_tick));
+            vp.line_segment([pos2(vbar.center().x - 2.5, sy), pos2(vbar.center().x + 2.5, sy)], Stroke::new(1.0, t.ruler_tick_word));
         }
         k += 1;
         if k > 2000 {
@@ -2583,13 +2584,7 @@ fn ruler_marks(origin: f32, width: f32, (unit, div, step): (f32, i32, i32), scal
             let mark = if k % div == 0 {
                 (k != 0).then_some(RulerMark::Label(k / div * step))
             } else if scale * unit / div as f32 > 4.0 || k % 2 == 0 {
-                Some(RulerMark::Tick(if k % (div / 2) == 0 {
-                    5.0
-                } else if div >= 8 && k % (div / 4) == 0 {
-                    3.0
-                } else {
-                    1.5
-                }))
+                Some(RulerMark::Tick(ruler_tick_length(k, div)))
             } else {
                 None
             };
@@ -2603,6 +2598,19 @@ fn ruler_marks(origin: f32, width: f32, (unit, div, step): (f32, i32, i32), scal
         }
     }
     marks
+}
+
+fn ruler_tick_length(k: i32, div: i32) -> f32 {
+    let mac = cfg!(target_os = "macos");
+    if k % (div / 2) == 0 {
+        if mac { 9.0 } else { 5.0 }
+    } else if div >= 8 && k % (div / 4) == 0 {
+        if mac { 4.0 } else { 3.0 }
+    } else if mac {
+        2.0
+    } else {
+        1.5
+    }
 }
 
 /// Screen x of a point `d` points from the page's start edge, on a page whose left edge sits at
@@ -4466,6 +4474,29 @@ mod tests {
         let xs = |rtl| marks.iter().map(|(d, _)| ruler_x(*d, x0, scale, page_w, rtl)).collect::<Vec<_>>();
         assert!(xs(false).windows(2).all(|w| w[0] < w[1]));
         assert!(xs(true).windows(2).all(|w| w[0] > w[1]));
+    }
+
+    #[test]
+    fn word_mac_ruler_geometry_constants_pin_the_measured_sizes() {
+        assert_eq!(RULER, 17.0);
+        assert_eq!(V_RULER, 16.0);
+        assert_eq!(GAP, 11.5);
+        assert_eq!(RULER_SHADOW_OUTER, 9.0);
+        assert_eq!(RULER_SHADOW_MIDDLE, 5.0);
+        assert_eq!(RULER_SHADOW_INNER, 2.0);
+    }
+
+    #[test]
+    fn word_mac_ruler_ticks_are_anchored_by_platform() {
+        if cfg!(target_os = "macos") {
+            assert_eq!(ruler_tick_length(4, 8), 9.0);
+            assert_eq!(ruler_tick_length(2, 8), 4.0);
+            assert_eq!(ruler_tick_length(1, 8), 2.0);
+        } else {
+            assert_eq!(ruler_tick_length(4, 8), 5.0);
+            assert_eq!(ruler_tick_length(2, 8), 3.0);
+            assert_eq!(ruler_tick_length(1, 8), 1.5);
+        }
     }
 
     /// #692: Home › Paragraph › Right-to-Left Text Direction flips the ruler on screen: the
