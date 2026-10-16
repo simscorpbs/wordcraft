@@ -7,7 +7,7 @@ Snapshot taken 2026-10-16 ~17:20 UTC because the PC had to shut down. Nothing he
 - Session id: `20261016-122758-gpt-6-luna-max-4760`
 - Full log: `C:\Users\Brenno\estagiario-logs$2.log`
 - Resume (from a worktree on this branch, clean tree): `estagiario continuar 20261016-122758-gpt-6-luna-max-4760 "<what to fix or finish>"`
-- Status when snapshotted: still running, no final report yet.
+- Status: stopped on purpose at ~17:25 UTC (PC shutting down) while idle between steps, before its final report. The session is resumable with the command above.
 
 ## Done (per the files on disk; not yet reviewed item by item)
 - Edits in crates/ui-egui/src/lib.rs, crates/ui-egui/src/backstage.rs, crates/engine/src/recovery.rs and apps/wordcraft/src/main.rs for items A-D of the brief; the intern was in its final static review.
@@ -16,12 +16,14 @@ Snapshot taken 2026-10-16 ~17:20 UTC because the PC had to shut down. Nothing he
 - Final report from the intern; confirm every item A-D and its tests against the brief.
 - Then: review item by item, translations and docs (Sol), one `cargo xtask ci` (6 Windows-only failures known on base 86adfd34), commit "Cloud AutoSave: Word-like close, cloud files covered on open, version history", push feat/cloud-autosave, merge into fork main.
 
-## Last words in the log
+## Last words in the log (final)
 ```
+As assinaturas confirmam que `file.save` com `ifUnchanged` retorna `saved` ou `conflict` e já atualiza `dirty`/stamp. Vou centralizar a limpeza de recuperação em `Session`, fazer o AutoSave cobrir arquivos abertos dentro de uma raiz cloud, e ajustar o fluxo de fechamento para reaproveitar esse resultado sem duplicar o prompt.
+A parte principal já está implementada. Agora estou revisando os caminhos de erro e as interações com os diálogos, especialmente para garantir que um conflito substitua o Save Changes sem perder a ação pendente e que o caso local continue bloqueado. Depois vou formatar e revisar o diff sem compilar.
 Vou revisar o diff dos quatro arquivos, conferir os testes adicionados e fazer apenas verificações estáticas permitidas. Não vou compilar nem abrir aplicativos.
 A revisão encontrou um ponto estático de portabilidade: o novo helper de recuperação deixava o parâmetro sem uso no wasm, o que pode virar warning no CI. Vou ajustar isso sem alterar o comportamento e depois conferir o diff novamente.
-apply patch
 O diff revisado confirma as mudanças nos quatro arquivos autorizados. Vou fazer a última checagem do contexto da branch e do fluxo de `file.save`/CloudRoot; os arquivos locais de planejamento não existem nesta cópia, então registro isso como limite da revisão.
+Vou revisar o diff já preparado, conferir as assinaturas e os fluxos de fechamento, recuperação e backstage, e fazer apenas ajustes necessários. Não vou compilar nem executar testes, conforme a instrução.
 ```
 
 ## Brief given
