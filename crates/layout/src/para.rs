@@ -1746,7 +1746,8 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
         let mut xs: Vec<f32> = Vec::new();
         let mut leaders = Vec::new();
         let mut last_break: Option<usize> = None; // cluster index after which we may break
-        let mut last_plain: Option<(usize, f32)> = None; // last non-hyphen break and the x after it
+        // The last non-hyphen break, the x after it and the width of the spaces up to it.
+        let mut last_plain: Option<(usize, f32, f32)> = None;
         // After `hyph_limit` hyphenated lines in a row this one may not end with a hyphen.
         let hyph_ok = hyph_limit == 0 || lines.iter().rev().take_while(|l| l.hyphen.is_some()).count() < hyph_limit;
         let mut end = LineEnd::Para;
@@ -1758,6 +1759,8 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
         // past the margin (`MAX_WORD_OVERHANG` of it and the space before it).
         let mut word_end: Option<usize> = None;
         let mut word_overhang = f32::MAX;
+        // Where that word starts, and the space before it.
+        let (mut word_x0, mut word_before) = (0.0f32, 0.0f32);
         while j < n {
             let Some(c) = pl.clusters.get(j).cloned() else { break };
             match c.kind {
@@ -1826,13 +1829,15 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
                     _ => false,
                 }
             });
-            let mut shrink = if shrink_spaces && !has_tab { space_w * MAX_SPACE_SHRINK } else { 0.0 };
+            let floor = if shrink_spaces && !has_tab { space_w * MAX_SPACE_SHRINK } else { 0.0 };
+            let mut shrink = floor;
             if shrink > 0.0 && c.kind == ClKind::Text {
                 if word_end.is_none_or(|e| j > e) {
                     let (end, w) = word_extent(pl, j);
                     let before = j.checked_sub(1).and_then(|k| pl.clusters.get(k)).filter(|p| p.kind == ClKind::Space).map_or(0.0, |p| p.adv);
                     word_end = Some(end);
                     word_overhang = MAX_WORD_OVERHANG * (w + before);
+                    (word_x0, word_before) = (x, before);
                 }
                 shrink = shrink.min(word_overhang);
             }
@@ -1842,14 +1847,23 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
             if !fits && (c0..j).any(|k| pl.clusters.get(k).is_some_and(|c| c.kind != ClKind::Marker)) {
                 // Wrap: back up to the last break opportunity on this line.
                 end = LineEnd::Wrap;
-                // Hyphenate only when the plain break leaves more than the hyphenation zone empty.
-                if let (Some(bk), Some((pj, px))) = (last_break, last_plain)
+                // Hyphenate only when the plain break leaves more than the hyphenation zone empty;
+                // on a justified Word 2013+ line, only when without the hyphen its spaces would
+                // have to stretch by more than MIN_HYPHEN_STRETCH of their width.
+                if let (Some(bk), Some((pj, px, psw))) = (last_break, last_plain)
                     && pj >= c0
                     && pj < bk
                     && pl.hyph_after.binary_search(&(bk as u32)).is_ok()
-                    && right_edge - px <= zone
                 {
-                    last_break = Some(pj);
+                    let trail = pl.clusters.get(pj).filter(|p| p.kind == ClKind::Space).map_or(0.0, |p| p.adv);
+                    let plain = if shrink_spaces && !has_tab {
+                        right_edge - (px - trail) <= MIN_HYPHEN_STRETCH * (psw - trail)
+                    } else {
+                        right_edge - px <= zone
+                    };
+                    if plain {
+                        last_break = Some(pj);
+                    }
                 }
                 if let Some(bk) = last_break.filter(|bk| *bk >= c0) {
                     xs.truncate(bk + 1 - c0);
@@ -1934,9 +1948,15 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
                 let hyph = pl.hyph_after.binary_search(&(j as u32)).is_ok();
                 if !hyph {
                     last_break = Some(j);
-                    last_plain = Some((j, x));
-                } else if hyph_ok && x + hyphen_glyph(pl, c.style, &mut hcache).2 <= right_edge + shrink + 0.01 {
-                    last_break = Some(j);
+                    last_plain = Some((j, x, space_w));
+                } else if hyph_ok {
+                    let hw = hyphen_glyph(pl, c.style, &mut hcache).2;
+                    // On a justified line the part before the hyphen may hang past the margin
+                    // by less than a whole word may (Word 2013+).
+                    let room = if floor > 0.0 { floor.min(MAX_FRAGMENT_OVERHANG * (x + hw - word_x0 + word_before)) } else { shrink };
+                    if x + hw <= right_edge + room + 0.01 {
+                        last_break = Some(j);
+                    }
                 }
             }
             j += 1;
@@ -2393,6 +2413,17 @@ const MAX_SPACE_SHRINK: f32 = 0.25;
 /// last word stays only while roughly two thirds of it fit, whatever room the spaces have left
 /// (words of 7–61 pt on lines of 24–29 spaces all switch at 0.341–0.345).
 const MAX_WORD_OVERHANG: f32 = 0.344;
+
+/// How much the spaces of a justified line (Word 2013+) would have to stretch, as a share of their
+/// width, before Word hyphenates its next word rather than move it down whole. Measured in Word
+/// for Mac on lines of 6–28 spaces: 0.486–0.490 of the inner spaces' width.
+const MIN_HYPHEN_STRETCH: f32 = 0.487;
+
+/// How much of a hyphenated word's first part (with its hyphen and the space before it) may hang
+/// past the margin of a justified line for the spaces to pull it back in; the spaces' own limit
+/// ([`MAX_SPACE_SHRINK`]) applies too. Measured once in Word for Mac: 0.316–0.320 on a line of 10
+/// spaces.
+const MAX_FRAGMENT_OVERHANG: f32 = 0.319;
 
 /// The last cluster of the word starting at cluster `j`, and the word's width: it runs to the
 /// next space, tab, break or object, or through the next cluster after which a line may break
