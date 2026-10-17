@@ -253,6 +253,9 @@ pub struct Tokens {
     pub on_accent: Color32,
     pub input: Color32,
     pub input_border: Color32,
+    /// Border and text for the compact icon/text controls in the tab strip.
+    pub ribbon_button_border: Color32,
+    pub ribbon_button_text: Color32,
     pub group_label: Color32,
     pub ruler: Color32,
     pub ruler_margin: Color32,
@@ -301,6 +304,8 @@ impl Tokens {
             on_accent: Color32::WHITE,
             input: Color32::WHITE,
             input_border: Color32::from_rgb(0x8A, 0x8A, 0x8A),
+            ribbon_button_border: Color32::from_rgb(0xD9, 0xD9, 0xD9),
+            ribbon_button_text: Color32::BLACK,
             group_label: Color32::from_rgb(0x70, 0x70, 0x70),
             ruler: Color32::from_rgb(0xFF, 0xFF, 0xFF),
             ruler_margin: Color32::from_rgb(0xD4, 0xD4, 0xD4),
@@ -344,6 +349,8 @@ impl Tokens {
             on_accent: Color32::from_rgb(0x11, 0x16, 0x2E),
             input: Color32::from_rgb(0x1E, 0x1E, 0x1E),
             input_border: Color32::from_rgb(0x7A, 0x7A, 0x7A),
+            ribbon_button_border: Color32::from_rgb(0x6A, 0x6A, 0x6A),
+            ribbon_button_text: Color32::from_rgb(0xF2, 0xF2, 0xF2),
             group_label: Color32::from_rgb(0xA0, 0xA0, 0xA0),
             // The text area is lighter than the margins, as in the light theme (#1148).
             ruler: Color32::from_rgb(0x45, 0x45, 0x45),
@@ -664,6 +671,9 @@ pub fn apply(ctx: &egui::Context, appearance: Appearance) {
     });
 }
 
+/// The radius shared by the tab-strip controls.
+pub(crate) const RIBBON_BUTTON_CORNER_RADIUS: u8 = 5;
+
 /// Turn egui's own animations on or off: hover and press fades, menus, tooltips and windows fading
 /// in, sections sliding open, and the glide when a scroll area brings the caret or a list item
 /// into view. Off, each of them happens at once.
@@ -694,16 +704,16 @@ fn visuals(t: &Tokens) -> Visuals {
     v.widgets.inactive.weak_bg_fill = t.input;
     v.widgets.inactive.bg_stroke = Stroke::new(1.0, t.input_border);
     v.widgets.inactive.fg_stroke = Stroke::new(1.0, t.text);
-    v.widgets.inactive.corner_radius = CornerRadius::same(4);
+    v.widgets.inactive.corner_radius = CornerRadius::same(RIBBON_BUTTON_CORNER_RADIUS);
     v.widgets.hovered.bg_fill = t.hover;
     v.widgets.hovered.weak_bg_fill = t.hover;
     v.widgets.hovered.bg_stroke = Stroke::new(1.0, t.border_strong);
     v.widgets.hovered.fg_stroke = Stroke::new(1.0, t.text);
-    v.widgets.hovered.corner_radius = CornerRadius::same(4);
+    v.widgets.hovered.corner_radius = CornerRadius::same(RIBBON_BUTTON_CORNER_RADIUS);
     v.widgets.active.bg_fill = t.pressed;
     v.widgets.active.weak_bg_fill = t.pressed;
     v.widgets.active.fg_stroke = Stroke::new(1.0, t.text);
-    v.widgets.active.corner_radius = CornerRadius::same(4);
+    v.widgets.active.corner_radius = CornerRadius::same(RIBBON_BUTTON_CORNER_RADIUS);
     v.widgets.open.bg_fill = t.pressed;
     v.widgets.open.weak_bg_fill = t.pressed;
     v.popup_shadow = egui::Shadow { offset: [0, 4], blur: 16, spread: 0, color: Color32::from_black_alpha(if t.dark { 120 } else { 40 }) };
@@ -753,6 +763,17 @@ mod tests {
                 assert!(r >= 3.0, "dark={}: input_border on {name} is {r:.2}:1", t.dark);
             }
         }
+    }
+
+    #[test]
+    fn tab_strip_button_tokens_match_the_audit() {
+        assert_eq!(super::RIBBON_BUTTON_CORNER_RADIUS, 5);
+        assert_eq!(super::Tokens::light().ribbon_button_border, egui::Color32::from_rgb(0xD9, 0xD9, 0xD9));
+        assert_eq!(super::Tokens::light().ribbon_button_text, egui::Color32::BLACK);
+        let visuals = super::visuals(&super::Tokens::light());
+        assert_eq!(visuals.widgets.inactive.corner_radius, egui::CornerRadius::same(5));
+        assert_eq!(visuals.widgets.hovered.corner_radius, egui::CornerRadius::same(5));
+        assert_eq!(visuals.widgets.active.corner_radius, egui::CornerRadius::same(5));
     }
 
     /// #1148: on both rulers the text area is lighter than the margins in both themes, as in the
