@@ -921,7 +921,7 @@ impl WordApp {
         // "Save changes?" and AutoSave's go-ahead were both about the old one.
         if self.session.document_id() != document {
             self.autosave_path = None;
-            if matches!(self.dialog, Some(dialogs::Dialog::SaveChanges { .. })) {
+            if matches!(self.dialog.as_ref(), Some(dialogs::Dialog::SaveChanges { .. })) {
                 self.dialog = None;
             }
             crate::table_pen::stop(self);
@@ -2117,7 +2117,7 @@ impl WordApp {
             match self.session.run("file.save", &json!({"ifUnchanged": true})) {
                 Ok(v) if v.get("conflict").is_some() => {
                     log::warn!("AutoSave paused: {} was changed elsewhere", self.title_stem());
-                    if self.dialog.is_none() || matches!(self.dialog, Some(dialogs::Dialog::SaveChanges { .. })) {
+                    if self.dialog.is_none() || matches!(self.dialog.as_ref(), Some(dialogs::Dialog::SaveChanges { .. })) {
                         self.show_save_conflict();
                     }
                 }
@@ -4285,6 +4285,27 @@ mod tests {
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
         assert!(a.close_requested());
         assert_eq!(prompt(&a), None);
+        let on_disk = wordcraft_engine::io::open_path(&path).unwrap().plain_text(wordcraft_doc::StoryRef::Body);
+        assert!(on_disk.contains("Revised Draft"), "the edit is on disk: {on_disk:?}");
+        assert!(a.quit_requested, "the app may close");
+        assert!(a.close_requested(), "the close that follows goes ahead");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// #1445: the window's X on an edited document with a file → Save writes the file and lets
+    /// the window close.
+    #[test]
+    fn window_close_save_writes_the_file_and_quits() {
+        let dir = scratch("close-save-prompt");
+        let path = docx_on_disk(&dir, "Draft");
+        let mut a = app();
+        a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        a.autosave = false;
+        a.session.autosave = false;
+        a.run("text.insert", json!({"text": "Revised "})).unwrap();
+        assert!(!a.close_requested());
+        assert_eq!(prompt(&a), Some("saveChanges"));
+        a.run("ui.saveChanges", json!({"answer": "save"})).unwrap();
         let on_disk = wordcraft_engine::io::open_path(&path).unwrap().plain_text(wordcraft_doc::StoryRef::Body);
         assert!(on_disk.contains("Revised Draft"), "the edit is on disk: {on_disk:?}");
         assert!(a.quit_requested, "the app may close");
