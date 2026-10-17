@@ -10,6 +10,31 @@ use crate::{WordApp, icons};
 pub const CONTENT_H: f32 = 66.0;
 /// Height of the group title row under the content.
 pub const LABEL_H: f32 = 18.0;
+/// Height of the compact ribbon when group titles are hidden.
+pub const RIBBON_NO_LABEL_H: f32 = 76.0;
+/// Height of a compact ribbon control row.
+pub const SMALL_H: f32 = 24.0;
+/// Height used by three-row stacks, which must still fit the 66 pt content area.
+pub const STACK_SMALL_H: f32 = 22.0;
+/// Top inner margin of the ribbon frame.
+pub const RIBBON_FRAME_TOP: f32 = 4.0;
+/// Bottom inner margin of the ribbon frame.
+pub const RIBBON_FRAME_BOTTOM: f32 = 6.0;
+/// Top breathing room inside a two-row group.
+pub const TWO_ROW_CONTENT_TOP: f32 = 7.0;
+/// Bottom breathing room inside a two-row group.
+pub const TWO_ROW_CONTENT_BOTTOM: f32 = 3.0;
+/// Measured top breathing room of the two compact rows, including the ribbon frame.
+pub const TWO_ROW_TOP: f32 = RIBBON_FRAME_TOP + TWO_ROW_CONTENT_TOP;
+/// Measured gap between the two compact rows.
+pub const TWO_ROW_GAP: f32 = 8.0;
+/// Measured bottom breathing room of the two compact rows, including the ribbon frame.
+pub const TWO_ROW_BOTTOM: f32 = RIBBON_FRAME_BOTTOM + TWO_ROW_CONTENT_BOTTOM;
+/// Height of a ribbon group separator.
+pub const GROUP_SEPARATOR_H: f32 = 62.0;
+pub(crate) fn stack_small_id() -> egui::Id {
+    egui::Id::new("ribbon.stack.small_height")
+}
 /// Large buttons: centre of the 32 px icon, top of the first label line, and the pitch and
 /// height of a label line (`regular(11.5)`; a test checks the font's real line height).
 pub const BIG_ICON_Y: f32 = 18.0;
@@ -19,6 +44,11 @@ pub const LABEL_LINE_H: f32 = 14.0;
 // #653: a two-line label ends inside the content, above the group title row.
 const _: () = assert!(BIG_LABEL_Y + LABEL_PITCH + LABEL_LINE_H <= CONTENT_H);
 const _: () = assert!(BIG_ICON_Y + 16.0 <= BIG_LABEL_Y);
+const _: () = assert!(STACK_SMALL_H * 3.0 == CONTENT_H);
+
+fn compact_control_height(ui: &Ui) -> f32 {
+    if ui.ctx().data(|d| d.get_temp::<bool>(stack_small_id()).unwrap_or(false)) { STACK_SMALL_H } else { SMALL_H }
+}
 
 /// Shortcut text for a command (`⌘B` on macOS, `Ctrl+B` elsewhere): its first key in effect,
 /// custom keys included (Customize Keyboard).
@@ -191,7 +221,7 @@ pub fn small(ui: &mut Ui, app: &mut WordApp, icon: &str, label: Option<&str>, ti
     let (label, tip) = (label.map(|l| tl!(l)), tl!(tip));
     let t = Tokens::get(ui.ctx());
     let text_w = label.map(|l| ui.ctx().fonts_mut(|f| f.layout_no_wrap(l.to_string(), regular(11.5), t.text).size().x) + 6.0).unwrap_or(0.0);
-    let (r, resp) = ui.allocate_exact_size(vec2(24.0 + text_w, 22.0), Sense::click());
+    let (r, resp) = ui.allocate_exact_size(vec2(24.0 + text_w, compact_control_height(ui)), Sense::click());
     keytip_badge(ui, r, id, tip);
     let on = enabled(app, id);
     bg(ui, r, &resp, checked, &t);
@@ -224,9 +254,10 @@ pub fn split(
 ) {
     let tip = tl!(tip);
     let t = Tokens::get(ui.ctx());
-    let (r, resp) = ui.allocate_exact_size(vec2(24.0, 22.0), Sense::click());
+    let control_h = compact_control_height(ui);
+    let (r, resp) = ui.allocate_exact_size(vec2(24.0, control_h), Sense::click());
     keytip_badge(ui, r, id, tip);
-    let (ar, aresp) = ui.allocate_exact_size(vec2(11.0, 22.0), Sense::click());
+    let (ar, aresp) = ui.allocate_exact_size(vec2(11.0, control_h), Sense::click());
     bg(ui, r, &resp, checked, &t);
     bg(ui, ar, &aresp, false, &t);
     let ic = Rect::from_center_size(r.center(), vec2(17.0, 17.0));
@@ -288,7 +319,7 @@ pub fn menu_button(
         resp
     } else {
         let text_w = label.map(|l| ui.ctx().fonts_mut(|f| f.layout_no_wrap(l.to_string(), regular(11.5), t.text).size().x) + 6.0).unwrap_or(0.0);
-        let (r, resp) = ui.allocate_exact_size(vec2(24.0 + text_w + 10.0, 22.0), Sense::click());
+        let (r, resp) = ui.allocate_exact_size(vec2(24.0 + text_w + 10.0, compact_control_height(ui)), Sense::click());
         keytip_badge(ui, r, "menu", tip);
         bg(ui, r, &resp, false, &t);
         icons::paint(ui.painter(), Rect::from_center_size(pos2(r.min.x + 12.0, r.center().y), vec2(17.0, 17.0)), icon, c, a);
@@ -325,10 +356,13 @@ pub fn group(ui: &mut Ui, title: &str, launcher: Option<&str>, app: &mut WordApp
 /// A ribbon group whose title is shown as is (a custom group's name, Customize Ribbon).
 pub fn group_titled(ui: &mut Ui, id_title: &str, title: &str, launcher: Option<&str>, app: &mut WordApp, add: impl FnOnce(&mut Ui, &mut WordApp)) {
     let t = Tokens::get(ui.ctx());
+    let show_title = app.ui.show_group_titles;
     let label_w = ui.ctx().fonts_mut(|f| f.layout_no_wrap(title.to_string(), regular(11.0), t.group_label).size().x);
     let start = ui.cursor().min;
     let inner = ui.vertical(|ui| {
-        ui.set_min_width(label_w + if launcher.is_some() { 22.0 } else { 10.0 });
+        if show_title {
+            ui.set_min_width(label_w + if launcher.is_some() { 22.0 } else { 10.0 });
+        }
         let content = ui.allocate_ui_with_layout(vec2(ui.available_width(), CONTENT_H), egui::Layout::left_to_right(egui::Align::Min), |ui| {
             ui.spacing_mut().item_spacing = vec2(1.0, 1.0);
             add(ui, app);
@@ -341,24 +375,38 @@ pub fn group_titled(ui: &mut Ui, id_title: &str, title: &str, launcher: Option<&
         let _ = content;
     });
     let r = inner.response.rect;
-    let r = Rect::from_min_max(start, pos2(r.max.x, start.y + CONTENT_H + LABEL_H));
-    let title_y = r.max.y - LABEL_H / 2.0;
-    ui.painter().text(pos2(r.center().x, title_y), Align2::CENTER_CENTER, title, regular(11.0), t.group_label);
-    if let Some(cmd) = launcher {
-        let lr = Rect::from_center_size(pos2(r.max.x - 6.0, title_y), vec2(11.0, 11.0));
-        let resp = ui.interact(lr, ui.id().with(("launch", id_title)), Sense::click());
-        if resp.hovered() {
-            ui.painter().rect_filled(lr.expand(2.0), 2.0, t.hover);
-        }
-        icons::paint(ui.painter(), lr, "launcher", t.text_dim, t.accent);
-        if resp.on_hover_text(crate::i18n::fmt(tl!("{group} settings"), &[("group", title)])).clicked() {
-            let _ = app.run(cmd, serde_json::json!({}));
+    let group_h = if show_title { CONTENT_H + LABEL_H } else { CONTENT_H };
+    let r = Rect::from_min_max(start, pos2(r.max.x, start.y + group_h));
+    if show_title {
+        let title_y = r.max.y - LABEL_H / 2.0;
+        ui.painter().text(pos2(r.center().x, title_y), Align2::CENTER_CENTER, title, regular(11.0), t.group_label);
+        if let Some(cmd) = launcher {
+            let lr = Rect::from_center_size(pos2(r.max.x - 6.0, title_y), vec2(11.0, 11.0));
+            let resp = ui.interact(lr, ui.id().with(("launch", id_title)), Sense::click());
+            if resp.hovered() {
+                ui.painter().rect_filled(lr.expand(2.0), 2.0, t.hover);
+            }
+            icons::paint(ui.painter(), lr, "launcher", t.text_dim, t.accent);
+            if resp.on_hover_text(crate::i18n::fmt(tl!("{group} settings"), &[("group", title)])).clicked() {
+                let _ = app.run(cmd, serde_json::json!({}));
+            }
         }
     }
     ui.add_space(5.0);
     let x = ui.cursor().min.x;
-    ui.painter().line_segment([pos2(x, start.y + 4.0), pos2(x, start.y + CONTENT_H + LABEL_H - 4.0)], Stroke::new(1.0, t.border));
+    let separator_top = start.y + (CONTENT_H - GROUP_SEPARATOR_H) / 2.0;
+    ui.painter().line_segment([pos2(x, separator_top), pos2(x, separator_top + GROUP_SEPARATOR_H)], Stroke::new(1.0, t.border));
     ui.add_space(6.0);
+}
+
+/// Lay out two compact rows at the measured ribbon positions.
+pub fn two_rows(ui: &mut Ui, add: impl FnOnce(&mut Ui)) {
+    ui.vertical(|ui| {
+        ui.spacing_mut().item_spacing = vec2(1.0, 0.0);
+        ui.add_space(TWO_ROW_CONTENT_TOP);
+        add(ui);
+        ui.add_space(TWO_ROW_CONTENT_BOTTOM);
+    });
 }
 
 /// The icon a command's button shows outside its own ribbon group (custom groups, the Quick
@@ -890,6 +938,19 @@ mod tests {
         ctx.run_ui(egui::RawInput::default(), |_| {}).drop_without_applying_deltas();
         let h = ctx.fonts_mut(|f| f.layout_no_wrap("Page Number Mail Merge gjpqy".into(), crate::theme::regular(11.5), Color32::WHITE).size().y);
         assert!(h <= LABEL_LINE_H, "label line is {h} px tall");
+    }
+
+    #[test]
+    fn ribbon_control_heights_fit_their_layouts() {
+        assert_eq!(SMALL_H, 24.0);
+        assert_eq!(STACK_SMALL_H, 22.0);
+        assert_eq!(STACK_SMALL_H * 3.0, CONTENT_H);
+        assert_eq!(RIBBON_FRAME_TOP, 4.0);
+        assert_eq!(RIBBON_FRAME_BOTTOM, 6.0);
+        assert_eq!(TWO_ROW_TOP, 11.0);
+        assert_eq!(TWO_ROW_GAP, 8.0);
+        assert_eq!(TWO_ROW_BOTTOM, 9.0);
+        assert_eq!(GROUP_SEPARATOR_H, 62.0);
     }
 
     #[test]

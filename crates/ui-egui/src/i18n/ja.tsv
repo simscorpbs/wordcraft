@@ -810,6 +810,7 @@
 	Animate the caret (it glides and fades)	カーソルをアニメーション表示する（滑らかに移動してフェードする）
 	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	オン: 入力や矢印キーの操作でカーソルが新しい位置へ滑らかに移動し、点滅もフェードします。オフ: カーソルは瞬時に移動し、点滅は表示と非表示が切り替わるだけです。
 	Show the community button in the title bar	タイトル バーにコミュニティ ボタンを表示する
+	Show group titles	グループ名を表示
 	Show/Hide ¶	編集記号の表示/非表示 ¶
 	Show\nComments	コメントの表示
 	Shrink Font 1 Point	フォントを 1 ポイント縮小

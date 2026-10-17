@@ -815,6 +815,7 @@
 	Animate the caret (it glides and fades)	커서 애니메이션 (부드럽게 이동하고 희미해짐)
 	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	사용: 입력하거나 방향키를 누르면 커서가 새 위치로 부드럽게 이동하고 깜박임이 서서히 사라집니다. 사용 안 함: 커서가 바로 이동하고 깜박임이 켜졌다 꺼집니다.
 	Show the community button in the title bar	제목 표시줄에 커뮤니티 단추 표시
+	Show group titles	그룹 제목 표시
 	Show/Hide ¶	¶ 표시/숨기기
 	Show\nComments	메모\n표시
 	Shrink Font 1 Point	글꼴 크기 1포인트 줄이기

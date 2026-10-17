@@ -847,6 +847,7 @@
 	Animate the caret (it glides and fades)	Animar el cursor (se desliza y se desvanece)
 	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Activado: el cursor se desliza hasta su nueva posición al escribir o usar las flechas, y su parpadeo se desvanece. Desactivado: salta y parpadea de golpe.
 	Show the community button in the title bar	Mostrar el botón de comunidad en la barra de título
+	Show group titles	Mostrar títulos de grupo
 	Show/Hide ¶	Mostrar u ocultar ¶
 	Show\nComments	Mostrar\ncomentarios
 	Shrink Font 1 Point	Reducir fuente 1 punto
