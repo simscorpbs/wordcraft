@@ -521,6 +521,12 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                     if response.clicked() {
                         let _ = app.run("file.rename", json!({}));
                     }
+                    response.context_menu(|ui| {
+                        if ui.button(tl!("Version History")).clicked() {
+                            app.ui.versions_pane = true;
+                            ui.close();
+                        }
+                    });
                     let content_left = cx - content_w / 2.0;
                     if app.has_document() {
                         icons::paint(
@@ -554,6 +560,12 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                     if response.clicked() {
                         let _ = app.run("file.rename", json!({}));
                     }
+                    response.context_menu(|ui| {
+                        if ui.button(tl!("Version History")).clicked() {
+                            app.ui.versions_pane = true;
+                            ui.close();
+                        }
+                    });
 
                     paint_text(
                         ui.painter(),

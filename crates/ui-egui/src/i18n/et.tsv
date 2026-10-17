@@ -864,6 +864,11 @@
 	User Name	Kasutajanimi
 	User name:	Kasutajanimi:
 	Version History	Versiooniajalugu
+	No versions yet.	Versioone veel pole.
+	Open version	Ava versioon
+	Previous version	Eelmine versioon
+	Restore	Taasta
+	Save a copy	Salvesta koopia
 	Version {version} ({build})	Versioon {version} ({build})
 	Vertical	Püstine
 	Vertical Alignment	Püstjoondus
@@ -957,6 +962,22 @@
 	Normal speed	Tavaline kiirus
 	AutoSave documents you have saved in WordCraft	Salvesta WordCraftis salvestatud dokumendid automaatselt
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Automaatsalvestus ebaõnnestus: {error}. Selle uuesti sisse lülitamiseks salvesta dokument.
+	{name} was moved or deleted elsewhere	{name} teisaldati või kustutati mujal
+	{name} was changed on another device	{name} muudeti teises seadmes
+	AutoSave stopped so that neither version is lost.	Automaatne salvestamine peatati, et kumbki versioon ei läheks kaotsi.
+	Keep both saves this version as a copy beside the other.	Säilita mõlemad ja salvesta see versioon teise kõrvale koopiana.
+	Save it here again	Salvesta siia uuesti
+	Keep both	Säilita mõlemad
+	Keep this version	Säilita see versioon
+	Open the other version	Ava teine versioon
+	Decide later	Otsusta hiljem
+	Where should AutoSave keep this document?	Kuhu peaks automaatne salvestamine selle dokumendi salvestama?
+	Other location…	Muu asukoht…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Automaatne salvestamine on peatatud: seda faili muudeti teises seadmes. Klõpsa, et valida säilitatav versioon.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Automaatne salvestamine on peatatud: see fail teisaldati või kustutati mujal. Klõpsa, et valida toiming.
+	Cloud Status	Pilve olek
+	Save to Cloud	Salvesta pilve
+	Resolve Save Conflict	Lahenda salvestuskonflikt
 	Couldn't download {name}: {error}	Faili {name} allalaadimine ebaõnnestus: {error}
 	Do you want to save changes to {name}?	Kas soovid faili {name} muudatused salvestada?
 	Don't Save	Ära salvesta

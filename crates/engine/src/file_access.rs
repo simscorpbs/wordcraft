@@ -441,6 +441,8 @@ mod tests {
     /// reached only after `io` checked the roots), this module, and the test files.
     /// The host-enabled recovery store owns its profile files; commands address known snapshot
     /// IDs, never paths. Only that storage module is exempt, not recovery commands in general.
+    /// The version history store (`versions.rs`) is the same kind of host-enabled profile store:
+    /// commands address version IDs, never paths.
     #[test]
     fn commands_do_not_touch_the_file_system_themselves() {
         fn walk(dir: &Path, files: &mut Vec<PathBuf>) {
@@ -464,6 +466,7 @@ mod tests {
             if path.parent() == Some(src.as_path()) && (name == "io.rs" || name == "file_access.rs" || name.starts_with("tests"))
                 || path.starts_with(src.join("io"))
                 || path == src.join("recovery/desktop.rs")
+                || path == src.join("versions.rs")
             {
                 continue;
             }

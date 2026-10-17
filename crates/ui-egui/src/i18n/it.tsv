@@ -884,6 +884,11 @@
 	User Name	Nome utente
 	User name:	Nome utente:
 	Version History	Cronologia versioni
+	No versions yet.	Non ci sono ancora versioni.
+	Open version	Apri versione
+	Previous version	Versione precedente
+	Restore	Ripristina
+	Save a copy	Salva una copia
 	Version {version} ({build})	Versione {version} ({build})
 	Vertical	Verticale
 	Vertical Alignment	Allineamento verticale
@@ -978,6 +983,22 @@
 	Normal speed	Velocità normale
 	AutoSave documents you have saved in WordCraft	Salva automaticamente i documenti che hai salvato in WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Salvataggio automatico non riuscito: {error}. Salva il documento per riattivare il salvataggio automatico.
+	{name} was moved or deleted elsewhere	{name} è stato spostato o eliminato altrove
+	{name} was changed on another device	{name} è stato modificato su un altro dispositivo
+	AutoSave stopped so that neither version is lost.	Il salvataggio automatico è stato sospeso per non perdere nessuna versione.
+	Keep both saves this version as a copy beside the other.	Mantieni entrambe e salva questa versione come copia accanto all’altra.
+	Save it here again	Salva di nuovo qui
+	Keep both	Mantieni entrambe
+	Keep this version	Mantieni questa versione
+	Open the other version	Apri l’altra versione
+	Decide later	Decidi in seguito
+	Where should AutoSave keep this document?	Dove deve conservare questo documento il salvataggio automatico?
+	Other location…	Altra posizione…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Il salvataggio automatico è in pausa: questo file è stato modificato su un altro dispositivo. Fai clic per scegliere quale versione mantenere.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Il salvataggio automatico è in pausa: questo file è stato spostato o eliminato altrove. Fai clic per scegliere cosa fare.
+	Cloud Status	Stato del cloud
+	Save to Cloud	Salva nel cloud
+	Resolve Save Conflict	Risolvi conflitto di salvataggio
 	Couldn't download {name}: {error}	Impossibile scaricare {name}: {error}
 	Do you want to save changes to {name}?	Vuoi salvare le modifiche a {name}?
 	Don't Save	Non salvare

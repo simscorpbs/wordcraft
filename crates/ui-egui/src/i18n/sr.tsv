@@ -86,6 +86,22 @@
 	AutoSave	Аутоматско чување
 	AutoSave documents you have saved in WordCraft	Аутоматски чувај документе које сте већ сачували у WordCraft-у
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Аутоматско чување неуспело: {error}. Сачувајте документ да бисте га поново укључили.
+	{name} was moved or deleted elsewhere	{name} је премештен или обрисан другде
+	{name} was changed on another device	{name} је промењен на другом уређају
+	AutoSave stopped so that neither version is lost.	Аутоматско чување је заустављено да се ниједна верзија не би изгубила.
+	Keep both saves this version as a copy beside the other.	Задржи обе тако што ћеш ову верзију сачувати као копију поред друге.
+	Save it here again	Поново сачувај овде
+	Keep both	Задржи обе
+	Keep this version	Задржи ову верзију
+	Open the other version	Отвори другу верзију
+	Decide later	Одлучи касније
+	Where should AutoSave keep this document?	Где аутоматско чување треба да чува овај документ?
+	Other location…	Друга локација…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Аутоматско чување је паузирано: овај фајл је промењен на другом уређају. Кликни да изабереш верзију коју желиш да задржиш.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Аутоматско чување је паузирано: овај фајл је премештен или обрисан другде. Кликни да изабереш шта да урадиш.
+	Cloud Status	Статус облака
+	Save to Cloud	Сачувај у облак
+	Resolve Save Conflict	Реши конфликт чувања
 	Balloons	Облачићи
 	Bottom Margin	Доња маргина
 	Centimeters	Центиметри
@@ -1002,6 +1018,11 @@
 	User Name	Корисничко име
 	User name:	Корисничко име:
 	Version History	Историја верзија
+	No versions yet.	Још нема верзија.
+	Open version	Отвори верзију
+	Previous version	Претходна верзија
+	Restore	Врати
+	Save a copy	Сачувај копију
 	Version {version} ({build})	Верзија {version} ({build})
 	Vertical	Усправно
 	Vertical Alignment	Усправно поравнање

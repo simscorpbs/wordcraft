@@ -977,6 +977,11 @@
 	User Name	Användarnamn
 	User name:	Användarnamn:
 	Version History	Versionshistorik
+	No versions yet.	Inga versioner ännu.
+	Open version	Öppna version
+	Previous version	Tidigare version
+	Restore	Återställ
+	Save a copy	Spara en kopia
 	Version {version} ({build})	Version {version} ({build})
 	Vertical	Lodrät
 	Vertical Alignment	Lodrät justering
@@ -1074,6 +1079,22 @@
 	Normal speed	Normal hastighet
 	AutoSave documents you have saved in WordCraft	Autospara dokument som du har sparat i WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Autospara misslyckades: {error}. Spara dokumentet för att slå på Autospara igen.
+	{name} was moved or deleted elsewhere	{name} flyttades eller togs bort någon annanstans
+	{name} was changed on another device	{name} ändrades på en annan enhet
+	AutoSave stopped so that neither version is lost.	Autosparning har stoppats så att ingen version går förlorad.
+	Keep both saves this version as a copy beside the other.	Behåll båda och spara den här versionen som en kopia bredvid den andra.
+	Save it here again	Spara här igen
+	Keep both	Behåll båda
+	Keep this version	Behåll den här versionen
+	Open the other version	Öppna den andra versionen
+	Decide later	Bestäm senare
+	Where should AutoSave keep this document?	Var ska autosparning spara det här dokumentet?
+	Other location…	Annan plats…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Autosparning är pausad: den här filen ändrades på en annan enhet. Klicka för att välja vilken version som ska behållas.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Autosparning är pausad: den här filen flyttades eller togs bort någon annanstans. Klicka för att välja vad som ska göras.
+	Cloud Status	Molnstatus
+	Save to Cloud	Spara i molnet
+	Resolve Save Conflict	Lös sparningskonflikt
 	Couldn't download {name}: {error}	Det gick inte att ladda ner {name}: {error}
 	Do you want to save changes to {name}?	Vill du spara ändringarna i {name}?
 	Don't Save	Spara inte
