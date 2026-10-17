@@ -7,6 +7,78 @@ use wordcraft_doc::StoryRef;
 use crate::theme::{Tokens, TypeRung, medium, paint_text, regular, semibold, text_width};
 use crate::{WordApp, icons};
 
+pub(crate) const STATUS_BAR_HEIGHT: f32 = 28.0;
+pub(crate) const STATUS_BAR_HORIZONTAL_MARGIN: i8 = 24;
+pub(crate) const STATUS_VIEW_SLOT_WIDTH: f32 = 32.0;
+pub(crate) const STATUS_VIEW_SLOT_HEIGHT: f32 = 22.0;
+pub(crate) const STATUS_VIEW_ICON_SIZE: f32 = 16.0;
+pub(crate) const STATUS_ZOOM_BUTTON_SIZE: f32 = 18.0;
+pub(crate) const STATUS_ZOOM_SLIDER_WIDTH: f32 = 100.0;
+pub(crate) const STATUS_ZOOM_SLIDER_HANDLE_DIAMETER: f32 = 17.6;
+pub(crate) const STATUS_ZOOM_SLIDER_HEIGHT: f32 = STATUS_ZOOM_SLIDER_HANDLE_DIAMETER * 1.25;
+pub(crate) const STATUS_TEXT_SIZE: f32 = 12.0;
+pub(crate) const STATUS_TEXT_TRACKING: f32 = 0.216;
+pub(crate) const STATUS_TEXT_LINE_HEIGHT: f32 = 18.0;
+pub(crate) const STATUS_BORDER_WIDTH: f32 = 1.0;
+const STATUS_RIGHT_ITEM_SPACING: f32 = 4.0;
+const STATUS_ZOOM_VIEW_GAP: f32 = 10.0;
+const STATUS_VIEW_FOCUS_GAP: f32 = 8.0;
+
+/// View buttons shown in the status bar from left to right. The right-to-left egui layout paints
+/// this array in reverse so the visual order remains stable.
+pub(crate) const STATUS_VIEW_BUTTONS: [(&str, &str); 4] =
+    [("printLayout", "view.printLayout"), ("webLayout", "view.webLayout"), ("outline", "view.outline"), ("draft", "view.draft")];
+
+fn status_text_width(ui: &Ui, text: &str, color: egui::Color32, size: f32, tracking: f32) -> f32 {
+    let font = regular(size);
+    text_width(ui.painter(), text, &font, tracking, color)
+}
+
+fn status_focus_width(ui: &Ui, focus: &str, color: egui::Color32, size: f32, tracking: f32) -> f32 {
+    (status_text_width(ui, focus, color, size, tracking) + 26.0).max(56.0)
+}
+
+/// Width needed by the controls laid out at the right of the status bar, before the left side is
+/// painted. `zoom_text_width` excludes the one-point interaction allowance on the readout.
+fn status_right_block_width(zoom_text_width: f32, focus_width: f32) -> f32 {
+    let widget_count = STATUS_VIEW_BUTTONS.len() + 5;
+    let widgets = zoom_text_width
+        + 1.0
+        + 2.0 * STATUS_ZOOM_BUTTON_SIZE
+        + STATUS_ZOOM_SLIDER_WIDTH
+        + STATUS_VIEW_BUTTONS.len() as f32 * STATUS_VIEW_SLOT_WIDTH
+        + focus_width;
+    widgets + STATUS_RIGHT_ITEM_SPACING * (widget_count.saturating_sub(1) as f32) + STATUS_ZOOM_VIEW_GAP + STATUS_VIEW_FOCUS_GAP
+}
+
+fn status_language_budget(available_width: f32, right_width: f32, item_spacing: f32) -> f32 {
+    (available_width - right_width - item_spacing).max(0.0)
+}
+
+/// Keep a status-bar label inside its measured budget without slicing a UTF-8 character.
+fn fit_status_label(text: &str, max_width: f32, measure: impl Fn(&str) -> f32) -> Option<String> {
+    if max_width <= 0.0 {
+        return None;
+    }
+    if measure(text) <= max_width {
+        return Some(text.to_string());
+    }
+    if measure("…") > max_width {
+        return None;
+    }
+    let mut end = text.len();
+    loop {
+        end = text[..end].char_indices().last().map_or(0, |(index, _)| index);
+        let candidate = format!("{}…", &text[..end]);
+        if measure(&candidate) <= max_width {
+            return Some(candidate);
+        }
+        if end == 0 {
+            return Some("…".to_string());
+        }
+    }
+}
+
 fn qat_button(ui: &mut Ui, app: &mut WordApp, icon: &str, tip: &str, id: &str, enabled: bool) -> egui::Response {
     let t = Tokens::get(ui.ctx());
     let (r, resp) = ui.allocate_exact_size(vec2(26.0, 24.0), Sense::click());
@@ -396,13 +468,23 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
 
 pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
+    let (status_text_size, status_text_tracking, status_text_line_height, status_text_color, status_border) = if cfg!(target_os = "macos") {
+        (STATUS_TEXT_SIZE, STATUS_TEXT_TRACKING, STATUS_TEXT_LINE_HEIGHT, t.status_text, t.status_border)
+    } else {
+        (TypeRung::Caption.size(), TypeRung::Caption.tracking(), TypeRung::Caption.line_height(), t.text_dim, t.border)
+    };
     egui::Panel::bottom("status")
-        .exact_size(26.0)
+        .exact_size(STATUS_BAR_HEIGHT)
         .frame(
             egui::Frame::NONE
                 .fill(t.status_bar)
-                .inner_margin(egui::Margin { left: 12, right: 12, top: 0, bottom: 0 })
-                .stroke(Stroke::new(1.0, t.border)),
+                .inner_margin(egui::Margin {
+                    left: STATUS_BAR_HORIZONTAL_MARGIN,
+                    right: STATUS_BAR_HORIZONTAL_MARGIN,
+                    top: 0,
+                    bottom: 0,
+                })
+                .stroke(Stroke::new(STATUS_BORDER_WIDTH, status_border)),
         )
         .show(ui, |ui| {
             // No document open (#1129): an empty status bar.
@@ -418,11 +500,11 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                     l.caret_on(&app.session.sel.focus, app.session.page_hint).map(|c| c.page + 1).unwrap_or(1)
                 };
                 let st = |ui: &mut Ui, s: &str| {
-                    let font = TypeRung::Caption.regular();
-                    let track = TypeRung::Caption.tracking();
-                    let w = text_width(ui.painter(), s, &font, track, t.text_dim);
-                    let (r, resp) = ui.allocate_exact_size(vec2(w + 1.0, TypeRung::Caption.line_height()), Sense::click());
-                    paint_text(ui.painter(), pos2(r.min.x, r.min.y), Align2::LEFT_TOP, s, &font, track, t.text_dim);
+                    let font = regular(status_text_size);
+                    let track = status_text_tracking;
+                    let w = status_text_width(ui, s, status_text_color, status_text_size, status_text_tracking);
+                    let (r, resp) = ui.allocate_exact_size(vec2(w + 1.0, status_text_line_height), Sense::click());
+                    paint_text(ui.painter(), pos2(r.min.x, r.min.y), Align2::LEFT_TOP, s, &font, track, status_text_color);
                     resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, s));
                     resp
                 };
@@ -446,6 +528,14 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                 if app.session.sel.focus.story != StoryRef::Body && !crate::canvas::in_text_box(app) {
                     st(ui, tl!("Editing header/footer"));
                 }
+                let reading = app.session.view.read_mode;
+                let z = (if reading { app.session.view.read_zoom } else { app.canvas.scale / crate::canvas::PX_PER_PT } * 100.0).round();
+                let ztxt = format!("{z}%");
+                let focus = tl!("Focus");
+                let right_width = status_right_block_width(
+                    status_text_width(ui, &ztxt, status_text_color, status_text_size, status_text_tracking),
+                    status_focus_width(ui, focus, status_text_color, status_text_size, status_text_tracking),
+                );
                 // The language at the caret; a click sets the proofing language (Review › Language).
                 let lang = crate::ribbon::caret_language(app);
                 let missing = crate::ribbon::caret_missing_dictionary(app);
@@ -457,11 +547,17 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                     ),
                     None => tl!("Language").to_string(),
                 };
-                let resp = st(ui, &shown).on_hover_text(tip);
-                egui::Popup::menu(&resp).show(|ui| {
-                    ui.set_min_width(200.0);
-                    crate::ribbon::language_menu(ui, app);
+                let language_budget = status_language_budget(ui.available_width(), right_width, ui.spacing().item_spacing.x);
+                let shown = fit_status_label(&shown, language_budget, |value| {
+                    status_text_width(ui, value, status_text_color, status_text_size, status_text_tracking)
                 });
+                if let Some(shown) = shown {
+                    let resp = st(ui, &shown).on_hover_text(tip);
+                    egui::Popup::menu(&resp).show(|ui| {
+                        ui.set_min_width(200.0);
+                        crate::ribbon::language_menu(ui, app);
+                    });
+                }
                 if app.session.doc.settings.track_changes {
                     st(ui, tl!("Track Changes: On"));
                 }
@@ -471,21 +567,18 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                 if let Some((msg, at)) = &app.status_msg
                     && crate::now_ms() - at < 6000.0
                 {
-                    let font = TypeRung::Caption.regular();
-                    let track = TypeRung::Caption.tracking();
+                    let font = regular(status_text_size);
+                    let track = status_text_tracking;
                     paint_text(ui.painter(), pos2(ui.cursor().min.x, ui.cursor().min.y), Align2::LEFT_TOP, msg, &font, track, t.accent_text);
-                    ui.allocate_space(vec2(text_width(ui.painter(), msg, &font, track, t.accent_text) + 1.0, TypeRung::Caption.line_height()));
+                    ui.allocate_space(vec2(text_width(ui.painter(), msg, &font, track, t.accent_text) + 1.0, status_text_line_height));
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     ui.spacing_mut().item_spacing = vec2(4.0, 0.0);
-                    let reading = app.session.view.read_mode;
-                    let z = (if reading { app.session.view.read_zoom } else { app.canvas.scale / crate::canvas::PX_PER_PT } * 100.0).round();
-                    let ztxt = format!("{z}%");
-                    let zfont = TypeRung::Caption.regular();
-                    let ztrack = TypeRung::Caption.tracking();
-                    let zw = text_width(ui.painter(), &ztxt, &zfont, ztrack, t.text_dim);
-                    let (zr, zresp) = ui.allocate_exact_size(vec2(zw + 1.0, TypeRung::Caption.line_height()), Sense::click());
-                    paint_text(ui.painter(), pos2(zr.min.x, zr.min.y), Align2::LEFT_TOP, &ztxt, &zfont, ztrack, t.text_dim);
+                    let zfont = regular(status_text_size);
+                    let ztrack = status_text_tracking;
+                    let zw = status_text_width(ui, &ztxt, status_text_color, status_text_size, status_text_tracking);
+                    let (zr, zresp) = ui.allocate_exact_size(vec2(zw + 1.0, status_text_line_height), Sense::click());
+                    paint_text(ui.painter(), pos2(zr.min.x, zr.min.y), Align2::LEFT_TOP, &ztxt, &zfont, ztrack, status_text_color);
                     if zresp.clicked() && !reading {
                         let _ = app.run("ui.dialog", json!({ "name": "zoom" }));
                     }
@@ -498,8 +591,12 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                     }
                     // Reading zoom changes only reading presentation, never the normal view zoom.
                     let mut v = if reading { app.session.view.read_zoom } else { app.canvas.scale / crate::canvas::PX_PER_PT };
-                    let slider = egui::Slider::new(&mut v, if reading { 0.75..=1.5 } else { 0.1..=5.0 }).logarithmic(!reading).show_value(false);
-                    ui.spacing_mut().slider_width = 110.0;
+                    let slider = egui::Slider::new(&mut v, if reading { 0.75..=1.5 } else { 0.1..=5.0 })
+                        .logarithmic(!reading)
+                        .show_value(false)
+                        .handle_shape(egui::style::HandleShape::Circle);
+                    ui.spacing_mut().slider_width = STATUS_ZOOM_SLIDER_WIDTH;
+                    ui.spacing_mut().interact_size.y = STATUS_ZOOM_SLIDER_HEIGHT;
                     if ui.add(slider).changed() {
                         let command = if reading { "view.readTextSize" } else { "view.zoom" };
                         let _ = app.run(command, json!({"value": (v * 100.0).round()}));
@@ -513,42 +610,45 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                     }
                     ui.add_space(10.0);
                     let mode = app.session.view.mode;
-                    let read = app.session.view.read_mode;
-                    for (icon, id, name, on) in [
-                        ("webLayout", "view.webLayout", tl!("Web Layout"), mode == wordcraft_layout::ViewMode::Web),
-                        ("printLayout", "view.printLayout", tl!("Print Layout"), mode == wordcraft_layout::ViewMode::Print && !read),
-                        ("readMode", "view.readMode", tl!("Read Mode"), read),
-                    ] {
-                        let (r, resp) = ui.allocate_exact_size(vec2(22.0, 20.0), Sense::click());
+                    for &(icon, id) in STATUS_VIEW_BUTTONS.iter().rev() {
+                        let (name, on) = match id {
+                            "view.printLayout" => (tl!("Print Layout"), mode == wordcraft_layout::ViewMode::Print && !reading),
+                            "view.webLayout" => (tl!("Web Layout"), mode == wordcraft_layout::ViewMode::Web && !reading),
+                            "view.outline" => (tl!("Outline"), mode == wordcraft_layout::ViewMode::Outline),
+                            "view.draft" => (tl!("Draft"), mode == wordcraft_layout::ViewMode::Draft),
+                            _ => continue,
+                        };
+                        let (r, resp) = ui.allocate_exact_size(vec2(STATUS_VIEW_SLOT_WIDTH, STATUS_VIEW_SLOT_HEIGHT), Sense::click());
                         if on {
-                            ui.painter().rect_filled(r, 3.0, t.checked);
+                            ui.painter().rect_filled(r, 3.0, t.status_checked);
                         } else if resp.hovered() {
                             ui.painter().rect_filled(r, 3.0, t.hover);
                         }
-                        icons::paint(ui.painter(), r.shrink(3.0), icon, t.icon, t.accent);
+                        let icon_color = if on { t.status_checked_icon } else { t.icon };
+                        let icon_accent = if on { t.status_checked_icon } else { t.accent };
+                        icons::paint(ui.painter(), Rect::from_center_size(r.center(), vec2(STATUS_VIEW_ICON_SIZE, STATUS_VIEW_ICON_SIZE)), icon, icon_color, icon_accent);
                         resp.widget_info(|| egui::WidgetInfo::selected(egui::WidgetType::SelectableLabel, true, on, name));
                         if resp.on_hover_text(name).clicked() {
                             let _ = app.run(id, json!({}));
                         }
                     }
                     ui.add_space(8.0);
-                    let focus = tl!("Focus");
-                    let focus_w = ui.ctx().fonts_mut(|f| f.layout_no_wrap(focus.to_string(), regular(11.5), t.text_dim).size().x);
-                    let (r, resp) = ui.allocate_exact_size(vec2((focus_w + 26.0).max(56.0), 20.0), Sense::click());
+                    let focus_w = status_focus_width(ui, focus, status_text_color, status_text_size, status_text_tracking);
+                    let (r, resp) = ui.allocate_exact_size(vec2(focus_w, 20.0), Sense::click());
                     if resp.hovered() {
                         ui.painter().rect_filled(r, 3.0, t.hover);
                     }
                     icons::paint(ui.painter(), Rect::from_min_size(r.min + vec2(2.0, 2.0), vec2(16.0, 16.0)), "focus", t.icon, t.accent);
-                    let ffont = TypeRung::Caption.regular();
-                    let ftrack = TypeRung::Caption.tracking();
+                    let ffont = regular(status_text_size);
+                    let ftrack = status_text_tracking;
                     paint_text(
                         ui.painter(),
-                        pos2(r.min.x + 22.0, r.center().y - TypeRung::Caption.line_height() / 2.0),
+                        pos2(r.min.x + 22.0, r.center().y - status_text_line_height / 2.0),
                         Align2::LEFT_TOP,
                         focus,
                         &ffont,
                         ftrack,
-                        t.text_dim,
+                        status_text_color,
                     );
                     resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, focus));
                     if resp.clicked() {
@@ -561,7 +661,7 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
 
 fn small_icon(ui: &mut Ui, icon: &str, tip: &str) -> bool {
     let t = Tokens::get(ui.ctx());
-    let (r, resp) = ui.allocate_exact_size(vec2(18.0, 18.0), Sense::click());
+    let (r, resp) = ui.allocate_exact_size(vec2(STATUS_ZOOM_BUTTON_SIZE, STATUS_ZOOM_BUTTON_SIZE), Sense::click());
     if resp.hovered() {
         ui.painter().rect_filled(r, 3.0, t.hover);
     }
@@ -663,5 +763,36 @@ mod tests {
         assert_eq!(bar.content_left, 89.0);
         // Never tighter than the standard layout.
         assert_eq!(MacTitleBar::around_lights(40.0, 10.0, 12.0), MacTitleBar::default());
+    }
+
+    #[test]
+    fn status_bar_metrics_match_the_word_mac_measurement() {
+        assert_eq!(STATUS_BAR_HEIGHT, 28.0);
+        assert_eq!(STATUS_BAR_HORIZONTAL_MARGIN, 24);
+        assert_eq!(STATUS_VIEW_SLOT_WIDTH, 32.0);
+        assert_eq!(STATUS_VIEW_SLOT_HEIGHT, 22.0);
+        assert_eq!(STATUS_VIEW_ICON_SIZE, 16.0);
+        assert_eq!(STATUS_ZOOM_BUTTON_SIZE, 18.0);
+        assert_eq!(STATUS_ZOOM_SLIDER_WIDTH, 100.0);
+        assert_eq!(STATUS_ZOOM_SLIDER_HEIGHT, 22.0);
+        assert_eq!(STATUS_ZOOM_SLIDER_HANDLE_DIAMETER, 17.6);
+        assert_eq!(STATUS_TEXT_SIZE, 12.0);
+        assert_eq!(STATUS_TEXT_LINE_HEIGHT, 18.0);
+        assert_eq!(STATUS_BORDER_WIDTH, 1.0);
+        assert_eq!(
+            STATUS_VIEW_BUTTONS,
+            [("printLayout", "view.printLayout"), ("webLayout", "view.webLayout"), ("outline", "view.outline"), ("draft", "view.draft")]
+        );
+    }
+
+    #[test]
+    fn status_language_is_hidden_or_truncated_before_the_right_block() {
+        let right_width = status_right_block_width(20.0, 56.0);
+        assert_eq!(right_width, 391.0);
+        assert_eq!(status_language_budget(500.0, right_width, 14.0), 95.0);
+        assert_eq!(fit_status_label("Portuguese (Brazil) (no dictionary)", 0.0, |s| s.chars().count() as f32), None);
+        assert_eq!(fit_status_label("Portuguese (Brazil) (no dictionary)", 10.0, |s| s.chars().count() as f32), Some("Portugues…".to_string()));
+        assert_eq!(fit_status_label("Portuguese", 8.0, |s| s.chars().count() as f32), Some("Portugu…".to_string()));
+        assert_eq!(fit_status_label("éclair", 2.0, |s| s.chars().count() as f32), Some("é…".to_string()));
     }
 }
