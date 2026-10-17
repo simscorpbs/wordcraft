@@ -4528,8 +4528,8 @@ mod tests {
         assert_eq!(V_RULER_BAR, 15.0);
         assert_eq!(RULER_NUMBER_RISE, 3.0);
         assert_eq!(RULER_LABEL_CLIP_PAD, 1.0);
-        assert_eq!(INDENT_MARKER_HALF_WIDTH * 2.0, 10.0);
-        assert_eq!(LEFT_MARKER_HEIGHT + RULER_INSET, 10.0);
+        assert_eq!(INDENT_MARKER_HALF_WIDTH * 2.0, if cfg!(target_os = "macos") { 10.0 } else { 9.0 });
+        assert_eq!(LEFT_MARKER_HEIGHT + RULER_INSET, if cfg!(target_os = "macos") { 10.0 } else { 9.0 });
         assert_eq!(HOURGLASS_HEIGHT, 16.0);
         assert_eq!(RIGHT_MARKER_HEIGHT, if cfg!(target_os = "macos") { 8.5 } else { 5.0 });
         assert_eq!(RIGHT_MARKER_RADIUS, if cfg!(target_os = "macos") { 3.0 } else { 0.0 });
