@@ -2243,3 +2243,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	Uska
 	Medium	Srednja
+
+# Configurable interface accent
+	Accent color:	Boja naglašavanja:
+	Standard blue	Standardna plava
+	Classic blue	Klasična plava
+	Deep blue	Tamno plava
+	Choose a preset or pick a custom accent color.	Izaberite unapred podešenu ili prilagođenu boju naglašavanja.

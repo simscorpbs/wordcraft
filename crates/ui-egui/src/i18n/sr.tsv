@@ -2247,3 +2247,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	Уска
 	Medium	Средња
+
+# Configurable interface accent
+	Accent color:	Боја наглашавања:
+	Standard blue	Стандардна плава
+	Classic blue	Класична плава
+	Deep blue	Тамноплава
+	Choose a preset or pick a custom accent color.	Изаберите унапред подешену или прилагођену боју наглашавања.

@@ -2624,3 +2624,10 @@ preview	Title	Ukázka
 # Reading Mode column widths (#1040)
 	Narrow	Úzká
 	Medium	Střední
+
+# Configurable interface accent
+	Accent color:	Barva zvýraznění:
+	Standard blue	Standardní modrá
+	Classic blue	Klasická modrá
+	Deep blue	Tmavě modrá
+	Choose a preset or pick a custom accent color.	Vyberte přednastavenou nebo vlastní barvu zvýraznění.

@@ -2672,3 +2672,10 @@ template	Letter	Thư
 # Reading Mode column widths (#1040)
 	Narrow	Hẹp
 	Medium	Trung bình
+
+# Configurable interface accent
+	Accent color:	Màu nhấn:
+	Standard blue	Xanh lam tiêu chuẩn
+	Classic blue	Xanh lam cổ điển
+	Deep blue	Xanh lam đậm
+	Choose a preset or pick a custom accent color.	Chọn màu nhấn đặt sẵn hoặc tùy chỉnh.

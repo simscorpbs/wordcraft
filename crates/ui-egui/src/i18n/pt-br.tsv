@@ -2245,3 +2245,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	Estreita
 	Medium	Média
+
+# Configurable interface accent
+	Accent color:	Cor de destaque:
+	Standard blue	Azul padrão
+	Classic blue	Azul clássico
+	Deep blue	Azul escuro
+	Choose a preset or pick a custom accent color.	Escolha uma cor de destaque predefinida ou personalizada.

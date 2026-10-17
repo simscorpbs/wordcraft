@@ -2232,3 +2232,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	Schmal
 	Medium	Mittel
+
+# Configurable interface accent
+	Accent color:	Akzentfarbe:
+	Standard blue	Standardblau
+	Classic blue	Klassisches Blau
+	Deep blue	Dunkelblau
+	Choose a preset or pick a custom accent color.	Wählen Sie eine voreingestellte oder eigene Akzentfarbe.

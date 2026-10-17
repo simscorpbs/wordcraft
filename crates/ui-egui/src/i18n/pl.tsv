@@ -2622,3 +2622,10 @@ preview	Title	Tytuł
 # Reading Mode column widths (#1040)
 	Narrow	Wąska
 	Medium	Średnia
+
+# Configurable interface accent
+	Accent color:	Kolor akcentu:
+	Standard blue	Standardowy niebieski
+	Classic blue	Klasyczny niebieski
+	Deep blue	Ciemnoniebieski
+	Choose a preset or pick a custom accent color.	Wybierz gotowy lub niestandardowy kolor akcentu.

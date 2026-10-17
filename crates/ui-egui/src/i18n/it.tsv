@@ -2641,3 +2641,10 @@ preview	Title	Esempio
 # Reading Mode column widths (#1040)
 	Narrow	Stretta
 	Medium	Media
+
+# Configurable interface accent
+	Accent color:	Colore principale:
+	Standard blue	Blu standard
+	Classic blue	Blu classico
+	Deep blue	Blu scuro
+	Choose a preset or pick a custom accent color.	Scegli un colore principale preimpostato o personalizzato.

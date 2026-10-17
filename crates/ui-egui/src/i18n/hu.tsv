@@ -2628,3 +2628,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	Keskeny
 	Medium	Közepes
+
+# Configurable interface accent
+	Accent color:	Kiemelőszín:
+	Standard blue	Normál kék
+	Classic blue	Klasszikus kék
+	Deep blue	Sötétkék
+	Choose a preset or pick a custom accent color.	Válasszon előre beállított vagy egyéni kiemelőszínt.

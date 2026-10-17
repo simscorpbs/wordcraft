@@ -2629,3 +2629,10 @@ preview	Title	Örnek
 # Reading Mode column widths (#1040)
 	Narrow	Dar
 	Medium	Orta
+
+# Configurable interface accent
+	Accent color:	Vurgu rengi:
+	Standard blue	Standart mavi
+	Classic blue	Klasik mavi
+	Deep blue	Koyu mavi
+	Choose a preset or pick a custom accent color.	Hazır veya özel bir vurgu rengi seçin.

@@ -2647,3 +2647,10 @@ preview	Title	Titel
 	Bottom Right Cell	Nedre högra cellen
 	Inside Horizontal Border	Inre vågrät kantlinje
 	Inside Vertical Border	Inre lodrät kantlinje
+
+# Configurable interface accent
+	Accent color:	Accentfärg:
+	Standard blue	Standardblå
+	Classic blue	Klassisk blå
+	Deep blue	Mörkblå
+	Choose a preset or pick a custom accent color.	Välj en förinställd eller anpassad accentfärg.

@@ -2245,3 +2245,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	窄
 	Medium	中等
+
+# Configurable interface accent
+	Accent color:	强调色：
+	Standard blue	标准蓝
+	Classic blue	经典蓝
+	Deep blue	深蓝
+	Choose a preset or pick a custom accent color.	选择预设或自定义强调色。

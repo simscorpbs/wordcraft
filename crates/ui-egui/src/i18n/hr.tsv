@@ -2632,3 +2632,10 @@ preview	Title	Naslov
 	Bottom Right Cell	Donja desna ćelija
 	Inside Horizontal Border	Unutarnji vodoravni obrub
 	Inside Vertical Border	Unutarnji okomiti obrub
+
+# Configurable interface accent
+	Accent color:	Boja naglašavanja:
+	Standard blue	Standardna plava
+	Classic blue	Klasična plava
+	Deep blue	Tamnoplava
+	Choose a preset or pick a custom accent color.	Odaberite unaprijed zadanu ili prilagođenu boju naglašavanja.

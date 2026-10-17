@@ -241,6 +241,8 @@ pub struct UiState {
     pub recent_colors: Vec<String>,
     /// Interface theme: light, dark, or follow the OS appearance (#115).
     pub theme: theme::Appearance,
+    /// File › Options › General: the colour used by interface accents.
+    pub accent_color: theme::AccentColor,
     /// Interface size (#475, #822): Auto (the display scale the system reports) or an absolute
     /// size in percent. Junk saved values read as Auto; out-of-range ones are clamped to 50–300 %.
     #[serde(rename = "uiScale")]
@@ -346,6 +348,7 @@ impl Default for UiState {
             recent_symbols: Vec::new(),
             recent_colors: Vec::new(),
             theme: theme::Appearance::default(),
+            accent_color: theme::AccentColor::default(),
             interface_size: theme::InterfaceSize::default(),
             legacy_interface_size: None,
             animations: theme::Animations::default(),
@@ -1372,6 +1375,16 @@ impl WordApp {
                 }
                 json!({"theme": self.ui.theme.code(), "dark": self.ui_is_dark()})
             }
+            "ui.accentColor" => {
+                if let Some(v) = s("value").or_else(|| s("color")) {
+                    let Some(accent) = theme::AccentColor::parse(v) else {
+                        return Some(Err("unknown accent colour; use a six-digit hexadecimal colour".into()));
+                    };
+                    self.ui.accent_color = accent;
+                    self.applied_theme = None;
+                }
+                json!({"accentColor": self.ui.accent_color.hex()})
+            }
             "ui.interfaceSize" => {
                 // `auto` (the display scale the system reports) or an absolute size in percent,
                 // 50–300 (clamped); no value reads it. `percent` in the result is the size the
@@ -1775,7 +1788,7 @@ impl WordApp {
             other => other,
         };
         if self.applied_theme != Some(effective) {
-            theme::apply(ctx, effective);
+            theme::apply_with_accent(ctx, effective, self.ui.accent_color);
             self.applied_theme = Some(effective);
         }
         // Interface size (#475, #822): egui's zoom factor multiplies the display scale the system
@@ -2383,6 +2396,7 @@ pub(crate) fn works_without_document(id: &str) -> bool {
             | "ui.keytips"
             | "ui.dark"
             | "ui.theme"
+            | "ui.accentColor"
             | "ui.interfaceSize"
             | "ui.animations"
             | "ui.language"
@@ -5856,6 +5870,29 @@ mod tests {
         assert_eq!(a.run("ui.theme", json!({"value": "dark"})).unwrap()["theme"], "dark");
         assert_eq!(a.run("ui.dark", json!({})).unwrap()["theme"], "light", "ui.dark toggles the manual choice");
         assert_eq!(a.run("ui.theme", json!({})).unwrap()["theme"], "light");
+    }
+
+    #[test]
+    fn accent_color_defaults_applies_and_survives_a_restart() {
+        let mut a = app();
+        assert_eq!(a.ui.accent_color, theme::AccentColor::DEFAULT);
+        assert_eq!(a.run("ui.accentColor", json!({})).unwrap()["accentColor"], "3B5BDB");
+        let ctx = egui::Context::default();
+        a.run("ui.accentColor", json!({"value": "#214288"})).unwrap();
+        assert_eq!(a.ui.accent_color.hex(), "214288");
+        ctx.run_ui(egui::RawInput::default(), |ui| a.logic(ui.ctx())).drop_without_applying_deltas();
+        assert_eq!(theme::Tokens::get(&ctx).accent, egui::Color32::from_rgb(0x21, 0x42, 0x88));
+        let saved = serde_json::to_string(&a.prefs()).unwrap();
+        assert!(saved.contains(r#""accentColor":"214288""#), "{saved}");
+        a.run("ui.accentColor", json!({"value": "#3B5BDB"})).unwrap();
+        a.run("ui.theme", json!({"value": "dark"})).unwrap();
+        theme_frame(&ctx, &mut a, Some(egui::Theme::Dark));
+        assert_eq!(theme::Tokens::get(&ctx).accent, egui::Color32::from_rgb(0x7A, 0x93, 0xF0));
+        let mut b = app();
+        b.apply_prefs(serde_json::from_str(&saved).unwrap());
+        assert_eq!(b.ui.accent_color.hex(), "214288");
+        assert!(b.run("ui.accentColor", json!({"value": "not-a-colour"})).is_err());
+        assert_eq!(b.ui.accent_color.hex(), "214288");
     }
 
     /// One app frame with the OS appearance egui reports; returns the window commands it sent.

@@ -2630,3 +2630,10 @@ preview	Title	Пример
 # Reading Mode column widths (#1040)
 	Narrow	Узкая
 	Medium	Средняя
+
+# Configurable interface accent
+	Accent color:	Цвет акцента:
+	Standard blue	Стандартный синий
+	Classic blue	Классический синий
+	Deep blue	Тёмно-синий
+	Choose a preset or pick a custom accent color.	Выберите готовый или пользовательский цвет акцента.

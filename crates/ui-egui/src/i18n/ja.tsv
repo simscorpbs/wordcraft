@@ -2233,3 +2233,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	狭い
 	Medium	中
+
+# Configurable interface accent
+	Accent color:	アクセントカラー:
+	Standard blue	標準の青
+	Classic blue	クラシックブルー
+	Deep blue	濃い青
+	Choose a preset or pick a custom accent color.	プリセットまたはカスタムのアクセントカラーを選択します。

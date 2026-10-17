@@ -2240,3 +2240,10 @@
 # Reading Mode column widths (#1040)
 	Narrow	Étroite
 	Medium	Moyenne
+
+# Configurable interface accent
+	Accent color:	Couleur d’accentuation :
+	Standard blue	Bleu standard
+	Classic blue	Bleu classique
+	Deep blue	Bleu foncé
+	Choose a preset or pick a custom accent color.	Choisissez une couleur d’accentuation prédéfinie ou personnalisée.
