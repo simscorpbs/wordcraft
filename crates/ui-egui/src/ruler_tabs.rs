@@ -12,6 +12,8 @@ use crate::theme::Tokens;
 
 /// How far (screen points) past the ruler's edge the pointer takes a dragged stop off it.
 const DROP_OFF: f32 = 18.0;
+pub(crate) const SELECTOR_GLYPH_WIDTH: f32 = 6.0;
+pub(crate) const SELECTOR_GLYPH_HEIGHT: f32 = 10.0;
 
 /// The kinds of stop the corner selector cycles through (and the Tabs dialog lists), in Word's order.
 pub(crate) const KINDS: [TabAlign; 5] = [TabAlign::Left, TabAlign::Center, TabAlign::Right, TabAlign::Decimal, TabAlign::Bar];
@@ -111,6 +113,31 @@ pub(crate) fn draw_tab_glyph(p: &Painter, x: f32, base: f32, kind: TabAlign, rtl
     }
 }
 
+/// Draw the compact selector glyph in the ruler corner. This is deliberately separate from the
+/// larger stop marker: the selector has no enclosing box and stays within about 6 by 10 points.
+fn draw_selector_glyph(p: &Painter, center: egui::Pos2, kind: TabAlign, stroke: Stroke) {
+    let base = center.y + SELECTOR_GLYPH_HEIGHT / 2.0;
+    let top = center.y - SELECTOR_GLYPH_HEIGHT / 2.0;
+    let foot = SELECTOR_GLYPH_WIDTH / 2.0;
+    p.line_segment([pos2(center.x, top), pos2(center.x, base)], stroke);
+    match kind {
+        TabAlign::Left => {
+            p.line_segment([pos2(center.x, base), pos2(center.x + foot, base)], stroke);
+        }
+        TabAlign::Right => {
+            p.line_segment([pos2(center.x - foot, base), pos2(center.x, base)], stroke);
+        }
+        TabAlign::Center | TabAlign::Decimal => {
+            p.line_segment([pos2(center.x - foot, base), pos2(center.x + foot, base)], stroke);
+            if kind == TabAlign::Decimal {
+                p.circle_filled(pos2(center.x + foot * 0.7, base - 2.5), 0.9, stroke.color);
+            }
+        }
+        TabAlign::Bar => {}
+        TabAlign::Clear => {}
+    }
+}
+
 /// The tab selector in the corner where the rulers meet: click for the next kind of stop,
 /// right-click for the previous one.
 pub(crate) fn selector(app: &mut WordApp, ui: &Ui, corner: Rect) {
@@ -126,15 +153,19 @@ pub(crate) fn selector(app: &mut WordApp, ui: &Ui, corner: Rect) {
     }
     let kind = app.canvas.tab_kind;
     let p = ui.painter_at(corner);
-    let b = Rect::from_center_size(corner.center(), vec2(14.0, 14.0));
-    p.rect(b, 2.0, if r.hovered() { t.hover } else { t.ruler }, Stroke::new(1.0, t.text_dim), egui::StrokeKind::Inside);
-    // Centre the glyph on its box: Left's foot runs right of its stem, Right's left.
+    // The selector is a small, original glyph with no enclosing box. Hover is indicated by a
+    // light rounded wash behind it, preserving the compact Word-style corner.
+    if r.hovered() {
+        p.rect_filled(corner.shrink2(vec2(2.0, 2.0)), 2.0, t.hover);
+    }
+    let center = corner.center();
+    // Centre the glyph in the corner: Left's foot runs right of its stem, Right's left.
     let nudge = match kind {
         TabAlign::Left => -2.0,
         TabAlign::Right => 2.0,
         _ => 0.0,
     };
-    draw_tab_glyph(&p, b.center().x + nudge, b.max.y - 4.0, kind, false, Stroke::new(1.5, t.text));
+    draw_selector_glyph(&p, pos2(center.x + nudge, center.y), kind, Stroke::new(1.25, t.ruler_tick));
     r.on_hover_text(format!("{}: {}", tl!("Tabs"), tl!(kind_label(kind))));
 }
 
@@ -264,6 +295,12 @@ mod tests {
         assert_eq!(k, TabAlign::Left, "it wraps around");
         assert_eq!(next_kind(TabAlign::Left, true), TabAlign::Bar);
         assert_eq!(next_kind(TabAlign::Clear, false), TabAlign::Center, "a stray kind restarts the cycle");
+    }
+
+    #[test]
+    fn selector_glyph_keeps_the_audited_compact_size() {
+        assert_eq!(SELECTOR_GLYPH_WIDTH, 6.0);
+        assert_eq!(SELECTOR_GLYPH_HEIGHT, 10.0);
     }
 
     #[test]

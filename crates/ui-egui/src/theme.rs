@@ -268,11 +268,17 @@ pub struct Tokens {
     pub ruler: Color32,
     pub ruler_margin: Color32,
     pub ruler_tick: Color32,
+    pub ruler_number: Color32,
+    pub ruler_vertical_number: Color32,
+    pub ruler_marker: Color32,
     pub status_bar: Color32,
     pub selection: Color32,
     /// Find › Reading Highlight.
     pub find_highlight: Color32,
     pub page_shadow: Color32,
+    pub page_shadow_outer: Color32,
+    pub page_shadow_middle: Color32,
+    pub page_shadow_inner: Color32,
     /// Selection-frame handles (pictures, shapes, text boxes) and their shadow.
     pub handle: Color32,
     pub handle_shadow: Color32,
@@ -323,10 +329,16 @@ impl Tokens {
             ruler: Color32::from_rgb(0xFF, 0xFF, 0xFF),
             ruler_margin: Color32::from_rgb(0xD9, 0xD9, 0xD9),
             ruler_tick: Color32::from_rgb(0x63, 0x63, 0x63),
+            ruler_number: Color32::from_rgb(0x27, 0x27, 0x27),
+            ruler_vertical_number: Color32::from_rgb(0x1A, 0x1A, 0x1A),
+            ruler_marker: Color32::from_rgb(0x7A, 0x7A, 0x7A),
             status_bar: Color32::from_rgb(0xF2, 0xF2, 0xF2),
             selection: Color32::from_rgba_unmultiplied(0x3B, 0x5B, 0xDB, 0x48),
             find_highlight: Color32::from_rgba_unmultiplied(0xFF, 0xE0, 0x3D, 0x90),
             page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x22),
+            page_shadow_outer: Color32::from_rgba_unmultiplied(0, 0, 0, 0x0A),
+            page_shadow_middle: Color32::from_rgba_unmultiplied(0, 0, 0, 0x16),
+            page_shadow_inner: Color32::from_rgba_unmultiplied(0, 0, 0, 0x48),
             handle: Color32::WHITE,
             handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x28),
             guide: Color32::from_rgb(0xC0, 0x28, 0x8C),
@@ -374,10 +386,16 @@ impl Tokens {
             ruler: Color32::from_rgb(0x45, 0x45, 0x45),
             ruler_margin: Color32::from_rgb(0x2E, 0x2E, 0x2E),
             ruler_tick: Color32::from_rgb(0xB4, 0xB4, 0xB4),
+            ruler_number: Color32::from_rgb(0xE0, 0xE0, 0xE0),
+            ruler_vertical_number: Color32::from_rgb(0xE0, 0xE0, 0xE0),
+            ruler_marker: Color32::from_rgb(0xA0, 0xA0, 0xA0),
             status_bar: Color32::from_rgb(0x1F, 0x1F, 0x1F),
             selection: Color32::from_rgba_unmultiplied(0x7A, 0x93, 0xF0, 0x55),
             find_highlight: Color32::from_rgba_unmultiplied(0xC8, 0xA8, 0x00, 0x70),
             page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x60),
+            page_shadow_outer: Color32::from_rgba_unmultiplied(0, 0, 0, 0x18),
+            page_shadow_middle: Color32::from_rgba_unmultiplied(0, 0, 0, 0x30),
+            page_shadow_inner: Color32::from_rgba_unmultiplied(0, 0, 0, 0x50),
             handle: Color32::from_rgb(0xF2, 0xF2, 0xF2),
             handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x5A),
             guide: Color32::from_rgb(0xE0, 0x4C, 0xB0),
@@ -825,6 +843,15 @@ mod tests {
         assert_eq!(t.ruler_tick, egui::Color32::from_rgb(0x63, 0x63, 0x63));
         assert_eq!(t.border, egui::Color32::from_rgb(0xC1, 0xC1, 0xC1));
         assert_eq!(t.checked, egui::Color32::from_rgb(0xB7, 0xB7, 0xB7));
+    }
+
+    #[test]
+    fn word_mac_ruler_tokens_keep_the_branch_palette() {
+        let t = super::Tokens::light();
+        assert_eq!(t.ruler_number, egui::Color32::from_rgb(0x27, 0x27, 0x27));
+        assert_eq!(t.ruler_vertical_number, egui::Color32::from_rgb(0x1A, 0x1A, 0x1A));
+        assert_eq!(t.ruler_marker, egui::Color32::from_rgb(0x7A, 0x7A, 0x7A));
+        assert_eq!(t.page_shadow_inner.a(), 0x48);
     }
 
     /// #565: the composition of an input method (Bangla through ibus) drew as boxes because only the
