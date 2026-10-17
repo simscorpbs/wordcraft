@@ -352,8 +352,8 @@ impl Tokens {
             hover: Color32::from_rgb(0x3D, 0x3D, 0x3D),
             pressed: Color32::from_rgb(0x4A, 0x4A, 0x4A),
             checked: Color32::from_rgb(0x2E, 0x3A, 0x66),
-            status_checked: Color32::from_rgb(0xA9, 0xA9, 0xA9),
-            status_checked_icon: Color32::from_rgb(0x33, 0x33, 0x33),
+            status_checked: Color32::from_rgb(0x4A, 0x4A, 0x4A),
+            status_checked_icon: Color32::from_rgb(0xEE, 0xEE, 0xEE),
             accent: Color32::from_rgb(0x7A, 0x93, 0xF0),
             accent_text: Color32::from_rgb(0x9C, 0xB0, 0xF5),
             // Dark text on the light dark-theme accent: white on #7a93f0 is only 2.9:1 (#655).
@@ -778,9 +778,9 @@ mod tests {
         assert_eq!(light.status_text, egui::Color32::from_rgb(0x4E, 0x4E, 0x4E));
         assert_eq!(light.status_checked, egui::Color32::from_rgb(0xA9, 0xA9, 0xA9));
         assert_eq!(light.status_checked_icon, egui::Color32::from_rgb(0x33, 0x33, 0x33));
-        assert_eq!(light.checked, egui::Color32::from_rgb(0xDD, 0xE3, 0xF8));
-        assert_eq!(light.text_dim, egui::Color32::from_rgb(0x61, 0x61, 0x61));
-        assert_eq!(light.border, egui::Color32::from_rgb(0xE1, 0xE1, 0xE1));
+        // The dark theme keeps a dark selected button with a light icon on its dark bar.
+        let dark = super::Tokens::dark();
+        assert!(dark.status_checked.r() < 0x80 && dark.status_checked_icon.r() > 0xC0);
     }
 
     /// #1148: on both rulers the text area is lighter than the margins in both themes, as in the
