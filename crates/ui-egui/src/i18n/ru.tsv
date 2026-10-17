@@ -806,6 +806,11 @@ preview	Title	Пример
 	User Name	Имя пользователя
 	User name:	Имя пользователя:
 	Version History	Журнал версий
+	No versions yet.	Версий пока нет.
+	Open version	Открыть версию
+	Previous version	Предыдущая версия
+	Restore	Восстановить
+	Save a copy	Сохранить копию
 	Version {version} ({build})	Версия {version} ({build})
 	Vertical	Вертикально
 	Vertical Alignment	Вертикальное выравнивание

@@ -5678,7 +5678,8 @@ mod tests {
     }
 
     /// The result is a new, untitled document: Save, AutoSave and the title never point at the
-    /// file the original came from, even after Save in the prompt wrote that file.
+    /// file the original came from, even after AutoSave wrote the last edits to that file (as
+    /// Word does with AutoSave on, without asking first).
     #[test]
     fn mailings_results_never_save_over_the_original() {
         for id in MAILINGS {
@@ -5692,12 +5693,11 @@ mod tests {
             a.run("mailings.recipients", json!({"csv": "Name\nAda"})).unwrap();
             a.run("text.insert", json!({"text": "Again "})).unwrap();
             a.run(id, mailing(id)).unwrap();
-            a.run("ui.saveChanges", json!({"answer": "save"})).unwrap();
-            assert_eq!(prompt(&a), None);
+            assert_eq!(prompt(&a), None, "{id}: AutoSave saved the edits instead of asking");
             let saved = std::fs::read(&path).unwrap();
             assert!(
                 wordcraft_engine::io::open_path(&path).unwrap().plain_text(wordcraft_doc::StoryRef::Body).contains("Revised Again Signed"),
-                "{id}: Save wrote the document first"
+                "{id}: AutoSave wrote the document first"
             );
 
             assert_eq!(a.session.path, None, "{id}");

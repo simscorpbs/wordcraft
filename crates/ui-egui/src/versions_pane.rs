@@ -4,8 +4,8 @@ use egui::{Align, Stroke, Ui};
 use serde_json::json;
 use wordcraft_engine::versions::local_timestamp;
 
+use crate::WordApp;
 use crate::theme::{Tokens, regular, semibold};
-use crate::{WordApp, tl};
 
 /// Draw the right hand history pane when File › Info › Version History or the title is clicked.
 pub fn show(app: &mut WordApp, ui: &mut Ui) {

@@ -43,6 +43,11 @@ pub struct VersionInfo {
     pub author: String,
     pub size: u64,
     pub kind: VersionKind,
+    /// AutoSave versions only: when the ten-minute window this version gathers began. Later
+    /// AutoSave writes replace the version until the window closes, so a long editing session
+    /// still leaves one version every ten minutes instead of a single sliding one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub window_start: Option<String>,
 }
 
 /// Format a stored UTC timestamp for the history pane.  Version metadata stays UTC on disk so
@@ -157,7 +162,7 @@ fn load_local_zone() -> Option<LocalZone> {
         if seconds.unsigned_abs() > 86_400 {
             return None;
         }
-        return Some(LocalZone { default_offset: seconds, transitions: Vec::new() });
+        Some(LocalZone { default_offset: seconds, transitions: Vec::new() })
     }
     #[cfg(not(windows))]
     {
@@ -378,7 +383,8 @@ pub fn canonical_path(path: &Path) -> PathBuf {
 
 /// A small deterministic hash avoids adding a crypto dependency just for a directory name.
 pub fn document_key(path: &Path) -> String {
-    let text = canonical_path(path).to_string_lossy();
+    let canonical = canonical_path(path);
+    let text = canonical.to_string_lossy();
     let mut hash = 0xcbf29ce484222325u64;
     for byte in text.as_bytes() {
         hash ^= u64::from(*byte);
@@ -582,13 +588,15 @@ fn store_save_at(root: &Path, write: VersionWrite, now: u64) -> Result<Vec<Versi
     let dir = document_dir(root, &write.path);
     private_dir(&dir).map_err(|e| e.to_string())?;
     let mut list = read_index(&dir);
+    let window_start = |v: &VersionInfo| v.window_start.clone().unwrap_or_else(|| v.saved_at.clone());
     let replace = write.kind == VersionKind::Autosave
         && list
             .first()
-            .is_some_and(|v| v.kind == VersionKind::Autosave && now.saturating_sub(parse_iso_secs(&v.saved_at).unwrap_or(now)) < AUTOSAVE_JOIN);
+            .is_some_and(|v| v.kind == VersionKind::Autosave && now.saturating_sub(parse_iso_secs(&window_start(v)).unwrap_or(now)) < AUTOSAVE_JOIN);
+    let started = if replace { list.first().map(window_start) } else { None };
     let id = if replace { list.first().map(|v| v.id.clone()).ok_or("autosave history is inconsistent")? } else { new_id()? };
     write_version_file(&dir, &id, &write.bytes)?;
-    let info = VersionInfo { id: id.clone(), saved_at: write.saved_at, author: write.author, size, kind: write.kind };
+    let info = VersionInfo { id: id.clone(), saved_at: write.saved_at, author: write.author, size, kind: write.kind, window_start: started };
     if replace {
         if let Some(first) = list.first_mut() {
             *first = info;
@@ -723,7 +731,7 @@ impl Versions {
         if !meta.is_file() || meta.len() != info.size || meta.len() > MAX_DOCUMENT_BYTES {
             return Err("version bytes are missing or invalid".into());
         }
-        let mut file = File::open(&file_path).map_err(|e| e.to_string())?;
+        let file = File::open(&file_path).map_err(|e| e.to_string())?;
         let mut bytes = Vec::new();
         file.take(MAX_DOCUMENT_BYTES.saturating_add(1)).read_to_end(&mut bytes).map_err(|e| e.to_string())?;
         if bytes.len() as u64 != info.size {
@@ -801,7 +809,7 @@ impl crate::Session {
         {
             self.versions_tick();
             let store = self.version_store.as_ref().ok_or_else(|| "local version history is unavailable".to_string())?;
-            return store.read(path, id);
+            store.read(path, id)
         }
         #[cfg(target_arch = "wasm32")]
         {
@@ -878,10 +886,18 @@ mod tests {
         assert_eq!(first.len(), 1);
         assert_eq!(second.len(), 1);
         assert_eq!(second[0].size, 3);
+        // The window is counted from its first write, not the latest: continuous editing still
+        // leaves a version every ten minutes.
         let third = write(&root, &file, "three", VersionKind::Autosave, 1_800_000_601, 1_800_000_601);
-        assert_eq!(third.len(), 1, "the second write is still inside the ten-minute window");
-        let fourth = write(&root, &file, "four", VersionKind::Autosave, 1_800_000_601 + AUTOSAVE_JOIN, 1_800_000_601 + AUTOSAVE_JOIN);
-        assert_eq!(fourth.len(), 2);
+        assert_eq!(third.len(), 2, "ten minutes after the window opened, a new version starts");
+        let fourth = write(&root, &file, "four", VersionKind::Autosave, 1_800_001_200, 1_800_001_200);
+        assert_eq!(fourth.len(), 2, "joins the window that opened at the third write");
+        assert_eq!(fourth[0].size, 4);
+        let fifth = write(&root, &file, "five", VersionKind::Autosave, 1_800_000_601 + AUTOSAVE_JOIN, 1_800_000_601 + AUTOSAVE_JOIN);
+        assert_eq!(fifth.len(), 3);
+        // An explicit save is always its own version.
+        let saved = write(&root, &file, "saved", VersionKind::Save, 1_800_001_202, 1_800_001_202);
+        assert_eq!(saved.len(), 4);
         let _ = fs::remove_dir_all(root);
     }
 
@@ -890,7 +906,7 @@ mod tests {
     fn pruning_keeps_daily_history_and_bounds_count() {
         let root = temp("prune");
         let file = root.join("note.docx");
-        let now = 1_800_000_000;
+        let now: u64 = 1_800_000_000;
         for i in 0..110u64 {
             let _ = write(&root, &file, "x", VersionKind::Save, now.saturating_sub(i * 900), now);
         }
@@ -909,6 +925,7 @@ mod tests {
                 author: "Tester".into(),
                 size: 1,
                 kind: VersionKind::Save,
+                window_start: None,
             },
             VersionInfo {
                 id: "00000000000000000000000000000002".into(),
@@ -916,6 +933,7 @@ mod tests {
                 author: "Tester".into(),
                 size: 1,
                 kind: VersionKind::Save,
+                window_start: None,
             },
             VersionInfo {
                 id: "00000000000000000000000000000003".into(),
@@ -923,6 +941,7 @@ mod tests {
                 author: "Tester".into(),
                 size: 1,
                 kind: VersionKind::Save,
+                window_start: None,
             },
             VersionInfo {
                 id: "00000000000000000000000000000004".into(),
@@ -930,6 +949,7 @@ mod tests {
                 author: "Tester".into(),
                 size: 1,
                 kind: VersionKind::Save,
+                window_start: None,
             },
         ];
         let kept = prune(&root, entries, day_start);
@@ -944,6 +964,7 @@ mod tests {
                 author: "Tester".into(),
                 size: 6 << 20,
                 kind: VersionKind::Save,
+                window_start: None,
             })
             .collect();
         let kept = prune(&root, large, day_start);

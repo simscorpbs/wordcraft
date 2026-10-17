@@ -33,7 +33,7 @@ fn version_json(index: usize, info: &VersionInfo) -> Value {
 fn persistent_versions(s: &Session) -> bool {
     #[cfg(not(target_arch = "wasm32"))]
     {
-        return s.version_store.is_some();
+        s.version_store.is_some()
     }
     #[cfg(target_arch = "wasm32")]
     {
@@ -154,7 +154,7 @@ fn versions_command(s: &mut Session, v: &Value) -> CmdResult {
     }
     if persistent_versions(s) {
         let list = s.version_infos();
-        return Ok(Value::Array(list.iter().enumerate().map(version_json).collect()));
+        return Ok(Value::Array(list.iter().enumerate().map(|(i, info)| version_json(i, info)).collect()));
     }
     Ok(Value::Array(s.versions.iter().enumerate().map(|(i, (label, date, _))| json!({"index": i, "label": label, "date": date})).collect()))
 }

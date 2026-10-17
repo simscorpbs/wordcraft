@@ -595,15 +595,25 @@ mod tests {
         let _ = std::fs::remove_dir_all(root);
     }
 
+    /// The Recover page's buttons were white text on white buttons: it forced white text.
     #[test]
     fn recovery_page_does_not_force_white_text() {
-        let mut app = WordApp::new(wordcraft_engine::Session::new(wordcraft_doc::Document::new()), Services::default());
-        let ctx = egui::Context::default();
-        let output = ctx.run_ui(egui::RawInput::default(), |ui| {
-            recovery_page(&mut app, ui);
-            assert_eq!(ui.visuals().override_text_color, None);
-        });
-        output.drop_without_applying_deltas();
+        let app = WordApp::new(wordcraft_engine::Session::new(wordcraft_doc::Document::new()), Services::default());
+        let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                // The app's fonts are bound from the frame after they are installed.
+                if ctx.cumulative_frame_nr() == 0 {
+                    crate::theme::install_fonts(&ctx);
+                    return;
+                }
+                app.logic(&ctx);
+                recovery_page(app, ui);
+                assert_eq!(ui.visuals().override_text_color, None);
+            },
+            app,
+        );
+        h.run();
     }
 
     #[test]

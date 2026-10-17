@@ -1,5 +1,8 @@
 # Local document recovery
 
+> **Last reviewed:** 2026-10-17 · **Last updated:** 2026-10-17 · **Change:** clean saved documents no longer leave recovery copies; Recover follows the theme; version history moved to [cloud.md](cloud.md) · **Target:** Microsoft Word (Microsoft 365) for Mac 16.113.4
+
+
 Desktop WordCraft periodically keeps a local copy of unsaved work, including new drafts.
 File › Recover lists available copies. The page opens at startup when copies are found.
 Restore opens an unsaved document with no file path. Save As chooses where to keep it.
@@ -10,6 +13,8 @@ Continue without restoring leaves copies available. Discard asks for confirmatio
 the selected copy, including its retained generation. It does not delete the editing document.
 After discarding that document's copy, another copy is made only after a further edit.
 A successful save removes that document's recovery copy on the next worker cycle while it
+When a document is fully saved, closing it removes its recovery copies after any
+pending AutoSave flush.
 remains open. Copies left after switching documents can still be explicitly discarded.
 
 Documents with a password do not get plaintext recovery copies. Applying a password waits for
@@ -52,8 +57,8 @@ and 16 generations per record during discovery. Ordinarily only two valid genera
 Copies are retained until saved or explicitly discarded; there is no automatic age-based deletion.
 Over-limit writes report an error and retain the previous valid copy. JSON stores binary parts
 as byte arrays, so it can be substantially larger than DOCX. This first version has a fixed
-interval, English fallback for new labels, and no version-history or browser recovery. Saving
-to iCloud Drive, Google Drive or OneDrive is AutoSave's job, not recovery's ([cloud.md](cloud.md)).
+interval and English fallback for new labels. Version history is documented in [cloud.md](cloud.md).
+Saving to iCloud Drive, Google Drive or OneDrive is AutoSave's job, not recovery's.
 
 ## Commands and verification
 
@@ -84,3 +89,10 @@ all repository CI gates; no daily-driver recovery folder or native app is operat
 The desktop host chooses the private recovery profile. Recovery commands accept known
 snapshot IDs, never file paths or a profile override. This internal store is separate from
 the automation roots that constrain opening and saving user documents.
+
+## Revision history
+
+| Date | Change |
+|---|---|
+| 2026-10-17 | Saved documents clear recovery copies after AutoSave flush; the Recover page uses theme colours; version history is documented in [cloud.md](cloud.md). |
+
