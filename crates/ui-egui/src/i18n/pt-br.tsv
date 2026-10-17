@@ -2600,7 +2600,6 @@
 	Stacked, no bar	Empilhada, sem barra
 	Statement   5.50" × 8.50"	Declaração   5,50" × 8,50"
 	Strong	Forte
-	Style: APA	Estilo: APA
 	Subject	Assunto
 	Subscript-Superscript	Subscrito e sobrescrito
 	Subscripts and Superscripts	Subscritos e sobrescritos
@@ -2643,7 +2642,6 @@
 	Triple Integral with Limits	Integral tripla com limites
 	Triple Integral with Stacked Limits	Integral tripla com limites empilhados
 	Turabian	Turabian
-	Type a command, e.g. \"insert table\"	Digite um comando, por exemplo \"inserir tabela\"
 	Type a page number, or +2 / -1.	Digite um número de página ou +2 / -1.
 	Type equations in LaTeX	Digite equações em LaTeX
 	Type equations in the linear format (UnicodeMath)	Digite equações no formato linear (UnicodeMath)
