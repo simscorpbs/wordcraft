@@ -109,7 +109,7 @@ fn undo_list_button(ui: &mut Ui, app: &mut WordApp, enabled: bool) {
         ui.painter().rect_filled(r, 4.0, t.hover);
     }
     let c = if enabled { t.icon } else { t.text_disabled };
-    icons::paint(ui.painter(), Rect::from_center_size(r.center(), vec2(9.0, 9.0)), "dropdown", c, c);
+    icons::paint(ui.painter(), Rect::from_center_size(r.center(), vec2(crate::widgets::DROPDOWN, crate::widgets::DROPDOWN)), "dropdown", c, c);
     let resp = resp.on_hover_text(tl!("Undo History"));
     egui::Popup::menu(&resp).show(|ui| undo_list(ui, app));
 }
