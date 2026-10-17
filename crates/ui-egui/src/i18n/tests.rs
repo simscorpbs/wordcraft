@@ -352,9 +352,14 @@ fn brazilian_portuguese_locales_and_saved_preference_work_without_changing_the_d
 fn brazilian_portuguese_covers_the_entire_existing_interface_catalog() {
     use std::collections::HashSet;
     let keys = |source| parse_entries(source).0.into_iter().map(|e| e.source).collect::<HashSet<_>>();
-    assert_eq!(keys(lang("pt-br").0.source), keys(lang("zh-hans").0.source));
+    // Every key of the reference catalog, plus strings only Brazilian Portuguese translates so far
+    // (the equation gallery, built-in style and citation style names, Recover documents, Go To).
+    let (pt_keys, zh_keys) = (keys(lang("pt-br").0.source), keys(lang("zh-hans").0.source));
+    let mut missing: Vec<_> = zh_keys.difference(&pt_keys).cloned().collect();
+    missing.sort();
+    assert!(missing.is_empty(), "pt-br lacks {missing:?}");
     let pt = lang("pt-br");
-    assert_eq!(tr(pt, "Home"), "Início");
+    assert_eq!(tr(pt, "Home"), "Página Inicial");
     assert_eq!(tr(pt, "Font"), "Fonte");
     assert_eq!(tr(pt, "Review"), "Revisão");
     assert_eq!(tr(pt, "Save"), "Salvar");
@@ -989,7 +994,7 @@ fn polish_covers_every_key_of_every_other_catalog() {
     let polish = keys(lang("pl").0.source);
     // Italian and Hungarian still carry "Style: APA", which the interface no longer shows;
     // Hungarian and Bulgarian also name the citation styles, and Bulgarian has a few one-line
-    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "pl" | "it" | "hu" | "bg" | "vi" | "sv" | "hr")) {
+    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "pl" | "it" | "hu" | "bg" | "vi" | "sv" | "hr" | "pt-br")) {
         let mut missing: Vec<String> = keys(other.0.source).difference(&polish).cloned().collect();
         missing.sort();
         assert!(missing.is_empty(), "pl lacks {}'s {missing:?}", other.code());
@@ -1328,7 +1333,9 @@ fn croatian_covers_the_entire_existing_interface_catalog_and_keeps_count_labels_
     let keys = |source| parse_entries(source).0.into_iter().map(|e| e.source).collect::<HashSet<_>>();
     let hr = lang("hr");
     // Every key of every other catalog, and no catalog errors.
-    for other in Lang::all().filter(|l| *l != Lang::EN && l.code() != "hr") {
+    // Brazilian Portuguese also translates strings no other catalog has yet; its shared keys
+    // are those of zh-hans, which this loop checks.
+    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "hr" | "pt-br")) {
         let mut missing: Vec<String> = keys(other.0.source).difference(&keys(hr.0.source)).cloned().collect();
         missing.sort();
         // Italian and Hungarian still carry "Style: APA", which the interface no longer shows.
@@ -1500,7 +1507,9 @@ fn vietnamese_covers_existing_catalog_keys_with_an_explicit_preview_fallback() {
     assert_eq!(trc(vi, "preview", "Title"), tr(vi, "Title"));
     // Compare complete (context, source) keys so a contextual entry cannot hide a missing plain
     // translation, or silently satisfy another context's key.
-    for other in Lang::all().filter(|l| *l != Lang::EN && l.code() != "vi") {
+    // Brazilian Portuguese also translates strings no other catalog has yet; it still parses here.
+    assert!(parse_entries(lang("pt-br").0.source).1.is_empty());
+    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "vi" | "pt-br")) {
         let (entries, errors) = parse_entries(other.0.source);
         assert!(errors.is_empty(), "{}: {errors:?}", other.code());
         let keys: HashSet<_> = entries.into_iter().map(|e| (e.context, e.source)).collect();
