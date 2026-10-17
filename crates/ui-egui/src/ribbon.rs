@@ -154,12 +154,11 @@ pub(crate) const SHARE_ICON_X: f32 = 14.0;
 pub(crate) const SHARE_TEXT_X: f32 = 30.0;
 pub(crate) const ACTION_BUTTON_GAP: f32 = 8.0;
 
+/// Word for Mac has no File tab because its File menu lives in the macOS menu bar (audit C1).
+/// WordCraft has no native menu bar yet, so the File tab stays on every platform: without it a
+/// Mac user could not reach Open, Save As, Print, Recent or Options.
 fn show_file_tab() -> bool {
-    let mut visible = true;
-    if cfg!(target_os = "macos") {
-        visible = false;
-    }
-    visible
+    true
 }
 
 fn tab_font_size() -> f32 {
@@ -3021,7 +3020,7 @@ mod tests {
 
     #[test]
     fn tab_strip_measurements_match_the_mac_audit() {
-        assert_eq!(show_file_tab(), !cfg!(target_os = "macos"));
+        assert!(show_file_tab(), "File stays until a native macOS menu bar opens Backstage");
         assert_eq!(TAB_ITEM_SPACING, 2.0);
         assert_eq!(TAB_CELL_PADDING, 22.0);
         assert_eq!(TAB_FONT_SIZE_MACOS, 13.5);
