@@ -657,6 +657,10 @@ fn draw_watermark(ctx: &mut RenderContext, view: Affine, page: &Page, wm: &wordc
 /// against macOS: 1.21% of the pixel size horizontally and 1.25 times that vertically, each
 /// capped at 0.3 px, and no darkening past 72 px per em. We stroke the outline, which grows it
 /// evenly, so this is the mean of the two.
+///
+/// The curve is then scaled by [`WORD_MAC_STEM_SCALE`]: at full strength a pt-BR letter at 90% on
+/// a Retina screen measured 3.47 px stems against Word for Mac's 3.06 px (2.63 px undarkened),
+/// so half the curve lands on Word's weight.
 pub fn stem_darkening(ppem: f64) -> f64 {
     const FACTOR: [f64; 2] = [0.0121, 0.0121 * 1.25];
     const MAX_PX: f64 = 0.3;
@@ -664,8 +668,11 @@ pub fn stem_darkening(ppem: f64) -> f64 {
     if !ppem.is_finite() || ppem <= 0.0 || ppem > MAX_PPEM {
         return 0.0;
     }
-    FACTOR.iter().map(|f| (ppem * f).min(MAX_PX)).sum::<f64>() / 2.0
+    WORD_MAC_STEM_SCALE * FACTOR.iter().map(|f| (ppem * f).min(MAX_PX)).sum::<f64>() / 2.0
 }
+
+/// How much of the macOS smoothing curve [`stem_darkening`] applies, measured against Word for Mac.
+pub const WORD_MAC_STEM_SCALE: f64 = 0.5;
 
 /// A wavy line from `a` to `b` at height `y`; at most 20 000 units long, so a huge extent can't make it endless.
 fn wave_path(a: f64, b: f64, y: f64, amp: f64) -> BezPath {
@@ -1306,11 +1313,12 @@ mod tests {
         assert_eq!(stem_darkening(0.0), 0.0);
         assert_eq!(stem_darkening(f64::NAN), 0.0);
         assert_eq!(stem_darkening(-5.0), 0.0);
-        // Small text grows in proportion to its pixel size...
-        assert!((stem_darkening(10.0) - 10.0 * 0.0121 * 2.25 / 2.0).abs() < 1e-9);
-        // ...body text on a Retina screen hits the 0.3 px cap...
-        assert_eq!(stem_darkening(30.0), 0.3);
-        assert_eq!(stem_darkening(72.0), 0.3);
+        // Small text grows in proportion to its pixel size, at half the macOS curve as in Word...
+        assert_eq!(WORD_MAC_STEM_SCALE, 0.5);
+        assert!((stem_darkening(10.0) - 0.5 * 10.0 * 0.0121 * 2.25 / 2.0).abs() < 1e-9);
+        // ...body text on a Retina screen hits the cap, 0.15 px a side...
+        assert_eq!(stem_darkening(30.0), 0.15);
+        assert_eq!(stem_darkening(72.0), 0.15);
         // ...and display sizes aren't darkened at all.
         assert_eq!(stem_darkening(72.5), 0.0);
     }
@@ -1327,8 +1335,8 @@ mod tests {
         let plain = render_page(&d, &l.pages[0], 2.0, &RenderOptions::default());
         let dark = render_page(&d, &l.pages[0], 2.0, &RenderOptions { text_darkening: true, ..Default::default() });
         let (a, b) = (ink(&plain), ink(&dark));
-        // About 0.3 px more on every edge of an 11 pt line at 2x: clearly more ink, not bold.
-        assert!(b as f64 > a as f64 * 1.08 && (b as f64) < a as f64 * 1.6, "plain {a}, darkened {b}");
+        // About 0.15 px more on every edge of an 11 pt line at 2x: more ink, not bold.
+        assert!(b as f64 > a as f64 * 1.04 && (b as f64) < a as f64 * 1.3, "plain {a}, darkened {b}");
         // Off by default: exports and thumbnails are untouched.
         assert!(!RenderOptions::default().text_darkening);
     }
