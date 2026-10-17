@@ -140,16 +140,41 @@ fn local_offset(secs: u64) -> i32 {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn load_local_zone() -> Option<LocalZone> {
-    let path = std::env::var_os("TZ").filter(|value| value.as_encoded_bytes().first() == Some(&b'/')).map(std::path::PathBuf::from).unwrap_or_else(|| std::path::PathBuf::from("/etc/localtime"));
-    let metadata = std::fs::metadata(&path).ok()?;
-    if !metadata.is_file() || metadata.len() > 1 << 20 {
-        return None;
+    #[cfg(windows)]
+    {
+        // The standard library has no local-time conversion API on Windows.  PowerShell is part
+        // of every supported desktop installation, and this is run once per process (the result
+        // is held by `OnceLock`), so the history pane does not start a process for every row.
+        let output = std::process::Command::new("powershell.exe")
+            .args(["-NoLogo", "-NoProfile", "-NonInteractive", "-Command", "[DateTimeOffset]::Now.Offset.TotalSeconds"])
+            .output()
+            .ok()?;
+        if !output.status.success() || output.stdout.len() > 64 {
+            return None;
+        }
+        let text = String::from_utf8(output.stdout).ok()?;
+        let seconds = text.trim().parse::<i32>().ok()?;
+        if seconds.unsigned_abs() > 86_400 {
+            return None;
+        }
+        return Some(LocalZone { default_offset: seconds, transitions: Vec::new() });
     }
-    let bytes = std::fs::read(path).ok()?;
-    parse_tzif(&bytes)
+    #[cfg(not(windows))]
+    {
+        let path = std::env::var_os("TZ")
+            .filter(|value| value.as_encoded_bytes().first() == Some(&b'/'))
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| std::path::PathBuf::from("/etc/localtime"));
+        let metadata = std::fs::metadata(&path).ok()?;
+        if !metadata.is_file() || metadata.len() > 1 << 20 {
+            return None;
+        }
+        let bytes = std::fs::read(path).ok()?;
+        parse_tzif(&bytes)
+    }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(all(not(target_arch = "wasm32"), not(windows)))]
 fn parse_tzif(bytes: &[u8]) -> Option<LocalZone> {
     let (version, counts) = tzif_header(bytes, 0)?;
     let (offset, time_size) = if matches!(version, b'2' | b'3' | b'4') {
@@ -169,11 +194,7 @@ fn parse_tzif(bytes: &[u8]) -> Option<LocalZone> {
     for _ in 0..timecnt {
         let end = cursor.checked_add(time_size)?;
         let raw = bytes.get(cursor..end)?;
-        let at = if time_size == 8 {
-            i64::from_be_bytes(raw.try_into().ok()?)
-        } else {
-            i64::from(i32::from_be_bytes(raw.try_into().ok()?))
-        };
+        let at = if time_size == 8 { i64::from_be_bytes(raw.try_into().ok()?) } else { i64::from(i32::from_be_bytes(raw.try_into().ok()?)) };
         transition_times.push(at);
         cursor = end;
     }
@@ -195,7 +216,7 @@ fn parse_tzif(bytes: &[u8]) -> Option<LocalZone> {
     Some(LocalZone { default_offset, transitions })
 }
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(all(not(target_arch = "wasm32"), not(windows)))]
 fn tzif_header(bytes: &[u8], offset: usize) -> Option<(u8, (usize, usize, usize, usize, usize, usize))> {
     let header = bytes.get(offset..offset.checked_add(44)?)?;
     if header.get(..4)? != b"TZif" {
@@ -211,10 +232,17 @@ fn tzif_header(bytes: &[u8], offset: usize) -> Option<(u8, (usize, usize, usize,
     Some((version, (counts[0], counts[1], counts[2], counts[3], counts[4], counts[5])))
 }
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(all(not(target_arch = "wasm32"), not(windows)))]
 fn tzif_block_size(counts: (usize, usize, usize, usize, usize, usize), time_size: usize) -> Option<usize> {
     let (leapcnt, timecnt, typecnt, charcnt) = (counts.2, counts.3, counts.4, counts.5);
-    timecnt.checked_mul(time_size)?.checked_add(timecnt)?.checked_add(typecnt.checked_mul(6)?)?.checked_add(charcnt)?.checked_add(leapcnt.checked_mul(time_size.checked_add(4)?)?)?.checked_add(counts.0)?.checked_add(counts.1)
+    timecnt
+        .checked_mul(time_size)?
+        .checked_add(timecnt)?
+        .checked_add(typecnt.checked_mul(6)?)?
+        .checked_add(charcnt)?
+        .checked_add(leapcnt.checked_mul(time_size.checked_add(4)?)?)?
+        .checked_add(counts.0)?
+        .checked_add(counts.1)
 }
 
 /// The source document retained while a previous version is being viewed.
@@ -425,6 +453,10 @@ fn date_key(value: &str) -> &str {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn read_index(dir: &Path) -> Vec<VersionInfo> {
+    let Ok(dir_meta) = fs::symlink_metadata(dir) else { return Vec::new() };
+    if !dir_meta.is_dir() {
+        return Vec::new();
+    }
     let path = dir.join(INDEX_FILE);
     let Ok(meta) = fs::symlink_metadata(&path) else { return Vec::new() };
     if !meta.is_file() || meta.len() > MAX_INDEX_BYTES {
@@ -440,7 +472,10 @@ fn read_index(dir: &Path) -> Vec<VersionInfo> {
     }
     let Ok(mut list) = serde_json::from_slice::<Vec<VersionInfo>>(&bytes) else { return Vec::new() };
     list.retain(|v| {
-        id_ok(&v.id) && v.size <= MAX_DOCUMENT_BYTES && parse_iso_secs(&v.saved_at).is_some() && dir.join(format!("{}.bin", v.id)).is_file()
+        id_ok(&v.id)
+            && v.size <= MAX_DOCUMENT_BYTES
+            && parse_iso_secs(&v.saved_at).is_some()
+            && fs::symlink_metadata(dir.join(format!("{}.bin", v.id))).is_ok_and(|m| m.is_file() && m.len() == v.size)
     });
     list.sort_by(|a, b| parse_iso_secs(&b.saved_at).unwrap_or(0).cmp(&parse_iso_secs(&a.saved_at).unwrap_or(0)).then_with(|| b.id.cmp(&a.id)));
     list.truncate(MAX_VERSIONS);
@@ -569,7 +604,10 @@ fn store_save_at(root: &Path, write: VersionWrite, now: u64) -> Result<Vec<Versi
 #[cfg(not(target_arch = "wasm32"))]
 fn store_list(root: &Path, path: &Path) -> Result<Vec<VersionInfo>, String> {
     let dir = document_dir(root, path);
-    if !dir.exists() {
+    let Ok(meta) = fs::symlink_metadata(&dir) else {
+        return Ok(Vec::new());
+    };
+    if !meta.is_dir() {
         return Ok(Vec::new());
     }
     Ok(read_index(&dir))
@@ -798,6 +836,7 @@ mod tests {
         assert_eq!(document_key(path).len(), 16);
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
     #[test]
     fn iso_parser_accepts_engine_timestamps() {
         let now = 1_800_000_000;

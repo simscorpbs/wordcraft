@@ -2,6 +2,7 @@
 
 use egui::{Align, Stroke, Ui};
 use serde_json::json;
+use wordcraft_engine::versions::local_timestamp;
 
 use crate::theme::{Tokens, regular, semibold};
 use crate::{WordApp, tl};
@@ -41,14 +42,15 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             egui::ScrollArea::vertical().auto_shrink([false, true]).show(ui, |ui| {
                 let mut day = String::new();
                 for info in versions {
-                    let current_day = info.saved_at.get(..10).unwrap_or(&info.saved_at).to_string();
+                    let local = local_timestamp(&info.saved_at);
+                    let current_day = local.get(..10).unwrap_or(&local).to_string();
                     if current_day != day {
                         day = current_day.clone();
                         ui.add_space(6.0);
                         ui.label(egui::RichText::new(current_day).font(semibold(12.5)).color(t.text));
                     }
                     ui.group(|ui| {
-                        ui.label(egui::RichText::new(info.saved_at.clone()).font(regular(12.0)).color(t.text));
+                        ui.label(egui::RichText::new(local).font(regular(12.0)).color(t.text));
                         ui.label(egui::RichText::new(info.author.clone()).font(regular(11.5)).color(t.text_dim));
                         ui.horizontal(|ui| {
                             let id = info.id.clone();
@@ -67,7 +69,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
 
 fn legacy_row(app: &mut WordApp, ui: &mut Ui, index: usize, label: &str, date: &str, t: Tokens) {
     ui.group(|ui| {
-        ui.label(egui::RichText::new(date).font(regular(12.0)).color(t.text));
+        ui.label(egui::RichText::new(local_timestamp(date)).font(regular(12.0)).color(t.text));
         ui.label(egui::RichText::new(label).font(regular(11.5)).color(t.text_dim));
         if ui.button(tl!("Restore")).clicked() {
             let _ = app.run("file.versions", json!({"restore": index}));
@@ -79,13 +81,14 @@ fn legacy_row(app: &mut WordApp, ui: &mut Ui, index: usize, label: &str, date: &
 pub fn previous_bar(app: &mut WordApp, ui: &mut Ui) {
     let Some(info) = app.session.previous_version().cloned() else { return };
     let t = Tokens::get(ui.ctx());
+    let local = local_timestamp(&info.saved_at);
     egui::Panel::top("previous_version_bar")
         .exact_size(30.0)
         .frame(egui::Frame::NONE.fill(t.selection).inner_margin(egui::Margin::symmetric(12, 5)))
         .show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(egui::RichText::new(tl!("Previous version")).font(semibold(12.5)).color(t.text));
-                ui.label(egui::RichText::new(info.saved_at).font(regular(12.0)).color(t.text_dim));
+                ui.label(egui::RichText::new(local).font(regular(12.0)).color(t.text_dim));
                 if ui.button(tl!("Restore")).clicked() {
                     let _ = app.run("file.versions", json!({"restore": info.id}));
                 }
@@ -104,19 +107,20 @@ mod tests {
     fn app() -> WordApp {
         let mut app = WordApp::new(wordcraft_engine::Session::new(wordcraft_doc::Document::new()), crate::Services::default());
         app.session.versions.push(("First save".into(), "2026-10-16T10:00:00Z".into(), wordcraft_doc::Document::from_text("old")));
-        app.ui.versions_pane = true;
         app
     }
 
     #[test]
     fn panel_lists_a_version_and_restore_runs_the_command() {
+        let mut app = app();
+        assert!(app.run("file.versions", json!({})).is_ok(), "opening Version History succeeds");
         let mut harness = egui_kittest::Harness::builder().with_size(egui::vec2(1000.0, 700.0)).build_ui_state(
             |ui, app: &mut WordApp| {
                 let ctx = ui.ctx().clone();
                 app.logic(&ctx);
                 app.ui(ui);
             },
-            app(),
+            app,
         );
         harness.run_steps(6);
         assert!(harness.query_by_label("Restore").is_some());

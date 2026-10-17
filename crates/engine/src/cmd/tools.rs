@@ -10,7 +10,7 @@ use wordcraft_doc::props::{CharProps, NumRef};
 use wordcraft_doc::{Block, Document, Paragraph, Pos, RevisionKind, StoryRef, para_block};
 
 use super::{delete_selection, sel_result};
-use crate::versions::{OpenedVersion, VersionInfo, VersionKind};
+use crate::versions::{OpenedVersion, VersionInfo, VersionKind, local_timestamp};
 use crate::{CmdError, CmdResult, CommandSpec, Selection, Session, p};
 
 /// Smileys replaced even when typed straight after a word ("ok:)"), as Word does.
@@ -58,7 +58,7 @@ fn open_persisted_version(s: &mut Session, id: &str) -> CmdResult {
         .unwrap_or_else(|| (s.doc.clone(), s.sel.clone()));
     let stem =
         source.file_stem().map(|name| name.to_string_lossy().into_owned()).filter(|name| !name.is_empty()).unwrap_or_else(|| "Document".into());
-    let label = format!("{stem} (version {})", info.saved_at);
+    let label = format!("{stem} (version {})", local_timestamp(&info.saved_at));
     s.set_document(doc);
     s.path = None;
     s.file_name = Some(label);

@@ -759,7 +759,7 @@ impl WordApp {
     /// Close, Envelopes, Labels and Finish & Merge on a document with unsaved changes first ask
     /// Save / Don't Save / Cancel, and the command runs once that is answered (`ui.saveChanges`).
     pub fn run(&mut self, id: &str, params: Value) -> Result<Value, String> {
-        if id == "file.versions" && params.get("open").is_none() && params.get("restore").is_none() {
+        if id == "file.versions" && params.as_object().is_some_and(|object| object.is_empty()) {
             self.ui.versions_pane = true;
         }
         if id == "file.recover" && params.as_object().is_none_or(|p| p.is_empty()) {
@@ -833,6 +833,9 @@ impl WordApp {
             let e = tl!("No document is open. Create a document or open one first.").to_string();
             self.status(e.clone());
             return Err(e);
+        }
+        if id == "file.versions" && params.as_object().is_some_and(|object| object.is_empty()) {
+            self.ui.versions_pane = true;
         }
         if let Some(r) = self.ui_command(id, &params) {
             return r;
