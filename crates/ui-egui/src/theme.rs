@@ -2,11 +2,87 @@
 
 use std::sync::Arc;
 
-use egui::{Align2, Color32, CornerRadius, FontData, FontDefinitions, FontFamily, FontId, Rect, Stroke, Visuals};
+use egui::{Align2, Color32, CornerRadius, FontData, FontDefinitions, FontFamily, FontId, Id, Rect, Stroke, Visuals};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use wordcraft_doc::Rgb;
 
 /// WordCraft's app colour (and its darker ink for text on light backgrounds).
 pub const APP_COLOR: Color32 = Color32::from_rgb(0x3B, 0x5B, 0xDB);
 pub const APP_INK: Color32 = Color32::from_rgb(0x2B, 0x47, 0xB5);
+
+/// The user-selectable interface accent (File › Options › General).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct AccentColor(pub Rgb);
+
+impl AccentColor {
+    pub const DEFAULT: Self = Self(Rgb(0x3B, 0x5B, 0xDB));
+    pub const PRESETS: [(&'static str, Self); 3] =
+        [("Standard blue", Self::DEFAULT), ("Classic blue", Self(Rgb(0x21, 0x42, 0x88))), ("Deep blue", Self(Rgb(0x15, 0x44, 0xAF)))];
+
+    pub fn parse(value: &str) -> Option<Self> {
+        Rgb::parse(value).map(Self)
+    }
+
+    pub fn hex(self) -> String {
+        self.0.hex()
+    }
+
+    pub fn color32(self) -> Color32 {
+        Color32::from_rgb(self.0.0, self.0.1, self.0.2)
+    }
+
+    fn apply_to(self, tokens: &mut Tokens) {
+        if self == Self::DEFAULT {
+            return;
+        }
+        tokens.accent = self.color32();
+        tokens.on_accent = on_accent(tokens.accent);
+    }
+}
+
+impl Default for AccentColor {
+    fn default() -> Self {
+        Self::DEFAULT
+    }
+}
+
+impl Serialize for AccentColor {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.hex())
+    }
+}
+
+impl<'de> Deserialize<'de> for AccentColor {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Rgb::deserialize(deserializer).map(Self)
+    }
+}
+
+fn accent_data_id() -> Id {
+    Id::new("wordcraft.accent_color")
+}
+
+fn set_accent_data(ctx: &egui::Context, accent: AccentColor) {
+    ctx.data_mut(|d| d.insert_temp(accent_data_id(), accent));
+}
+
+fn on_accent(background: Color32) -> Color32 {
+    let white = contrast(Color32::WHITE, background);
+    let dark = contrast(Color32::from_rgb(0x11, 0x16, 0x2E), background);
+    if dark >= 4.5 || (white < 4.5 && dark > white) { Color32::from_rgb(0x11, 0x16, 0x2E) } else { Color32::WHITE }
+}
+
+fn contrast(a: Color32, b: Color32) -> f32 {
+    let luminance = |c: Color32| {
+        let channel = |v: u8| {
+            let v = f32::from(v) / 255.0;
+            if v <= 0.040_45 { v / 12.92 } else { ((v + 0.055) / 1.055).powf(2.4) }
+        };
+        0.2126 * channel(c.r()) + 0.7152 * channel(c.g()) + 0.0722 * channel(c.b())
+    };
+    let (x, y) = (luminance(a), luminance(b));
+    (x.max(y) + 0.05) / (x.min(y) + 0.05)
+}
 
 /// The interface theme setting (File › Options › General, View › Interface Theme): a fixed light or
 /// dark palette, or `System`, which follows the OS light/dark appearance live (#115). Dark page
@@ -409,7 +485,10 @@ impl Tokens {
         }
     }
     pub fn get(ctx: &egui::Context) -> Tokens {
-        let tokens = if ctx.global_style().visuals.dark_mode { Tokens::dark() } else { Tokens::light() };
+        let mut tokens = if ctx.global_style().visuals.dark_mode { Tokens::dark() } else { Tokens::light() };
+        if let Some(accent) = ctx.data_mut(|d| d.get_temp::<AccentColor>(accent_data_id())) {
+            accent.apply_to(&mut tokens);
+        }
         let focused = ctx.input(|i| i.viewport().focused != Some(false));
         if cfg!(target_os = "macos") && !focused {
             Tokens { title_bar: tokens.title_bar_inactive, ribbon: tokens.ribbon_inactive, tab_strip: tokens.tab_strip_inactive, ..tokens }
@@ -694,8 +773,18 @@ fn tracked_job(text: &str, font: &FontId, tracking: f32, color: Color32) -> egui
 /// Setting a concrete theme for `System` would pin the native window too, and macOS then stops
 /// reporting appearance changes (#311).
 pub fn apply(ctx: &egui::Context, appearance: Appearance) {
-    ctx.set_visuals_of(egui::Theme::Light, visuals(&Tokens::light()));
-    ctx.set_visuals_of(egui::Theme::Dark, visuals(&Tokens::dark()));
+    apply_with_accent(ctx, appearance, AccentColor::DEFAULT);
+}
+
+/// Apply the interface theme and the user-selected accent colour.
+pub fn apply_with_accent(ctx: &egui::Context, appearance: Appearance, accent: AccentColor) {
+    set_accent_data(ctx, accent);
+    let mut light = Tokens::light();
+    let mut dark = Tokens::dark();
+    accent.apply_to(&mut light);
+    accent.apply_to(&mut dark);
+    ctx.set_visuals_of(egui::Theme::Light, visuals(&light));
+    ctx.set_visuals_of(egui::Theme::Dark, visuals(&dark));
     ctx.all_styles_mut(|s| {
         s.spacing.item_spacing = egui::vec2(6.0, 4.0);
         s.spacing.button_padding = egui::vec2(8.0, 3.0);
@@ -768,6 +857,8 @@ pub fn c32(c: wordcraft_doc::Rgb) -> Color32 {
 mod tests {
     use std::collections::BTreeSet;
 
+    use super::AccentColor;
+
     /// WCAG contrast ratio between two opaque colours.
     pub(super) fn contrast(a: egui::Color32, b: egui::Color32) -> f32 {
         let lum = |c: egui::Color32| {
@@ -791,6 +882,13 @@ mod tests {
                 assert!(r >= 4.5, "dark={}: on_accent on {name} is {r:.2}:1", t.dark);
             }
         }
+    }
+
+    #[test]
+    fn accent_presets_keep_their_named_values() {
+        assert_eq!(AccentColor::DEFAULT.hex(), "3B5BDB");
+        assert_eq!(AccentColor::PRESETS[1].1.hex(), "214288");
+        assert_eq!(AccentColor::PRESETS[2].1.hex(), "1544AF");
     }
 
     /// #657: text field and combo outlines reach 3:1 against the field and everything it sits on.

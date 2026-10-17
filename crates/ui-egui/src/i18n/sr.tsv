@@ -2250,3 +2250,10 @@
 # Mac title bar options
 	Show Discord button in the title bar	Прикажи дугме Discord у траци наслова
 	Show account picture in the title bar	Прикажи слику налога у траци наслова
+
+# Configurable interface accent
+	Accent color:	Боја наглашавања:
+	Standard blue	Стандардна плава
+	Classic blue	Класична плава
+	Deep blue	Тамноплава
+	Choose a preset or pick a custom accent color.	Изаберите унапред подешену или прилагођену боју наглашавања.

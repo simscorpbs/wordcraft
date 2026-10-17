@@ -2491,3 +2491,10 @@ preview	Title	제목
 # Mac title bar options
 	Show Discord button in the title bar	제목 표시줄에 Discord 단추 표시
 	Show account picture in the title bar	제목 표시줄에 계정 사진 표시
+
+# Configurable interface accent
+	Accent color:	강조 색상:
+	Standard blue	기본 파란색
+	Classic blue	클래식 파란색
+	Deep blue	진한 파란색
+	Choose a preset or pick a custom accent color.	사전 설정 색상 또는 사용자 지정 강조 색상을 선택하세요.

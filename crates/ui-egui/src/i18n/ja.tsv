@@ -2236,3 +2236,10 @@
 # Mac title bar options
 	Show Discord button in the title bar	タイトル バーに Discord ボタンを表示する
 	Show account picture in the title bar	タイトル バーにアカウントの画像を表示する
+
+# Configurable interface accent
+	Accent color:	アクセントカラー:
+	Standard blue	標準の青
+	Classic blue	クラシックブルー
+	Deep blue	濃い青
+	Choose a preset or pick a custom accent color.	プリセットまたはカスタムのアクセントカラーを選択します。

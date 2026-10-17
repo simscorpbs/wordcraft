@@ -2675,3 +2675,10 @@ template	Letter	Thư
 # Mac title bar options
 	Show Discord button in the title bar	Hiện nút Discord trong thanh tiêu đề
 	Show account picture in the title bar	Hiện ảnh tài khoản trong thanh tiêu đề
+
+# Configurable interface accent
+	Accent color:	Màu nhấn:
+	Standard blue	Xanh lam tiêu chuẩn
+	Classic blue	Xanh lam cổ điển
+	Deep blue	Xanh lam đậm
+	Choose a preset or pick a custom accent color.	Chọn màu nhấn đặt sẵn hoặc tùy chỉnh.

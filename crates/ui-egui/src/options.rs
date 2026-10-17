@@ -180,6 +180,7 @@ fn flag(app: &mut WordApp, ui: &mut Ui, label: &str, key: &str, value: bool) {
 fn general(app: &mut WordApp, ui: &mut Ui) {
     section(ui, "Interface");
     theme_picker(app, ui);
+    accent_picker(app, ui);
     interface_size_picker(app, ui);
     ui.checkbox(&mut app.ui.mini_toolbar, tl!("Show the mini toolbar when text is selected"));
     let mut dark_page = app.session.view.dark_mode;
@@ -563,6 +564,32 @@ fn theme_picker(app: &mut WordApp, ui: &mut Ui) {
             }
         });
     });
+}
+
+/// Interface accent colour: a few named choices and an arbitrary custom colour.
+fn accent_picker(app: &mut WordApp, ui: &mut Ui) {
+    let current = app.ui.accent_color;
+    ui.horizontal(|ui| {
+        ui.label(tl!("Accent color:"));
+        for (label, accent) in crate::theme::AccentColor::PRESETS {
+            let label = match label {
+                "Standard blue" => tl!("Standard blue"),
+                "Classic blue" => tl!("Classic blue"),
+                "Deep blue" => tl!("Deep blue"),
+                _ => continue,
+            };
+            let button = egui::Button::new(label).fill(accent.color32());
+            if ui.add(button).clicked() {
+                let _ = app.run("ui.accentColor", json!({"value": accent.hex()}));
+            }
+        }
+        let mut custom = current.color32();
+        if ui.color_edit_button_srgba(&mut custom).changed() {
+            let accent = crate::theme::AccentColor(wordcraft_doc::Rgb(custom.r(), custom.g(), custom.b()));
+            let _ = app.run("ui.accentColor", json!({"value": accent.hex()}));
+        }
+    });
+    note(ui, "Choose a preset or pick a custom accent color.");
 }
 
 /// Interface size (#475, #822): Auto, which keeps the system's display scale and shows the size it

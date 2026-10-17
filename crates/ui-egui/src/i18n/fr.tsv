@@ -2243,3 +2243,10 @@
 # Mac title bar options
 	Show Discord button in the title bar	Afficher le bouton Discord dans la barre de titre
 	Show account picture in the title bar	Afficher la photo du compte dans la barre de titre
+
+# Configurable interface accent
+	Accent color:	Couleur d’accentuation :
+	Standard blue	Bleu standard
+	Classic blue	Bleu classique
+	Deep blue	Bleu foncé
+	Choose a preset or pick a custom accent color.	Choisissez une couleur d’accentuation prédéfinie ou personnalisée.

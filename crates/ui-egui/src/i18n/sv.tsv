@@ -2650,3 +2650,10 @@ preview	Title	Titel
 # Mac title bar options
 	Show Discord button in the title bar	Visa Discord-knappen i namnlisten
 	Show account picture in the title bar	Visa kontobilden i namnlisten
+
+# Configurable interface accent
+	Accent color:	Accentfärg:
+	Standard blue	Standardblå
+	Classic blue	Klassisk blå
+	Deep blue	Mörkblå
+	Choose a preset or pick a custom accent color.	Välj en förinställd eller anpassad accentfärg.

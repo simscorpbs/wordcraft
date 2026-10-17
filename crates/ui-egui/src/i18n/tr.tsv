@@ -2632,3 +2632,10 @@ preview	Title	Örnek
 # Mac title bar options
 	Show Discord button in the title bar	Başlık çubuğunda Discord düğmesini göster
 	Show account picture in the title bar	Başlık çubuğunda hesap resmini göster
+
+# Configurable interface accent
+	Accent color:	Vurgu rengi:
+	Standard blue	Standart mavi
+	Classic blue	Klasik mavi
+	Deep blue	Koyu mavi
+	Choose a preset or pick a custom accent color.	Hazır veya özel bir vurgu rengi seçin.

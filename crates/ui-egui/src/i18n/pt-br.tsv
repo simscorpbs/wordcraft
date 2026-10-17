@@ -2685,3 +2685,10 @@ template	Letter	Carta
 # Mac title bar options
 	Show Discord button in the title bar	Mostrar o botão do Discord na barra de título
 	Show account picture in the title bar	Mostrar a foto da conta na barra de título
+
+# Configurable interface accent
+	Accent color:	Cor de destaque:
+	Standard blue	Azul padrão
+	Classic blue	Azul clássico
+	Deep blue	Azul escuro
+	Choose a preset or pick a custom accent color.	Escolha uma cor de destaque predefinida ou personalizada.

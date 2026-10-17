@@ -2237,3 +2237,10 @@
 # Mac title bar options
 	Show Discord button in the title bar	在標題列中顯示 Discord 按鈕
 	Show account picture in the title bar	在標題列中顯示帳戶圖片
+
+# Configurable interface accent
+	Accent color:	強調色：
+	Standard blue	標準藍
+	Classic blue	經典藍
+	Deep blue	深藍
+	Choose a preset or pick a custom accent color.	選擇預設或自訂強調色。

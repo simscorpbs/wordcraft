@@ -2270,3 +2270,10 @@
 # Mac title bar options
 	Show Discord button in the title bar	Kuva tiitliribal Discordi nupp
 	Show account picture in the title bar	Kuva tiitliribal konto pilt
+
+# Configurable interface accent
+	Accent color:	Aktsentvärv:
+	Standard blue	Standardne sinine
+	Classic blue	Klassikaline sinine
+	Deep blue	Tumesinine
+	Choose a preset or pick a custom accent color.	Valige valmis või kohandatud aktsentvärv.

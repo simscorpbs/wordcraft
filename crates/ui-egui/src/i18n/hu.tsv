@@ -2631,3 +2631,10 @@
 # Mac title bar options
 	Show Discord button in the title bar	A Discord-gomb megjelenítése a címsávban
 	Show account picture in the title bar	A fiókkép megjelenítése a címsávban
+
+# Configurable interface accent
+	Accent color:	Kiemelőszín:
+	Standard blue	Normál kék
+	Classic blue	Klasszikus kék
+	Deep blue	Sötétkék
+	Choose a preset or pick a custom accent color.	Válasszon előre beállított vagy egyéni kiemelőszínt.

@@ -2602,3 +2602,10 @@ preview	Title	Título
 # Mac title bar options
 	Show Discord button in the title bar	Mostrar el botón de Discord en la barra de título
 	Show account picture in the title bar	Mostrar la foto de la cuenta en la barra de título
+
+# Configurable interface accent
+	Accent color:	Color de énfasis:
+	Standard blue	Azul estándar
+	Classic blue	Azul clásico
+	Deep blue	Azul oscuro
+	Choose a preset or pick a custom accent color.	Elija un color de énfasis preestablecido o personalizado.
