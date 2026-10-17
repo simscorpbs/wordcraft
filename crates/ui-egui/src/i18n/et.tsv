@@ -725,6 +725,7 @@
 	Animate the caret (it glides and fades)	Animeeri tekstikursorit (libiseb ja hajub)
 	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Sees: tekstikursor libiseb tippimisel või nooleklahvide kasutamisel uude kohta ja selle vilkumine hajub sujuvalt. Väljas: kursor hüppab ja vilgub järsult.
 	Show the community button in the title bar	Kuva tiitliribal kogukonna nupp
+	Show group titles	Kuva rühmade pealkirju
 	Show the mini toolbar when text is selected	Kuva teksti valimisel minitööriistariba
 	Show/Hide ¶	Kuva/peida ¶
 	Show\nComments	Kuva\nkommentaarid

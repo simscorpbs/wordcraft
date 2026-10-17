@@ -811,6 +811,7 @@
 	Animate the caret (it glides and fades)	為游標加上動畫（平滑移動並淡入淡出）
 	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	開啟：輸入或使用方向鍵時，游標會平滑移動到新位置，閃爍時淡入淡出。關閉：游標直接跳到新位置，閃爍時直接顯示和隱藏。
 	Show the community button in the title bar	在標題列中顯示社群按鈕
+	Show group titles	顯示群組標題
 	Show/Hide ¶	顯示/隱藏 ¶
 	Show\nComments	顯示註解
 	Shrink Font 1 Point	字型縮小 1 點

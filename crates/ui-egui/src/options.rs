@@ -199,6 +199,10 @@ fn general(app: &mut WordApp, ui: &mut Ui) {
     if ui.checkbox(&mut show_account_picture, tl!("Show account picture in the title bar")).changed() {
         let _ = app.run("ui.showAccountPicture", json!({"value": show_account_picture}));
     }
+    let mut show_group_titles = app.ui.show_group_titles;
+    if ui.checkbox(&mut show_group_titles, tl!("Show group titles")).changed() {
+        let _ = app.run("ui.showGroupTitles", json!({"value": show_group_titles}));
+    }
     default_app_button(app, ui);
     ui.add_space(8.0);
     section(ui, "Start-up");
@@ -1064,6 +1068,30 @@ mod tests {
         h.get_by_label("Show the Start screen when WordCraft starts").click();
         h.run_steps(4);
         assert!(h.state().ui.start_screen, "and on again");
+    }
+
+    /// File › Options › General: the ribbon group-title checkbox is wired to the UI command.
+    #[test]
+    fn general_group_titles_turn_off_and_on() {
+        let mut a = app();
+        a.run("file.options", json!({"pane": "general"})).unwrap();
+        let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                app.logic(&ctx);
+                app.ui(ui);
+            },
+            a,
+        );
+        h.run_steps(4);
+        let label = "Show group titles";
+        let initial = h.state().ui.show_group_titles;
+        h.get_by_label(label).click();
+        h.run_steps(4);
+        assert_ne!(h.state().ui.show_group_titles, initial, "the checkbox toggles titles");
+        h.get_by_label(label).click();
+        h.run_steps(4);
+        assert_eq!(h.state().ui.show_group_titles, initial, "and toggles back");
     }
 
     /// File › Options › Advanced › Editing: the alignment guides checkbox is the

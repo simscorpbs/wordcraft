@@ -838,6 +838,7 @@
 	Animate the caret (it glides and fades)	Animera markören (den glider och tonas)
 	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	På: markören glider till sin nya plats när du skriver eller använder piltangenterna, och blinkningen tonas mjukt. Av: den hoppar och blinkar av och på.
 	Show the community button in the title bar	Visa community-knappen i namnlisten
+	Show group titles	Visa grupprubriker
 	Show/Hide ¶	Visa/dölj ¶
 	Show\nComments	Visa\nkommentarer
 	Shrink Font 1 Point	Minska teckenstorleken 1 punkt

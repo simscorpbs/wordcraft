@@ -860,6 +860,7 @@
 	Animate the caret (it glides and fades)	Animiraj kursor (klizi i postepeno se gasi)
 	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Uključeno: kursor klizi na novo mesto dok kucate ili koristite strelice, a njegovo treptanje se postepeno gasi. Isključeno: skače i trepće naglo.
 	Show the community button in the title bar	Prikaži dugme zajednice u traci naslova
+	Show group titles	Prikaži naslove grupa
 	Show/Hide ¶	Prikaži/sakrij ¶
 	Show\nComments	Prikaži\nkomentare
 	Shrink Font 1 Point	Smanji font za 1 tačku

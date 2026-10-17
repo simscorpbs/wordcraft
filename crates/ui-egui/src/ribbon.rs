@@ -6,7 +6,27 @@ use serde_json::{Value, json};
 use crate::colors::{Remember, Target};
 use crate::options::MeasureExt;
 use crate::theme::{Tokens, medium, regular, semibold};
-use crate::widgets::{CONTENT_H, LABEL_H, big, big_toggle, combo, font_combo, group, menu_button, small, split};
+use crate::widgets::{
+    CONTENT_H, LABEL_H, RIBBON_FRAME_BOTTOM, RIBBON_FRAME_TOP, RIBBON_NO_LABEL_H, TWO_ROW_GAP, big, big_toggle, combo, font_combo, group,
+    menu_button, small, split,
+};
+
+/// Extra height occupied by the ribbon frame around its group content.
+pub(crate) const RIBBON_FRAME_EXTRA_H: f32 = 10.0;
+/// Horizontal frame padding on the left and right of the ribbon content.
+pub(crate) const RIBBON_SIDE_MARGIN: i8 = 4;
+/// Width of the invisible hit target for a ribbon edge scroll cue.
+pub(crate) const EDGE_CUE_W: f32 = 18.0;
+/// Width of the drawn edge scroll chevron.
+pub(crate) const EDGE_CUE_GLYPH_W: f32 = 6.5;
+/// Height of the drawn edge scroll chevron.
+pub(crate) const EDGE_CUE_GLYPH_H: f32 = 7.5;
+/// Vertical position of an edge scroll chevron, measured from the ribbon content top.
+pub(crate) const EDGE_CUE_SECOND_ROW_CENTER: f32 = 51.0;
+
+pub(crate) fn ribbon_height(show_group_titles: bool) -> f32 {
+    if show_group_titles { CONTENT_H + LABEL_H + RIBBON_FRAME_EXTRA_H } else { RIBBON_NO_LABEL_H }
+}
 use crate::{WordApp, icons};
 
 pub const TABS: [&str; 13] = wordcraft_engine::ribbon::TABS;
@@ -403,9 +423,17 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         return;
     }
     egui::Panel::top("ribbon")
-        .exact_size(CONTENT_H + LABEL_H + 10.0)
+        .exact_size(ribbon_height(app.ui.show_group_titles))
         .frame(
-            egui::Frame::NONE.fill(t.ribbon).inner_margin(egui::Margin { left: 8, right: 8, top: 4, bottom: 4 }).stroke(Stroke::new(1.0, t.border)),
+            egui::Frame::NONE
+                .fill(t.ribbon)
+                .inner_margin(egui::Margin {
+                    left: RIBBON_SIDE_MARGIN,
+                    right: RIBBON_SIDE_MARGIN,
+                    top: RIBBON_FRAME_TOP as i8,
+                    bottom: RIBBON_FRAME_BOTTOM as i8,
+                })
+                .stroke(Stroke::new(1.0, t.border)),
         )
         .show(ui, |ui| {
             // Right-click on the ribbon (outside a button): Customize Ribbon. Registered first, so
@@ -462,13 +490,13 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             let step = 160.0;
             let mut next = None;
             if offset > 1.0 {
-                let left = Rect::from_min_max(r.left_top(), pos2(r.left() + 18.0, r.bottom()));
+                let left = Rect::from_min_max(r.left_top(), pos2(r.left() + EDGE_CUE_W, r.bottom()));
                 if edge_cue(ui, left, "‹", tl!("Scroll ribbon left"), &t) {
                     next = Some(offset - step);
                 }
             }
             if overflow - offset > 1.0 {
-                let right = Rect::from_min_max(pos2(r.right() - 18.0, r.top()), r.right_bottom());
+                let right = Rect::from_min_max(pos2(r.right() - EDGE_CUE_W, r.top()), r.right_bottom());
                 if edge_cue(ui, right, "›", tl!("Scroll ribbon right"), &t) {
                     next = Some(offset + step);
                 }
@@ -524,14 +552,33 @@ fn edge_cue(ui: &mut Ui, rect: Rect, glyph: &str, hint: &str, t: &Tokens) -> boo
     let resp = ui.interact(rect, ui.id().with(glyph), Sense::click()).on_hover_text(hint);
     let ink = if resp.hovered() { t.text } else { t.text_dim };
     ui.painter().rect_filled(rect, 0.0, t.ribbon);
-    ui.painter().text(rect.center(), Align2::CENTER_CENTER, glyph, egui::FontId::proportional(18.0), ink);
+    let center = pos2(rect.center().x, rect.top() + EDGE_CUE_SECOND_ROW_CENTER);
+    let (left, right) = if glyph == "‹" {
+        (pos2(center.x + EDGE_CUE_GLYPH_W / 2.0, center.y - EDGE_CUE_GLYPH_H / 2.0), pos2(center.x - EDGE_CUE_GLYPH_W / 2.0, center.y))
+    } else {
+        (pos2(center.x - EDGE_CUE_GLYPH_W / 2.0, center.y - EDGE_CUE_GLYPH_H / 2.0), pos2(center.x + EDGE_CUE_GLYPH_W / 2.0, center.y))
+    };
+    let bottom = pos2(left.x, center.y + EDGE_CUE_GLYPH_H / 2.0);
+    ui.painter().line_segment([left, right], Stroke::new(1.25, ink));
+    ui.painter().line_segment([right, bottom], Stroke::new(1.25, ink));
     resp.clicked()
 }
 
 fn stack(ui: &mut Ui, add: impl FnOnce(&mut Ui)) {
+    let stack_id = crate::widgets::stack_small_id();
+    let previous = ui.ctx().data(|d| d.get_temp::<bool>(stack_id));
+    ui.ctx().data_mut(|d| d.insert_temp(stack_id, true));
     ui.vertical(|ui| {
         ui.spacing_mut().item_spacing = vec2(1.0, 0.0);
         add(ui);
+    });
+    ui.ctx().data_mut(|d| match previous {
+        Some(value) => {
+            d.insert_temp(stack_id, value);
+        }
+        None => {
+            d.remove::<bool>(stack_id);
+        }
     });
 }
 
@@ -827,7 +874,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
         });
     });
     group(ui, "Font", Some("format.fontDialog"), app, |ui, app| {
-        stack(ui, |ui| {
+        crate::widgets::two_rows(ui, |ui| {
             crate::widgets::row(ui, |ui| {
                 let font = st.get("font").and_then(Value::as_str).unwrap_or("").to_string();
                 let font = app.previews.font_shown(&font);
@@ -869,7 +916,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                 small(ui, app, "clear", None, "Clear All Formatting", "format.clear", json!({}), false);
                 small(ui, app, "phonetic", None, "Phonetic Guide", "format.phonetic", json!({}), false);
             });
-            ui.add_space(3.0);
+            ui.add_space(TWO_ROW_GAP);
             crate::widgets::row(ui, |ui| {
                 small(ui, app, "bold", None, "Bold", "format.bold", json!({}), flag("bold"));
                 small(ui, app, "italic", None, "Italic", "format.italic", json!({}), flag("italic"));
@@ -945,7 +992,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
         let align = rp.as_ref().map(|r| r.align.visual(r.bidi)).unwrap_or_default();
         let rtl = rp.as_ref().is_some_and(|r| r.bidi);
         let lists = wordcraft_engine::cmd::para::list_buttons(&app.session.doc, rp.as_ref().and_then(|r| r.numbering));
-        stack(ui, |ui| {
+        crate::widgets::two_rows(ui, |ui| {
             crate::widgets::row(ui, |ui| {
                 split(ui, app, "bullets", "Bullets", "para.bullets", json!({}), lists.bullets, None, |ui, app| {
                     ui.label(egui::RichText::new(tl!("Bullet Library")).small().weak());
@@ -1001,7 +1048,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                 let marks = app.session.view.marks;
                 small(ui, app, "pilcrow", None, "Show/Hide ¶", "view.marks", json!({}), marks);
             });
-            ui.add_space(3.0);
+            ui.add_space(TWO_ROW_GAP);
             crate::widgets::row(ui, |ui| {
                 use wordcraft_doc::Align as A;
                 small(ui, app, "alignLeft", None, "Align Left", "para.alignLeft", json!({}), align == A::Left);
@@ -3068,6 +3115,20 @@ mod tests {
         ctx.run_ui(egui::RawInput::default(), |_| {}).drop_without_applying_deltas();
         let glyph = ctx.fonts_mut(|f| f.layout_no_wrap("»".to_string(), medium(MORE_TABS_FONT_SIZE), egui::Color32::BLACK).size());
         assert!((glyph.x - 10.5).abs() < 1.0, "more glyph width is {}", glyph.x);
+    }
+
+    #[test]
+    fn mac_ribbon_dimensions_are_fixed() {
+        assert_eq!(ribbon_height(false), 76.0);
+        assert_eq!(ribbon_height(true), 94.0);
+        assert_eq!(RIBBON_FRAME_EXTRA_H, 10.0);
+        assert_eq!(RIBBON_SIDE_MARGIN, 4);
+        assert_eq!(EDGE_CUE_GLYPH_W, 6.5);
+        assert_eq!(EDGE_CUE_GLYPH_H, 7.5);
+        assert_eq!(
+            EDGE_CUE_SECOND_ROW_CENTER,
+            crate::widgets::TWO_ROW_CONTENT_TOP + crate::widgets::SMALL_H + TWO_ROW_GAP + crate::widgets::SMALL_H / 2.0
+        );
     }
 
     /// #860: Review › Language (and the status bar) reach every proofing language, not just the

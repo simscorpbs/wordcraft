@@ -261,6 +261,9 @@ pub struct UiState {
     pub show_discord: bool,
     /// File › Options › General: show the account picture in the title bar.
     pub show_account_picture: bool,
+    /// File › Options › General: show the titles under ribbon groups.
+    /// Word for Mac hides them by default; other platforms keep them visible.
+    pub show_group_titles: bool,
     /// User name (File › Options) for comments and tracked changes; empty keeps the default.
     pub author: String,
     /// Desktop: the main window's size and position, restored at the next launch.
@@ -344,6 +347,10 @@ impl Default for UiState {
         if cfg!(target_os = "macos") {
             show_title_bar_extras = false;
         }
+        let mut show_group_titles = true;
+        if cfg!(target_os = "macos") {
+            show_group_titles = false;
+        }
         UiState {
             tab: DEFAULT_TAB.into(),
             backstage: false,
@@ -362,6 +369,7 @@ impl Default for UiState {
             nav_tab: "headings".into(),
             show_discord: show_title_bar_extras,
             show_account_picture: show_title_bar_extras,
+            show_group_titles,
             author: String::new(),
             window: None,
             language: i18n::AUTO.into(),
@@ -1354,6 +1362,14 @@ impl WordApp {
             "ui.collapseRibbon" => {
                 self.ui.ribbon_collapsed = !self.ui.ribbon_collapsed;
                 json!({"collapsed": self.ui.ribbon_collapsed})
+            }
+            "ui.showGroupTitles" => {
+                match p.get("value") {
+                    None => {}
+                    Some(Value::Bool(on)) => self.ui.show_group_titles = *on,
+                    Some(_) => return Some(Err("`value` must be true or false".into())),
+                }
+                json!({"showGroupTitles": self.ui.show_group_titles})
             }
             "ui.keytips" => {
                 if let Some(v) = p.get("value") {
@@ -2416,6 +2432,7 @@ pub(crate) fn works_without_document(id: &str) -> bool {
             | "ui.dialog"
             | "ui.closeDialog"
             | "ui.collapseRibbon"
+            | "ui.showGroupTitles"
             | "ui.keytips"
             | "ui.dark"
             | "ui.theme"
@@ -2703,6 +2720,31 @@ mod tests {
         assert!(!b.ui.alignment_guides);
         let old: UiState = serde_json::from_str(r#"{"tab":"Insert"}"#).unwrap();
         assert!(old.alignment_guides, "older settings leave it on");
+    }
+
+    /// File › Options › General › Show group titles: the UI command toggles the preference,
+    /// rejects junk, and keeps the choice between runs. The platform default matches Word for Mac.
+    #[test]
+    fn group_titles_setting_is_a_ui_command_and_survives_a_restart() {
+        let mut a = app();
+        let default = !cfg!(target_os = "macos");
+        assert_eq!(a.ui.show_group_titles, default);
+        assert_eq!(a.run("ui.showGroupTitles", json!({})).unwrap(), json!({"showGroupTitles": default}));
+        assert_eq!(a.run("ui.showGroupTitles", json!({"value": !default})).unwrap(), json!({"showGroupTitles": !default}));
+        for junk in [json!({"value": "yes"}), json!({"value": 1}), json!({"value": null})] {
+            assert!(a.run("ui.showGroupTitles", junk).is_err());
+        }
+        assert_eq!(a.ui.show_group_titles, !default);
+        a.run("ui.showGroupTitles", json!({"value": false})).unwrap();
+        assert!(!a.ui.show_group_titles);
+        assert!(works_without_document("ui.showGroupTitles"));
+        let saved = serde_json::to_string(&a.prefs()).unwrap();
+        assert!(saved.contains(r#""showGroupTitles":false"#), "{saved}");
+        let mut b = app();
+        b.apply_prefs(serde_json::from_str(&saved).unwrap());
+        assert!(!b.ui.show_group_titles);
+        let old: UiState = serde_json::from_str(r#"{"tab":"Insert"}"#).unwrap();
+        assert_eq!(old.show_group_titles, default, "older settings use the platform default");
     }
 
     /// File › Options › Advanced › Animation: the caret's animation is a UI command, kept between
