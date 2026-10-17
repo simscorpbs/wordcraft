@@ -136,7 +136,47 @@ pub fn resolve_tab<'a>(current: &'a str, available: &[&str]) -> &'a str {
 }
 
 /// Width of the » button that holds the tabs the strip has no room for.
-const MORE_TABS_W: f32 = 24.0;
+pub(crate) const MORE_TABS_W: f32 = 24.0;
+/// Measurements for the tab strip and its right-hand controls (#C1–#C10).
+pub(crate) const TAB_FONT_SIZE_MACOS: f32 = 13.5;
+pub(crate) const TAB_FONT_SIZE_OTHER: f32 = 12.5;
+pub(crate) const TAB_CELL_PADDING: f32 = 22.0;
+pub(crate) const TAB_ITEM_SPACING: f32 = 2.0;
+pub(crate) const TAB_ACTIVE_MARKER_W: f32 = 37.0;
+pub(crate) const TAB_ACTIVE_MARKER_Y_OFFSET: f32 = 4.0;
+pub(crate) const TAB_ACTIVE_MARKER_H: f32 = 3.0;
+pub(crate) const MORE_TABS_FONT_SIZE: f32 = 17.0;
+pub(crate) const SHARE_BUTTON_W: f32 = 89.0;
+pub(crate) const SHARE_BUTTON_H: f32 = 24.0;
+pub(crate) const SHARE_WIDTH_EXTRA: f32 = 36.0;
+pub(crate) const SHARE_ICON_W: f32 = 20.0;
+pub(crate) const SHARE_ICON_X: f32 = 14.0;
+pub(crate) const SHARE_TEXT_X: f32 = 30.0;
+pub(crate) const ACTION_BUTTON_GAP: f32 = 8.0;
+
+fn show_file_tab() -> bool {
+    let mut visible = true;
+    if cfg!(target_os = "macos") {
+        visible = false;
+    }
+    visible
+}
+
+fn tab_font_size() -> f32 {
+    if cfg!(target_os = "macos") { TAB_FONT_SIZE_MACOS } else { TAB_FONT_SIZE_OTHER }
+}
+
+fn tab_cell_width(text_width: f32) -> f32 {
+    text_width + TAB_CELL_PADDING
+}
+
+fn share_button_width(label_width: f32) -> f32 {
+    (label_width + SHARE_WIDTH_EXTRA).max(SHARE_BUTTON_W)
+}
+
+fn active_marker_width(tab_width: f32) -> f32 {
+    TAB_ACTIVE_MARKER_W.min((tab_width - 4.0).max(0.0))
+}
 
 /// Which tabs fit on a strip `avail` points wide (#897), from each tab's width and whether it must
 /// stay. The others give way from the end, leaving `more` points for the » menu that holds them
@@ -192,15 +232,19 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     {
         app.ui.tab = prev;
     }
-    // The tabs shown: File, the user's tabs in their order (Customize Ribbon, #379), then the
-    // contextual ones (the Outlining tab right after File). A contextual tab (Table, Picture
-    // Format) may be stored while the selection moved away, and a tab may have been hidden.
+    // The tabs shown: File on non-macOS platforms, the user's tabs in their order (Customize
+    // Ribbon, #379), then the contextual ones. A contextual tab (Table, Picture Format) may be
+    // stored while the selection moved away, and a tab may have been hidden.
     let user_tabs = app.session.ribbon.tabs().into_owned();
-    let mut tabs: Vec<(String, bool)> = vec![("File".to_string(), false)];
+    let mut tabs: Vec<(String, bool)> = Vec::new();
+    if show_file_tab() {
+        tabs.push(("File".to_string(), false));
+    }
     tabs.extend(user_tabs.iter().filter(|e| !e.hidden).map(|e| (e.name.clone(), e.custom)));
     for ct in contextual_tabs(&app.session) {
         if ct == "Outlining" {
-            tabs.insert(1.min(tabs.len()), (ct.to_string(), false));
+            let at = if show_file_tab() { 1 } else { 0 };
+            tabs.insert(at.min(tabs.len()), (ct.to_string(), false));
         } else if !tabs.iter().any(|(n, _)| n == ct) {
             tabs.push((ct.to_string(), false));
         }
@@ -219,7 +263,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         .frame(egui::Frame::NONE.fill(t.tab_strip).inner_margin(egui::Margin { left: 8, right: 10, top: 0, bottom: 0 }))
         .show(ui, |ui| {
             ui.horizontal_centered(|ui| {
-                ui.spacing_mut().item_spacing = vec2(2.0, 0.0);
+                ui.spacing_mut().item_spacing = vec2(TAB_ITEM_SPACING, 0.0);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     // No document open (#1129): nothing to share, edit or comment on.
                     if !app.has_document() {
@@ -228,21 +272,35 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                     // Share, Editing mode, Comments, drawn first so the tabs get only the room
                     // left of them (#897).
                     let share = tl!("Share");
+                    let share_enabled = app.has_document();
                     let share_w = ui.ctx().fonts_mut(|f| f.layout_no_wrap(share.to_string(), medium(12.0), t.text).size().x);
-                    let (r, resp) = ui.allocate_exact_size(vec2((share_w + 36.0).max(74.0), 24.0), Sense::click());
-                    ui.painter().rect_filled(r, 4.0, if resp.hovered() { t.accent_text } else { t.accent });
+                    let share_width = share_button_width(share_w);
+                    let (r, resp) = ui.allocate_exact_size(vec2(share_width, SHARE_BUTTON_H), Sense::click());
+                    let share_fill = if !share_enabled {
+                        t.input
+                    } else if resp.hovered() {
+                        t.accent_text
+                    } else {
+                        t.accent
+                    };
+                    let share_radius = f32::from(crate::theme::RIBBON_BUTTON_CORNER_RADIUS);
+                    ui.painter().rect_filled(r, share_radius, share_fill);
+                    if !share_enabled {
+                        ui.painter().rect_stroke(r, share_radius, Stroke::new(1.0, t.ribbon_button_border), egui::StrokeKind::Inside);
+                    }
+                    let share_text = if share_enabled { t.on_accent } else { t.ribbon_button_text };
                     icons::paint(
                         ui.painter(),
-                        Rect::from_center_size(pos2(r.min.x + 14.0, r.center().y), vec2(14.0, 14.0)),
+                        Rect::from_center_size(pos2(r.min.x + SHARE_ICON_X, r.center().y), vec2(SHARE_ICON_W, SHARE_ICON_W)),
                         "share",
-                        t.on_accent,
-                        t.on_accent,
+                        share_text,
+                        share_text,
                     );
-                    ui.painter().text(pos2(r.min.x + 26.0, r.center().y), Align2::LEFT_CENTER, share, medium(12.0), t.on_accent);
+                    ui.painter().text(pos2(r.min.x + SHARE_TEXT_X, r.center().y), Align2::LEFT_CENTER, share, medium(12.0), share_text);
                     if resp.on_hover_text(tl!("Export a copy to share (PDF, Word document)")).clicked() {
                         let _ = app.run("ui.backstage", json!({"value": true, "page": "export"}));
                     }
-                    ui.add_space(6.0);
+                    ui.add_space(ACTION_BUTTON_GAP);
                     let track = app.session.doc.settings.track_changes;
                     let mode =
                         crate::widgets::icon_text_menu_button(ui, "pencil", if track { tl!("Reviewing") } else { tl!("Editing") }, regular(12.0));
@@ -256,7 +314,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                             ui.close();
                         }
                     });
-                    ui.add_space(4.0);
+                    ui.add_space(ACTION_BUTTON_GAP);
                     if crate::widgets::icon_text_button(ui, "comment", tl!("Comments"), regular(12.0)).clicked() {
                         let _ = app.run("view.commentsPane", json!({}));
                     }
@@ -269,18 +327,21 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                             .iter()
                             .zip(&labels)
                             .map(|((tab, custom), shown)| {
-                                let w = ui.ctx().fonts_mut(|f| f.layout_no_wrap(shown.to_string(), medium(12.5), t.text).size().x) + 18.0;
+                                let w = tab_cell_width(
+                                    ui.ctx().fonts_mut(|f| f.layout_no_wrap(shown.to_string(), medium(tab_font_size()), t.text).size().x),
+                                );
                                 let contextual = !custom && wordcraft_engine::ribbon::CONTEXTUAL_TABS.contains(&tab.as_str());
-                                (w + 2.0, tab == "File" || *tab == app.ui.tab || contextual)
+                                (w + TAB_ITEM_SPACING, tab == "File" || *tab == app.ui.tab || contextual)
                             })
                             .collect();
-                        let fits = fit_tabs(&widths, ui.available_width(), MORE_TABS_W + 2.0);
+                        let fits = fit_tabs(&widths, ui.available_width(), MORE_TABS_W + TAB_ITEM_SPACING);
                         for ((tab, custom), _) in tabs.iter().zip(&fits).filter(|(_, fits)| **fits) {
                             let (tab, custom) = (tab.as_str(), *custom);
                             let contextual = !custom && wordcraft_engine::ribbon::CONTEXTUAL_TABS.contains(&tab);
                             // A custom tab's name is the user's own text: shown as typed.
                             let shown = if custom { tab } else { tl!(tab) };
-                            let w = ui.ctx().fonts_mut(|f| f.layout_no_wrap(shown.to_string(), medium(12.5), t.text).size().x) + 18.0;
+                            let w =
+                                tab_cell_width(ui.ctx().fonts_mut(|f| f.layout_no_wrap(shown.to_string(), medium(tab_font_size()), t.text).size().x));
                             let (r, resp) = ui.allocate_exact_size(vec2(w, 30.0), Sense::click());
                             if app.ui.keytips == crate::keytips::Phase::Tabs {
                                 crate::keytips::record_tab(r, tab, &app.ui.keytip_prefix, &mut app.keytip_rects);
@@ -291,9 +352,18 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                                 ui.painter().rect_filled(r.shrink2(vec2(0.0, 4.0)), 4.0, t.hover);
                             }
                             let color = if contextual || active { t.accent_text } else { t.text };
-                            ui.painter().text(r.center(), Align2::CENTER_CENTER, shown, if active { semibold(12.5) } else { medium(12.5) }, color);
+                            ui.painter().text(
+                                r.center(),
+                                Align2::CENTER_CENTER,
+                                shown,
+                                if active { semibold(tab_font_size()) } else { medium(tab_font_size()) },
+                                color,
+                            );
                             if active {
-                                let u = Rect::from_center_size(pos2(r.center().x, r.max.y - 2.0), vec2(w - 16.0, 3.0));
+                                let u = Rect::from_center_size(
+                                    pos2(r.center().x, r.max.y - TAB_ACTIVE_MARKER_Y_OFFSET),
+                                    vec2(active_marker_width(w), TAB_ACTIVE_MARKER_H),
+                                );
                                 ui.painter().rect_filled(u, 2.0, t.accent);
                             }
                             if resp.clicked() {
@@ -316,7 +386,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                             if resp.hovered() {
                                 ui.painter().rect_filled(r.shrink2(vec2(0.0, 4.0)), 4.0, t.hover);
                             }
-                            ui.painter().text(r.center(), Align2::CENTER_CENTER, "»", medium(12.5), t.text);
+                            ui.painter().text(r.center(), Align2::CENTER_CENTER, "»", medium(MORE_TABS_FONT_SIZE), t.text);
                             egui::Popup::menu(&resp).show(|ui| {
                                 for (tab, shown) in left_out {
                                     if ui.selectable_label(false, shown).clicked() {
@@ -2947,6 +3017,34 @@ mod tests {
         assert_eq!(fit_tabs(&tabs, 10.0, 20.0), [true, false, false, false, true]);
         // Hostile numbers don't panic.
         let _ = fit_tabs(&[(f32::NAN, false), (f32::INFINITY, false)], f32::NAN, 20.0);
+    }
+
+    #[test]
+    fn tab_strip_measurements_match_the_mac_audit() {
+        assert_eq!(show_file_tab(), !cfg!(target_os = "macos"));
+        assert_eq!(TAB_ITEM_SPACING, 2.0);
+        assert_eq!(TAB_CELL_PADDING, 22.0);
+        assert_eq!(TAB_FONT_SIZE_MACOS, 13.5);
+        assert_eq!(TAB_FONT_SIZE_OTHER, 12.5);
+        assert_eq!(TAB_ACTIVE_MARKER_H, 3.0);
+        assert_eq!(TAB_ACTIVE_MARKER_Y_OFFSET, 4.0);
+        assert_eq!(TAB_ACTIVE_MARKER_W, 37.0);
+        assert!((active_marker_width(59.0) - 37.0).abs() < f32::EPSILON);
+        assert!((active_marker_width(56.0) - 37.0).abs() < f32::EPSILON);
+        assert!((tab_cell_width(36.5) + TAB_ITEM_SPACING - 60.5).abs() < f32::EPSILON);
+        assert_eq!(SHARE_BUTTON_W, 89.0);
+        assert_eq!(SHARE_BUTTON_H, 24.0);
+        assert_eq!(SHARE_WIDTH_EXTRA, 36.0);
+        assert_eq!(share_button_width(30.0), 89.0);
+        assert_eq!(SHARE_ICON_W, 20.0);
+        assert_eq!(ACTION_BUTTON_GAP, 8.0);
+        assert_eq!(MORE_TABS_W, 24.0);
+        assert_eq!(MORE_TABS_FONT_SIZE, 17.0);
+        let ctx = egui::Context::default();
+        ctx.set_fonts(crate::theme::font_definitions(false, false));
+        ctx.run_ui(egui::RawInput::default(), |_| {}).drop_without_applying_deltas();
+        let glyph = ctx.fonts_mut(|f| f.layout_no_wrap("»".to_string(), medium(MORE_TABS_FONT_SIZE), egui::Color32::BLACK).size());
+        assert!((glyph.x - 10.5).abs() < 1.0, "more glyph width is {}", glyph.x);
     }
 
     /// #860: Review › Language (and the status bar) reach every proofing language, not just the

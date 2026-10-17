@@ -16,6 +16,12 @@ pub const BIG_ICON_Y: f32 = 18.0;
 pub const BIG_LABEL_Y: f32 = 36.0;
 pub const LABEL_PITCH: f32 = 13.0;
 pub const LABEL_LINE_H: f32 = 14.0;
+/// Compact tab-strip button padding and icon geometry (#C5, #C6).
+pub(crate) const ICON_TEXT_BUTTON_PADDING_X: f32 = 10.0;
+pub(crate) const ICON_TEXT_BUTTON_PADDING_Y: f32 = 4.0;
+pub(crate) const ICON_TEXT_BUTTON_LAYOUT_ICON_W: f32 = 16.0;
+pub(crate) const ICON_TEXT_BUTTON_PAINT_ICON_W: f32 = 20.0;
+pub(crate) const ICON_TEXT_BUTTON_GAP: f32 = 8.0;
 // #653: a two-line label ends inside the content, above the group title row.
 const _: () = assert!(BIG_LABEL_Y + LABEL_PITCH + LABEL_LINE_H <= CONTENT_H);
 const _: () = assert!(BIG_ICON_Y + 16.0 <= BIG_LABEL_Y);
@@ -851,28 +857,32 @@ pub fn icon_text_menu_button(ui: &mut Ui, icon: &str, text: &str, font: egui::Fo
 fn icon_text_button_with(ui: &mut Ui, icon: &str, text: &str, font: egui::FontId, marker: bool) -> Response {
     let t = Tokens::get(ui.ctx());
     let galley = ui.painter().layout_no_wrap(text.to_string(), font, Color32::PLACEHOLDER);
-    let pad = ui.spacing().button_padding;
-    let icon_w = 16.0;
+    let pad = vec2(ICON_TEXT_BUTTON_PADDING_X, ICON_TEXT_BUTTON_PADDING_Y);
+    let icon_w = ICON_TEXT_BUTTON_LAYOUT_ICON_W;
     let marker_w = if marker { DROPDOWN + 4.0 } else { 0.0 };
-    let size = vec2(pad.x + icon_w + 4.0 + galley.size().x + marker_w + pad.x, galley.size().y.max(icon_w) + 2.0 * pad.y);
+    let size = vec2(pad.x + icon_w + ICON_TEXT_BUTTON_GAP + galley.size().x + marker_w + pad.x, galley.size().y.max(icon_w) + 2.0 * pad.y);
     let (r, resp) = ui.allocate_exact_size(size, Sense::click());
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, ui.is_enabled(), text));
     let st = drawn_state(ui, &resp, true);
     let r = r.expand(st.expansion);
-    ui.painter().rect(r, ui.visuals().widgets.inactive.corner_radius, st.fill, st.stroke, egui::StrokeKind::Inside);
+    let stroke = Stroke::new(st.stroke.width, t.ribbon_button_border);
+    ui.painter().rect(r, CornerRadius::same(crate::theme::RIBBON_BUTTON_CORNER_RADIUS), st.fill, stroke, egui::StrokeKind::Inside);
     icons::paint(
         ui.painter(),
-        Rect::from_center_size(pos2(r.min.x + pad.x + icon_w / 2.0, r.center().y), vec2(icon_w, icon_w)),
+        Rect::from_center_size(
+            pos2(r.min.x + pad.x + icon_w / 2.0, r.center().y),
+            vec2(ICON_TEXT_BUTTON_PAINT_ICON_W, ICON_TEXT_BUTTON_PAINT_ICON_W),
+        ),
         icon,
-        t.icon,
-        t.accent,
+        t.ribbon_button_text,
+        t.ribbon_button_text,
     );
-    let text_x = r.min.x + pad.x + icon_w + 4.0;
+    let text_x = r.min.x + pad.x + icon_w + ICON_TEXT_BUTTON_GAP;
     let text_w = galley.size().x;
-    ui.painter().galley(pos2(text_x, r.center().y - galley.size().y / 2.0), galley, st.text);
+    ui.painter().galley(pos2(text_x, r.center().y - galley.size().y / 2.0), galley, t.ribbon_button_text);
     if marker {
         let c = pos2(text_x + text_w + 4.0 + DROPDOWN / 2.0, r.center().y);
-        icons::paint(ui.painter(), Rect::from_center_size(c, vec2(DROPDOWN, DROPDOWN)), "dropdown", st.text, st.text);
+        icons::paint(ui.painter(), Rect::from_center_size(c, vec2(DROPDOWN, DROPDOWN)), "dropdown", t.ribbon_button_text, t.ribbon_button_text);
     }
     resp
 }
@@ -944,6 +954,31 @@ mod tests {
         assert_eq!(after.2, w.inactive.weak_bg_fill);
         frame(vec![press(frameless.center(), true)]);
         assert_eq!(settle().3, t.pressed);
+    }
+
+    #[test]
+    fn tab_strip_buttons_match_the_audited_sizes() {
+        let ctx = egui::Context::default();
+        crate::theme::apply(&ctx, crate::theme::Appearance::Light);
+        ctx.set_fonts(crate::theme::font_definitions(false, false));
+        let sizes = std::cell::Cell::new((vec2(0.0, 0.0), vec2(0.0, 0.0)));
+        ctx.run_ui(egui::RawInput::default(), |ui| {
+            let comments = icon_text_button(ui, "comment", "Comments", regular(12.0));
+            let editing = icon_text_menu_button(ui, "pencil", "Editing", regular(12.0));
+            sizes.set((comments.rect.size(), editing.rect.size()));
+        })
+        .drop_without_applying_deltas();
+        let (comments, editing) = sizes.get();
+        assert!((comments.x - 105.0).abs() < 1.0, "Comments width is {}", comments.x);
+        assert_eq!(comments.y, 24.0);
+        assert!((editing.x - 96.0).abs() < 1.0, "Editing width is {}", editing.x);
+        assert_eq!(editing.y, 24.0);
+        assert_eq!(ICON_TEXT_BUTTON_PADDING_X, 10.0);
+        assert_eq!(ICON_TEXT_BUTTON_PADDING_Y, 4.0);
+        assert_eq!(ICON_TEXT_BUTTON_LAYOUT_ICON_W, 16.0);
+        assert_eq!(ICON_TEXT_BUTTON_PAINT_ICON_W, 20.0);
+        assert_eq!(ICON_TEXT_BUTTON_GAP, 8.0);
+        assert_eq!(crate::theme::RIBBON_BUTTON_CORNER_RADIUS, 5);
     }
 
     #[test]
