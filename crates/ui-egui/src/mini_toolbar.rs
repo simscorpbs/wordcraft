@@ -19,16 +19,16 @@ const PAD_X: f32 = 4.0;
 const PAD_Y: f32 = 3.0;
 /// Height of one row of controls (the ribbon's 22 pt buttons plus a little air), and the gap
 /// between the two rows.
-const ROW_H: f32 = 24.0;
+const ROW_H: f32 = 28.0;
 const ROW_GAP: f32 = 2.0;
 /// Horizontal gap between neighbouring controls.
-const SPACING: f32 = 1.0;
+const SPACING: f32 = 2.0;
 /// The ribbon's widget metrics: a small icon button, a split button (icon part plus its 11 pt
 /// arrow, two allocations), a group divider and the size box.
 const BTN_W: f32 = 24.0;
-const SPLIT_W: f32 = 24.0 + SPACING + 11.0;
+const SPLIT_W: f32 = 24.0 + SPACING + 14.0;
 const SEP_W: f32 = 9.0;
-const COMBO_SIZE_W: f32 = 52.0;
+const COMBO_SIZE_W: f32 = 54.0;
 /// Gap between the size box and the grow/shrink buttons.
 const GAP: f32 = 3.0;
 /// Row 2, like Word's: B I U S | highlight, font colour | the four alignments. Fourteen
@@ -248,7 +248,8 @@ fn content(app: &mut WordApp, ui: &mut egui::Ui, t: &Tokens) {
         sep(ui, t);
 
         let hl = app.canvas.last_highlight.clone();
-        widgets::split(ui, app, "highlight", "Text Highlight Color", "format.highlight", json!({"color": hl}), false, None, |ui, app| {
+        let hl_swatch = wordcraft_doc::props::Highlight::from_ooxml(&hl).rgb().map(crate::theme::c32);
+        widgets::split(ui, app, "highlight", "Text Highlight Color", "format.highlight", json!({"color": hl}), false, hl_swatch, |ui, app| {
             highlight_menu(ui, app);
         });
         let fc = app.canvas.last_font_color.clone();
@@ -313,6 +314,14 @@ fn font_color_menu(ui: &mut egui::Ui, app: &mut WordApp) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn mini_toolbar_tracks_ribbon_control_metrics() {
+        assert_eq!(ROW_H, 28.0);
+        assert_eq!(SPACING, 2.0);
+        assert_eq!(SPLIT_W, 40.0);
+        assert_eq!(COMBO_SIZE_W, 54.0);
+    }
 
     fn vp() -> Rect {
         Rect::from_min_size(pos2(100.0, 50.0), Vec2::new(1200.0, 700.0))

@@ -7,7 +7,7 @@ use crate::theme::{Tokens, regular};
 use crate::{WordApp, icons};
 
 /// Height of the ribbon content area (without group labels).
-pub const CONTENT_H: f32 = 66.0;
+pub const CONTENT_H: f32 = 72.0;
 /// Height of the group title row under the content.
 pub const LABEL_H: f32 = 18.0;
 /// Large buttons: centre of the 32 px icon, top of the first label line, and the pitch and
@@ -22,6 +22,21 @@ pub(crate) const ICON_TEXT_BUTTON_PADDING_Y: f32 = 4.0;
 pub(crate) const ICON_TEXT_BUTTON_LAYOUT_ICON_W: f32 = 16.0;
 pub(crate) const ICON_TEXT_BUTTON_PAINT_ICON_W: f32 = 20.0;
 pub(crate) const ICON_TEXT_BUTTON_GAP: f32 = 8.0;
+/// The dropdown marker after the text of Editing (#C6): kept apart from [`DROPDOWN`], which sizes
+/// the ribbon combo arrows.
+pub(crate) const ICON_TEXT_BUTTON_MARKER_W: f32 = 14.0;
+
+/// Compact ribbon dimensions measured against Word for Mac.
+pub(crate) const COMBO_HEIGHT: f32 = 24.0;
+pub(crate) const FONT_COMBO_WIDTH: f32 = 100.0;
+pub(crate) const SIZE_COMBO_WIDTH: f32 = 54.0;
+pub(crate) const FONT_SIZE_GAP: f32 = 3.0;
+pub(crate) const COMBO_ARROW_WIDTH: f32 = 14.0;
+pub(crate) const COMBO_RADIUS: u8 = 2;
+pub(crate) const SMALL_BUTTON_WIDTH: f32 = 24.0;
+pub(crate) const SMALL_BUTTON_HEIGHT: f32 = 24.0;
+pub(crate) const SMALL_BUTTON_ICON: f32 = 19.0;
+pub(crate) const RIBBON_ITEM_SPACING_X: f32 = 2.0;
 // #653: a two-line label ends inside the content, above the group title row.
 const _: () = assert!(BIG_LABEL_Y + LABEL_PITCH + LABEL_LINE_H <= CONTENT_H);
 const _: () = assert!(BIG_ICON_Y + 16.0 <= BIG_LABEL_Y);
@@ -120,10 +135,8 @@ pub(crate) fn bg(ui: &Ui, r: Rect, resp: &Response, checked: bool, t: &Tokens) {
     } else {
         return;
     };
-    ui.painter().rect_filled(r, CornerRadius::same(4), fill);
-    if checked {
-        ui.painter().rect_stroke(r, CornerRadius::same(4), Stroke::new(1.0, t.accent.linear_multiply(0.5)), egui::StrokeKind::Inside);
-    }
+    let radius = if cfg!(target_os = "macos") { COMBO_RADIUS } else { 4 };
+    ui.painter().rect_filled(r, CornerRadius::same(radius), fill);
 }
 
 /// Runs a ribbon button's command, then hands keyboard focus back to the document so typing
@@ -148,7 +161,7 @@ pub fn big_toggle(ui: &mut Ui, app: &mut WordApp, icon: &str, label: &str, id: &
 
 /// Size of the drop-down marker drawn after a label or beside a split button (#659: one marker,
 /// the `dropdown` icon, everywhere; no text glyph).
-pub const DROPDOWN: f32 = 10.0;
+pub const DROPDOWN: f32 = COMBO_ARROW_WIDTH;
 
 /// One centred label line (top at `y`); `marker` draws the drop-down icon after the text, in the
 /// text's colour, and the pair is centred together.
@@ -197,15 +210,21 @@ pub fn small(ui: &mut Ui, app: &mut WordApp, icon: &str, label: Option<&str>, ti
     let (label, tip) = (label.map(|l| tl!(l)), tl!(tip));
     let t = Tokens::get(ui.ctx());
     let text_w = label.map(|l| ui.ctx().fonts_mut(|f| f.layout_no_wrap(l.to_string(), regular(11.5), t.text).size().x) + 6.0).unwrap_or(0.0);
-    let (r, resp) = ui.allocate_exact_size(vec2(24.0 + text_w, 22.0), Sense::click());
+    let (r, resp) = ui.allocate_exact_size(vec2(SMALL_BUTTON_WIDTH + text_w, SMALL_BUTTON_HEIGHT), Sense::click());
     keytip_badge(ui, r, id, tip);
     let on = enabled(app, id);
     bg(ui, r, &resp, checked, &t);
-    let ic = Rect::from_center_size(pos2(r.min.x + 12.0, r.center().y), vec2(17.0, 17.0));
+    let ic = Rect::from_center_size(pos2(r.min.x + SMALL_BUTTON_WIDTH / 2.0, r.center().y), vec2(SMALL_BUTTON_ICON, SMALL_BUTTON_ICON));
     let (c, a) = if on { (t.icon, t.accent) } else { (t.text_disabled, t.text_disabled) };
     icons::paint(ui.painter(), ic, icon, c, a);
     if let Some(l) = label {
-        ui.painter().text(pos2(r.min.x + 24.0, r.center().y), Align2::LEFT_CENTER, l, regular(11.5), if on { t.text } else { t.text_disabled });
+        ui.painter().text(
+            pos2(r.min.x + SMALL_BUTTON_WIDTH, r.center().y),
+            Align2::LEFT_CENTER,
+            l,
+            regular(11.5),
+            if on { t.text } else { t.text_disabled },
+        );
     }
     let resp = tooltip(app, resp, tip, id);
     command_menu(&resp, app, id);
@@ -230,16 +249,14 @@ pub fn split(
 ) {
     let tip = tl!(tip);
     let t = Tokens::get(ui.ctx());
-    let (r, resp) = ui.allocate_exact_size(vec2(24.0, 22.0), Sense::click());
+    let (r, resp) = ui.allocate_exact_size(vec2(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT), Sense::click());
     keytip_badge(ui, r, id, tip);
-    let (ar, aresp) = ui.allocate_exact_size(vec2(11.0, 22.0), Sense::click());
+    let (ar, aresp) = ui.allocate_exact_size(vec2(COMBO_ARROW_WIDTH, SMALL_BUTTON_HEIGHT), Sense::click());
     bg(ui, r, &resp, checked, &t);
     bg(ui, ar, &aresp, false, &t);
-    let ic = Rect::from_center_size(r.center(), vec2(17.0, 17.0));
-    icons::paint(ui.painter(), ic, icon, t.icon, t.accent);
-    if let Some(sw) = swatch {
-        ui.painter().rect_filled(Rect::from_min_max(pos2(r.min.x + 4.0, r.max.y - 5.0), pos2(r.max.x - 4.0, r.max.y - 2.0)), 0.0, sw);
-    }
+    let ic = Rect::from_center_size(r.center(), vec2(SMALL_BUTTON_ICON, SMALL_BUTTON_ICON));
+    let icon_accent = swatch.unwrap_or_else(|| split_icon_accent(icon, t.accent));
+    icons::paint(ui.painter(), ic, icon, t.icon, icon_accent);
     icons::paint(ui.painter(), Rect::from_center_size(ar.center(), vec2(DROPDOWN, DROPDOWN)), "dropdown", t.icon, t.accent);
     let resp = tooltip(app, resp, tip, id);
     command_menu(&resp, app, id);
@@ -250,6 +267,15 @@ pub fn split(
         ui.set_min_width(180.0);
         menu(ui, app);
     });
+}
+
+fn split_icon_accent(icon: &str, accent: Color32) -> Color32 {
+    match icon {
+        "highlight" => icons::HIGHLIGHT_DEFAULT_COLOR,
+        "fontcolor" => icons::FONTCOLOR_DEFAULT_COLOR,
+        "shading" => icons::HIGHLIGHT_DEFAULT_COLOR,
+        _ => accent,
+    }
 }
 
 /// Whether a menu button whose menu is about command `id` is on ("" = always).
@@ -294,12 +320,18 @@ pub fn menu_button(
         resp
     } else {
         let text_w = label.map(|l| ui.ctx().fonts_mut(|f| f.layout_no_wrap(l.to_string(), regular(11.5), t.text).size().x) + 6.0).unwrap_or(0.0);
-        let (r, resp) = ui.allocate_exact_size(vec2(24.0 + text_w + 10.0, 22.0), Sense::click());
+        let (r, resp) = ui.allocate_exact_size(vec2(SMALL_BUTTON_WIDTH + text_w + 10.0, SMALL_BUTTON_HEIGHT), Sense::click());
         keytip_badge(ui, r, "menu", tip);
         bg(ui, r, &resp, false, &t);
-        icons::paint(ui.painter(), Rect::from_center_size(pos2(r.min.x + 12.0, r.center().y), vec2(17.0, 17.0)), icon, c, a);
+        icons::paint(
+            ui.painter(),
+            Rect::from_center_size(pos2(r.min.x + SMALL_BUTTON_WIDTH / 2.0, r.center().y), vec2(SMALL_BUTTON_ICON, SMALL_BUTTON_ICON)),
+            icon,
+            c,
+            a,
+        );
         if let Some(l) = label {
-            ui.painter().text(pos2(r.min.x + 24.0, r.center().y), Align2::LEFT_CENTER, l, regular(11.5), text);
+            ui.painter().text(pos2(r.min.x + SMALL_BUTTON_WIDTH, r.center().y), Align2::LEFT_CENTER, l, regular(11.5), text);
         }
         icons::paint(ui.painter(), Rect::from_center_size(pos2(r.max.x - 6.0, r.center().y), vec2(DROPDOWN, DROPDOWN)), "dropdown", c, c);
         resp
@@ -336,7 +368,7 @@ pub fn group_titled(ui: &mut Ui, id_title: &str, title: &str, launcher: Option<&
     let inner = ui.vertical(|ui| {
         ui.set_min_width(label_w + if launcher.is_some() { 22.0 } else { 10.0 });
         let content = ui.allocate_ui_with_layout(vec2(ui.available_width(), CONTENT_H), egui::Layout::left_to_right(egui::Align::Min), |ui| {
-            ui.spacing_mut().item_spacing = vec2(1.0, 1.0);
+            ui.spacing_mut().item_spacing = vec2(RIBBON_ITEM_SPACING_X, 0.0);
             add(ui, app);
         });
         #[cfg(test)]
@@ -433,7 +465,7 @@ pub fn customize_menu_items(ui: &mut Ui, app: &mut WordApp) {
 /// A row of small buttons (used inside a vertical stack).
 pub fn row(ui: &mut Ui, add: impl FnOnce(&mut Ui)) {
     ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing = vec2(1.0, 0.0);
+        ui.spacing_mut().item_spacing = vec2(RIBBON_ITEM_SPACING_X, 0.0);
         add(ui);
     });
 }
@@ -548,6 +580,26 @@ pub fn font_matches(query: &str, items: &[String]) -> Vec<usize> {
     exact
 }
 
+/// Shortens a family name for the closed font field while keeping the complete name editable.
+pub(crate) fn ellipsize(ui: &Ui, text: &str, max_width: f32, font: egui::FontId) -> String {
+    if crate::theme::text_width(ui.painter(), text, &font, 0.0, Color32::PLACEHOLDER) <= max_width {
+        return text.to_owned();
+    }
+    let marker = "…";
+    if crate::theme::text_width(ui.painter(), marker, &font, 0.0, Color32::PLACEHOLDER) >= max_width {
+        return marker.to_owned();
+    }
+    let mut prefix = String::new();
+    for ch in text.chars() {
+        let candidate = format!("{prefix}{ch}{marker}");
+        if crate::theme::text_width(ui.painter(), &candidate, &font, 0.0, Color32::PLACEHOLDER) > max_width {
+            break;
+        }
+        prefix.push(ch);
+    }
+    format!("{prefix}{marker}")
+}
+
 /// Width of a combo arrow's border, the field's own (the theme's input border is 1 pt).
 const ARROW_BORDER: f32 = 1.0;
 
@@ -589,9 +641,11 @@ fn combo_impl(
         ui.spacing_mut().item_spacing = vec2(0.0, 0.0);
         // The field and its arrow share one outline: rounded on the outside, square where they
         // meet. The field's frame takes the widget visuals' radius in every state.
-        let r = ui.visuals().widgets.inactive.corner_radius;
         let w = &mut ui.visuals_mut().widgets;
+        let radius = if cfg!(target_os = "macos") { COMBO_RADIUS } else { w.inactive.corner_radius.nw };
         for v in [&mut w.noninteractive, &mut w.inactive, &mut w.hovered, &mut w.active, &mut w.open] {
+            v.corner_radius.nw = radius;
+            v.corner_radius.sw = radius;
             v.corner_radius.ne = 0;
             v.corner_radius.se = 0;
         }
@@ -607,10 +661,21 @@ fn combo_impl(
                 }
             });
         }
-        let te = egui::TextEdit::singleline(&mut text).id(te_id).desired_width(width - 16.0).font(regular(12.0)).margin(vec2(4.0, 3.0));
+        let was_focused = ui.memory(|m| m.has_focus(te_id));
+        let mut shown_text =
+            if search && !was_focused { ellipsize(ui, current, width - COMBO_ARROW_WIDTH - 2.0, regular(12.0)) } else { text.clone() };
+        let te = egui::TextEdit::singleline(&mut shown_text)
+            .id(te_id)
+            .desired_width(width - COMBO_ARROW_WIDTH)
+            .font(regular(12.0))
+            .margin(vec2(4.0, 5.0))
+            .min_size(vec2(width - COMBO_ARROW_WIDTH, COMBO_HEIGHT));
         // The arrow's box is painted here, under the field, once its size is known.
         let arrow_bg = ui.painter().add(egui::Shape::Noop);
         let resp = ui.add(te);
+        if resp.has_focus() {
+            text = if was_focused { shown_text.clone() } else { current.to_owned() };
+        }
         keytip_badge(ui, resp.rect, "combo", id);
         focused = resp.has_focus();
         let enter = resp.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
@@ -655,10 +720,10 @@ fn combo_impl(
         } else if enter {
             out = Some(text.clone());
         }
-        let (ar, aresp) = ui.allocate_exact_size(vec2(16.0, resp.rect.height()), Sense::click());
+        let (ar, aresp) = ui.allocate_exact_size(vec2(COMBO_ARROW_WIDTH, COMBO_HEIGHT), Sense::click());
         // It reaches one border width under the field, so the field's right border is the only line
         // between them: two borders side by side read as a double-width divider.
-        let ar_radius = CornerRadius { nw: 0, sw: 0, ne: r.ne, se: r.se };
+        let ar_radius = CornerRadius { nw: 0, sw: 0, ne: radius, se: radius };
         let under = Rect::from_min_max(pos2(ar.min.x - ARROW_BORDER, ar.min.y), ar.max);
         let fill = if aresp.hovered() { t.hover } else { t.input };
         let arrow_box = egui::epaint::RectShape::new(under, ar_radius, fill, Stroke::new(ARROW_BORDER, t.input_border), egui::StrokeKind::Inside);
@@ -859,7 +924,7 @@ fn icon_text_button_with(ui: &mut Ui, icon: &str, text: &str, font: egui::FontId
     let galley = ui.painter().layout_no_wrap(text.to_string(), font, Color32::PLACEHOLDER);
     let pad = vec2(ICON_TEXT_BUTTON_PADDING_X, ICON_TEXT_BUTTON_PADDING_Y);
     let icon_w = ICON_TEXT_BUTTON_LAYOUT_ICON_W;
-    let marker_w = if marker { DROPDOWN + 4.0 } else { 0.0 };
+    let marker_w = if marker { ICON_TEXT_BUTTON_MARKER_W } else { 0.0 };
     let size = vec2(pad.x + icon_w + ICON_TEXT_BUTTON_GAP + galley.size().x + marker_w + pad.x, galley.size().y.max(icon_w) + 2.0 * pad.y);
     let (r, resp) = ui.allocate_exact_size(size, Sense::click());
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, ui.is_enabled(), text));
@@ -881,7 +946,7 @@ fn icon_text_button_with(ui: &mut Ui, icon: &str, text: &str, font: egui::FontId
     let text_w = galley.size().x;
     ui.painter().galley(pos2(text_x, r.center().y - galley.size().y / 2.0), galley, t.ribbon_button_text);
     if marker {
-        let c = pos2(text_x + text_w + 4.0 + DROPDOWN / 2.0, r.center().y);
+        let c = pos2(text_x + text_w + ICON_TEXT_BUTTON_MARKER_W / 2.0 + 2.0, r.center().y);
         icons::paint(ui.painter(), Rect::from_center_size(c, vec2(DROPDOWN, DROPDOWN)), "dropdown", t.ribbon_button_text, t.ribbon_button_text);
     }
     resp
@@ -990,6 +1055,47 @@ mod tests {
         assert_eq!(font_matches(" new ", &items), vec![2, 3]);
         assert!(font_matches("zapfino", &items).is_empty());
         assert_eq!(font_matches("", &items), vec![0, 1, 2, 3, 4]);
+    }
+
+    #[test]
+    fn ribbon_control_dimensions_match_word_for_mac() {
+        assert_eq!(COMBO_HEIGHT, 24.0);
+        assert_eq!(CONTENT_H, 72.0);
+        assert_eq!(FONT_COMBO_WIDTH, 100.0);
+        assert_eq!(SIZE_COMBO_WIDTH, 54.0);
+        assert_eq!(FONT_SIZE_GAP, 3.0);
+        assert_eq!(COMBO_ARROW_WIDTH, 14.0);
+        assert_eq!(COMBO_RADIUS, 2);
+        assert_eq!(SMALL_BUTTON_WIDTH, 24.0);
+        assert_eq!(SMALL_BUTTON_HEIGHT, 24.0);
+        assert_eq!(SMALL_BUTTON_ICON, 19.0);
+        assert_eq!(RIBBON_ITEM_SPACING_X, 2.0);
+        assert_eq!(DROPDOWN, 14.0);
+        assert_eq!(crate::icons::COLOR_BAR_WIDTH_UNITS, 16.0);
+        assert_eq!(crate::icons::COLOR_BAR_HEIGHT_UNITS, 4.0);
+    }
+
+    #[test]
+    fn split_color_bar_defaults_keep_legacy_colors_without_a_swatch() {
+        let accent = Color32::from_rgb(0x3B, 0x5B, 0xDB);
+        assert_eq!(split_icon_accent("highlight", accent), crate::icons::HIGHLIGHT_DEFAULT_COLOR);
+        assert_eq!(split_icon_accent("fontcolor", accent), crate::icons::FONTCOLOR_DEFAULT_COLOR);
+        assert_eq!(split_icon_accent("shading", accent), crate::icons::HIGHLIGHT_DEFAULT_COLOR);
+    }
+
+    #[test]
+    fn closed_font_field_ellipsizes_but_keeps_short_names() {
+        let ctx = egui::Context::default();
+        ctx.set_fonts(crate::theme::font_definitions(false, false));
+        ctx.run_ui(egui::RawInput::default(), |_| {}).drop_without_applying_deltas();
+        ctx.run_ui(egui::RawInput::default(), |ui| {
+            let short = ellipsize(ui, "Arial", 84.0, regular(12.0));
+            let long = ellipsize(ui, "Neue Haas Grotesk Text", 84.0, regular(12.0));
+            assert_eq!(short, "Arial");
+            assert!(long.ends_with('…'));
+            assert!(crate::theme::text_width(ui.painter(), &long, &regular(12.0), 0.0, Color32::PLACEHOLDER) <= 84.0);
+        })
+        .drop_without_applying_deltas();
     }
 
     /// Focuses a fresh combo, types `typed`, presses `keys` (one per frame) and returns its value.

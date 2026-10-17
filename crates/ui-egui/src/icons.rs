@@ -4,6 +4,17 @@
 
 use egui::{Color32, FontId, Painter, Pos2, Rect, Shape, Stroke, pos2, vec2};
 
+pub(crate) const COLOR_BAR_WIDTH_UNITS: f32 = 16.0;
+pub(crate) const COLOR_BAR_HEIGHT_UNITS: f32 = 4.0;
+pub(crate) const HIGHLIGHT_DEFAULT_COLOR: Color32 = Color32::from_rgb(0xF2, 0xC8, 0x11);
+pub(crate) const FONTCOLOR_DEFAULT_COLOR: Color32 = Color32::from_rgb(0xD1, 0x3B, 0x3B);
+pub(crate) const ICON_GRID_UNITS: f32 = 20.0;
+pub(crate) const DROPDOWN_REFERENCE_BOX_PT: f32 = 14.0;
+pub(crate) const DROPDOWN_TRIANGLE_WIDTH_PT: f32 = 6.0;
+pub(crate) const DROPDOWN_TRIANGLE_HEIGHT_PT: f32 = 4.0;
+pub(crate) const DROPDOWN_TRIANGLE_WIDTH_UNITS: f32 = DROPDOWN_TRIANGLE_WIDTH_PT * ICON_GRID_UNITS / DROPDOWN_REFERENCE_BOX_PT;
+pub(crate) const DROPDOWN_TRIANGLE_HEIGHT_UNITS: f32 = DROPDOWN_TRIANGLE_HEIGHT_PT * ICON_GRID_UNITS / DROPDOWN_REFERENCE_BOX_PT;
+
 struct Pen<'a> {
     p: &'a Painter,
     r: Rect,
@@ -14,7 +25,7 @@ struct Pen<'a> {
 
 impl Pen<'_> {
     fn s(&self) -> f32 {
-        self.r.width().min(self.r.height()) / 20.0
+        self.r.width().min(self.r.height()) / ICON_GRID_UNITS
     }
     fn pt(&self, x: f32, y: f32) -> Pos2 {
         let s = self.s();
@@ -75,8 +86,8 @@ impl Pen<'_> {
 pub fn paint(p: &Painter, r: Rect, name: &str, c: Color32, accent: Color32) {
     let pen = Pen { p, r, c, a: accent, w: 1.25 };
     let a = accent;
-    let red = Color32::from_rgb(0xD1, 0x3B, 0x3B);
-    let yellow = Color32::from_rgb(0xF2, 0xC8, 0x11);
+    let red = FONTCOLOR_DEFAULT_COLOR;
+    let yellow = HIGHLIGHT_DEFAULT_COLOR;
     let green = Color32::from_rgb(0x2E, 0x8B, 0x57);
     let orange = Color32::from_rgb(0xE0, 0x7B, 0x1F);
     match name {
@@ -153,11 +164,11 @@ pub fn paint(p: &Painter, r: Rect, name: &str, c: Color32, accent: Color32) {
         "highlight" => {
             pen.fill(&[(5.0, 12.0), (11.0, 4.0), (14.0, 7.0), (8.0, 15.0)], c);
             pen.line(&[(5.0, 12.0), (3.5, 15.0), (8.0, 15.0)]);
-            pen.frect(2.0, 16.5, 18.0, 19.0, yellow);
+            pen.frect(2.0, 19.0 - COLOR_BAR_HEIGHT_UNITS, 2.0 + COLOR_BAR_WIDTH_UNITS, 19.0, a);
         }
         "fontcolor" => {
             pen.text(10.0, 9.0, 14.0, "A", c, false);
-            pen.frect(2.0, 16.5, 18.0, 19.0, red);
+            pen.frect(2.0, 19.0 - COLOR_BAR_HEIGHT_UNITS, 2.0 + COLOR_BAR_WIDTH_UNITS, 19.0, a);
         }
         "effects" => {
             pen.text(10.0, 10.0, 15.0, "A", a, true);
@@ -237,7 +248,7 @@ pub fn paint(p: &Painter, r: Rect, name: &str, c: Color32, accent: Color32) {
             pen.fill(&[(4.0, 9.0), (10.0, 3.0), (16.0, 9.0), (10.0, 15.0)], Color32::TRANSPARENT);
             pen.closed(&[(4.0, 9.0), (10.0, 3.0), (16.0, 9.0), (10.0, 15.0)], c);
             pen.fcircle(16.5, 13.5, 1.6, a);
-            pen.frect(2.0, 16.5, 18.0, 19.0, yellow);
+            pen.frect(2.0, 19.0 - COLOR_BAR_HEIGHT_UNITS, 2.0 + COLOR_BAR_WIDTH_UNITS, 19.0, a);
         }
         "borders" => {
             for y in [3.0, 10.0, 17.0] {
@@ -1211,9 +1222,15 @@ pub fn paint(p: &Painter, r: Rect, name: &str, c: Color32, accent: Color32) {
             pen.line(&[(5.0, 5.0), (15.0, 15.0)]);
             pen.line(&[(15.0, 5.0), (5.0, 15.0)]);
         }
-        // A triangle filling most of its box: it is drawn at 9–12 pt beside combos and split
-        // buttons, where a smaller one shrank to a dot (#535).
-        "dropdown" => pen.fill(&[(3.0, 7.0), (17.0, 7.0), (10.0, 14.0)], c),
+        // The reference box is 14 pt, so this is 6×4 pt on ribbon combos and split buttons.
+        "dropdown" => pen.fill(
+            &[
+                (10.0 - DROPDOWN_TRIANGLE_WIDTH_UNITS / 2.0, 8.0),
+                (10.0 + DROPDOWN_TRIANGLE_WIDTH_UNITS / 2.0, 8.0),
+                (10.0, 8.0 + DROPDOWN_TRIANGLE_HEIGHT_UNITS),
+            ],
+            c,
+        ),
         "more" => {
             for x in [5.0, 10.0, 15.0] {
                 pen.fcircle(x, 10.0, 1.3, c);
@@ -1473,5 +1490,20 @@ pub fn library(p: &Painter, r: Rect, icon: &wordcraft_render::icon_lib::Icon, c:
             }
             p.add(Shape::line(pts, stroke));
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{
+        DROPDOWN_REFERENCE_BOX_PT, DROPDOWN_TRIANGLE_HEIGHT_PT, DROPDOWN_TRIANGLE_HEIGHT_UNITS, DROPDOWN_TRIANGLE_WIDTH_PT,
+        DROPDOWN_TRIANGLE_WIDTH_UNITS, ICON_GRID_UNITS,
+    };
+
+    #[test]
+    fn dropdown_triangle_is_six_by_four_points_in_the_reference_box() {
+        let scale = DROPDOWN_REFERENCE_BOX_PT / ICON_GRID_UNITS;
+        assert!((DROPDOWN_TRIANGLE_WIDTH_UNITS * scale - DROPDOWN_TRIANGLE_WIDTH_PT).abs() < 1e-5);
+        assert!((DROPDOWN_TRIANGLE_HEIGHT_UNITS * scale - DROPDOWN_TRIANGLE_HEIGHT_PT).abs() < 1e-5);
     }
 }

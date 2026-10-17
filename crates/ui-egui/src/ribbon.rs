@@ -833,7 +833,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                 let font = app.previews.font_shown(&font);
                 let fams = app.previews.families();
                 let prev = app.previews.font_preview_fn();
-                if let Some(f) = font_combo(ui, "font", 150.0, &font, &fams, Some(&*prev)) {
+                if let Some(f) = font_combo(ui, "font", crate::widgets::FONT_COMBO_WIDTH, &font, &fams, Some(&*prev)) {
                     let _ = if f == crate::widgets::ADD_FONT {
                         app.run("font.add", json!({}))
                     } else if f == crate::widgets::LOAD_SYSTEM_FONTS {
@@ -843,6 +843,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                         app.run("format.font", json!({"name": f}))
                     };
                 }
+                ui.add_space(crate::widgets::FONT_SIZE_GAP - crate::widgets::RIBBON_ITEM_SPACING_X);
                 let size = st
                     .get("size")
                     .and_then(Value::as_f64)
@@ -850,7 +851,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                     .unwrap_or_default();
                 let sizes: Vec<String> =
                     wordcraft_engine::cmd::format::SIZES.iter().map(|s| if s.fract() == 0.0 { format!("{s:.0}") } else { s.to_string() }).collect();
-                if let Some(v) = combo(ui, "size", 52.0, &size, &sizes, None)
+                if let Some(v) = combo(ui, "size", crate::widgets::SIZE_COMBO_WIDTH, &size, &sizes, None)
                     && let Ok(x) = v.trim().parse::<f64>()
                 {
                     let _ = app.run("format.size", json!({"size": x}));
@@ -908,7 +909,8 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                     mi(ui, app, "Double Strikethrough", "format.doubleStrikethrough", json!({}));
                 });
                 let hl = app.canvas.last_highlight.clone();
-                split(ui, app, "highlight", "Text Highlight Color", "format.highlight", json!({"color": hl}), false, None, |ui, app| {
+                let hl_swatch = wordcraft_doc::props::Highlight::from_ooxml(&hl).rgb().map(crate::theme::c32);
+                split(ui, app, "highlight", "Text Highlight Color", "format.highlight", json!({"color": hl}), false, hl_swatch, |ui, app| {
                     let grid = wordcraft_doc::props::Highlight::ALL;
                     egui::Grid::new("hl").spacing(vec2(3.0, 3.0)).show(ui, |ui| {
                         for (i, h) in grid.iter().enumerate().skip(1) {
@@ -1019,11 +1021,22 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                     mi(ui, app, "Remove Space After Paragraph", "para.removeSpaceAfter", json!({}));
                     mi(ui, app, "Line Spacing Options…", "para.dialog", json!({}));
                 });
-                split(ui, app, "shading", "Shading", "para.shading", json!({"color": app.canvas.last_shading.clone()}), false, None, |ui, app| {
-                    mi(ui, app, "No Color", "para.shading", json!({"color": null}));
-                    let theme = app.session.doc.settings.theme_colors.clone();
-                    crate::colors::menu(ui, app, &theme, Target::cmd("para.shading").remember(Remember::Shading));
-                });
+                let shading_swatch = wordcraft_doc::Rgb::parse(&app.canvas.last_shading).map(crate::theme::c32);
+                split(
+                    ui,
+                    app,
+                    "shading",
+                    "Shading",
+                    "para.shading",
+                    json!({"color": app.canvas.last_shading.clone()}),
+                    false,
+                    shading_swatch,
+                    |ui, app| {
+                        mi(ui, app, "No Color", "para.shading", json!({"color": null}));
+                        let theme = app.session.doc.settings.theme_colors.clone();
+                        crate::colors::menu(ui, app, &theme, Target::cmd("para.shading").remember(Remember::Shading));
+                    },
+                );
                 split(ui, app, "borders", "Borders", "para.borders", json!({"kind": "bottom"}), false, None, |ui, app| {
                     for (l, k) in [
                         ("Bottom Border", "bottom"),
@@ -2579,11 +2592,22 @@ fn table_design(app: &mut WordApp, ui: &mut Ui) {
                     ui.close();
                 }
             });
-            split(ui, app, "shading", "Shading", "table.shading", json!({"color": app.canvas.last_shading.clone()}), false, None, |ui, app| {
-                mi(ui, app, "No Color", "table.shading", json!({"color": null}));
-                let theme = app.session.doc.settings.theme_colors.clone();
-                crate::colors::menu(ui, app, &theme, Target::cmd("table.shading").remember(Remember::Shading));
-            });
+            let shading_swatch = wordcraft_doc::Rgb::parse(&app.canvas.last_shading).map(crate::theme::c32);
+            split(
+                ui,
+                app,
+                "shading",
+                "Shading",
+                "table.shading",
+                json!({"color": app.canvas.last_shading.clone()}),
+                false,
+                shading_swatch,
+                |ui, app| {
+                    mi(ui, app, "No Color", "table.shading", json!({"color": null}));
+                    let theme = app.session.doc.settings.theme_colors.clone();
+                    crate::colors::menu(ui, app, &theme, Target::cmd("table.shading").remember(Remember::Shading));
+                },
+            );
         });
     });
     group(ui, "Borders", None, app, |ui, app| {
