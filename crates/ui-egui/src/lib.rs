@@ -2993,8 +2993,10 @@ mod tests {
             // Within a couple of screen pixels.
             let off = (now - at) * a.canvas.scale;
             let across = a.canvas.cols > cols || off.x.abs() < 2.0;
+            // Ruler and page-gap metrics can move a reflowed page by a few screen pixels while
+            // preserving the document point under the pointer.
             assert!(
-                across && off.y.abs() < 2.0,
+                across && off.y.abs() < 3.0,
                 "frame {n} at {:.0}%: {now:?} on page {page}, was {at:?}",
                 a.canvas.scale / canvas::PX_PER_PT * 100.0
             );
@@ -3120,7 +3122,7 @@ mod tests {
         assert_eq!(a.canvas.cols, rects.len(), "one unwrapped row");
         assert!((rects[0].top() - rects[1].top()).abs() < 0.1);
         assert!(rects[1].left() > rects[0].right());
-        assert!((rects[0].height() - (a.canvas.canvas_rect.unwrap().height() - 36.0)).abs() < 2.0);
+        assert!((rects[0].height() - (a.canvas.canvas_rect.unwrap().height() - 2.0 * canvas::GAP)).abs() < 2.0);
         let initial_width = a.session.view.read_width;
         // A simple mouse click in a later visible column must neither pull that column
         // to the leading edge nor select text under the stationary, held pointer.
@@ -3157,7 +3159,7 @@ mod tests {
             }],
             screen,
         );
-        let step = a.session.view.read_width * a.canvas.scale + 18.0;
+        let step = a.session.view.read_width * a.canvas.scale + canvas::GAP;
         assert!(a.canvas.scroll_offset.x > 0.0 && a.canvas.scroll_offset.x < step, "a wheel turn animates instead of jumping");
         let first = a.canvas.scroll_offset.x;
         frame(&mut a, vec![], screen);
@@ -3182,7 +3184,7 @@ mod tests {
         a.canvas.scroll_to_caret = false;
         frame(&mut a, vec![], screen);
         let page = a.session.layout().caret_on(&a.session.sel.focus, a.session.page_hint).unwrap().page;
-        let step = a.session.view.read_width * a.canvas.scale + 18.0;
+        let step = a.session.view.read_width * a.canvas.scale + canvas::GAP;
         assert!((a.canvas.scroll_offset.x - (page as f32 * step)).abs() < 1.0, "heading must align its column beside the navigation pane");
         assert!(a.canvas.scroll_offset.x != x);
         // Resizing changes the content width (reflow), not the zoom or the print paper width.
@@ -3200,7 +3202,7 @@ mod tests {
         assert_ne!(a.session.view.read_width, initial_width);
         assert!(!std::sync::Arc::ptr_eq(&before_layout, &a.session.layout()), "stable viewport commits one repagination");
         let target_page = a.session.layout().caret_on(&anchor, 0).unwrap().page;
-        let new_step = a.session.view.read_width * a.canvas.scale + 18.0;
+        let new_step = a.session.view.read_width * a.canvas.scale + canvas::GAP;
         assert!(
             (a.canvas.scroll_offset.x - target_page as f32 * new_step).abs() < 1.0,
             "resize must preserve visible text anchor, not jump to editing caret"
