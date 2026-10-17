@@ -13,6 +13,8 @@ mod animations;
 #[cfg(target_os = "macos")]
 mod apple_events;
 mod clipboard;
+#[cfg(target_os = "macos")]
+mod color_space;
 mod control_server;
 mod default_apps;
 mod file_dialogs;
@@ -456,6 +458,10 @@ fn main() -> eframe::Result {
             }
             app.ui.window = restored;
             app.integrated_titlebar = cfg!(target_os = "macos");
+            #[cfg(target_os = "macos")]
+            if !color_space::tag_window_srgb() {
+                log::warn!("window colour space: no window to tag sRGB");
+            }
             #[cfg(target_os = "macos")]
             if let Some(bar) = traffic_lights::title_bar() {
                 log::info!("title bar: {bar:?}");
