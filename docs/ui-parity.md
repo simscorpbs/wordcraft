@@ -60,7 +60,7 @@ Document title opens Rename Document; the account badge opens Options › Genera
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-10-17 | trivial | Tab strip parity C1–C10: File is omitted from the macOS row, tab cells and the active marker use the measured spacing, and the action controls are 24 pt with 5 pt corners; the overflow glyph is enlarged |
+| 2026-10-17 | trivial | Tab strip parity C2–C10 (File stays on macOS until a native menu bar exists): tab cells and the active marker use the measured spacing, and the action controls are 24 pt with 5 pt corners; the overflow glyph is enlarged |
 | 2026-10-13 | trivial | New/Modify Table Style: No Border on a part that inherits its lines hides them; emptying the font box makes the part's font inherited again (#1288) |
 | 2026-10-14 | trivial | Tab stops edited on the ruler: corner kind selector, click to set, drag to move or off to clear, per-kind markers mirrored for RTL; each gesture one `para.tabs` call and one undo step; Rulers 85% → 90% |
 | 2026-10-12 | trivial | Tables on the page: one selected cell (Select Cell, or a click along its left edge) is a cell selection when its border is dragged: the border moves in its row only (#962) |
