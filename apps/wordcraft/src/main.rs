@@ -444,6 +444,10 @@ fn main() -> eframe::Result {
                 if let Err(e) = app.session.enable_recovery(dir.join("recovery"), std::sync::Arc::new(move || ctx.request_repaint())) {
                     log::warn!("local recovery unavailable: {e}");
                 }
+                let ctx = cc.egui_ctx.clone();
+                if let Err(e) = app.session.enable_versions(dir.join("versions"), std::sync::Arc::new(move || ctx.request_repaint())) {
+                    log::warn!("local version history unavailable: {e}");
+                }
             }
             #[cfg(not(target_arch = "wasm32"))]
             {

@@ -1,0 +1,10 @@
+{"method":"engine.execute","params":{"command":"ui.theme","params":{"value":"light"}}}
+{"method":"engine.execute","params":{"command":"file.versions","params":{"save":"Morning draft"}}}
+{"method":"engine.execute","params":{"command":"file.versions","params":{"save":"Afternoon draft"}}}
+{"method":"engine.execute","params":{"command":"file.versions","params":{}}}
+{"steps":6}
+{"shot":"versions-shot-light.png"}
+{"method":"engine.execute","params":{"command":"ui.theme","params":{"value":"dark"}}}
+{"method":"engine.execute","params":{"command":"file.versions","params":{}}}
+{"steps":6}
+{"shot":"versions-shot-dark.png"}

@@ -384,6 +384,12 @@ fn save_as_page(app: &mut WordApp, ui: &mut Ui) {
 
 fn info_page(app: &mut WordApp, ui: &mut Ui) {
     heading(ui, "Info");
+    if ui.button(egui::RichText::new(tl!("Version History")).font(medium(14.0))).clicked() {
+        app.ui.backstage = false;
+        app.ui.versions_pane = true;
+        app.canvas.want_focus = true;
+    }
+    ui.add_space(12.0);
     let info = app.session.run("file.info", &json!({})).unwrap_or_default();
     ui.columns(2, |cols| {
         let ui = &mut cols[0];
