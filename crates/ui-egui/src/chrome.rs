@@ -259,11 +259,30 @@ pub(crate) fn qat_menu(ui: &mut Ui, app: &mut WordApp) {
 /// vertically centred in it, with the controls beside them.
 pub const MAC_TITLE_BAR: f32 = 28.0;
 /// The traffic lights as AppKit lays them out: button diameter, centre-to-centre pitch and the
-/// first button's left edge (8–10 pt depending on the macOS version; the larger value keeps the
-/// gap after them from shrinking).
-const MAC_LIGHT: f32 = 12.0;
-const MAC_LIGHT_PITCH: f32 = 20.0;
-const MAC_LIGHTS_LEFT: f32 = 10.0;
+/// 12 pt reservation before the first button, measured on the current macOS layout.
+pub(crate) const MAC_LIGHT: f32 = 14.0;
+pub(crate) const MAC_LIGHT_PITCH: f32 = 23.0;
+pub(crate) const MAC_LIGHTS_LEFT: f32 = 12.0;
+/// Width reserved for the document icon and its title in the integrated Mac title bar.
+pub(crate) const MAC_DOCUMENT_TITLE_WIDTH: f32 = 181.0;
+/// Size of the original document icon drawn beside the title.
+pub(crate) const MAC_DOCUMENT_TITLE_ICON: f32 = 16.0;
+/// Gap between the document icon and its title text.
+pub(crate) const MAC_DOCUMENT_TITLE_GAP: f32 = 4.0;
+/// Padding inside the measured Mac document-title slot.
+pub(crate) const MAC_DOCUMENT_TITLE_PADDING: f32 = 8.0;
+/// Mac search hit target, including the transparent space around its glyph.
+pub(crate) const MAC_SEARCH_TARGET: f32 = 22.0;
+/// Mac search glyph size.
+pub(crate) const MAC_SEARCH_GLYPH: f32 = 14.0;
+/// Right inset from the Mac search target to the glyph.
+pub(crate) const MAC_SEARCH_RIGHT_INSET: f32 = 10.0;
+/// Gap between the Mac search target and the neighbouring title-bar control.
+pub(crate) const MAC_SEARCH_CONTROL_GAP: f32 = 8.0;
+/// Right frame inset for the integrated Mac title bar; the target itself supplies the search gap.
+pub(crate) const MAC_TITLE_BAR_RIGHT_INSET: i8 = 0;
+/// Gap on each side of the measured Mac document-title slot.
+pub(crate) const MAC_DOCUMENT_TITLE_SIDE_GAP: f32 = 8.0;
 /// Where title-bar content starts to the right of the traffic lights (the title bar here, the
 /// Backstage back button, #222): the end of the three lights plus the same gap the lights keep
 /// from the top of the window.
@@ -295,6 +314,90 @@ impl MacTitleBar {
     }
 }
 
+fn document_title(app: &WordApp) -> String {
+    if !app.has_document() {
+        return "WordCraft".to_string();
+    }
+    let status = if app.session.dirty {
+        tl!("Edited")
+    } else if app.session.path.is_some() {
+        tl!("Saved")
+    } else {
+        tl!("Not saved")
+    };
+    format!("{} — {status}", app.title_stem())
+}
+
+fn truncated_title(ui: &Ui, text: &str, max_width: f32, font: &egui::FontId, tracking: f32, color: egui::Color32) -> String {
+    let mut shown: String = text.chars().take(240).collect();
+    if text_width(ui.painter(), &shown, font, tracking, color) > max_width {
+        while !shown.is_empty() && text_width(ui.painter(), &format!("{shown}…"), font, tracking, color) > max_width {
+            shown.pop();
+        }
+        if !shown.is_empty() {
+            shown.push('…');
+        }
+    }
+    shown
+}
+
+fn truncated_document_title(ui: &Ui, text: &str, max_width: f32, font: &egui::FontId, tracking: f32, color: egui::Color32) -> String {
+    let Some((name, status)) = text.rsplit_once(" — ") else {
+        return truncated_title(ui, text, max_width, font, tracking, color);
+    };
+    let suffix = format!(" — {status}");
+    if text_width(ui.painter(), text, font, tracking, color) <= max_width {
+        return text.to_string();
+    }
+    let mut shown: String = name.chars().take(240).collect();
+    while !shown.is_empty() {
+        let candidate = format!("{shown}…{suffix}");
+        if text_width(ui.painter(), &candidate, font, tracking, color) <= max_width {
+            return candidate;
+        }
+        shown.pop();
+    }
+    truncated_title(ui, &suffix, max_width, font, tracking, color)
+}
+
+fn search_control(ui: &mut Ui, app: &mut WordApp, t: Tokens, mac: bool, control_h: f32) {
+    let search_w = if mac { MAC_SEARCH_TARGET } else { 260.0 };
+    let search_h = if mac { MAC_SEARCH_TARGET } else { control_h };
+    let (r, resp) = ui.allocate_exact_size(vec2(search_w, search_h), Sense::click());
+    if mac {
+        let icon = Rect::from_min_size(
+            pos2(r.max.x - MAC_SEARCH_RIGHT_INSET - MAC_SEARCH_GLYPH, r.center().y - MAC_SEARCH_GLYPH / 2.0),
+            vec2(MAC_SEARCH_GLYPH, MAC_SEARCH_GLYPH),
+        );
+        icons::paint(ui.painter(), icon, "search", t.text_dim, t.accent);
+    } else {
+        ui.painter().rect(r, 6.0, if resp.hovered() { t.input } else { t.ribbon }, Stroke::new(1.0, t.border), egui::StrokeKind::Inside);
+        icons::paint(ui.painter(), Rect::from_center_size(pos2(r.min.x + 16.0, r.center().y), vec2(16.0, 16.0)), "search", t.text_dim, t.accent);
+        let ph = tl!("Search commands and help");
+        let pfont = TypeRung::Control.regular();
+        let ptrack = TypeRung::Control.tracking();
+        paint_text(
+            ui.painter(),
+            pos2(r.min.x + 30.0, r.center().y - TypeRung::Control.line_height() / 2.0),
+            Align2::LEFT_TOP,
+            ph,
+            &pfont,
+            ptrack,
+            t.text_dim,
+        );
+    }
+    if app.ui.keytips == crate::keytips::Phase::Tabs {
+        app.keytip_rects.push((r, crate::keytips::SEARCH_LETTER.to_string()));
+    }
+    let tip = match crate::widgets::shortcut_text(app, "tools.search") {
+        k if k.is_empty() => tl!("Search").to_string(),
+        k => format!("{} ({k})", tl!("Search")),
+    };
+    if resp.on_hover_text(tip).clicked() {
+        let _ = app.run("tools.search", json!({}));
+    }
+}
+
 pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
     // macOS: shorter, so the system's traffic lights are centred in it; the tallest controls
@@ -303,9 +406,10 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
     let bar = app.mac_titlebar;
     let left = if mac { bar.content_left as i8 } else { 8 };
     let control_h = if mac { 22.0 } else { 26.0 };
+    let right = if mac { MAC_TITLE_BAR_RIGHT_INSET } else { 10 };
     egui::Panel::top("title_bar")
         .exact_size(if mac { bar.height } else { 38.0 })
-        .frame(egui::Frame::NONE.fill(t.title_bar).inner_margin(egui::Margin { left, right: 10, top: 0, bottom: 0 }))
+        .frame(egui::Frame::NONE.fill(t.title_bar).inner_margin(egui::Margin { left, right, top: 0, bottom: 0 }))
         .show(ui, |ui| {
             let full = ui.max_rect();
             // Drag the window by the title bar (integrated title bar on macOS).
@@ -355,16 +459,22 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                 quick_access(ui, app);
                 qat_end = ui.min_rect().max.x;
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    // Account / community.
-                    let (r, resp) = ui.allocate_exact_size(vec2(control_h, control_h), Sense::click());
-                    ui.painter().circle_filled(r.center(), control_h / 2.0 - 1.0, t.accent);
-                    resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, tl!("Account")));
-                    let initials: String = app.session.user_initials().chars().take(2).collect();
-                    ui.painter().text(r.center(), Align2::CENTER_CENTER, initials, semibold(10.5), t.on_accent);
-                    if resp.on_hover_text(format!("{} — set your name in File › Options", app.session.author)).clicked() {
-                        let _ = app.run("ui.backstage", json!({"value": true, "page": "options", "pane": "general"}));
+                    if mac {
+                        search_control(ui, app, t, true, control_h);
+                        ui.add_space(MAC_SEARCH_CONTROL_GAP);
                     }
-                    ui.add_space(8.0);
+                    // Account / community.
+                    if app.ui.show_account_picture {
+                        let (r, resp) = ui.allocate_exact_size(vec2(control_h, control_h), Sense::click());
+                        ui.painter().circle_filled(r.center(), control_h / 2.0 - 1.0, t.accent);
+                        resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, tl!("Account")));
+                        let initials: String = app.session.user_initials().chars().take(2).collect();
+                        ui.painter().text(r.center(), Align2::CENTER_CENTER, initials, semibold(10.5), t.on_accent);
+                        if resp.on_hover_text(format!("{} — set your name in File › Options", app.session.author)).clicked() {
+                            let _ = app.run("ui.backstage", json!({"value": true, "page": "options", "pane": "general"}));
+                        }
+                        ui.add_space(8.0);
+                    }
                     if app.ui.show_discord {
                         let (r, resp) = ui.allocate_exact_size(vec2(84.0, 22.0), Sense::click());
                         ui.painter().rect_filled(r, 11.0, if resp.hovered() { t.accent_text } else { t.accent });
@@ -381,87 +491,80 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                         }
                         ui.add_space(8.0);
                     }
-                    // Search ("Tell me").
-                    let (r, resp) = ui.allocate_exact_size(vec2(260.0, control_h), Sense::click());
-                    ui.painter().rect(r, 6.0, if resp.hovered() { t.input } else { t.ribbon }, Stroke::new(1.0, t.border), egui::StrokeKind::Inside);
-                    icons::paint(
-                        ui.painter(),
-                        Rect::from_center_size(pos2(r.min.x + 16.0, r.center().y), vec2(16.0, 16.0)),
-                        "search",
-                        t.text_dim,
-                        t.accent,
-                    );
-                    let ph = tl!("Search commands and help");
-                    let pfont = TypeRung::Control.regular();
-                    let ptrack = TypeRung::Control.tracking();
-                    paint_text(
-                        ui.painter(),
-                        pos2(r.min.x + 30.0, r.center().y - TypeRung::Control.line_height() / 2.0),
-                        Align2::LEFT_TOP,
-                        ph,
-                        &pfont,
-                        ptrack,
-                        t.text_dim,
-                    );
-                    if app.ui.keytips == crate::keytips::Phase::Tabs {
-                        app.keytip_rects.push((r, crate::keytips::SEARCH_LETTER.to_string()));
-                    }
-                    let tip = match crate::widgets::shortcut_text(app, "tools.search") {
-                        k if k.is_empty() => tl!("Search").to_string(),
-                        k => format!("{} ({k})", tl!("Search")),
-                    };
-                    if resp.on_hover_text(tip).clicked() {
-                        let _ = app.run("tools.search", json!({}));
+                    if !mac {
+                        search_control(ui, app, t, false, control_h);
                     }
                     right_start = ui.min_rect().min.x;
                 });
             });
-            // Centred title.
-            let title = if !app.has_document() {
-                // No document open (#1129): the app's name alone.
-                "WordCraft".to_string()
-            } else {
-                format!(
-                    "{} — {}",
-                    app.title_stem(),
-                    if app.session.dirty {
-                        tl!("Edited")
-                    } else if app.session.path.is_some() {
-                        tl!("Saved")
-                    } else {
-                        tl!("Not saved")
-                    }
-                )
-            };
+            // Centred title. Mac keeps a measured slot for the file icon and title.
+            let title = document_title(app);
             let font = TypeRung::Chrome.semibold();
             let track = TypeRung::Chrome.tracking();
-            let cx = full.center().x;
-            let available = 2.0 * (cx - qat_end - 10.0).min(right_start - 10.0 - cx);
-            let mut shown: String = title.chars().take(240).collect();
-            if text_width(ui.painter(), &shown, &font, track, t.text) > available {
-                while !shown.is_empty() && text_width(ui.painter(), &format!("{shown}…"), &font, track, t.text) > available {
-                    shown.pop();
+            let cx = if mac { (qat_end + right_start) / 2.0 } else { full.center().x };
+            let available = if mac {
+                (right_start - qat_end - 2.0 * MAC_DOCUMENT_TITLE_SIDE_GAP).max(0.0)
+            } else {
+                2.0 * (cx - qat_end - 10.0).min(right_start - 10.0 - cx)
+            };
+            let title_area = if mac { available.min(MAC_DOCUMENT_TITLE_WIDTH) } else { available };
+            if mac {
+                let icon_width = if app.has_document() { MAC_DOCUMENT_TITLE_ICON + MAC_DOCUMENT_TITLE_GAP } else { 0.0 };
+                let text_limit = (title_area - icon_width - MAC_DOCUMENT_TITLE_PADDING).max(0.0);
+                let shown = truncated_document_title(ui, &title, text_limit, &font, track, t.text);
+                let w = text_width(ui.painter(), &shown, &font, track, t.text);
+                let content_w = icon_width + w;
+                if title_area >= icon_width + MAC_DOCUMENT_TITLE_PADDING {
+                    let rect = Rect::from_center_size(pos2(cx, full.center().y), vec2(title_area, control_h));
+                    let response = ui.interact(rect, ui.id().with("document_name"), Sense::click()).on_hover_text(tl!("Rename Document"));
+                    response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, &title));
+                    if response.clicked() {
+                        let _ = app.run("file.rename", json!({}));
+                    }
+                    let content_left = cx - content_w / 2.0;
+                    if app.has_document() {
+                        icons::paint(
+                            ui.painter(),
+                            Rect::from_min_size(
+                                pos2(content_left, full.center().y - MAC_DOCUMENT_TITLE_ICON / 2.0),
+                                vec2(MAC_DOCUMENT_TITLE_ICON, MAC_DOCUMENT_TITLE_ICON),
+                            ),
+                            "file",
+                            t.icon,
+                            t.accent,
+                        );
+                    }
+                    paint_text(
+                        ui.painter(),
+                        pos2(content_left + icon_width, full.center().y - TypeRung::Chrome.line_height() / 2.0),
+                        Align2::LEFT_TOP,
+                        &shown,
+                        &font,
+                        track,
+                        t.text,
+                    );
                 }
-                shown.push('…');
-            }
-            let w = text_width(ui.painter(), &shown, &font, track, t.text);
-            if available > 24.0 {
-                let rect = Rect::from_center_size(pos2(cx, full.center().y), vec2(w + 8.0, control_h));
-                let response = ui.interact(rect, ui.id().with("document_name"), Sense::click()).on_hover_text(tl!("Rename Document"));
-                response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, &title));
-                if response.clicked() {
-                    let _ = app.run("file.rename", json!({}));
-                }
+            } else {
+                let shown = truncated_title(ui, &title, available, &font, track, t.text);
+                let w = text_width(ui.painter(), &shown, &font, track, t.text);
+                if available > 24.0 {
+                    let rect = Rect::from_center_size(pos2(cx, full.center().y), vec2(w + 8.0, control_h));
+                    let response = ui.interact(rect, ui.id().with("document_name"), Sense::click()).on_hover_text(tl!("Rename Document"));
+                    response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, &title));
+                    if response.clicked() {
+                        let _ = app.run("file.rename", json!({}));
+                    }
 
-                paint_text(
-                    ui.painter(),
-                    pos2(cx - w / 2.0, full.center().y - TypeRung::Chrome.line_height() / 2.0),
-                    Align2::LEFT_TOP,
-                    &shown,
-                    &font,
-                    track,
-                    t.text,
-                );
+                    paint_text(
+                        ui.painter(),
+                        pos2(cx - w / 2.0, full.center().y - TypeRung::Chrome.line_height() / 2.0),
+                        Align2::LEFT_TOP,
+                        &shown,
+                        &font,
+                        track,
+                        t.text,
+                    );
+                }
             }
         });
 }
@@ -750,6 +853,50 @@ mod tests {
         assert_eq!(MAC_CONTENT_LEFT - lights_end, margin);
         // `egui::Margin` is in `i8`.
         assert!(MAC_CONTENT_LEFT <= f32::from(i8::MAX));
+    }
+
+    #[test]
+    fn mac_title_bar_measurements_match_the_audit() {
+        assert_eq!(MAC_LIGHT, 14.0);
+        assert_eq!(MAC_LIGHT_PITCH, 23.0);
+        assert_eq!(MAC_LIGHTS_LEFT, 12.0);
+        assert_eq!(MAC_LIGHTS_LEFT + MAC_LIGHT / 2.0, 19.0, "the first traffic-light centre moved right by 3 pt");
+        assert_eq!(MAC_DOCUMENT_TITLE_WIDTH, 181.0);
+        assert_eq!(MAC_DOCUMENT_TITLE_ICON, 16.0);
+        assert_eq!(MAC_DOCUMENT_TITLE_GAP, 4.0);
+        assert_eq!(MAC_DOCUMENT_TITLE_PADDING, 8.0);
+        assert_eq!(MAC_SEARCH_TARGET, 22.0);
+        assert_eq!(MAC_SEARCH_GLYPH, 14.0);
+        assert_eq!(MAC_SEARCH_RIGHT_INSET, 10.0);
+        assert_eq!(MAC_SEARCH_CONTROL_GAP, 8.0);
+        assert_eq!(MAC_TITLE_BAR_RIGHT_INSET, 0);
+        assert_eq!(MAC_DOCUMENT_TITLE_SIDE_GAP, 8.0);
+    }
+
+    #[test]
+    fn mac_document_title_uses_saved() {
+        let mut app = WordApp::new(wordcraft_engine::Session::new(wordcraft_doc::Document::new()), crate::Services::default());
+        app.session.path = Some(std::path::PathBuf::from("Impugnacao.docx"));
+        assert!(document_title(&app).ends_with(" — Saved"));
+    }
+
+    #[test]
+    fn mac_document_title_truncates_the_name_before_the_saved_status() {
+        let ctx = ctx();
+        let font = TypeRung::Chrome.semibold();
+        let track = TypeRung::Chrome.tracking();
+        let title = "Impugnacao de contrato com um nome de arquivo muito longo — Saved";
+        let max_width = MAC_DOCUMENT_TITLE_WIDTH - MAC_DOCUMENT_TITLE_ICON - MAC_DOCUMENT_TITLE_GAP - MAC_DOCUMENT_TITLE_PADDING;
+        let mut shown = String::new();
+        let mut shown_width = 0.0;
+        ctx.run_ui(egui::RawInput::default(), |ui| {
+            shown = truncated_document_title(ui, title, max_width, &font, track, Tokens::light().text);
+            shown_width = text_width(ui.painter(), &shown, &font, track, Tokens::light().text);
+        })
+        .drop_without_applying_deltas();
+        assert!(shown.contains('…'));
+        assert!(shown.ends_with(" — Saved"));
+        assert!(shown_width <= max_width);
     }
 
     #[test]

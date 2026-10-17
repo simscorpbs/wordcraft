@@ -2247,3 +2247,6 @@
 # Reading Mode column widths (#1040)
 	Narrow	Уска
 	Medium	Средња
+# Mac title bar options
+	Show Discord button in the title bar	Прикажи дугме Discord у траци наслова
+	Show account picture in the title bar	Прикажи слику налога у траци наслова

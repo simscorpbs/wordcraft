@@ -2621,3 +2621,6 @@
 # Reading Mode column widths (#1040)
 	Narrow	Тясна
 	Medium	Средна
+# Mac title bar options
+	Show Discord button in the title bar	Показване на бутона Discord в заглавната лента
+	Show account picture in the title bar	Показване на снимката на акаунта в заглавната лента

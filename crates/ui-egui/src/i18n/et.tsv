@@ -2267,3 +2267,6 @@
 # Reading Mode column widths (#1040)
 	Narrow	Kitsas
 	Medium	Keskmine
+# Mac title bar options
+	Show Discord button in the title bar	Kuva tiitliribal Discordi nupp
+	Show account picture in the title bar	Kuva tiitliribal konto pilt

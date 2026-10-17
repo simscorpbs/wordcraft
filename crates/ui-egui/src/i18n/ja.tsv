@@ -2233,3 +2233,6 @@
 # Reading Mode column widths (#1040)
 	Narrow	狭い
 	Medium	中
+# Mac title bar options
+	Show Discord button in the title bar	タイトル バーに Discord ボタンを表示する
+	Show account picture in the title bar	タイトル バーにアカウントの画像を表示する
