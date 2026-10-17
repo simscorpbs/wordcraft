@@ -2245,3 +2245,6 @@
 # Reading Mode column widths (#1040)
 	Narrow	窄
 	Medium	中等
+# Mac title bar options
+	Show Discord button in the title bar	在标题栏中显示 Discord 按钮
+	Show account picture in the title bar	在标题栏中显示账户图片

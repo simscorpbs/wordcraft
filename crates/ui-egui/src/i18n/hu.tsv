@@ -2628,3 +2628,6 @@
 # Reading Mode column widths (#1040)
 	Narrow	Keskeny
 	Medium	Közepes
+# Mac title bar options
+	Show Discord button in the title bar	A Discord-gomb megjelenítése a címsávban
+	Show account picture in the title bar	A fiókkép megjelenítése a címsávban

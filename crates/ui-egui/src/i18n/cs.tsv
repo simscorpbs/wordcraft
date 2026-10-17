@@ -2624,3 +2624,6 @@ preview	Title	Ukázka
 # Reading Mode column widths (#1040)
 	Narrow	Úzká
 	Medium	Střední
+# Mac title bar options
+	Show Discord button in the title bar	Zobrazit tlačítko Discord v záhlaví okna
+	Show account picture in the title bar	Zobrazit obrázek účtu v záhlaví okna

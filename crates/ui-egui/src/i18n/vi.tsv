@@ -2672,3 +2672,6 @@ template	Letter	Thư
 # Reading Mode column widths (#1040)
 	Narrow	Hẹp
 	Medium	Trung bình
+# Mac title bar options
+	Show Discord button in the title bar	Hiện nút Discord trong thanh tiêu đề
+	Show account picture in the title bar	Hiện ảnh tài khoản trong thanh tiêu đề

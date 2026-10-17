@@ -2632,3 +2632,6 @@ preview	Title	Naslov
 	Bottom Right Cell	Donja desna ćelija
 	Inside Horizontal Border	Unutarnji vodoravni obrub
 	Inside Vertical Border	Unutarnji okomiti obrub
+# Mac title bar options
+	Show Discord button in the title bar	Prikaži gumb Discord u naslovnoj traci
+	Show account picture in the title bar	Prikaži sliku računa u naslovnoj traci

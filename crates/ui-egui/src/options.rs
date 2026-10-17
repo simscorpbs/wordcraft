@@ -190,7 +190,14 @@ fn general(app: &mut WordApp, ui: &mut Ui) {
     {
         let _ = app.run("view.darkMode", json!({"value": dark_page}));
     }
-    ui.checkbox(&mut app.ui.show_discord, tl!("Show the community button in the title bar"));
+    let mut show_discord = app.ui.show_discord;
+    if ui.checkbox(&mut show_discord, tl!("Show Discord button in the title bar")).changed() {
+        let _ = app.run("ui.showDiscord", json!({"value": show_discord}));
+    }
+    let mut show_account_picture = app.ui.show_account_picture;
+    if ui.checkbox(&mut show_account_picture, tl!("Show account picture in the title bar")).changed() {
+        let _ = app.run("ui.showAccountPicture", json!({"value": show_account_picture}));
+    }
     default_app_button(app, ui);
     ui.add_space(8.0);
     section(ui, "Start-up");
