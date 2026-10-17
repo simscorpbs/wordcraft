@@ -985,6 +985,11 @@
 	User Name	Nombre de usuario
 	User name:	Nombre de usuario:
 	Version History	Historial de versiones
+	No versions yet.	Todavía no hay versiones.
+	Open version	Abrir versión
+	Previous version	Versión anterior
+	Restore	Restaurar
+	Save a copy	Guardar una copia
 	Version {version} ({build})	Versión {version} ({build})
 	Vertical	Vertical
 	Vertical Alignment	Alineación vertical
@@ -1083,6 +1088,22 @@
 	Normal speed	Velocidad normal
 	AutoSave documents you have saved in WordCraft	Autoguardar los documentos que hayas guardado en WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Error de autoguardado: {error}. Guarda el documento para volver a activar el autoguardado.
+	{name} was moved or deleted elsewhere	{name} se movió o eliminó en otro lugar
+	{name} was changed on another device	{name} cambió en otro dispositivo
+	AutoSave stopped so that neither version is lost.	El autoguardado se detuvo para que no se pierda ninguna versión.
+	Keep both saves this version as a copy beside the other.	Conservar ambas y guardar esta versión como una copia junto a la otra.
+	Save it here again	Volver a guardarlo aquí
+	Keep both	Conservar ambas
+	Keep this version	Conservar esta versión
+	Open the other version	Abrir la otra versión
+	Decide later	Decidir más tarde
+	Where should AutoSave keep this document?	¿Dónde debe guardar el autoguardado este documento?
+	Other location…	Otra ubicación…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	El autoguardado está en pausa: este archivo cambió en otro dispositivo. Haz clic para elegir qué versión conservar.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	El autoguardado está en pausa: este archivo se movió o eliminó en otro lugar. Haz clic para elegir qué hacer.
+	Cloud Status	Estado de la nube
+	Save to Cloud	Guardar en la nube
+	Resolve Save Conflict	Resolver conflicto de guardado
 	Couldn't download {name}: {error}	No se pudo descargar {name}: {error}
 	Do you want to save changes to {name}?	¿Quieres guardar los cambios en {name}?
 	Don't Save	No guardar

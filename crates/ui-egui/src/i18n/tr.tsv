@@ -813,6 +813,11 @@ preview	Title	Örnek
 	User Name	Kullanıcı Adı
 	User name:	Kullanıcı adı:
 	Version History	Sürüm Geçmişi
+	No versions yet.	Henüz sürüm yok.
+	Open version	Sürümü aç
+	Previous version	Önceki sürüm
+	Restore	Geri yükle
+	Save a copy	Bir kopya kaydet
 	Version {version} ({build})	Sürüm {version} ({build})
 	Vertical	Dikey
 	Vertical Alignment	Dikey Hizalama
@@ -857,6 +862,22 @@ preview	Title	Örnek
 	Apply Styles	Stilleri Uygula
 	AutoSave documents you have saved in WordCraft	WordCraft'ta kaydettiğiniz belgeleri otomatik kaydet
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Otomatik Kaydet başarısız oldu: {error}. Otomatik Kaydet'i yeniden açmak için belgeyi kaydedin.
+	{name} was moved or deleted elsewhere	{name} başka bir yere taşındı veya orada silindi
+	{name} was changed on another device	{name} başka bir cihazda değiştirildi
+	AutoSave stopped so that neither version is lost.	Hiçbir sürüm kaybolmasın diye Otomatik Kaydet durduruldu.
+	Keep both saves this version as a copy beside the other.	İkisini de koruyun ve bu sürümü diğerinin yanında kopya olarak kaydedin.
+	Save it here again	Buraya yeniden kaydet
+	Keep both	İkisini de koru
+	Keep this version	Bu sürümü koru
+	Open the other version	Diğer sürümü aç
+	Decide later	Daha sonra karar ver
+	Where should AutoSave keep this document?	Otomatik Kaydet bu belgeyi nerede tutmalı?
+	Other location…	Başka konum…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Otomatik Kaydet duraklatıldı: Bu dosya başka bir cihazda değiştirildi. Tutulacak sürümü seçmek için tıklayın.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Otomatik Kaydet duraklatıldı: Bu dosya başka bir yere taşındı veya orada silindi. Yapılacak işlemi seçmek için tıklayın.
+	Cloud Status	Bulut durumu
+	Save to Cloud	Buluta kaydet
+	Resolve Save Conflict	Kaydetme çakışmasını çöz
 	Bottom Margin	Alt Kenar Boşluğu
 	Edit Comment	Yorumu Düzenle
 	Left Margin	Sol Kenar Boşluğu

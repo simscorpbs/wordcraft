@@ -5260,6 +5260,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "wordcraft-cloud"
+version = "0.7.0"
+
+[[package]]
 name = "wordcraft-control-key"
 version = "0.7.0"
 
@@ -5329,6 +5333,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.21",
+ "wordcraft-cloud",
  "wordcraft-doc",
  "wordcraft-docbin",
  "wordcraft-docx",

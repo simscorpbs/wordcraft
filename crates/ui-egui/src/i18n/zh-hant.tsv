@@ -66,6 +66,22 @@
 	AutoSave	自動儲存
 	AutoSave documents you have saved in WordCraft	自動儲存在 WordCraft 中儲存過的文件
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	自動儲存失敗：{error}。重新儲存文件後將恢復自動儲存。
+	{name} was moved or deleted elsewhere	{name} 已在其他位置移動或刪除
+	{name} was changed on another device	{name} 已在其他裝置上變更
+	AutoSave stopped so that neither version is lost.	自動儲存已停止，以免遺失任何版本。
+	Keep both saves this version as a copy beside the other.	保留兩個版本，將此版本作為複本儲存在另一個版本旁邊。
+	Save it here again	再次儲存到此處
+	Keep both	保留兩個版本
+	Keep this version	保留此版本
+	Open the other version	開啟另一個版本
+	Decide later	稍後決定
+	Where should AutoSave keep this document?	自動儲存應將此文件保留在哪裡？
+	Other location…	其他位置…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	自動儲存已暫停：此檔案已在其他裝置上變更。按一下以選擇要保留的版本。
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	自動儲存已暫停：此檔案已在其他位置移動或刪除。按一下以選擇動作。
+	Cloud Status	雲端狀態
+	Save to Cloud	儲存到雲端
+	Resolve Save Conflict	解決儲存衝突
 	Balloons	註解方塊
 	Bottom Margin	下邊界
 	Centimeters	公分
@@ -939,6 +955,11 @@
 	User Name	使用者名稱
 	User name:	使用者名稱：
 	Version History	版本歷程記錄
+	No versions yet.	尚無版本。
+	Open version	開啟版本
+	Previous version	先前的版本
+	Restore	還原
+	Save a copy	儲存複本
 	Version {version} ({build})	版本 {version}（{build}）
 	Vertical	垂直
 	Vertical Alignment	垂直對齊方式

@@ -385,6 +385,16 @@ pub enum Dialog {
     About {
         tab: u8,
     },
+    /// AutoSave found the file changed (or moved or deleted, `missing`) elsewhere: keep both
+    /// versions, keep this one, open the other, or decide later (`ui.saveConflict`).
+    SaveConflict {
+        name: String,
+        missing: bool,
+    },
+    /// Turning AutoSave on for a new document: which cloud folder to save it in, under what name.
+    SaveToCloud {
+        name: String,
+    },
     /// Confirm before deleting a recovery copy.
     DiscardRecovery {
         id: String,
@@ -819,6 +829,8 @@ impl Dialog {
             Dialog::About { .. } => "about",
             Dialog::SaveChanges { .. } => "saveChanges",
             Dialog::DiscardRecovery { .. } => "discardRecovery",
+            Dialog::SaveConflict { .. } => "saveConflict",
+            Dialog::SaveToCloud { .. } => "saveToCloud",
             Dialog::RecipientList { .. } => "recipientList",
             Dialog::SelectTable { .. } => "selectTable",
             Dialog::InsertMergeField { .. } => "insertMergeField",
@@ -1266,6 +1278,7 @@ pub fn show(app: &mut WordApp, ctx: &egui::Context) {
         Dialog::About { .. } => "About WordCraft",
         Dialog::SaveChanges { .. } => "WordCraft",
         Dialog::DiscardRecovery { .. } => "Discard recovery copy",
+        Dialog::SaveConflict { .. } | Dialog::SaveToCloud { .. } => "AutoSave",
         Dialog::RecipientList { .. } => "Recipient List",
         Dialog::SelectTable { .. } => "Select Table",
         Dialog::InsertMergeField { .. } => "Insert Merge Field",
@@ -1508,6 +1521,19 @@ fn apply_font(app: &mut WordApp, d: &Dialog) {
     if !changed.is_empty() {
         let _ = app.run("format.set", json!({"props": changed}));
     }
+}
+
+/// Pick a non-conflicting `.docx` path in a provider's save folder.
+fn cloud_path(root: &wordcraft_engine::cloud::CloudRoot, name: &str) -> String {
+    let name = name.trim();
+    let stem = name.rsplit_once('.').filter(|(_, extension)| extension.eq_ignore_ascii_case("docx")).map_or(name, |(stem, _)| stem.trim());
+    let stem = if stem.is_empty() { "Document" } else { stem };
+    let dir = root.save_dir();
+    let path = match wordcraft_engine::cloud::unique_path(&dir, stem, "docx") {
+        Some(path) => path,
+        None => dir.join(format!("{stem}.docx")),
+    };
+    path.to_string_lossy().into_owned()
 }
 
 /// Returns true to close.
@@ -2400,6 +2426,89 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             }
             let (ok, cancel) = buttons(ui, tl!("Close"));
             ok || cancel
+        }
+        Dialog::SaveConflict { name, missing } => {
+            let heading = if *missing { tl!("{name} was moved or deleted elsewhere") } else { tl!("{name} was changed on another device") };
+            ui.label(egui::RichText::new(crate::i18n::fmt(heading, &[("name", name)])).font(semibold(15.0)));
+            ui.label(tl!("AutoSave stopped so that neither version is lost."));
+            if !*missing {
+                ui.label(tl!("Keep both saves this version as a copy beside the other."));
+            }
+            ui.add_space(8.0);
+            let answer = ui
+                .horizontal(|ui| {
+                    let mut answer = None;
+                    if *missing {
+                        if ui.add(crate::widgets::primary_button(ui, tl!("Save it here again"))).clicked() {
+                            answer = Some("mine");
+                        }
+                    } else {
+                        if ui.add(crate::widgets::primary_button(ui, tl!("Keep both"))).clicked() {
+                            answer = Some("both");
+                        }
+                        if ui.button(tl!("Keep this version")).clicked() {
+                            answer = Some("mine");
+                        }
+                        if ui.button(tl!("Open the other version")).clicked() {
+                            answer = Some("theirs");
+                        }
+                    }
+                    if ui.button(tl!("Decide later")).clicked() || ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+                        answer = Some("later");
+                    }
+                    answer
+                })
+                .inner;
+            if let Some(answer) = answer {
+                app.dialog = Some(d.clone());
+                let result = app.run("ui.saveConflict", json!({"answer": answer}));
+                if let Err(e) = &result {
+                    app.status(e.clone());
+                }
+                return result.is_ok();
+            }
+            false
+        }
+        Dialog::SaveToCloud { name } => {
+            ui.label(egui::RichText::new(tl!("Where should AutoSave keep this document?")).font(semibold(15.0)));
+            ui.add_space(4.0);
+            ui.horizontal(|ui| {
+                ui.label(tl!("File name:"));
+                ui.add(egui::TextEdit::singleline(name).desired_width(240.0));
+            });
+            ui.add_space(8.0);
+            let roots = app.session.cloud.roots.clone();
+            let mut picked = None;
+            for root in &roots {
+                let label = match &root.account {
+                    Some(account) => format!("{} ({account})", root.provider.name()),
+                    None => root.provider.name().to_string(),
+                };
+                if ui.button(label).on_hover_text(root.path.to_string_lossy()).clicked() {
+                    picked = Some(root.clone());
+                }
+            }
+            ui.add_space(8.0);
+            let mut close = false;
+            ui.horizontal(|ui| {
+                if ui.button(tl!("Other location…")).clicked() {
+                    close = true;
+                    let _ = app.save_as(crate::file_dialogs::AfterSave::AutoSave);
+                }
+                if ui.button(tl!("Cancel")).clicked() || ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+                    close = true;
+                }
+            });
+            if let Some(root) = picked {
+                // The provider's folder this button names, even when an account has several.
+                let result =
+                    app.run("file.save", json!({"path": cloud_path(&root, name)})).and_then(|_| app.run("file.autosave", json!({"value": true})));
+                if let Err(e) = &result {
+                    app.status(e.clone());
+                }
+                return true;
+            }
+            close
         }
         Dialog::DiscardRecovery { name, .. } => {
             ui.label(crate::i18n::fmt(tl!("Discard the recovery copy of {name}?"), &[("name", name)]));

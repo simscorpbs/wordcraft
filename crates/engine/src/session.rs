@@ -413,9 +413,19 @@ pub struct Session {
     pub macros: std::collections::BTreeMap<String, Vec<(String, Value)>>,
     /// Saved versions: (label, date, document).
     pub versions: Vec<(String, String, Document)>,
+    /// The desktop history worker. Headless sessions leave it disabled.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub(crate) version_store: Option<crate::versions::Versions>,
+    /// A previous version opened as a separate, unsaved document.
+    pub(crate) opened_version: Option<crate::versions::OpenedVersion>,
+    /// A restore save is labelled separately from an ordinary save.
+    pub(crate) version_next_kind: Option<crate::versions::VersionKind>,
     /// Quick Parts / AutoText entries.
     pub building_blocks: std::collections::BTreeMap<String, Fragment>,
     pub autosave: bool,
+    /// The document's file as last read or written, AutoSave's conflict waiting, and the cloud
+    /// folders on this computer (`cmd::cloud`).
+    pub cloud: crate::cmd::cloud::CloudState,
     /// Citation style: APA, MLA, Chicago, IEEE.
     pub bib_style: String,
     /// Mail merge data source and preview.
@@ -627,8 +637,13 @@ impl Session {
             recording: None,
             macros: Default::default(),
             versions: Vec::new(),
+            #[cfg(not(target_arch = "wasm32"))]
+            version_store: None,
+            opened_version: None,
+            version_next_kind: None,
             building_blocks: Default::default(),
             autosave: true,
+            cloud: Default::default(),
             bib_style,
             merge: Default::default(),
             ui_requests: Vec::new(),
@@ -1001,6 +1016,9 @@ impl Session {
         self.doc.ensure_nonempty();
         self.password = None;
         self.file_name = None;
+        self.cloud.forget_file();
+        self.opened_version = None;
+        self.version_next_kind = None;
         self.sel = Selection::caret(self.doc.start_of(StoryRef::Body));
         self.pending = None;
         self.also_selected.clear();
@@ -1073,8 +1091,14 @@ impl Session {
             recording: _,
             macros: _,
             versions: _,
+            #[cfg(not(target_arch = "wasm32"))]
+                version_store: _,
+            opened_version: _,
+            version_next_kind: _,
             building_blocks: _,
             autosave: _,
+            // Like the file path: the file on disk, not an edit.
+            cloud: _,
             bib_style: _,
             merge: _,
             ui_requests: _,
@@ -1256,6 +1280,9 @@ impl Session {
         }
         match &result {
             Ok(_) => {
+                if let Ok(value) = &result {
+                    self.record_saved_command(id, params, value);
+                }
                 if spec.mutates {
                     // Formatting changed while tracking becomes a formatting revision.
                     if let Some((before, ..)) = &before_doc {

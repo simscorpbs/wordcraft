@@ -966,6 +966,11 @@
 	User Name	Ім'я користувача
 	User name:	Ім'я користувача:
 	Version History	Історія версій
+	No versions yet.	Версій ще немає.
+	Open version	Відкрити версію
+	Previous version	Попередня версія
+	Restore	Відновити
+	Save a copy	Зберегти копію
 	Version {version} ({build})	Версія {version} ({build})
 	Vertical	Вертикальна
 	Vertical Alignment	Вертикальне вирівнювання
@@ -1057,6 +1062,22 @@
 	Normal speed	Звичайна швидкість
 	AutoSave documents you have saved in WordCraft	Автоматично зберігати документи, збережені у WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Не вдалося виконати автозбереження: {error}. Збережіть документ, щоб знову ввімкнути автозбереження.
+	{name} was moved or deleted elsewhere	{name} переміщено або видалено в іншому місці
+	{name} was changed on another device	{name} змінено на іншому пристрої
+	AutoSave stopped so that neither version is lost.	Автозбереження зупинено, щоб не втратити жодну версію.
+	Keep both saves this version as a copy beside the other.	Залиште обидві, зберігши цю версію як копію поруч з іншою.
+	Save it here again	Зберегти тут ще раз
+	Keep both	Залишити обидві
+	Keep this version	Залишити цю версію
+	Open the other version	Відкрити іншу версію
+	Decide later	Вирішити пізніше
+	Where should AutoSave keep this document?	Де автозбереження має зберігати цей документ?
+	Other location…	Інше розташування…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Автозбереження призупинено: цей файл змінено на іншому пристрої. Натисніть, щоб вибрати версію для збереження.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Автозбереження призупинено: цей файл переміщено або видалено в іншому місці. Натисніть, щоб вибрати дію.
+	Cloud Status	Стан хмари
+	Save to Cloud	Зберегти в хмару
+	Resolve Save Conflict	Вирішити конфлікт збереження
 	Couldn't download {name}: {error}	Не вдалося завантажити {name}: {error}
 	Do you want to save changes to {name}?	Зберегти зміни в {name}?
 	Don't Save	Не зберігати

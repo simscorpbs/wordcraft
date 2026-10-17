@@ -114,6 +114,22 @@
 	AutoSave	Automatické ukládání
 	AutoSave documents you have saved in WordCraft	Automaticky ukládat dokumenty uložené ve WordCraftu
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Automatické ukládání selhalo: {error}. Uložením dokumentu automatické ukládání znovu zapnete.
+	{name} was moved or deleted elsewhere	{name} byl jinde přesunut nebo odstraněn
+	{name} was changed on another device	{name} byl změněn na jiném zařízení
+	AutoSave stopped so that neither version is lost.	Automatické ukládání se zastavilo, aby se neztratila žádná verze.
+	Keep both saves this version as a copy beside the other.	Ponechte obě verze a uložte tuto jako kopii vedle druhé.
+	Save it here again	Uložit znovu sem
+	Keep both	Ponechat obě
+	Keep this version	Ponechat tuto verzi
+	Open the other version	Otevřít druhou verzi
+	Decide later	Rozhodnout později
+	Where should AutoSave keep this document?	Kam má automatické ukládání tento dokument ukládat?
+	Other location…	Jiné umístění…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Automatické ukládání je pozastaveno: tento soubor byl změněn na jiném zařízení. Kliknutím vyberte verzi, kterou chcete ponechat.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Automatické ukládání je pozastaveno: tento soubor byl jinde přesunut nebo odstraněn. Kliknutím vyberte akci.
+	Cloud Status	Stav cloudu
+	Save to Cloud	Uložit do cloudu
+	Resolve Save Conflict	Vyřešit konflikt při ukládání
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Automatické ukládání není v prohlížeči dostupné, protože nemůže zapisovat do vašich souborů. Příkaz Uložit stáhne kopii.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Automatické ukládání podporuje pouze soubory .docx, .odt a .rtf; formát {name} nedokáže zachovat veškeré formátování. Pro zapnutí automatického ukládání uložte dokument jako .docx.
 	AutoSave saves every change to the file (needs a saved document)	Automatické ukládání zapisuje každou změnu do souboru (vyžaduje uložený dokument)
@@ -1292,6 +1308,11 @@
 	User Name	Uživatelské jméno
 	User name:	Uživatelské jméno:
 	Version History	Historie verzí
+	No versions yet.	Zatím nejsou k dispozici žádné verze.
+	Open version	Otevřít verzi
+	Previous version	Předchozí verze
+	Restore	Obnovit
+	Save a copy	Uložit kopii
 	Version {version} ({build})	Verze {version} ({build})
 	Vertical	Svisle
 	Vertical Alignment	Svislé zarovnání

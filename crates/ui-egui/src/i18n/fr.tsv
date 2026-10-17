@@ -898,6 +898,11 @@
 	User Name	Nom d’utilisateur
 	User name:	Nom d’utilisateur :
 	Version History	Historique des versions
+	No versions yet.	Aucune version pour l’instant.
+	Open version	Ouvrir la version
+	Previous version	Version précédente
+	Restore	Restaurer
+	Save a copy	Enregistrer une copie
 	Version {version} ({build})	Version {version} ({build})
 	Vertical	Vertical
 	Vertical Alignment	Alignement vertical
@@ -985,6 +990,22 @@
 	Normal speed	Vitesse normale
 	AutoSave documents you have saved in WordCraft	Enregistrement automatique des documents que vous avez enregistrés dans WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Échec de l’enregistrement automatique : {error}. Enregistrez le document pour réactiver l’enregistrement automatique.
+	{name} was moved or deleted elsewhere	{name} a été déplacé ou supprimé ailleurs
+	{name} was changed on another device	{name} a été modifié sur un autre appareil
+	AutoSave stopped so that neither version is lost.	L’enregistrement automatique est arrêté afin qu’aucune version ne soit perdue.
+	Keep both saves this version as a copy beside the other.	Conserver les deux et enregistrer cette version comme copie à côté de l’autre.
+	Save it here again	L’enregistrer de nouveau ici
+	Keep both	Conserver les deux
+	Keep this version	Conserver cette version
+	Open the other version	Ouvrir l’autre version
+	Decide later	Décider plus tard
+	Where should AutoSave keep this document?	Où l’enregistrement automatique doit-il conserver ce document ?
+	Other location…	Autre emplacement…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	L’enregistrement automatique est en pause : ce fichier a été modifié sur un autre appareil. Cliquez pour choisir la version à conserver.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	L’enregistrement automatique est en pause : ce fichier a été déplacé ou supprimé ailleurs. Cliquez pour choisir quoi faire.
+	Cloud Status	État du cloud
+	Save to Cloud	Enregistrer dans le cloud
+	Resolve Save Conflict	Résoudre le conflit d’enregistrement
 	Couldn't download {name}: {error}	Impossible de télécharger {name} : {error}
 	Do you want to save changes to {name}?	Voulez-vous enregistrer les modifications apportées à {name} ?
 	Don't Save	Ne pas enregistrer

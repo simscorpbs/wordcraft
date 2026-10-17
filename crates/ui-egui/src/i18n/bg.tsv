@@ -896,6 +896,11 @@
 	User Name	Потребителско име
 	User name:	Потребителско име:
 	Version History	История на версиите
+	No versions yet.	Все още няма версии.
+	Open version	Отваряне на версията
+	Previous version	Предишна версия
+	Restore	Възстановяване
+	Save a copy	Запиши копие
 	Version {version} ({build})	Версия {version} ({build})
 	Vertical	Вертикално
 	Vertical Alignment	Вертикално подравняване
@@ -990,6 +995,22 @@
 	Normal speed	Нормална скорост
 	AutoSave documents you have saved in WordCraft	Автоматично запазване на документите, които сте запазили в WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Автоматичното запазване е неуспешно: {error}. Запазете документа, за да включите отново автоматичното запазване.
+	{name} was moved or deleted elsewhere	{name} е преместен или изтрит другаде
+	{name} was changed on another device	{name} е променен на друго устройство
+	AutoSave stopped so that neither version is lost.	Автоматичното записване спря, за да не бъде загубена нито една версия.
+	Keep both saves this version as a copy beside the other.	Запазете и двете, като запишете тази версия като копие до другата.
+	Save it here again	Запазете го отново тук
+	Keep both	Запази и двете
+	Keep this version	Запази тази версия
+	Open the other version	Отвори другата версия
+	Decide later	Реши по-късно
+	Where should AutoSave keep this document?	Къде да се съхранява автоматично този документ?
+	Other location…	Друго местоположение…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	Автоматичното записване е поставено на пауза: този файл е променен на друго устройство. Щракнете, за да изберете коя версия да запазите.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	Автоматичното записване е поставено на пауза: този файл е преместен или изтрит другаде. Щракнете, за да изберете действие.
+	Cloud Status	Състояние на облака
+	Save to Cloud	Запази в облака
+	Resolve Save Conflict	Разрешаване на конфликт при запис
 	Couldn't download {name}: {error}	Неуспешно изтегляне на {name}: {error}
 	Do you want to save changes to {name}?	Искате ли да запазите промените в {name}?
 	Don't Save	Без запазване

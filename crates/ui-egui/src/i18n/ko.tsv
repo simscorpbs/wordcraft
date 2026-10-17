@@ -945,6 +945,11 @@
 	User Name	사용자 이름
 	User name:	사용자 이름:
 	Version History	버전 기록
+	No versions yet.	아직 버전이 없습니다.
+	Open version	버전 열기
+	Previous version	이전 버전
+	Restore	복원
+	Save a copy	사본 저장
 	Version {version} ({build})	버전 {version} ({build})
 	Vertical	세로
 	Vertical Alignment	세로 맞춤
@@ -1033,6 +1038,22 @@
 	Normal speed	보통 속도
 	AutoSave documents you have saved in WordCraft	WordCraft에서 저장한 문서 자동 저장
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	자동 저장 실패: {error}. 자동 저장을 다시 사용하려면 문서를 저장하세요.
+	{name} was moved or deleted elsewhere	{name}이(가) 다른 곳으로 이동되었거나 삭제되었습니다
+	{name} was changed on another device	{name}이(가) 다른 장치에서 변경되었습니다
+	AutoSave stopped so that neither version is lost.	어느 버전도 잃지 않도록 자동 저장이 중지되었습니다.
+	Keep both saves this version as a copy beside the other.	둘 다 유지하고 이 버전을 다른 버전 옆에 복사본으로 저장합니다.
+	Save it here again	여기에 다시 저장
+	Keep both	둘 다 유지
+	Keep this version	이 버전 유지
+	Open the other version	다른 버전 열기
+	Decide later	나중에 결정
+	Where should AutoSave keep this document?	자동 저장에서 이 문서를 어디에 보관할까요?
+	Other location…	다른 위치…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	자동 저장이 일시 중지되었습니다. 이 파일이 다른 장치에서 변경되었습니다. 유지할 버전을 선택하려면 클릭하세요.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	자동 저장이 일시 중지되었습니다. 이 파일이 다른 곳으로 이동되었거나 삭제되었습니다. 수행할 작업을 선택하려면 클릭하세요.
+	Cloud Status	클라우드 상태
+	Save to Cloud	클라우드에 저장
+	Resolve Save Conflict	저장 충돌 해결
 	Couldn't download {name}: {error}	{name}을(를) 다운로드하지 못했습니다: {error}
 	Do you want to save changes to {name}?	{name}의 변경 내용을 저장하시겠습니까?
 	Don't Save	저장 안 함

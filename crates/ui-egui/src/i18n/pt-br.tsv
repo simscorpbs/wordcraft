@@ -939,6 +939,10 @@
 	User Name	Nome de Usuário
 	User name:	Nome de usuário:
 	Version History	Histórico de Versões
+	No versions yet.	Ainda não há versões.
+	Open version	Abrir versão
+	Previous version	Versão anterior
+	Save a copy	Salvar uma cópia
 	Version {version} ({build})	Versão {version} ({build})
 	Vertical	Vertical
 	Vertical Alignment	Alinhamento vertical
@@ -1030,6 +1034,22 @@
 	Normal speed	Velocidade normal
 	AutoSave documents you have saved in WordCraft	Salvar automaticamente documentos que você salvou no WordCraft
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Falha no salvamento automático: {error}. Salve o documento para reativar o salvamento automático.
+	{name} was moved or deleted elsewhere	{name} foi movido ou excluído em outro local
+	{name} was changed on another device	{name} foi alterado em outro dispositivo
+	AutoSave stopped so that neither version is lost.	O salvamento automático foi interrompido para que nenhuma versão seja perdida.
+	Keep both saves this version as a copy beside the other.	Manter as duas salva esta versão como uma cópia ao lado da outra.
+	Save it here again	Salvar novamente aqui
+	Keep both	Manter as duas
+	Keep this version	Manter esta versão
+	Open the other version	Abrir a outra versão
+	Decide later	Decidir mais tarde
+	Where should AutoSave keep this document?	Onde o salvamento automático deve manter este documento?
+	Other location…	Outro local…
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	O salvamento automático está pausado: este arquivo foi alterado em outro dispositivo. Clique para escolher qual versão manter.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	O salvamento automático está pausado: este arquivo foi movido ou excluído em outro local. Clique para escolher o que fazer.
+	Cloud Status	Status da nuvem
+	Save to Cloud	Salvar na nuvem
+	Resolve Save Conflict	Resolver conflito de salvamento
 	Couldn't download {name}: {error}	Não foi possível baixar {name}: {error}
 	Do you want to save changes to {name}?	Deseja salvar as alterações em {name}?
 	Don't Save	Não Salvar
