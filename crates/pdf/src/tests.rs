@@ -1860,3 +1860,57 @@ fn pages_print_scaled_to_other_paper() {
         assert_eq!(size(&bytes), size(&plain));
     }
 }
+
+/// A document with a 288 × 144 pt text box, inline, whose two lines of text are bent by `warp`.
+fn warped_text_box(warp: &str) -> Document {
+    let mut d = Document::from_text("x");
+    let lines = ["ARCHED", "LETTERS"].map(|t| para_block(Paragraph::with_text(t, CharProps { size: Some(28.0), ..Default::default() })));
+    let id = d.add_part(wordcraft_doc::PartKind::TextBox, lines.to_vec());
+    let extra = wordcraft_doc::connector::ShapeExtra { warp: wordcraft_doc::wordart::TextWarp::new(warp), ..Default::default() };
+    let shape = InlineObject::Shape {
+        kind: wordcraft_doc::para::ShapeKind::TextBox,
+        w: 288.0,
+        h: 144.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float: Default::default(),
+        story: Some(id),
+        effects: Default::default(),
+        freeform: None,
+        extra,
+    };
+    d.insert_object(&wordcraft_doc::Pos::body(0, 1), shape, &CharProps::default()).unwrap();
+    d
+}
+
+#[test]
+fn warped_text_box_text_is_bent_as_on_screen() {
+    // The screen draws a warped text box's lines together, as outlines bent over its frame; the
+    // PDF drew each line flat, as plain text, because it drew the lines one at a time without
+    // the box they belong to.
+    let d = warped_text_box("textArchUp");
+    let lay = wordcraft_layout::layout(&d, &mut wordcraft_layout::LayoutCache::new(), &Default::default());
+    let screen: Vec<kurbo::Rect> = wordcraft_layout::display::page_display(&d, &lay.pages[0], &Default::default())
+        .iter()
+        .filter_map(|it| match it {
+            wordcraft_layout::display::Draw::Art { path, .. } => Some(kurbo::Shape::bounding_box(path)),
+            _ => None,
+        })
+        .collect();
+    assert!(!screen.is_empty(), "the screen bends the text");
+    let union = |rs: &[kurbo::Rect]| rs.iter().copied().reduce(|a, b| a.union(b)).unwrap();
+    let pdf = export(&d, &PdfOptions { compress: false, ..Default::default() }).unwrap();
+    let fills: Vec<kurbo::Rect> = filled_paths(&pdf).iter().map(kurbo::Shape::bounding_box).collect();
+    assert!(!fills.is_empty(), "the PDF draws the bent letters as paths");
+    let (a, b) = (union(&screen), union(&fills));
+    // PDF space is y-up: compare widths and heights, and the left edges.
+    assert!((a.width() - b.width()).abs() < 1.0 && (a.height() - b.height()).abs() < 1.0, "screen {a:?}, pdf {b:?}");
+    assert!((a.x0 - b.x0).abs() < 1.0, "screen {a:?}, pdf {b:?}");
+    // The text is still there to copy, once.
+    let text = squash(&extract_text(&pdf).concat());
+    assert_eq!(text.matches("ARCHED").count(), 1, "{text}");
+    // A plain (flat) warp leaves the text as text, as before.
+    let flat = export(&warped_text_box("textPlain"), &PdfOptions { compress: false, ..Default::default() }).unwrap();
+    assert!(filled_paths(&flat).is_empty());
+}

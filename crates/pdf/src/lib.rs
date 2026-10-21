@@ -374,6 +374,16 @@ fn baseline(glyphs: &[(u32, f32, f32)]) -> Option<f32> {
     counts.into_iter().max_by_key(|&(bits, n)| (n, std::cmp::Reverse(bits))).map(|(bits, _)| f32::from_bits(bits))
 }
 
+/// For a line of a warped text box among `warped` (see
+/// [`wordcraft_layout::display::warped_text_boxes`]): the box's bent text for its first line,
+/// taken out of `warped`, and `Some(None)` for its other lines, already drawn. `None` for
+/// anything else.
+fn warped_lines(warped: &mut [(u32, Vec<Draw>)], it: &Placed) -> Option<Option<Vec<Draw>>> {
+    let Placed::Lines { story: StoryRef::Part(id), .. } = it else { return None };
+    let (_, draws) = warped.iter_mut().find(|(w, _)| w == id)?;
+    Some((!draws.is_empty()).then(|| std::mem::take(draws)))
+}
+
 /// A chart's or diagram's alt text: its own, else what it is ("chart", "diagram").
 fn graphic_alt(alt: &str, kind: GraphicKind) -> &str {
     if alt.trim().is_empty() { kind.noun() } else { alt }
@@ -819,16 +829,28 @@ impl Exporter<'_> {
             placeholders: false,
             ..Default::default()
         };
+        // A warped text box's lines are drawn together, bent, where its first one is.
+        let mut warped = wordcraft_layout::display::warped_text_boxes(self.doc, &page.header, &dopts);
+        warped.extend(wordcraft_layout::display::warped_text_boxes(self.doc, &page.footer, &dopts));
         for it in page.header.iter().chain(page.footer.iter()) {
-            let draws = self.draws(page, it, &dopts);
+            let draws = match warped_lines(&mut warped, it) {
+                Some(None) => continue,
+                Some(Some(draws)) => draws,
+                None => self.draws(page, it, &dopts),
+            };
             self.tagged(s, Role::Artifact(ArtifactType::Other), None, |me, s| {
                 for d in &draws {
                     me.draw(s, d);
                 }
             });
         }
+        let mut warped = wordcraft_layout::display::warped_text_boxes(self.doc, &page.items, &dopts);
         for it in &page.items {
-            let draws = self.draws(page, it, &dopts);
+            let draws = match warped_lines(&mut warped, it) {
+                Some(None) => continue,
+                Some(Some(draws)) => draws,
+                None => self.draws(page, it, &dopts),
+            };
             match it {
                 Placed::Lines { story, path, para, .. } => {
                     let idx = self.entry(*story, path, para);
