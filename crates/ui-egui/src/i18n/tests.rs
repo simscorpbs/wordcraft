@@ -359,6 +359,28 @@ fn brazilian_portuguese_covers_the_entire_existing_interface_catalog() {
     missing.sort();
     assert!(missing.is_empty(), "pt-br lacks {missing:?}");
     let pt = lang("pt-br");
+    // Labels a Brazilian Word user reads every day: the big Review button, the built-in styles,
+    // the cross-reference dialog and the hyperlink dialog's place in the document.
+    assert_eq!(tr(pt, "Track\nChanges"), "Controlar\nalterações");
+    assert_eq!(tr(pt, "Quote"), "Citação");
+    assert_eq!(tr(pt, "Footnote Text"), "Texto de nota de rodapé");
+    assert_eq!(tr(pt, "No Spacing"), "Sem espaçamento");
+    assert_eq!(tr(pt, "Reference type:"), "Tipo de referência:");
+    assert_eq!(tr(pt, "Place in This Document"), "Local neste documento");
+    set_current(pt);
+    assert_eq!(builtin_style_name("TOC 3"), "Sumário 3");
+    assert_eq!(builtin_style_name("Heading 7"), "Título 7");
+    // Every built-in paragraph and character style shows in Portuguese in the Styles gallery.
+    let sheet = wordcraft_doc::StyleSheet::builtin();
+    let untranslated: Vec<&str> = sheet
+        .styles
+        .iter()
+        .filter(|s| s.kind != wordcraft_doc::StyleKind::Table && style_name(s) == s.name && s.name.chars().any(char::is_alphabetic))
+        .map(|s| s.name.as_str())
+        .filter(|n| *n != "Normal")
+        .collect();
+    set_current(Lang::EN);
+    assert!(untranslated.is_empty(), "built-in styles without a Portuguese name: {untranslated:?}");
     assert_eq!(tr(pt, "Home"), "Página Inicial");
     assert_eq!(tr(pt, "Font"), "Fonte");
     assert_eq!(tr(pt, "Review"), "Revisão");
