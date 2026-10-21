@@ -210,6 +210,14 @@ pub(crate) fn open(s: &mut Session, v: &Value) -> CmdResult {
         s.ui_requests.push(json!({"open": "openFile"}));
         return sel_result(s);
     };
+    // A file read from disk is kept under its real name (bytes given with `data` keep theirs).
+    let opened;
+    let path = if p::str(v, "data").is_none() {
+        opened = crate::io::opened_path(path);
+        opened.as_str()
+    } else {
+        path
+    };
     let password = p::str(v, "password");
     let (mut doc, encrypted) = if let Some(data) = p::str(v, "data") {
         let bytes = super::insert::base64_decode(data).ok_or_else(|| CmdError::Params("bad base64".into()))?;
