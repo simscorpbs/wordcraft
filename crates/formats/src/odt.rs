@@ -43,6 +43,10 @@ const MAX_INFO_CHARS: usize = 256;
 // ---------------------------------------------------------------------------------------------
 // Export
 
+/// Escape text for element content and attribute values. Characters XML 1.0 can't carry (other
+/// controls, and the non-characters U+FFFE and U+FFFF, which an RTF `\u-1` gives) are dropped:
+/// a reader refuses the whole file over one. Tabs and line feeds are written as references, so
+/// an attribute keeps them (a literal one reads back as a space).
 fn x(s: &str) -> String {
     let mut o = String::with_capacity(s.len());
     for c in s.chars() {
@@ -52,7 +56,10 @@ fn x(s: &str) -> String {
             '>' => o.push_str("&gt;"),
             '"' => o.push_str("&quot;"),
             '\'' => o.push_str("&apos;"),
-            c if c.is_control() && !matches!(c, '\t' | '\n') => {}
+            '\t' => o.push_str("&#9;"),
+            '\n' => o.push_str("&#10;"),
+            '\u{FFFE}' | '\u{FFFF}' => {}
+            c if c.is_control() => {}
             _ => o.push(c),
         }
     }
@@ -2578,6 +2585,27 @@ mod tests {
         );
         let doc = import(&package(&content, Some(&only_default))).unwrap();
         assert_eq!(doc.styles.default_chr.font.as_deref(), Some("DejaVu Serif"));
+    }
+
+    /// RTF `\u-1` is U+FFFF, which XML can't carry: the ODT it was saved to was refused by XML
+    /// readers. It is dropped, and the rest of the text survives.
+    #[test]
+    fn characters_xml_cannot_carry_are_not_written() {
+        let doc = crate::rtf::import(br"{\rtf1\ansi\uc1 a\u-1?b\u-2?c\par}").unwrap();
+        assert!(doc.body.iter().filter_map(|b| b.as_para()).any(|p| p.plain_text().contains('\u{FFFF}')));
+        let bytes = export(&doc).unwrap();
+        let mut z = zip::ZipArchive::new(Cursor::new(bytes.as_slice())).unwrap();
+        let mut content = String::new();
+        z.by_name("content.xml").unwrap().read_to_string(&mut content).unwrap();
+        assert!(!content.contains(['\u{FFFE}', '\u{FFFF}']), "{content}");
+        let back = import(&bytes).unwrap();
+        let text: Vec<String> = back.body.iter().filter_map(|b| b.as_para()).map(|p| p.plain_text()).collect();
+        assert!(text.iter().any(|t| t == "abc"), "{text:?}");
+    }
+
+    #[test]
+    fn x_escapes_markup_and_keeps_whitespace_in_attributes() {
+        assert_eq!(x("a<b>&\"'\t\n\r\u{1}\u{FFFF}z"), "a&lt;b&gt;&amp;&quot;&apos;&#9;&#10;z");
     }
 
     #[test]
