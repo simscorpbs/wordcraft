@@ -452,6 +452,22 @@ pub fn page_display(doc: &Document, page: &Page, opts: &DisplayOptions) -> Vec<D
     out
 }
 
+/// The text of each warped text box among `items` (a page's body, header or footer), drawn as
+/// [`page_display`] draws it: all the box's lines together, bent over its frame. A back end
+/// drawing the items one at a time draws these in place of the boxes' lines. Empty, without a
+/// walk of the document, when no box is warped.
+pub fn warped_text_boxes(doc: &Document, items: &[Placed], opts: &DisplayOptions) -> Vec<(u32, Vec<Draw>)> {
+    warped_boxes(doc, items)
+        .into_iter()
+        .map(|(id, rect, warp)| {
+            let lines: Vec<&Placed> = items.iter().filter(|i| matches!(i, Placed::Lines { story: StoryRef::Part(s), .. } if *s == id)).collect();
+            let mut out = Vec::new();
+            warped_text(doc, &lines, rect, &warp, opts, 1.0, &mut out);
+            (id, out)
+        })
+        .collect()
+}
+
 /// One object drawn alone, as its page draws it: the picture, shape or group `o` in `rect` (its
 /// unturned frame) and the text of the text box story `text_box` on `page`. A dragged object's
 /// preview, which mustn't show what was behind it (#1010).
