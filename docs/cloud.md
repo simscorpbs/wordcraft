@@ -29,7 +29,16 @@ The desktop app keeps a local history for each saved document under `<settings_d
 
 `file.versions={}` lists versions newest first and returns `{id,savedAt,author,size,kind}`. `file.versions={"open":"id"}` opens an older version as a separate unsaved document named `Name (version <local date time>)`. `file.versions={"restore":"id"}` replaces the current content in one Undo step; AutoSave records that write as a `restore` version. The legacy `{"save":"label"}` and numeric `{"restore":index}` forms remain available for compatibility.
 
-File > Info > Version History and the document name in the title bar open the right-hand history pane. Versions are grouped by local day and show local time and author. The pane offers Open version and Restore. An opened older version shows a Previous version bar with Restore and Save a copy.
+File > Info > Version History opens the right-hand history pane. Clicking the document name in the title bar (left or right button) opens a small file menu, as Word does for a OneDrive document: the file name, which can be changed there and applied with Enter (`file.rename`); the folder that holds the file, or Not saved; and Version History. The pane lists versions newest first under day headings: Today, Yesterday, or the date (month names in English and Portuguese, an ISO date in other interface languages). Each row shows the local time and the author, with an Open version link; hovering a row shows its full date and time, and right-clicking it offers Open version and Restore. With no versions the pane says why: the document has not been saved yet, the history is empty, or (in the browser) the history is kept by the desktop app.
+
+Before a version is opened or restored, AutoSave writes the current document if it has unsaved changes, so that state is in the history too. An opened version is read only. Commands that would change it, including Undo and Redo, are refused with a status-line message; file commands, the view, moving the insertion point, selecting and copying still work. Its row in the pane is highlighted and has no link, and the title bar reads `Name (version <local date time>) — Previous version`. A Previous version bar above the page shows the date, time and author with **Compare**, **Restore**, **Save a copy** and **Close**.
+
+- **Compare** (`file.compareVersion={}`, same options as `review.compare`) shows the previous version as the original and the current document as the revised one, with the differences as tracked changes. The comparison takes the version's place and stays read only; pressing Compare again shows the version.
+- **Restore** first returns to the current document, then runs `file.versions={"restore":"id"}`: the version becomes the document's content in one Undo step, and AutoSave records it.
+- **Save a copy** saves the version as a new file and then returns to the current document.
+- **Close** (`file.closeVersion={}`) returns to the current document as it was: its unsaved changes, password and AutoSave disk stamp are kept while the version is shown and put back.
+
+WordCraft has one document per window, so the version is shown in the document's own window instead of a separate one. New, Open and Close while a version is shown first return to the current document. Close stops there, as closing the version's window would in Word, and New and Open then save or ask about the document's changes as usual. Quitting the app does the same, so a shown version never hides unsaved work.
 
 WordCraft keeps a disk stamp with size, modification time and a fast byte digest. AutoSave calls `file.save` with `ifUnchanged`. If another device or program changed the bytes, or the file is missing because it was moved or deleted, AutoSave does not overwrite it. It records `changed` or `missing` and pauses. A timestamp-only touch with identical bytes is accepted.
 
@@ -43,5 +52,6 @@ The feature depends on a compatible sync client being installed and signed in. T
 
 | Date | Change |
 |---|---|
+| 2026-10-21 | Version History works more like Word: title-bar file menu, Today and Yesterday day headings, read-only previous versions with Compare, Restore, Save a copy and Close, and AutoSave before a version is opened or restored. |
 | 2026-10-17 | Added Word-style close and switch behaviour, immediate AutoSave coverage for synced folders and local version history commands. |
 | 2026-10-16 | Added cloud-folder discovery, Save to Cloud, disk-stamp conflict protection and resolution commands. |

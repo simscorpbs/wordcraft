@@ -2799,3 +2799,11 @@ template	Letter	Carta
 	SAMPLE	AMOSTRA
 	ASAP	PRIORIDADE
 	URGENT	URGENTE
+	Yesterday	Ontem
+	This is a previous version. Restore it or save a copy to make changes.	Esta é uma versão anterior. Restaure-a ou salve uma cópia para fazer alterações.
+	Saved a copy of the previous version as {path}	Cópia da versão anterior salva como {path}
+	Version history is kept by the desktop app.	O histórico de versões fica no aplicativo para computador.
+	Save the document to start its version history.	Salve o documento para iniciar o histórico de versões.
+	Back to the current version	Voltar à versão atual
+	Show the previous version again	Mostrar de novo a versão anterior
+	Show what changed since this version	Mostrar o que mudou desde esta versão

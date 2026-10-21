@@ -9,6 +9,9 @@
 //! background work such as a Zotero session). The window is 1440×900 pt at 2× and opens the sample
 //! document unless the first line is `{"empty": true}`; `{"empty": true, "startScreen": true}`
 //! starts the way the desktop app does with nothing to open (File › Home, #766).
+//! `{"versions": "/abs/dir"}` keeps the local version history there, as the desktop app keeps it
+//! in its settings folder, so Version History can be shown with real versions.
+//! `{"openVersion": n}` then opens the history's version `n` (0 = the newest).
 
 use wordcraft_engine::Session;
 use wordcraft_ui_egui::{ControlRequest, Services, WordApp};
@@ -26,7 +29,11 @@ fn main() {
     } else {
         wordcraft_engine::sample::sample_document()
     };
-    let mut app = WordApp::new(Session::new(doc), Services::default()).with_control(rx);
+    let mut session = Session::new(doc);
+    if let Some(dir) = lines.iter().find_map(|l| l.get("versions").and_then(|v| v.as_str())) {
+        session.enable_versions(dir.into(), std::sync::Arc::new(|| {})).expect("version history");
+    }
+    let mut app = WordApp::new(session, Services::default()).with_control(rx);
     app.integrated_titlebar = true;
     if lines.first().is_some_and(|l| l.get("startScreen").is_some()) {
         app.start_screen();
@@ -58,6 +65,12 @@ fn main() {
                 }
                 Err(e) => eprintln!("render failed: {e}"),
             }
+        } else if let Some(n) = l.get("openVersion").and_then(|v| v.as_u64()) {
+            let list = harness.state_mut().session.version_infos();
+            let id = list.get(n as usize).map(|v| v.id.clone()).expect("no such version");
+            let r = harness.state_mut().run("file.versions", serde_json::json!({"open": id}));
+            println!("openVersion: {r:?}");
+            step_n(&mut harness, 4);
         } else if let Some(n) = l.get("steps").and_then(|v| v.as_u64()) {
             step_n(&mut harness, n as usize);
         } else if let Some(ms) = l.get("wait").and_then(|v| v.as_u64()) {

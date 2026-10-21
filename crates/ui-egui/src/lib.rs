@@ -631,6 +631,11 @@ pub struct WordApp {
     /// The file AutoSave is allowed to cover. Local files are added after an explicit save; files
     /// opened from a discovered cloud root are covered as soon as their disk stamp is available.
     autosave_path: Option<std::path::PathBuf>,
+    /// While a previous version from Version History is shown: the file AutoSave covered before
+    /// it opened, given back when it closes ([`versions_pane::close_previous_version`]).
+    version_autosave_path: Option<std::path::PathBuf>,
+    /// The previous version bar's Compare is on: the comparison is shown in the version's place.
+    pub(crate) version_compared: bool,
     /// The cloud folders being looked for in the background ([`Self::discover_cloud`]).
     cloud_discovery: Option<std::sync::mpsc::Receiver<Vec<wordcraft_engine::cloud::CloudRoot>>>,
     /// Web: saves the browser's picker hasn't finished yet ([`async_saves`], #1315).
@@ -738,6 +743,8 @@ impl WordApp {
             read_aloud_at: None,
             read_aloud_error: None,
             autosave_path: None,
+            version_autosave_path: None,
+            version_compared: false,
             cloud_discovery: None,
             saves_in_flight: Vec::new(),
             awaiting_save: None,
@@ -895,6 +902,20 @@ impl WordApp {
             self.dialog = dialogs::Dialog::open(name, self);
             return Ok(json!({"pending": name}));
         }
+        // A previous version stands in for the document only while it is shown: New, Open and
+        // Close first go back to the document, so its unsaved changes are saved or asked about,
+        // and Close itself only closes the previous version, as closing its window does in Word.
+        if self.session.previous_version().is_some() && discards_document(id, &params) {
+            let closed = versions_pane::close_previous_version(self);
+            if id == "file.close" && params.get("quit").and_then(Value::as_bool) != Some(true) {
+                return closed;
+            }
+        }
+        // Opening or restoring a version: AutoSave writes the document first, so what it was
+        // becomes a version of its own in the history, as in Word.
+        if let Some(r) = versions_pane::before_user_command(self, id, &params) {
+            return r;
+        }
         if (self.session.dirty || self.save_unconfirmed() || refused.is_some()) && discards_document(id, &params) {
             match self.autosave_before_discard() {
                 AutoSaveBeforeDiscard::Conflict => return Ok(json!({"pending": "saveConflict"})),
@@ -976,6 +997,15 @@ impl WordApp {
         }
         if let Some(r) = self.ui_command(id, &params) {
             return r;
+        }
+        if self.session.previous_version().is_some() && discards_document(id, &params) {
+            let closed = versions_pane::close_previous_version(self);
+            if id == "file.close" && params.get("quit").and_then(Value::as_bool) != Some(true) {
+                return closed;
+            }
+        }
+        if id == "file.versions" && params.get("open").is_some() && self.session.previous_version().is_none() {
+            self.version_autosave_path = self.autosave_path.clone();
         }
         if id == "file.close" {
             return self.close_document(&params);
@@ -1077,6 +1107,7 @@ impl WordApp {
         if r.is_ok() && id == "file.versions" && params.get("restore").is_some() {
             self.autosave_path = self.session.path.clone();
         }
+        versions_pane::after_command(self, id, &params, &r);
         // A renamed file is the same file: AutoSave keeps covering it, and Recent drops the old name.
         if r.is_ok()
             && id == "file.rename"
@@ -1093,7 +1124,7 @@ impl WordApp {
         }
         self.after_command(id);
         if let Err(e) = &r {
-            self.status(e.clone());
+            self.status(versions_pane::status_text(e));
         }
         r
     }
@@ -1420,6 +1451,11 @@ impl WordApp {
         // No document open (#1129): nothing to save.
         if !self.has_document() {
             return true;
+        }
+        // Quitting while a previous version is shown closes it first: the document it stood in
+        // for is the one to save or ask about.
+        if self.session.previous_version().is_some() {
+            let _ = versions_pane::close_previous_version(self);
         }
         // A comment draft the document refuses is an unsaved change: the prompt can drop it.
         let refused = panes::flush_comment_drafts(self).is_err();
@@ -3113,16 +3149,12 @@ mod tests {
             initial,
         );
         h.run_steps(6);
+        // The document name opens Word's file menu: the name, where the file is, Version History.
         h.get_by_label("Document1 — Not saved").click();
         h.run_steps(2);
-        assert_eq!(h.state().dialog.as_ref().map(|d| d.name()), Some("renameDocument"));
-        h.get_by_role_and_label(egui::accesskit::Role::Button, "Rename").click();
-        h.run_steps(2);
-        assert!(h.state().dialog.is_none());
-        assert!(h.state().session.file_name.is_none());
-        assert!(!h.state().session.dirty);
-        h.get_by_label("Document1 — Not saved").click();
-        h.run_steps(2);
+        assert!(h.query_by_label("Location").is_some());
+        assert!(h.query_by_label("Not saved").is_some(), "an unsaved document has no folder yet");
+        assert!(h.query_by_label("Version History").is_some());
         h.event(egui::Event::Key {
             key: egui::Key::A,
             physical_key: None,
@@ -3132,23 +3164,22 @@ mod tests {
         });
         h.event(egui::Event::Text("Project notes".into()));
         h.run_steps(2);
-        h.get_by_role_and_label(egui::accesskit::Role::Button, "Rename").click();
+        h.event(egui::Event::Key { key: egui::Key::Enter, physical_key: None, pressed: true, repeat: false, modifiers: Default::default() });
         h.run_steps(2);
-        assert!(h.state().dialog.is_none());
         assert_eq!(h.state().title_stem(), "Project notes");
         assert_eq!(h.state().default_save_name(), "Project notes.docx");
         assert!(h.state().session.doc.core.title.is_empty());
         assert!(!h.state().session.dirty);
-        // A long name remains clickable, and Escape leaves it unchanged.
+        assert!(h.query_by_label("Location").is_none(), "Enter renames and closes the menu");
+        // A long name remains clickable, and its menu offers Version History.
         let long_name = "Notes ".repeat(25);
         h.state_mut().run("file.rename", json!({"name": long_name})).unwrap();
         h.run_steps(2);
         h.get_by_label(&format!("{} — Not saved", long_name.trim())).click();
         h.run_steps(2);
-        assert!(h.state().dialog.is_some());
-        h.event(egui::Event::Key { key: egui::Key::Escape, physical_key: None, pressed: true, repeat: false, modifiers: Default::default() });
+        h.get_by_label("Version History").click();
         h.run_steps(2);
-        assert!(h.state().dialog.is_none());
+        assert!(h.state().ui.versions_pane, "Version History opens the pane");
         assert_eq!(h.state().title_stem(), long_name.trim());
         h.get_by_label("Account").click();
         h.run_steps(2);
