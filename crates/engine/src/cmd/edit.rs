@@ -547,7 +547,12 @@ pub(crate) fn search_full(s: &Session, story: StoryRef, with_rep: bool) -> Resul
                 let (Some(a), Some(b)) = (pos_of(m.start(), false), pos_of(m.end(), true)) else { continue };
                 let rep = pieces.as_ref().map(|pc| {
                     let group = |n: usize| caps.get_group(n).and_then(|g| hay.get(g.range())).map(str::to_string);
-                    find_pattern::expand(pc, hay.get(m.range()).unwrap_or(""), &group, &s.clipboard_text)
+                    let found = hay.get(m.range()).unwrap_or("");
+                    let rep = find_pattern::expand(pc, found, &group, &s.clipboard_text);
+                    // Without Match case the replacement follows the found text's case, as in
+                    // Word; Use wildcards always matches case there, and regular expressions
+                    // (WordCraft's own) replace exactly what they are given.
+                    if opts.match_case || opts.wildcards || opts.regex { rep } else { find_pattern::in_case_of(found, rep) }
                 });
                 out.push(Found { a, b, rep });
                 if out.len() >= 100_000 {

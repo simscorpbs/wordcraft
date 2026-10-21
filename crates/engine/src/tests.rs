@@ -711,6 +711,33 @@ fn find_replace() {
 }
 
 #[test]
+fn replace_follows_the_case_of_the_found_text() {
+    // Without Match case Word fits the replacement to what it replaces: capitals stay capitals,
+    // a capital first letter stays one; lowercase text gets the replacement as typed.
+    let mut s = s();
+    run(&mut s, "document.setText", json!({"text": "cat. Cat and CAT, cAt"}));
+    assert_eq!(run(&mut s, "edit.replaceAll", json!({"text": "cat", "with": "dog"}))["replaced"], 4);
+    assert_eq!(text(&s), "dog. Dog and DOG, dog");
+    // Single Replace too, and the found text's case wins over the replacement's.
+    run(&mut s, "document.setText", json!({"text": "The end"}));
+    run(&mut s, "caret.docStart", json!({}));
+    run(&mut s, "edit.find", json!({"text": "the"}));
+    run(&mut s, "edit.replace", json!({"text": "the", "with": "a"}));
+    assert_eq!(text(&s), "A end");
+    run(&mut s, "document.setText", json!({"text": "usa and USA"}));
+    run(&mut s, "edit.replaceAll", json!({"text": "usa", "with": "United States"}));
+    assert_eq!(text(&s), "United States and UNITED STATES");
+    // Match case, wildcards and regular expressions replace with the text exactly as typed.
+    run(&mut s, "document.setText", json!({"text": "Cat CAT"}));
+    run(&mut s, "edit.replaceAll", json!({"text": "cat", "with": "dog", "matchCase": true}));
+    assert_eq!(text(&s), "Cat CAT");
+    run(&mut s, "edit.replaceAll", json!({"text": "Cat", "with": "dog", "matchCase": false, "wildcards": true}));
+    assert_eq!(text(&s), "dog CAT");
+    run(&mut s, "edit.replaceAll", json!({"text": "cat", "with": "fox", "wildcards": false, "regex": true}));
+    assert_eq!(text(&s), "dog fox");
+}
+
+#[test]
 fn find_replace_special_codes() {
     // ^p finds paragraph marks across paragraphs; Replace All with ^p splits paragraphs and is one undo step.
     let mut s = s();
