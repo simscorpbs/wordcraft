@@ -1329,6 +1329,24 @@ impl Document {
         self.para_paths(StoryRef::Body).len()
     }
 
+    /// How deep tables nest in any story (0: no table; 1: tables with no table in their cells).
+    /// Measured with an explicit stack, so a document of any depth is safe to measure; editing
+    /// keeps new nesting within [`MAX_TABLE_NESTING`].
+    pub fn table_depth(&self) -> usize {
+        let mut deepest = 0;
+        let mut stack: Vec<(&Blocks, usize)> = std::iter::once(&self.body).chain(self.parts.values().map(|p| &p.blocks)).map(|b| (b, 0)).collect();
+        while let Some((blocks, depth)) = stack.pop() {
+            for b in blocks {
+                if let Block::Table(t) = &**b {
+                    let d = depth.saturating_add(1);
+                    deepest = deepest.max(d);
+                    stack.extend(t.rows.iter().flat_map(|r| r.cells.iter()).map(|c| (&c.blocks, d)));
+                }
+            }
+        }
+        deepest
+    }
+
     /// Add a media item; returns its key (deduplicated by content).
     pub fn add_media(&mut self, bytes: Vec<u8>, ext: &str) -> String {
         if let Some((k, _)) = self.media.iter().find(|(_, v)| v.as_slice() == bytes.as_slice()) {
@@ -1451,6 +1469,12 @@ pub fn count_words(s: &str) -> usize {
 
 /// How deep in nested tables [`Document::para_paths`] goes: cells below this are skipped.
 pub(crate) const PARA_WALK_DEPTH: usize = 16;
+
+/// The deepest table nesting an edit may create ([`Document::table_depth`]): every paragraph of
+/// such a table is still reached by [`Document::para_paths`], and the recursive walks (layout,
+/// writers, copying and freeing the document) stay far from the stack's end. A file may open
+/// deeper (each reader caps its own nesting); edits then may not nest it further.
+pub const MAX_TABLE_NESTING: usize = PARA_WALK_DEPTH;
 
 fn walk(bl: &Blocks, prefix: &mut Vec<u32>, out: &mut Vec<Path>, depth: usize) {
     if depth > PARA_WALK_DEPTH {

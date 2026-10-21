@@ -1371,6 +1371,15 @@ impl Session {
         {
             result = Err(CmdError::Disabled(format!("{id}: only the editable regions of this protected document can change")));
         }
+        // Tables nest only so deep: thousands of tables inside tables would overflow the stack
+        // of every recursive walk (layout, saving, even freeing the document) and crash.
+        if result.is_ok()
+            && let Some((before, ..)) = &before_doc
+            && self.doc.table_depth() > wordcraft_doc::MAX_TABLE_NESTING
+            && self.doc.table_depth() > before.table_depth()
+        {
+            result = Err(CmdError::Failed(format!("{id}: tables can't nest more than {} deep", wordcraft_doc::MAX_TABLE_NESTING)));
+        }
         match &result {
             Ok(_) => {
                 if spec.mutates {
