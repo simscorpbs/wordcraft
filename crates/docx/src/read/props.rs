@@ -488,6 +488,7 @@ impl PropCtx {
                 }
                 "w:jc" => t.align = k.attr("w:val").map(align),
                 "w:tblInd" => t.indent = tw(k, "w:w"),
+                "w:tblCellSpacing" => t.cell_spacing = cell_spacing(k),
                 "w:tblBorders" => t.borders = Some(borders(k)),
                 "w:shd" => t.shading = self.shd_fill(k),
                 "w:tblLayout" => t.fixed = k.attr("w:type") == Some("fixed"),
@@ -561,10 +562,20 @@ pub fn trpr(e: &El) -> RowProps {
             "w:gridAfter" => r.grid_after = k.attr("w:val").and_then(u32_of).unwrap_or(0).min(63),
             "w:wBefore" => r.w_before = gap_width(k),
             "w:wAfter" => r.w_after = gap_width(k),
+            "w:tblCellSpacing" => r.cell_spacing = cell_spacing(k),
             _ => {}
         }
     }
     r
+}
+
+/// `w:tblCellSpacing` in points: a width in twips (`dxa`, the only unit Word writes), clamped;
+/// `nil`, a percentage or junk is none.
+fn cell_spacing(k: &El) -> Option<f32> {
+    match k.attr("w:type") {
+        None | Some("dxa") => tw(k, "w:w").filter(|v| *v > 0.0).map(|v| v.min(1584.0)),
+        _ => None,
+    }
 }
 
 /// `w:wBefore`/`w:wAfter` in points: only a width in twips (`dxa`) is kept.
