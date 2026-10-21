@@ -427,6 +427,12 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
         });
 }
 
+/// The status bar's page count hint: Go To with the key that opens it here (`Ctrl+Alt+G` on
+/// Windows and Linux, `⌘⌥G` on the Mac, or the user's own from Customize Keyboard).
+fn goto_hint(app: &WordApp) -> String {
+    crate::widgets::tooltip_lines(tl!("Go To"), &crate::widgets::shortcut_text(app, "edit.goto"), "", None).0
+}
+
 pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
     egui::Panel::bottom("status")
@@ -460,7 +466,7 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                     resp
                 };
                 if st(ui, &crate::i18n::fmt(tl!("Page {page} of {pages}"), &[("page", &page.to_string()), ("pages", &l.pages.len().to_string())]))
-                    .on_hover_text(tl!("Go To (⌘⌥G)"))
+                    .on_hover_text(goto_hint(app))
                     .clicked()
                 {
                     let _ = app.run("ui.dialog", json!({"name": "goto"}));
@@ -838,5 +844,18 @@ mod tests {
         click(&ctx, &mut n, row.rect.center(), &mut a);
         assert!(a.canvas.want_focus, "the row click returns focus to the document");
         assert!(a.session.undo_history().is_empty(), "the step was undone");
+    }
+
+    /// The page count's hint names the key that opens Go To on this platform, and follows
+    /// Customize Keyboard. It used to say `⌘⌥G` everywhere, a Mac key on Windows and Linux.
+    #[test]
+    fn the_page_count_hint_names_the_go_to_key_in_effect() {
+        let mut a = WordApp::new(wordcraft_engine::Session::new(wordcraft_doc::Document::from_text("Text")), crate::Services::default());
+        let expected = if cfg!(target_os = "macos") { "Go To (⌘⌥G)" } else { "Go To (Ctrl+Alt+G)" };
+        assert_eq!(goto_hint(&a), expected);
+        // Ctrl+Alt+G (⌘⌥G) given to another command: F5 still opens Go To.
+        let s = &mut a.session;
+        s.keymap.assign(&s.registry, "format.bold", "Mod+Alt+G").unwrap();
+        assert_eq!(goto_hint(&a), "Go To (F5)");
     }
 }
