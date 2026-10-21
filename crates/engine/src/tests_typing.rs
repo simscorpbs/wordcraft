@@ -467,6 +467,28 @@ fn ordinals_become_superscript() {
 }
 
 #[test]
+fn text_after_an_ordinal_finished_by_enter_is_not_superscript() {
+    // Enter finishes "1st" (its suffix goes up), and the next paragraph is typed as before.
+    let s = typed(
+        "the 1st
+next",
+    );
+    let first = s.doc.para_at(&Pos::body(0, 0)).unwrap();
+    assert_eq!(first.props_of_char(5).vert_align, Some(VertAlign::Superscript));
+    let next = s.doc.para_at(&Pos::body(1, 0)).unwrap();
+    assert_eq!((next.text.as_str(), next.props_of_char(0).vert_align, next.mark.vert_align), ("next", None, None));
+    // Superscript typed on purpose still carries on, as any formatting does on Enter.
+    let mut s = typed("x");
+    run(&mut s, "format.superscript", json!({}));
+    typ(
+        &mut s, "2
+3",
+    );
+    let next = s.doc.para_at(&Pos::body(1, 0)).unwrap();
+    assert_eq!(next.props_of_char(0).vert_align, Some(VertAlign::Superscript));
+}
+
+#[test]
 fn web_addresses_become_links() {
     let mut s = typed("see https://example.org/log, then ");
     let p = s.doc.para_at(&Pos::body(0, 0)).unwrap();
