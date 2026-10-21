@@ -1634,6 +1634,10 @@ struct PageBuilder<'a> {
     /// Top of the footer of the pages being started: a footer reaching above the bottom margin
     /// pushes the body up (`f32::MAX`: no footer).
     foot_top: f32,
+    /// Where the body starts and the footer starts on the even pages being started, when they
+    /// show the section's even header and footer (different odd and even pages): they take the
+    /// place of the default ones' on those pages.
+    even_top: Option<(f32, f32)>,
 }
 
 /// Gap above the footnote separator and its length.
@@ -2033,10 +2037,14 @@ impl PageBuilder<'_> {
         }
         let s = self.sect;
         self.number = self.restart_at.take().unwrap_or_else(|| self.number.saturating_add(1));
+        let (body_top, foot_top) = match self.even_top {
+            Some(even) if self.number.is_multiple_of(2) => even,
+            _ => (body_top, self.foot_top),
+        };
         let (w, h) = if self.web { (s.page_w, f32::MAX / 4.0) } else { (s.page_w, s.page_h) };
         // A footer taller than the bottom margin pushes the body up (Word: no gap), leaving it at
         // least a little room.
-        let bottom = (s.page_h - s.margin_bottom).min(self.foot_top.max(body_top + 36.0));
+        let bottom = (s.page_h - s.margin_bottom).min(foot_top.max(body_top + 36.0));
         let body = Rect::new(s.margin_left + s.gutter, body_top, s.text_width(), (bottom - body_top).max(36.0));
         let mut decor = Vec::new();
         if !self.web {
@@ -2294,6 +2302,7 @@ fn layout_pass(
         sect_beneath: false,
         beneath: false,
         foot_top: f32::MAX,
+        even_top: None,
     };
     // Endnotes in document order, with the section of their reference; placed at the end of a
     // section that keeps them there, else at the end of the document.
@@ -2360,6 +2369,13 @@ fn layout_pass(
         } else {
             with_pct_base(&mut ctx, fb(feet.first), |c| foot_top_for(c, sect, feet.first))
         };
+        // Even pages showing an even header or footer: their own body top and footer top.
+        let even_top =
+            (doc.settings.even_odd_headers && !web && !reflow && !turn.is_turned() && (heads.even.is_some() || feet.even.is_some())).then(|| {
+                let top = with_pct_base(&mut ctx, hb(heads.even), |c| body_top_for(c, sect, heads.even));
+                let foot = with_pct_base(&mut ctx, fb(feet.even), |c| foot_top_for(c, sect, feet.even));
+                (top, foot)
+            });
         ctx.grid = para::Grid::of(doc, sect);
         let restart = sect.page_num_start;
         if sect.line_numbers.as_ref().is_some_and(|l| l.restart == wordcraft_doc::section::LineNumberRestart::Section) {
@@ -2393,6 +2409,8 @@ fn layout_pass(
                 pb.restart_at = restart;
             }
             pb.foot_top = first_foot;
+            // A section's first page with Different First Page shows the first page's parts.
+            pb.even_top = if sect.title_page { None } else { even_top };
             pb.new_page(block, first_top);
             pb.foot_top = foot_top;
         } else {
@@ -2405,6 +2423,7 @@ fn layout_pass(
         }
         prev_turn = turn;
         pb.foot_top = foot_top;
+        pb.even_top = even_top;
         let last = (*end).min(doc.body.len().saturating_sub(1));
         // Newspaper columns are balanced on the section's last page when the next section starts
         // on the same page (a continuous break), as in Word. That page is laid out again from the
@@ -3135,13 +3154,7 @@ fn footer_table_wraps(ctx: &mut Ctx, pb: &PageBuilder) -> Vec<WrapArea> {
         return Vec::new();
     }
     let set = linked(&sections, page.section, |s| s.footers);
-    let id = if sect.title_page && first {
-        set.first
-    } else if doc.settings.even_odd_headers && page.number.is_multiple_of(2) {
-        set.even.or(set.default)
-    } else {
-        set.default
-    };
+    let id = shown_part(set, sect.title_page && first, doc.settings.even_odd_headers && page.number.is_multiple_of(2));
     let Some(id) = id else { return Vec::new() };
     let Some(part) = doc.parts.get(&id) else { return Vec::new() };
     let blocks = part.blocks.clone();
@@ -4204,13 +4217,7 @@ fn header_table_areas(ctx: &mut Ctx, pb: &PageBuilder) -> Vec<Rect> {
         return Vec::new();
     }
     let set = linked(&sections, page.section, |s| s.headers);
-    let id = if sect.title_page && first {
-        set.first
-    } else if ctx.doc.settings.even_odd_headers && page.number.is_multiple_of(2) {
-        set.even.or(set.default)
-    } else {
-        set.default
-    };
+    let id = shown_part(set, sect.title_page && first, ctx.doc.settings.even_odd_headers && page.number.is_multiple_of(2));
     let Some(id) = id else { return Vec::new() };
     let Some(part) = ctx.doc.parts.get(&id) else { return Vec::new() };
     let blocks = part.blocks.clone();
@@ -4384,6 +4391,20 @@ fn linked(sections: &[(usize, &SectionProps)], si: usize, get: fn(&SectionProps)
     set
 }
 
+/// The header or footer a page shows from its section's set (with the parts it links to): the
+/// first page's on the first page of a section with Different First Page, the even pages' on an
+/// even page with different odd and even pages, else the default. An even page with no even part
+/// shows none; it doesn't fall back on the odd pages' (ECMA-376 §17.10.5; Word leaves it empty).
+fn shown_part(set: HeaderSet, first: bool, even: bool) -> Option<u32> {
+    if first {
+        set.first
+    } else if even {
+        set.even
+    } else {
+        set.default
+    }
+}
+
 /// Whether a header, a footer or a text box shows a `PAGEREF` field, which they resolve from the
 /// paginated body (see [`bookmark_pages`]).
 fn headers_footers_refer_to_pages(doc: &Document) -> bool {
@@ -4475,14 +4496,7 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
         let Some((_, sect)) = sections.get(page.section) else { continue };
         // Inherit header/footer references from earlier sections (Word's "link to previous").
         let pick = |get: fn(&SectionProps) -> HeaderSet| -> Option<u32> {
-            let set = linked(sections, page.section, get);
-            if sect.title_page && first_of_section.contains(&i) {
-                return set.first;
-            }
-            if even_odd && page.number % 2 == 0 {
-                return set.even.or(set.default);
-            }
-            set.default
+            shown_part(linked(sections, page.section, get), sect.title_page && first_of_section.contains(&i), even_odd && page.number % 2 == 0)
         };
         let hid = pick(|s| s.headers);
         let fid = pick(|s| s.footers);

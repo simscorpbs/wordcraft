@@ -568,3 +568,65 @@ fn a_roman_page_number_in_the_footer_stays_roman_with_the_page_count_in_the_body
         assert_eq!(glyphs, want.chars().count(), "page {}: the footer should show {want}", p.number);
     }
 }
+
+/// Three pages, one paragraph each (each after the first starts a page).
+fn three_pages() -> Document {
+    let mut d = Document::from_text("Page one\nPage two\nPage three");
+    for i in 1..3 {
+        if let Some(Block::Para(p)) = d.body.get_mut(i).map(Arc::make_mut) {
+            p.props.page_break_before = Some(true);
+        }
+    }
+    d.settings.even_odd_headers = true;
+    d
+}
+
+#[test]
+fn even_pages_show_no_header_without_an_even_one() {
+    // ECMA-376 §17.10.5: with different odd and even headers on and no even header in the
+    // section or one before it, an even page has no header (Word shows it empty); it doesn't
+    // fall back on the odd pages' header.
+    let mut d = three_pages();
+    let head = d.add_part(PartKind::Header, paras("Odd header", 1));
+    let foot = d.add_part(PartKind::Footer, paras("Odd footer", 1));
+    d.last_section.headers.default = Some(head);
+    d.last_section.footers.default = Some(foot);
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 3);
+    let shown: Vec<_> = l.pages.iter().map(|p| (p.header_story, p.footer_story, p.header.is_empty(), p.footer.is_empty())).collect();
+    assert_eq!(shown, [(Some(head), Some(foot), false, false), (None, None, true, true), (Some(head), Some(foot), false, false)]);
+    assert_eq!(l.pages[1].hf_slot, HfSlot::Even);
+    // With an even header (and footer), page 2 shows them.
+    let even_head = d.add_part(PartKind::Header, paras("Even header", 1));
+    d.last_section.headers.even = Some(even_head);
+    let l = lay(&d);
+    assert_eq!(l.pages[1].header_story, Some(even_head));
+    assert_eq!(l.pages[1].footer_story, None);
+}
+
+#[test]
+fn a_tall_even_header_or_footer_moves_the_even_pages_body() {
+    // An even header taller than the top margin pushes the body down on even pages only, and an
+    // even footer taller than the bottom margin pushes it up, as the odd pages' do for theirs.
+    let mut d = three_pages();
+    let head = d.add_part(PartKind::Header, paras("Even header line", 8));
+    let foot = d.add_part(PartKind::Footer, paras("Even footer line", 8));
+    d.last_section.headers.even = Some(head);
+    d.last_section.footers.even = Some(foot);
+    let margin_top = d.last_section.margin_top;
+    let bottom = d.last_section.page_h - d.last_section.margin_bottom;
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 3);
+    for i in [0, 2] {
+        assert!((l.pages[i].body.y - margin_top).abs() < 0.01, "page {}: body at {:?}", i + 1, l.pages[i].body);
+        assert!((l.pages[i].body.bottom() - bottom).abs() < 0.01, "page {}: body at {:?}", i + 1, l.pages[i].body);
+    }
+    let p = &l.pages[1];
+    let (_, header_bottom) = extent(&p.header, StoryRef::Part(head)).unwrap();
+    let (footer_top, _) = extent(&p.footer, StoryRef::Part(foot)).unwrap();
+    assert!(header_bottom > margin_top && footer_top < bottom, "header ends at {header_bottom}, footer starts at {footer_top}");
+    let (body_top, _) = extent(&p.items, StoryRef::Body).unwrap();
+    assert!(body_top >= header_bottom - 0.01, "body at {body_top}, header ends at {header_bottom}");
+    assert!(p.body.y >= header_bottom - 0.01, "{:?}", p.body);
+    assert!(p.body.bottom() <= footer_top + 0.01, "body {:?}, footer starts at {footer_top}", p.body);
+}
