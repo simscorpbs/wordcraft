@@ -107,6 +107,53 @@ fn locates_documents_by_root_and_by_folder_names() {
     assert_eq!(at("/Users/bo/Library/Mobile Documents/com~apple~CloudDocs"), None);
 }
 
+/// Windows spells one folder several ways: a verbatim `\\?\` prefix (what `canonicalize` returns),
+/// another case, `/` for `\`. All of them are inside the discovered root (AutoSave was blocked for
+/// `\\?\C:\Users\ana\OneDrive\a.docx`).
+#[cfg(windows)]
+#[test]
+fn windows_spellings_of_a_root_are_the_same_folder() {
+    let roots = [
+        CloudRoot { provider: Provider::OneDrive, path: PathBuf::from(r"C:\Users\ana\OneDrive"), account: None },
+        CloudRoot { provider: Provider::GoogleDrive, path: PathBuf::from(r"\\nas\Drive"), account: None },
+    ];
+    let at = |p: &str| locate(Path::new(p), &roots).map(|l| l.provider);
+    for p in [r"\\?\C:\Users\ana\OneDrive\a.docx", r"c:\users\ANA\onedrive\a.docx", "C:/Users/ana/OneDrive/Sub/a.docx"] {
+        assert_eq!(at(p), Some(Provider::OneDrive), "{p}");
+    }
+    for p in [r"\\?\UNC\nas\Drive\b.docx", r"\\NAS\drive\b.docx"] {
+        assert_eq!(at(p), Some(Provider::GoogleDrive), "{p}");
+    }
+    let verbatim_root = [CloudRoot { provider: Provider::OneDrive, path: PathBuf::from(r"\\?\C:\Users\ana\OneDrive"), account: None }];
+    assert_eq!(locate(Path::new(r"C:\Users\ana\OneDrive\a.docx"), &verbatim_root).map(|l| l.provider), Some(Provider::OneDrive));
+    // Another drive, or a device path, is not the same folder.
+    assert_eq!(at(r"\\?\D:\Users\ana\OneDrive\a.docx"), None);
+    assert_eq!(at(r"\\.\C:\Users\ana\OneDrive\a.docx"), None);
+    // Folder names count without regard to case too.
+    assert_eq!(locate(Path::new(r"\\?\C:\Users\bo\ICLOUDDRIVE\c.docx"), &[]).map(|l| l.provider), Some(Provider::ICloudDrive));
+}
+
+/// A document reached through short 8.3 folder names is still inside its root (it opened with
+/// AutoSave blocked: `C:\…\ONEDRI~1\DOCUME~1\Plan.docx` matched no discovered folder).
+#[cfg(windows)]
+#[test]
+fn short_names_are_inside_the_root_with_the_long_name() {
+    let dir = scratch("short-names");
+    let root = std::fs::canonicalize(&dir).unwrap().join("OneDrive Pessoal");
+    let docs = root.join("Documentos Longos");
+    std::fs::create_dir_all(&docs).unwrap();
+    let doc = docs.join("Plano Anual.docx");
+    std::fs::write(&doc, b"x").unwrap();
+    let out = std::process::Command::new("cmd").args(["/C", &format!("for %I in (\"{}\") do @echo %~sI", doc.display())]).output().unwrap();
+    let short = PathBuf::from(String::from_utf8_lossy(&out.stdout).trim());
+    let plain_root = PathBuf::from(root.to_string_lossy().trim_start_matches(r"\\?\"));
+    let roots = [CloudRoot { provider: Provider::OneDrive, path: plain_root.clone(), account: None }];
+    if short.to_string_lossy().contains('~') {
+        assert_eq!(locate(&short, &roots), Some(CloudLocation { provider: Provider::OneDrive, root: plain_root }), "{}", short.display());
+    }
+    let _ = std::fs::remove_dir_all(dir);
+}
+
 #[test]
 fn provider_ids_round_trip() {
     for p in Provider::ALL {

@@ -105,20 +105,74 @@ pub struct CloudLocation {
 /// `…/CloudStorage/GoogleDrive-…/…`, `…/CloudStorage/OneDrive-…/…`), so a document still counts
 /// when discovery missed its folder.
 pub fn locate(path: &Path, roots: &[CloudRoot]) -> Option<CloudLocation> {
-    roots
-        .iter()
-        .filter(|root| contains(&root.path, path))
-        .max_by_key(|root| root.path.components().count())
-        .map(|root| CloudLocation { provider: root.provider, root: root.path.clone() })
-        .or_else(|| locate_by_name(path))
+    let inside = |path: &Path| {
+        roots
+            .iter()
+            .filter(|root| contains(&root.path, path))
+            .max_by_key(|root| root.path.components().count())
+            .map(|root| CloudLocation { provider: root.provider, root: root.path.clone() })
+    };
+    inside(path).or_else(|| long_names(path).and_then(|long| inside(&long))).or_else(|| locate_by_name(path))
+}
+
+/// On Windows, a path spelled with short 8.3 names (`C:\Users\ANA~1\ONEDRI~1\a.docx`, as some
+/// programs pass files on) under its long names, so it is found inside its root as well. Only such
+/// paths touch the disk.
+#[cfg(windows)]
+fn long_names(path: &Path) -> Option<PathBuf> {
+    let short = path.components().any(|c| matches!(c, Component::Normal(name) if name.to_string_lossy().contains('~')));
+    if short { std::fs::canonicalize(path).ok() } else { None }
+}
+
+#[cfg(not(windows))]
+fn long_names(_path: &Path) -> Option<PathBuf> {
+    None
 }
 
 /// Whether `path` lies inside `root`, comparing whole components, without regard to case on
-/// macOS and Windows (whose usual file systems ignore it).
+/// macOS and Windows (whose usual file systems ignore it). On Windows a verbatim prefix names the
+/// same drive or share as the ordinary one: `\\?\C:\Users\…` is inside `C:\Users`.
 fn contains(root: &Path, path: &Path) -> bool {
     let root: Vec<Component<'_>> = root.components().collect();
     let path: Vec<Component<'_>> = path.components().collect();
-    root.len() < path.len() && root.iter().zip(&path).all(|(a, b)| same_component(a.as_os_str(), b.as_os_str()))
+    root.len() < path.len() && root.iter().zip(&path).all(|(a, b)| same_part(a, b))
+}
+
+fn same_part(a: &Component<'_>, b: &Component<'_>) -> bool {
+    match (a, b) {
+        (Component::Prefix(a), Component::Prefix(b)) => same_prefix(a, b),
+        _ => same_component(a.as_os_str(), b.as_os_str()),
+    }
+}
+
+/// `C:` and `\\?\C:` are one drive, `\\server\share` and `\\?\UNC\server\share` one share (Windows
+/// names ignore case). Other prefixes (`\\.\COM1`, `\\?\Volume{…}`) must match as written.
+fn same_prefix(a: &std::path::PrefixComponent<'_>, b: &std::path::PrefixComponent<'_>) -> bool {
+    use std::path::Prefix;
+    let drive = |p: Prefix<'_>| match p {
+        Prefix::Disk(letter) | Prefix::VerbatimDisk(letter) => Some(letter.to_ascii_uppercase()),
+        _ => None,
+    };
+    let share = |p: Prefix<'_>| match p {
+        Prefix::UNC(server, share) | Prefix::VerbatimUNC(server, share) => {
+            Some((server.to_string_lossy().to_lowercase(), share.to_string_lossy().to_lowercase()))
+        }
+        _ => None,
+    };
+    match (drive(a.kind()), drive(b.kind()), share(a.kind()), share(b.kind())) {
+        (Some(x), Some(y), _, _) => x == y,
+        (_, _, Some(x), Some(y)) => x == y,
+        _ => same_component(a.as_os_str(), b.as_os_str()),
+    }
+}
+
+/// A folder name compared as the file system does: without regard to case on macOS and Windows.
+fn named(name: &str, wanted: &str) -> bool {
+    if cfg!(any(target_os = "macos", target_os = "windows")) { name.eq_ignore_ascii_case(wanted) } else { name == wanted }
+}
+
+fn named_with_prefix(name: &str, prefix: &str) -> bool {
+    name.get(..prefix.len()).is_some_and(|start| named(start, prefix))
 }
 
 fn same_component(a: &std::ffi::OsStr, b: &std::ffi::OsStr) -> bool {
@@ -137,13 +191,18 @@ fn locate_by_name(path: &Path) -> Option<CloudLocation> {
     for component in folders.components() {
         root.push(component.as_os_str());
         let name = component.as_os_str().to_string_lossy();
-        let provider = match previous.as_deref() {
-            Some("Mobile Documents") if name == "com~apple~CloudDocs" => Some(Provider::ICloudDrive),
+        let after = |folder: &str| previous.as_deref().is_some_and(|p| named(p, folder));
+        let provider = if after("Mobile Documents") && named(&name, "com~apple~CloudDocs") {
+            Some(Provider::ICloudDrive)
+        } else if named(&name, "iCloudDrive") {
             // iCloud for Windows keeps the folder in the user's profile.
-            _ if name == "iCloudDrive" => Some(Provider::ICloudDrive),
-            Some("CloudStorage") if name.starts_with("GoogleDrive-") => Some(Provider::GoogleDrive),
-            Some("CloudStorage") if name.starts_with("OneDrive-") || name == "OneDrive" => Some(Provider::OneDrive),
-            _ => None,
+            Some(Provider::ICloudDrive)
+        } else if after("CloudStorage") && named_with_prefix(&name, "GoogleDrive-") {
+            Some(Provider::GoogleDrive)
+        } else if after("CloudStorage") && (named_with_prefix(&name, "OneDrive-") || named(&name, "OneDrive")) {
+            Some(Provider::OneDrive)
+        } else {
+            None
         };
         if let Some(provider) = provider {
             return Some(CloudLocation { provider, root });
