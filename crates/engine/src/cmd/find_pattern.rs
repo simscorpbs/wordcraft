@@ -415,3 +415,22 @@ pub fn expand(pieces: &[Piece], found: &str, group: &dyn Fn(usize) -> Option<Str
     }
     out
 }
+
+/// Replace with text in the case of the text it replaces, as Word does when Match case is off:
+/// found text in capitals (two letters or more) puts the replacement in capitals, found text
+/// starting with a capital capitalises the replacement's first letter; otherwise the
+/// replacement stays as typed.
+pub fn in_case_of(found: &str, rep: String) -> String {
+    let mut letters = found.chars().filter(|c| c.is_alphabetic());
+    let Some(first) = letters.next() else { return rep };
+    if !first.is_uppercase() {
+        return rep;
+    }
+    let rest: Vec<char> = letters.collect();
+    if !rest.is_empty() && rest.iter().all(|c| !c.is_lowercase()) {
+        return rep.to_uppercase();
+    }
+    let Some(i) = rep.find(char::is_alphabetic) else { return rep };
+    let Some(c) = rep.get(i..).and_then(|t| t.chars().next()) else { return rep };
+    format!("{}{}{}", rep.get(..i).unwrap_or(""), c.to_uppercase(), rep.get(i + c.len_utf8()..).unwrap_or(""))
+}
