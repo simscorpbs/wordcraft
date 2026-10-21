@@ -1322,6 +1322,8 @@ impl Session {
         if let Some(why) = (spec.enabled)(self) {
             return Err(CmdError::Disabled(format!("{id}: {why}")));
         }
+        // A previous version from Version History is read only, as in Word.
+        crate::cmd::version_view::check_before(self, id, spec.mutates)?;
         // Restrict Editing: refused outright, or allowed as long as it only edits the exceptions.
         let guard = if spec.mutates { crate::cmd::protect::check_before(self, id, params)? } else { false };
         // Quick Parts aren't part of the document, so a refused edit puts them back itself (the Spike).

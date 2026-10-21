@@ -51,11 +51,19 @@ fn open_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     let (info, bytes) = s.read_version(&source, id).map_err(CmdError::Failed)?;
     let password = s.password.as_ref().map(|value| value.as_str().to_owned());
     let (doc, encrypted) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password.as_deref()).map_err(CmdError::Failed)?;
-    let (original_doc, original_sel) = s
-        .opened_version
-        .as_ref()
-        .map(|version| (version.original_doc.clone(), version.original_sel.clone()))
-        .unwrap_or_else(|| (s.doc.clone(), s.sel.clone()));
+    let (original_doc, original_sel, original_dirty, original_password, original_stamp, original_conflict, original_autosave) =
+        match s.opened_version.as_ref() {
+            Some(version) => (
+                version.original_doc.clone(),
+                version.original_sel.clone(),
+                version.original_dirty,
+                version.original_password.clone(),
+                version.original_stamp.clone(),
+                version.original_conflict,
+                version.original_autosave,
+            ),
+            None => (s.doc.clone(), s.sel.clone(), s.dirty, s.password.clone(), s.cloud.stamp.clone(), s.cloud.conflict, s.autosave),
+        };
     let stem =
         source.file_stem().map(|name| name.to_string_lossy().into_owned()).filter(|name| !name.is_empty()).unwrap_or_else(|| "Document".into());
     let label = format!("{stem} (version {})", local_timestamp(&info.saved_at));
@@ -65,17 +73,35 @@ fn open_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     if encrypted {
         s.password = password.as_deref().map(crate::io::Password::new);
     }
-    let original_dirty = s.opened_version.as_ref().map_or(s.dirty, |version| version.original_dirty);
     s.dirty = false;
-    s.opened_version = Some(OpenedVersion { path: source, info: info.clone(), original_doc, original_sel, original_dirty });
+    s.opened_version = Some(OpenedVersion {
+        path: source,
+        info: info.clone(),
+        original_doc,
+        original_sel,
+        original_dirty,
+        original_password,
+        original_stamp,
+        original_conflict,
+        original_autosave,
+    });
     Ok(json!({"opened": info.id, "savedAt": info.saved_at, "name": s.file_name.clone()}))
 }
 
 fn restore_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     let source = version_source(s).ok_or_else(|| CmdError::Disabled("version history needs a saved document".into()))?;
     let (info, bytes) = s.read_version(&source, id).map_err(CmdError::Failed)?;
-    let password = s.password.as_ref().map(crate::io::Password::as_str);
-    let (doc, _) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password).map_err(CmdError::Failed)?;
+    // While a previous version is shown, the document's own password is the one kept aside.
+    let password = match s.opened_version.as_ref() {
+        Some(version) => version.original_password.clone(),
+        None => s.password.clone(),
+    };
+    let (doc, _) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password.as_ref().map(crate::io::Password::as_str))
+        .map_err(CmdError::Failed)?;
+    if s.opened_version.is_some() {
+        // The unsaved changes kept below are the document's: they are written with its password.
+        s.password = password;
+    }
     // The state being replaced stays in the history: unsaved changes are stored first.
     let unsaved = match &s.opened_version {
         Some(previous) => previous.original_dirty.then(|| previous.original_doc.clone()),
@@ -100,9 +126,17 @@ fn restore_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     // The restore is a version at once, with the restored bytes.
     s.record_restore(&source, bytes);
     s.version_next_kind = None;
-    if opened.is_some() {
+    if let Some(previous) = opened {
         s.path = Some(source);
         s.file_name = None;
+        // The document's password and AutoSave's disk stamp come back with it.
+        s.password = previous.original_password;
+        s.cloud.stamp = previous.original_stamp;
+        s.cloud.conflict = previous.original_conflict;
+        s.refresh_autosave();
+        if s.autosave != previous.original_autosave {
+            s.set_autosave(previous.original_autosave);
+        }
     }
     Ok(json!({"restored": info.id, "savedAt": info.saved_at}))
 }
@@ -1314,6 +1348,13 @@ fn compare(s: &mut Session, v: &Value) -> CmdResult {
     } else {
         return Err(CmdError::Params("`path` or `text` of the revised document is required".into()));
     };
+    compare_documents(s, &revised, v)
+}
+
+/// [`compare`] once the revised document is in hand: the current document (or `original`) is
+/// compared with `revised`, with the same settings. Version History's Compare uses it with the
+/// document kept aside while a previous version is shown.
+pub(crate) fn compare_documents(s: &mut Session, revised: &Document, v: &Value) -> CmdResult {
     let show_in = p::str(v, "showIn").unwrap_or("original");
     if !matches!(show_in, "original" | "revised" | "new") {
         return Err(CmdError::Params("`showIn` is \"original\", \"revised\" or \"new\"".into()));

@@ -290,9 +290,17 @@ pub struct OpenedVersion {
     /// unsaved work when the read-only copy is shown.
     pub(crate) original_doc: wordcraft_doc::Document,
     pub(crate) original_sel: crate::Selection,
-    /// Whether `original_doc` had changes not yet written to its file. Restore stores those
-    /// changes as a version first, so the state before the restore stays in the history.
+    /// What else opening the version replaced, so closing it (`file.closeVersion`) or restoring
+    /// it gives back the same document: whether it had changes not yet written to its file
+    /// (Restore stores those as a version first, so the state before the restore stays in the
+    /// history), its password, and the disk stamp and conflict AutoSave checks before it writes.
     pub(crate) original_dirty: bool,
+    pub(crate) original_password: Option<crate::io::Password>,
+    pub(crate) original_stamp: Option<wordcraft_cloud::DiskStamp>,
+    pub(crate) original_conflict: Option<wordcraft_cloud::DiskState>,
+    /// The document's AutoSave switch: opening the version (a document with no file) set the
+    /// default, and closing it gives the document its own switch back.
+    pub(crate) original_autosave: bool,
 }
 
 #[cfg(not(target_arch = "wasm32"))]

@@ -349,11 +349,66 @@ impl MacTitleBar {
     }
 }
 
+/// The document name in the title bar: clicking it opens [`document_menu`].
+pub(crate) fn document_name_id() -> egui::Id {
+    egui::Id::new("title_bar").with("document_name")
+}
+
+/// The name field of [`document_menu`].
+pub(crate) fn document_menu_name_id() -> egui::Id {
+    document_name_id().with("name")
+}
+
+/// What Word shows when the document's name in the title bar is clicked: the file name, which can
+/// be changed there, where the file is, and Version History. Right-click opens the same menu.
+fn document_menu(ui: &Ui, app: &mut WordApp, response: &egui::Response) {
+    let t = Tokens::get(ui.ctx());
+    let popup = egui::Popup::from_toggle_button_response(response).close_behavior(egui::PopupCloseBehavior::CloseOnClickOutside);
+    let popup = if response.secondary_clicked() { popup.open_memory(egui::SetOpenCommand::Bool(true)) } else { popup };
+    let field = document_menu_name_id();
+    let opened = response.clicked() || response.secondary_clicked();
+    popup.show(|ui| {
+        ui.set_width(300.0);
+        ui.spacing_mut().item_spacing.y = 6.0;
+        let viewing_version = app.session.previous_version().is_some();
+        let mut name = if opened { app.title_stem() } else { ui.data_mut(|d| d.get_temp::<String>(field)).unwrap_or_else(|| app.title_stem()) };
+        let label = ui.label(egui::RichText::new(tl!("File name:")).font(regular(11.5)).color(t.text_dim));
+        let edit =
+            ui.add_enabled(!viewing_version, egui::TextEdit::singleline(&mut name).id(field).desired_width(f32::INFINITY)).labelled_by(label.id);
+        if opened && !viewing_version {
+            edit.request_focus();
+        }
+        let commit = edit.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
+        ui.data_mut(|d| d.insert_temp(field, name.clone()));
+        if commit {
+            if name.trim() != app.title_stem() {
+                let _ = app.run("file.rename", json!({"name": name.trim()}));
+            }
+            ui.close();
+        }
+        let location = match app.session.path.as_ref().and_then(|p| p.parent()) {
+            Some(folder) => folder.to_string_lossy().into_owned(),
+            None => tl!("Not saved").to_string(),
+        };
+        ui.label(egui::RichText::new(tl!("Location")).font(regular(11.5)).color(t.text_dim));
+        ui.add(egui::Label::new(egui::RichText::new(location).font(regular(12.5)).color(t.text)).truncate());
+        ui.separator();
+        if ui.button(tl!("Version History")).clicked() {
+            app.ui.versions_pane = true;
+            app.canvas.want_focus = true;
+            ui.close();
+        }
+    });
+}
+
 fn document_title(app: &WordApp) -> String {
     if !app.has_document() {
         return "WordCraft".to_string();
     }
-    let status = if app.session.dirty {
+    // A version opened from Version History is a read-only copy, not an unsaved document.
+    let status = if app.session.previous_version().is_some() {
+        tl!("Previous version")
+    } else if app.session.dirty {
         tl!("Edited")
     } else if app.session.path.is_some() {
         tl!("Saved")
@@ -555,17 +610,9 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                 let content_w = icon_width + w;
                 if title_area >= icon_width + MAC_DOCUMENT_TITLE_PADDING {
                     let rect = Rect::from_center_size(pos2(cx, full.center().y), vec2(title_area, control_h));
-                    let response = ui.interact(rect, ui.id().with("document_name"), Sense::click()).on_hover_text(tl!("Rename Document"));
+                    let response = ui.interact(rect, document_name_id(), Sense::click()).on_hover_text(tl!("Rename Document"));
                     response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, &title));
-                    if response.clicked() {
-                        let _ = app.run("file.rename", json!({}));
-                    }
-                    response.context_menu(|ui| {
-                        if ui.button(tl!("Version History")).clicked() {
-                            app.ui.versions_pane = true;
-                            ui.close();
-                        }
-                    });
+                    document_menu(ui, app, &response);
                     let content_left = cx - content_w / 2.0;
                     if app.has_document() {
                         icons::paint(
@@ -594,17 +641,9 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                 let w = text_width(ui.painter(), &shown, &font, track, t.text);
                 if available > 24.0 {
                     let rect = Rect::from_center_size(pos2(cx, full.center().y), vec2(w + 8.0, control_h));
-                    let response = ui.interact(rect, ui.id().with("document_name"), Sense::click()).on_hover_text(tl!("Rename Document"));
+                    let response = ui.interact(rect, document_name_id(), Sense::click()).on_hover_text(tl!("Rename Document"));
                     response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, &title));
-                    if response.clicked() {
-                        let _ = app.run("file.rename", json!({}));
-                    }
-                    response.context_menu(|ui| {
-                        if ui.button(tl!("Version History")).clicked() {
-                            app.ui.versions_pane = true;
-                            ui.close();
-                        }
-                    });
+                    document_menu(ui, app, &response);
 
                     paint_text(
                         ui.painter(),
