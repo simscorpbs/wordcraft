@@ -594,12 +594,24 @@ fn new_paragraph(s: &mut Session, _: &Value) -> CmdResult {
         return sel_result(s);
     }
     // Enter finishes a word like a space does ("teh" → "the", sentence capitals, links).
+    let mut typed = None;
     if s.sel.is_collapsed() && at.off > 0 {
+        typed = s.doc.para_at(&at).map(|p| p.props_at(at.off).vert_align);
         super::tools::autocorrect_word(s, true)?;
         s.autocap.take_if(|c| c.depth == u64::MAX);
         at = s.sel.focus.clone();
     }
     let new = split_para(s, &at)?;
+    // The superscript the ordinals AutoFormat gives "1st" isn't how the text was typed, so it
+    // doesn't carry on into the new paragraph.
+    if let Some(v) = typed
+        && let Ok(p) = s.doc.para_mut(new.story, &new.path)
+        && p.is_empty()
+        && p.mark.vert_align != v
+    {
+        p.mark.vert_align = v;
+        p.touch();
+    }
     s.sel = Selection::caret(new);
     s.goal_x = None;
     sel_result(s)
