@@ -128,8 +128,16 @@ impl PropCtx {
         Some(c)
     }
 
-    /// `w:shd`: its fill colour (a theme fill first), or a solid pattern's colour.
+    /// `w:shd`: its fill colour (a theme fill first), or a solid pattern's colour. A percentage
+    /// pattern (`pct5` … `pct95`, ECMA-376 §17.18.78) paints that share of the pattern colour
+    /// over the fill, so it reads as the blend of the two: `auto` is black for the pattern and
+    /// white for the fill, as Word draws them.
     pub fn shd_fill(&self, e: &El) -> Option<Rgb> {
+        let pattern = || self.theme_color(e, "w:themeColor", "w:themeTint", "w:themeShade").or_else(|| e.attr("w:color").and_then(Rgb::parse));
+        if let Some(pct) = e.attr("w:val").and_then(pattern_percent) {
+            let fill = self.theme_color(e, "w:themeFill", "w:themeFillTint", "w:themeFillShade").or_else(|| e.attr("w:fill").and_then(Rgb::parse));
+            return Some(blend(pattern().unwrap_or(Rgb(0, 0, 0)), fill.unwrap_or(Rgb(255, 255, 255)), pct));
+        }
         if let Some(c) = self.theme_color(e, "w:themeFill", "w:themeFillTint", "w:themeFillShade") {
             return Some(c);
         }
@@ -391,6 +399,24 @@ pub(crate) fn tab_leader(v: &str) -> TabLeader {
         "middleDot" => TabLeader::MiddleDot,
         _ => TabLeader::None,
     }
+}
+
+/// The share of the pattern colour (0–1) a `pctN` shading pattern paints (`pct5` … `pct95`;
+/// `pct12` and `pct37` and `pct62` and `pct87` are 12.5 % steps). `None` for any other pattern.
+fn pattern_percent(v: &str) -> Option<f32> {
+    let n: u32 = v.trim().strip_prefix("pct")?.parse().ok()?;
+    let share = match n {
+        12 | 37 | 62 | 87 => n as f32 + 0.5,
+        1..=99 => n as f32,
+        _ => return None,
+    };
+    Some(share / 100.0)
+}
+
+/// `share` of `pattern` painted over `fill`.
+fn blend(pattern: Rgb, fill: Rgb, share: f32) -> Rgb {
+    let mix = |p: u8, f: u8| (f32::from(p) * share + f32::from(f) * (1.0 - share)).round().clamp(0.0, 255.0) as u8;
+    Rgb(mix(pattern.0, fill.0), mix(pattern.1, fill.1), mix(pattern.2, fill.2))
 }
 
 /// `w:shd/@w:fill` (a solid fill colour; `auto` = none), ignoring theme fills ([`PropCtx::shd_fill`]).
