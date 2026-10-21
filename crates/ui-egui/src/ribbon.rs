@@ -1830,7 +1830,7 @@ fn layout(app: &mut WordApp, ui: &mut Ui) {
                 let _ = app.run("para.indents", json!({"left": l * k}));
             }
             spaced(ui, egui::RichText::new(tl!("Before:")).small());
-            if ui.add_sized(FIELD, egui::DragValue::new(&mut b).speed(1.0).range(0.0..=1584.0).suffix(format!(" {}", tl!("pt")))).changed() {
+            if ui.add_sized(FIELD, egui::DragValue::new(&mut b).speed(1.0).range(0.0..=1584.0).suffix(format!(" {}", tl!("pt"))).number()).changed() {
                 let _ = app.run("para.spacing", json!({"before": b}));
             }
             ui.end_row();
@@ -1841,7 +1841,7 @@ fn layout(app: &mut WordApp, ui: &mut Ui) {
                 let _ = app.run("para.indents", json!({"right": r * k}));
             }
             spaced(ui, egui::RichText::new(tl!("After:")).small());
-            if ui.add_sized(FIELD, egui::DragValue::new(&mut a).speed(1.0).range(0.0..=1584.0).suffix(format!(" {}", tl!("pt")))).changed() {
+            if ui.add_sized(FIELD, egui::DragValue::new(&mut a).speed(1.0).range(0.0..=1584.0).suffix(format!(" {}", tl!("pt"))).number()).changed() {
                 let _ = app.run("para.spacing", json!({"after": a}));
             }
             ui.end_row();

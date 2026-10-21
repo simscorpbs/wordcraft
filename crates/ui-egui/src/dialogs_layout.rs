@@ -1265,7 +1265,8 @@ fn size_ui(app: &mut WordApp, ui: &mut Ui, f: &mut SizeForm) -> bool {
     let percent = |ui: &mut Ui, label: &str, was: f32| {
         let name = ui.label(tl!(label));
         let mut v = was;
-        let field = egui::DragValue::new(&mut v).speed(1.0).range(1.0..=10_000.0).clamp_existing_to_range(false).suffix(" %").max_decimals(1);
+        let field =
+            egui::DragValue::new(&mut v).speed(1.0).range(1.0..=10_000.0).clamp_existing_to_range(false).suffix(" %").max_decimals(1).number();
         let changed = ui.add(field.update_while_editing(false)).labelled_by(name.id).changed();
         (changed && v != was).then_some(v)
     };
