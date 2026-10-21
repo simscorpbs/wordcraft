@@ -3214,21 +3214,49 @@ fn hostile_params_never_panic() {
         json!({"value": -1e308, "rows": 1e9}),
         json!({"width": 1e-9, "height": 1e30, "top": -1e9, "left": 1e9}),
         json!({"section": {"pageW": -1e308, "pageH": 0, "marginTop": 1e30, "header": -5, "columns": {"count": 1000000, "space": -1e300, "widths": [[0, 0]]}}}),
+        // Multibyte text, offsets inside characters, and counts and indexes at the integer limits
+        // (run with the caret just after a multibyte character).
+        json!({"text": "é😀\u{FFFC}x", "index": 4294967295u64, "count": -1, "n": u64::MAX, "id": 4294967295u64, "level": 255, "start": 99999, "end": -3, "row": 99999, "col": 99999, "rows": 0, "cols": 0}),
+        json!({"index": -1, "count": 1e9, "level": -1, "story": 99999, "block": -1, "off": -1, "from": 999, "to": 0, "value": "😀", "name": "", "pos": {"block": 0, "off": 1}}),
+        json!({"rows": 100000, "cols": 100000, "count": 100000000, "size": 1e15, "times": 1e12, "level": 1000000}),
     ];
+    // `Session::run` turns a panic into an error so the app survives; here that error is a failure.
+    let mut panicked = Vec::new();
     for spec in reg.all() {
         // These reach outside the session (files). Read Aloud (`review.readAloud`, `readAloud.*`)
         // is fuzzed too: under `cfg(test)` its backend is the silent `Hold`, asserted below.
         if spec.id.starts_with("file.") || spec.id == "insert.picture" || spec.id == "insert.textFromFile" {
             continue;
         }
-        for j in &junk {
+        for (k, j) in junk.iter().enumerate() {
             let mut s = Session::new(crate::sample::sample_document());
             assert_ne!(s.read_aloud.backend, crate::speech::Backend::System, "tests must never start real speech");
-            let _ = s.run(spec.id, j);
+            if k >= 6 {
+                s.run("text.insert", &json!({"text": "aé😀b"})).unwrap();
+            }
+            if let Err(e) = s.run(spec.id, j)
+                && e.to_string().contains(" panicked: ")
+            {
+                panicked.push(format!("{} with {j}: {e}", spec.id));
+            }
             s.clamp_selection();
             let _ = s.layout();
         }
     }
+    assert!(panicked.is_empty(), "commands panicked:\n{}", panicked.join("\n"));
+}
+
+/// The guard in `Session::run` reports a panic as an error naming the command, which is what
+/// [`hostile_params_never_panic`] looks for.
+#[test]
+fn a_panicking_command_is_reported_as_panicked() {
+    let mut s = s();
+    let spec = crate::CommandSpec::new("test.panics", "Panics", "Test", |_, _| panic!("boom"));
+    let mut specs = s.registry.all().to_vec();
+    specs.push(spec);
+    s.registry = std::sync::Arc::new(crate::Registry::new(specs));
+    let e = s.run("test.panics", &json!({})).unwrap_err().to_string();
+    assert!(e.contains(" panicked: ") && e.contains("boom"), "{e}");
 }
 
 /// Inserting a table in the cell of a table thousands of times overflowed the stack (layout,
