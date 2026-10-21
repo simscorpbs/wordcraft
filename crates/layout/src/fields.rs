@@ -124,32 +124,92 @@ pub(crate) fn reference_link(instr: &str) -> Option<String> {
     None
 }
 
-/// `\* FORMAT` switch value (Arabic, roman, ROMAN, alphabetic, ALPHABETIC, CardText, Ordinal…).
-pub fn format_switch(instr: &str) -> Option<NumFormat> {
+/// The values of an instruction's `\* FORMAT` switches, in order: `\* ROMAN \* MERGEFORMAT` and
+/// `\*ROMAN\*MERGEFORMAT` both give `ROMAN`, `MERGEFORMAT`.
+fn format_values(instr: &str) -> Vec<&str> {
+    let mut out = Vec::new();
     let mut it = instr.split_whitespace();
     while let Some(w) = it.next() {
-        if let Some(rest) = w.strip_prefix("\\*") {
-            let v = if rest.is_empty() { it.next()? } else { rest };
-            let v = v.split('\\').next().unwrap_or(v);
-            let fmt = match v {
-                "roman" => NumFormat::LowerRoman,
-                "ROMAN" | "Roman" => NumFormat::UpperRoman,
-                "alphabetic" => NumFormat::LowerLetter,
-                "ALPHABETIC" | "Alphabetic" => NumFormat::UpperLetter,
-                "CardText" | "cardtext" => NumFormat::CardinalText,
-                "OrdText" | "ordtext" => NumFormat::OrdinalText,
-                "Ordinal" | "ordinal" => NumFormat::Ordinal,
-                "Arabic" | "arabic" => NumFormat::Decimal,
-                // Chinese numerals: counting (一百零一), legal (壹佰零壹), digit by digit (一〇一).
-                v if v.eq_ignore_ascii_case("ChineseNum1") => NumFormat::ChineseCountingThousand,
-                v if v.eq_ignore_ascii_case("ChineseNum2") => NumFormat::ChineseLegalSimplified,
-                v if v.eq_ignore_ascii_case("ChineseNum3") => NumFormat::IdeographDigital,
-                _ => continue,
-            };
-            return Some(fmt);
+        let Some(rest) = w.strip_prefix("\\*") else { continue };
+        let Some(v) = (if rest.is_empty() { it.next() } else { Some(rest) }) else { break };
+        // Switches run together: `roman\*MERGEFORMAT`, `roman\h`.
+        let mut parts = v.split("\\*");
+        if let Some(first) = parts.next() {
+            out.extend(first.split('\\').next());
         }
+        out.extend(parts.filter_map(|p| p.split('\\').next()));
+    }
+    out.retain(|v| !v.is_empty());
+    out
+}
+
+/// `\* FORMAT` switch value (Arabic, roman, ROMAN, alphabetic, ALPHABETIC, CardText, Ordinal…).
+pub fn format_switch(instr: &str) -> Option<NumFormat> {
+    for v in format_values(instr) {
+        let fmt = match v {
+            "roman" => NumFormat::LowerRoman,
+            "ROMAN" | "Roman" => NumFormat::UpperRoman,
+            "alphabetic" => NumFormat::LowerLetter,
+            "ALPHABETIC" | "Alphabetic" => NumFormat::UpperLetter,
+            "CardText" | "cardtext" => NumFormat::CardinalText,
+            "OrdText" | "ordtext" => NumFormat::OrdinalText,
+            "Ordinal" | "ordinal" => NumFormat::Ordinal,
+            "Arabic" | "arabic" => NumFormat::Decimal,
+            // Chinese numerals: counting (一百零一), legal (壹佰零壹), digit by digit (一〇一).
+            v if v.eq_ignore_ascii_case("ChineseNum1") => NumFormat::ChineseCountingThousand,
+            v if v.eq_ignore_ascii_case("ChineseNum2") => NumFormat::ChineseLegalSimplified,
+            v if v.eq_ignore_ascii_case("ChineseNum3") => NumFormat::IdeographDigital,
+            _ => continue,
+        };
+        return Some(fmt);
     }
     None
+}
+
+/// Number `n` as field `instr` shows it: in the number format its `\*` switch names, else
+/// `default`; numbers in words lower case, as Word writes them (`\* CardText` gives "twelve",
+/// ECMA-376 §17.16.4.3); then in the case a `\* Upper`, `\* Lower`, `\* FirstCap` or `\* Caps`
+/// switch asks for ("Twelve" with `\* CardText \* FirstCap`).
+pub fn format_number(instr: &str, n: u32, default: NumFormat) -> String {
+    let text = match format_switch(instr) {
+        Some(fmt @ (NumFormat::CardinalText | NumFormat::OrdinalText)) => fmt.format(n).to_lowercase(),
+        Some(fmt) => fmt.format(n),
+        None => default.format(n),
+    };
+    apply_case(instr, text)
+}
+
+/// `text` in the case the field's `\* Upper`, `\* Lower`, `\* FirstCap` or `\* Caps` switches
+/// ask for, applied in order.
+pub fn apply_case(instr: &str, mut text: String) -> String {
+    let cap = |w: &str| {
+        let mut c = w.chars();
+        c.next().map_or_else(String::new, |f| f.to_uppercase().chain(c).collect())
+    };
+    for v in format_values(instr) {
+        if v.eq_ignore_ascii_case("Upper") {
+            text = text.to_uppercase();
+        } else if v.eq_ignore_ascii_case("Lower") {
+            text = text.to_lowercase();
+        } else if v.eq_ignore_ascii_case("FirstCap") {
+            let start = text.len() - text.trim_start().len();
+            text = format!("{}{}", text.get(..start).unwrap_or(""), cap(text.get(start..).unwrap_or("")));
+        } else if v.eq_ignore_ascii_case("Caps") {
+            // Each word's first letter, keeping the spaces between the words.
+            let mut out = String::with_capacity(text.len());
+            let mut word_start = true;
+            for c in text.chars() {
+                if word_start && !c.is_whitespace() {
+                    out.extend(c.to_uppercase());
+                } else {
+                    out.push(c);
+                }
+                word_start = c.is_whitespace();
+            }
+            text = out;
+        }
+    }
+    text
 }
 
 /// The light grey behind a field shown as its code.
@@ -168,19 +228,18 @@ pub fn field_text(instr: &str, result: &str, ctx: &FieldCtx) -> (String, bool) {
 /// Display text for a field on page `page` (see [`field_text`]).
 pub fn field_text_on(instr: &str, result: &str, ctx: &FieldCtx, page: u32) -> (String, bool) {
     let name = field_name(instr);
-    let fmt = format_switch(instr);
     match name.as_str() {
-        "PAGE" => (fmt.unwrap_or(ctx.page_format).format(page), true),
-        "NUMPAGES" => (fmt.unwrap_or(NumFormat::Decimal).format(ctx.pages), true),
-        "SECTIONPAGES" => (fmt.unwrap_or(NumFormat::Decimal).format(ctx.section_pages), true),
-        "SECTION" => (fmt.unwrap_or(NumFormat::Decimal).format(ctx.section), true),
+        "PAGE" => (format_number(instr, page, ctx.page_format), true),
+        "NUMPAGES" => (format_number(instr, ctx.pages, NumFormat::Decimal), true),
+        "SECTIONPAGES" => (format_number(instr, ctx.section_pages, NumFormat::Decimal), true),
+        "SECTION" => (format_number(instr, ctx.section, NumFormat::Decimal), true),
         "PAGEREF" => match pageref_page(instr, ctx) {
-            Some((n, page_format)) => (fmt.unwrap_or(page_format).format(n), true),
+            Some((n, page_format)) => (format_number(instr, n, page_format), true),
             None => (result.to_string(), false),
         },
-        "TITLE" if result.is_empty() => (ctx.title.to_string(), false),
-        "AUTHOR" if result.is_empty() => (ctx.author.to_string(), false),
-        "FILENAME" if result.is_empty() => (ctx.filename.to_string(), false),
+        "TITLE" if result.is_empty() => (apply_case(instr, ctx.title.to_string()), false),
+        "AUTHOR" if result.is_empty() => (apply_case(instr, ctx.author.to_string()), false),
+        "FILENAME" if result.is_empty() => (apply_case(instr, ctx.filename.to_string()), false),
         // ASK and SET only assign text to a bookmark: they never show a result (ECMA-376 §17.16.5).
         "ASK" | "SET" => (String::new(), false),
         "STYLEREF" => match &ctx.styleref {
@@ -250,13 +309,34 @@ mod tests {
         assert_eq!(field_text(" PAGE \\* ROMAN ", "", &ctx).0, "IV");
         assert_eq!(field_text("PAGE \\*roman", "", &ctx).0, "iv");
         assert_eq!(field_text("PAGE \\*roman\\*MERGEFORMAT", "", &ctx).0, "iv");
-        assert_eq!(field_text("NUMPAGES \\* CardText", "", &ctx).0, "Twelve");
+        assert_eq!(field_text("NUMPAGES \\* CardText", "", &ctx).0, "twelve");
         assert_eq!(field_text("NUMPAGES \\* CHINESENUM1", "", &ctx).0, "十二");
         assert_eq!(field_text("PAGE \\* ChineseNum2", "", &ctx).0, "肆");
         assert_eq!(field_text("DATE \\@ \"M/d/yyyy\"", "1/2/2026", &ctx), ("1/2/2026".into(), false));
         assert_eq!(field_name("=SUM(ABOVE)"), "SUM(ABOVE)");
         assert_eq!(field_code_text(" PAGE \\* ROMAN "), "{ PAGE \\* ROMAN }");
         assert_eq!(field_code_text(""), "{  }");
+    }
+
+    /// Numbers in words are lower case, as Word writes them (ECMA-376 §17.16.4.3: "one hundred
+    /// twenty-three"); the case switches capitalise them, and apply to other computed results.
+    #[test]
+    fn number_words_and_case_switches() {
+        let ctx = FieldCtx { page: 21, pages: 3, title: "annual report".into(), ..Default::default() };
+        assert_eq!(field_text("PAGE \\* CardText", "", &ctx).0, "twenty-one");
+        assert_eq!(field_text("PAGE \\* OrdText", "", &ctx).0, "twenty-first");
+        assert_eq!(field_text("PAGE \\* CardText \\* FirstCap", "", &ctx).0, "Twenty-one");
+        assert_eq!(field_text("NUMPAGES \\* CardText \\* Caps \\* MERGEFORMAT", "", &ctx).0, "Three");
+        assert_eq!(field_text("PAGE \\* OrdText \\* Upper", "", &ctx).0, "TWENTY-FIRST");
+        assert_eq!(field_text("PAGE \\* Ordinal", "", &ctx).0, "21st");
+        assert_eq!(field_text("PAGE \\* ROMAN \\* Lower", "", &ctx).0, "xxi");
+        assert_eq!(field_text("TITLE \\* Caps", "", &ctx).0, "Annual Report");
+        assert_eq!(field_text("TITLE \\* Upper", "", &ctx).0, "ANNUAL REPORT");
+        // Switches run together are each read.
+        assert_eq!(field_text("PAGE \\*MERGEFORMAT\\*ROMAN", "", &ctx).0, "XXI");
+        assert_eq!(field_text("PAGE \\*CardText\\*FirstCap", "", &ctx).0, "Twenty-one");
+        // A stored result stays as Word left it.
+        assert_eq!(field_text("TITLE \\* Upper", "Kept", &ctx).0, "Kept");
     }
 
     /// #1765: ASK and SET only assign text to a bookmark; they show nothing, whatever result is stored.
