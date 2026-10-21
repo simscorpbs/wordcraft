@@ -710,7 +710,11 @@ pub fn sectpr(e: &El) -> (SectionProps, Vec<HfRef>) {
                     _ => PageVAlign::Top,
                 }
             }
-            "w:pgBorders" => s.page_borders = Some(borders(k)),
+            "w:pgBorders" => {
+                s.page_borders = Some(borders(k));
+                // Measured from the text unless the file says the page edge (§17.6.10).
+                s.page_borders_from_text = k.attr("w:offsetFrom").map(str::trim) != Some("page");
+            }
             "w:docGrid" => {
                 let mut g = DocGrid::default();
                 if let Some(t) = k.attr("w:type").and_then(DocGridType::from_ooxml) {
