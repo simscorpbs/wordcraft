@@ -54,21 +54,46 @@ pub trait MeasureExt {
     /// The same field showing nothing, not even the unit, until a length is typed in: a value
     /// the selected paragraphs differ in.
     fn measure_blank(self, unit: Unit) -> Self;
+    /// A plain number field (points, lines, a percentage): written with the region's decimal
+    /// separator (`1,5` in Brazil) and read with either, as length fields are. Without it a
+    /// typed `1,5` didn't parse and the field silently kept its old value.
+    fn number(self) -> Self;
+}
+
+/// `n` with the region's decimal separator.
+fn format_decimal(n: f64, decimals: std::ops::RangeInclusive<usize>, sep: char) -> String {
+    let s = egui::emath::format_with_decimals_in_range(n, decimals);
+    if sep == '.' { s } else { s.replace('.', &sep.to_string()) }
 }
 
 impl MeasureExt for egui::DragValue<'_> {
     fn measure(self, unit: Unit) -> Self {
         let sep = decimal();
         self.suffix(unit.suffix())
-            .custom_formatter(move |n, decimals| {
-                let s = egui::emath::format_with_decimals_in_range(n, decimals);
-                if sep == '.' { s } else { s.replace('.', &sep.to_string()) }
-            })
+            .custom_formatter(move |n, decimals| format_decimal(n, decimals, sep))
             .custom_parser(move |text| parse_length(text, unit))
     }
     fn measure_blank(self, unit: Unit) -> Self {
         self.custom_formatter(|_, _| String::new()).custom_parser(move |text| parse_length(text, unit))
     }
+    fn number(self) -> Self {
+        let sep = decimal();
+        self.custom_formatter(move |n, decimals| format_decimal(n, decimals, sep)).custom_parser(parse_number)
+    }
+}
+
+/// A number typed in a field, with either decimal separator: `1,5` and `1.5` are both 1.5.
+fn parse_number(text: &str) -> Option<f64> {
+    let text: String = text
+        .chars()
+        .filter(|c| !c.is_whitespace())
+        .map(|c| match c {
+            ',' => '.',
+            '\u{2212}' => '-',
+            c => c,
+        })
+        .collect();
+    text.parse::<f64>().ok().filter(|v| v.is_finite())
 }
 
 /// A length typed in a field, in `unit`s.
@@ -733,7 +758,7 @@ mod tests {
     use serde_json::json;
     use wordcraft_geom::Unit;
 
-    use super::{decimal, length, unit};
+    use super::{decimal, length, parse_number, unit};
 
     use crate::theme::Appearance;
     use crate::{Services, UiState, WordApp};
@@ -1121,5 +1146,56 @@ mod tests {
         h.state_mut().run("file.options", json!({"units": "auto", "region": "en-US"})).unwrap();
         h.run_steps(4);
         assert_eq!(length(72.0), "1\"");
+    }
+
+    #[test]
+    fn numbers_read_either_decimal_separator() {
+        assert_eq!(parse_number("1,5"), Some(1.5));
+        assert_eq!(parse_number(" 1.5 "), Some(1.5));
+        assert_eq!(parse_number("\u{2212}0,5"), Some(-0.5));
+        assert_eq!(parse_number("12"), Some(12.0));
+        assert_eq!(parse_number("1,2,3"), None);
+        assert_eq!(parse_number("abc"), None);
+        assert_eq!(parse_number("inf"), None);
+    }
+
+    /// In a Brazilian region the Paragraph dialog's line spacing reads `1,50`, and a typed `2,5`
+    /// (the decimal comma) is applied. Before, the box showed `1.5` and the comma didn't parse,
+    /// so OK silently kept the old spacing.
+    #[test]
+    fn paragraph_spacing_fields_take_the_regions_decimal_comma() {
+        use egui::accesskit::Role;
+        let mut a = WordApp::new(wordcraft_engine::Session::new(wordcraft_doc::Document::from_text("Texto")), Services::default());
+        a.run("file.options", json!({"region": "pt-BR"})).unwrap();
+        a.run("para.set", json!({"props": {"lineSpacing": {"rule": "multiple", "value": 1.5}, "spaceAfter": 7.5}})).unwrap();
+        let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                app.logic(&ctx);
+                app.ui(ui);
+            },
+            a,
+        );
+        h.run_steps(2);
+        h.state_mut().run("ui.dialog", json!({"name": "paragraph"})).unwrap();
+        h.run_steps(4);
+        assert_eq!(decimal(), ',');
+        assert!(h.query_by_value("1,50").is_some(), "line spacing with a decimal comma");
+        assert!(h.query_by_value("7,5 pt").is_some(), "spacing after with a decimal comma");
+        h.get_all_by_role(Role::SpinButton).find(|n| n.accesskit_node().value().as_deref() == Some("1,50")).expect("the line spacing box").click();
+        h.run_steps(2);
+        h.get_all_by_role(Role::SpinButton).find(|n| n.accesskit_node().is_focused()).expect("editing").type_text("2,5");
+        // Enter takes the typed value and, as in Word, presses the dialog's OK.
+        h.key_press(egui::Key::Enter);
+        h.run_steps(2);
+        if let Some(ok) = h.query_by_role_and_label(Role::Button, "OK") {
+            ok.click();
+            h.run_steps(2);
+        }
+        let app = h.state();
+        assert!(app.dialog.is_none(), "the dialog closed");
+        let p = app.session.doc.para(wordcraft_doc::StoryRef::Body, &wordcraft_doc::Path::top(0)).map(|p| p.props.clone()).unwrap_or_default();
+        assert_eq!(p.line_spacing, Some(wordcraft_doc::props::LineSpacing::Multiple(2.5)));
+        assert_eq!(p.space_after, Some(7.5), "untouched");
     }
 }

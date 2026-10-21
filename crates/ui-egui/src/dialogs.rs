@@ -1841,7 +1841,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                 color_field(ui, &theme, color, "Automatic", "auto");
                 ui.end_row();
                 ui.label(tl!("Spacing (pt):"));
-                ui.add(egui::DragValue::new(spacing).speed(0.1).range(-20.0..=20.0));
+                ui.add(egui::DragValue::new(spacing).speed(0.1).range(-20.0..=20.0).number());
                 ui.end_row();
                 let label = tl!("Kerning for fonts:");
                 match kern {
@@ -1855,7 +1855,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     }
                 }
                 ui.horizontal(|ui| {
-                    ui.add_enabled(*kern == Some(true), egui::DragValue::new(kern_at).speed(0.5).range(1.0..=1638.0).max_decimals(1));
+                    ui.add_enabled(*kern == Some(true), egui::DragValue::new(kern_at).speed(0.5).range(1.0..=1638.0).max_decimals(1).number());
                     ui.label(tl!("Points and above"));
                 });
                 ui.end_row();
@@ -2493,10 +2493,10 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                 });
                 ui.end_row();
                 ui.label(tl!("Offset (pt):"));
-                ui.add(egui::DragValue::new(offset).speed(0.5).range(-100.0..=100.0));
+                ui.add(egui::DragValue::new(offset).speed(0.5).range(-100.0..=100.0).number());
                 ui.end_row();
                 ui.label(tl!("Size (pt):"));
-                ui.add(egui::DragValue::new(size).speed(0.5).range(1.0..=200.0));
+                ui.add(egui::DragValue::new(size).speed(0.5).range(1.0..=200.0).number());
                 ui.end_row();
             });
             let mut remove = false;
@@ -2551,15 +2551,15 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                 }
                 ui.end_row();
                 ui.label(tl!("Size:"));
-                ui.add(egui::DragValue::new(size).range(1.0..=1638.0).speed(0.5));
+                ui.add(egui::DragValue::new(size).range(1.0..=1638.0).speed(0.5).number());
                 ui.end_row();
                 ui.label(tl!("Color:"));
                 ui.text_edit_singleline(color);
                 ui.end_row();
                 ui.label(tl!("Space before/after:"));
                 ui.horizontal(|ui| {
-                    ui.add(egui::DragValue::new(before).range(0.0..=1584.0));
-                    ui.add(egui::DragValue::new(after).range(0.0..=1584.0));
+                    ui.add(egui::DragValue::new(before).range(0.0..=1584.0).number());
+                    ui.add(egui::DragValue::new(after).range(0.0..=1584.0).number());
                 });
                 ui.end_row();
             });
@@ -3455,8 +3455,8 @@ fn para_number(ui: &mut Ui, value: &mut f32, kind: ParaNumber, key: &str, mixed:
     // A value from the document outside the range (line spacing 6) stays until edited.
     let field = match kind {
         ParaNumber::Length => egui::DragValue::new(value).speed(3.6 / unit.pt_per_unit()).max_decimals(2),
-        ParaNumber::Points => egui::DragValue::new(value).speed(1.0).range(0.0..=1584.0).clamp_existing_to_range(false),
-        ParaNumber::Lines => egui::DragValue::new(value).speed(0.05).range(0.5..=5.0).clamp_existing_to_range(false),
+        ParaNumber::Points => egui::DragValue::new(value).speed(1.0).range(0.0..=1584.0).clamp_existing_to_range(false).number(),
+        ParaNumber::Lines => egui::DragValue::new(value).speed(0.05).range(0.5..=5.0).clamp_existing_to_range(false).number(),
     };
     let field = match kind {
         ParaNumber::Length if blank => field.measure_blank(unit),
