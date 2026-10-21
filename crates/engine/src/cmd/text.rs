@@ -744,13 +744,19 @@ fn backspace_inner(s: &mut Session, _: &Value) -> CmdResult {
     let prev_path = f.path.with_last(i - 1);
     match s.doc.block(f.story, &prev_path) {
         Some(Block::Para(prev)) => {
-            let a = Pos { story: f.story, path: prev_path, off: prev.len() };
-            // An empty paragraph before a non-empty one takes the latter's formatting (Word).
+            let a = Pos { story: f.story, path: prev_path.clone(), off: prev.len() };
             if s.doc.settings.track_changes {
                 // Tracked: the paragraph mark above is marked deleted (or removed, when this
                 // author inserted it) and the caret moves before it, as in Word.
                 s.sel = Selection { anchor: a, focus: f };
                 delete_selection(s)?;
+                return sel_result(s);
+            }
+            // An empty paragraph above just goes: this paragraph keeps its own style and
+            // formatting (Word), instead of taking the empty one's (an empty Heading 1 left
+            // above body text).
+            if super::remove_empty_para(s, f.story, &prev_path)? {
+                s.sel = Selection::caret(Pos { story: f.story, path: prev_path, off: 0 });
                 return sel_result(s);
             }
             let at = s.doc.delete_range(&a, &f)?;
@@ -807,6 +813,11 @@ fn delete_inner(s: &mut Session, _: &Value) -> CmdResult {
             if s.doc.container(f.story, &f.path).map(|c| c.len()) == blocks && s.doc.para_at(&f).is_some_and(|p| p.mark.del.is_some()) {
                 s.sel = Selection::caret(b);
             }
+            return sel_result(s);
+        }
+        // Delete in an empty paragraph removes it; the next keeps its formatting (Word).
+        if super::remove_empty_para(s, f.story, &f.path)? {
+            s.sel = Selection::caret(Pos { off: 0, ..f });
             return sel_result(s);
         }
         let at = s.doc.delete_range(&f, &b)?;

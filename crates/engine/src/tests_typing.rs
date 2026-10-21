@@ -2206,3 +2206,40 @@ fn ctrl_left_steps_over_a_typed_apostrophe_and_stops_at_punctuation() {
     run(&mut s, "text.deleteWordBack", json!({}));
     assert_eq!(texts(&s), ["it end. now"]);
 }
+
+#[test]
+fn backspace_or_delete_beside_an_empty_paragraph_keeps_the_texts_style() {
+    // An empty Heading 1 above body text: Backspace at the start of the text, or Delete in the
+    // empty heading, removes the empty paragraph and the text stays Normal, as in Word.
+    let styles = |s: &Session| -> Vec<(String, Option<String>)> {
+        s.doc.body.iter().filter_map(|b| b.as_para()).map(|p| (p.text.clone(), p.props.style.clone())).collect()
+    };
+    let setup = || {
+        let mut s = s();
+        run(&mut s, "para.heading1", json!({}));
+        typ(&mut s, "\nBody");
+        assert_eq!(styles(&s), [(String::new(), Some("Heading1".into())), ("Body".into(), Some("Normal".into()))]);
+        s
+    };
+    let mut s = setup();
+    run(&mut s, "caret.home", json!({}));
+    typ(&mut s, "\u{8}");
+    assert_eq!(styles(&s), [("Body".into(), Some("Normal".into()))]);
+    assert_eq!(s.sel.focus, Pos::body(0, 0));
+    run(&mut s, "edit.undo", json!({}));
+    assert_eq!(styles(&s).len(), 2);
+
+    let mut s = setup();
+    run(&mut s, "caret.docStart", json!({}));
+    run(&mut s, "text.delete", json!({}));
+    assert_eq!(styles(&s), [("Body".into(), Some("Normal".into()))]);
+    assert_eq!(s.sel.focus, Pos::body(0, 0));
+
+    // Text above still takes the paragraph below into its own formatting.
+    let mut s = self::s();
+    run(&mut s, "para.heading1", json!({}));
+    typ(&mut s, "Title\nBody");
+    run(&mut s, "caret.home", json!({}));
+    typ(&mut s, "\u{8}");
+    assert_eq!(styles(&s), [("TitleBody".into(), Some("Heading1".into()))]);
+}
