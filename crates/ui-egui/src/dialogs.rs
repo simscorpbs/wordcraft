@@ -1197,7 +1197,12 @@ impl Dialog {
             "bookmark" => Dialog::Bookmark { name: bookmark_at_caret(&app.session), by_location: false, hidden: false, deleted: false },
             "wordCount" => Dialog::WordCount { stats: app.session.run("review.wordCount", &json!({})).unwrap_or_default() },
             "zoom" => Dialog::Zoom { percent: (app.session.view.zoom * 100.0).round() },
-            "watermark" => Dialog::Watermark { text: "CONFIDENTIAL".into(), diagonal: true },
+            // The document's watermark, so OK doesn't swap it for the default; without one, the
+            // default word in the interface language.
+            "watermark" => match &app.session.doc.settings.watermark {
+                Some(w) => Dialog::Watermark { text: w.text.clone(), diagonal: w.diagonal },
+                None => Dialog::Watermark { text: tl!("CONFIDENTIAL").into(), diagonal: true },
+            },
             "phonetic" => {
                 let v = wordcraft_engine::cmd::phonetic::state(&app.session);
                 let f = |k: &str| v.get(k).and_then(Value::as_f64).unwrap_or(0.0) as f32;
