@@ -8133,6 +8133,37 @@ fn ambiguous_widths_keep_grid() {
     }
 }
 
+/// A full-width fixed table whose cells ask for 66% and 34% (as python-docx writes it: an equal
+/// grid, `w:tcW w:type="pct"` on every cell) splits 66/34 in Word, not by its stale grid.
+#[test]
+fn percentage_cell_widths_replace_an_equal_grid() {
+    let mut t = Table::new(2, 2, 400.0);
+    t.props.width_pct = Some(100.0);
+    t.props.fixed = true;
+    for row in &mut t.rows {
+        for (cell, share) in row.cells.iter_mut().zip([66.0, 34.0]) {
+            (cell.props.width, cell.props.width_pct) = (None, Some(share));
+            cell.blocks = vec![wordcraft_doc::para_block(Paragraph::with_text("A", Default::default()))];
+        }
+    }
+    // A column dragged in the app gives its cells widths in points: then the grid stands.
+    let mut dragged = t.clone();
+    dragged.rows.iter_mut().flat_map(|r| r.cells.iter_mut()).for_each(|c| c.props.width = Some(200.0));
+    let first_column = |table: Table| {
+        let mut d = Document::from_text("After");
+        d.insert_block(StoryRef::Body, &Path::top(0), wordcraft_doc::Block::Table(table)).unwrap();
+        let l = lay(&d);
+        let [(x0, _, _)] = para_at(&l, &[0, 1, 0, 0])[..] else { panic!("cell missing") };
+        let [(x1, _, _)] = para_at(&l, &[0, 1, 1, 0])[..] else { panic!("cell missing") };
+        x1 - x0
+    };
+    // Letter with 1" margins: a 468pt text column.
+    let w = first_column(t);
+    assert!((w - 0.66 * 468.0).abs() < 0.05, "first column {w}");
+    let w = first_column(dragged);
+    assert!((w - 234.0).abs() < 0.05, "dragged first column {w}");
+}
+
 /// #1374 helpers: a page-anchored, square-wrapped rectangle `w`×`h` at (`x`, `y`) on the page.
 fn page_shape(x: f32, y: f32, w: f32, h: f32) -> InlineObject {
     use wordcraft_doc::para::{Anchor, Float, ShapeKind, Wrap};

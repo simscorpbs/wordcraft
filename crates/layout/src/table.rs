@@ -1221,6 +1221,16 @@ fn apply_cell_widths(t: &Table, grid: &mut [f32]) {
     if first.cells.len() != grid.len() {
         return;
     }
+    // Cells that each ask for a share of the table (`w:tcW w:type="pct"`) split it that way, as
+    // Word does, whatever an equal stale grid says (python-docx writes one).
+    if let Some(shares) = cell_shares(t, grid.len()) {
+        let total: f32 = grid.iter().sum();
+        let sum: f32 = shares.iter().sum();
+        if total.is_finite() && total > 0.0 && sum.is_finite() && sum > 0.0 {
+            grid.iter_mut().zip(&shares).for_each(|(w, s)| *w = total * (s / sum));
+        }
+        return;
+    }
     let widths: Option<Vec<f32>> = first.cells.iter().map(|c| c.props.width.filter(|w| w.is_finite() && *w > 0.0)).collect();
     let Some(widths) = widths else { return };
     let total: f32 = widths.iter().sum();
@@ -1234,6 +1244,22 @@ fn apply_cell_widths(t: &Table, grid: &mut [f32]) {
         return;
     }
     grid.copy_from_slice(&widths);
+}
+
+/// Each column's share of the table, in percent, when every row has one single-column cell per
+/// grid column asking for the same share and none gives a width in points (a column dragged in
+/// the app has one, and then the grid stands).
+fn cell_shares(t: &Table, ncols: usize) -> Option<Vec<f32>> {
+    let first = t.rows.first()?;
+    let shares: Vec<f32> = first.cells.iter().map(|c| c.props.width_pct.filter(|p| p.is_finite() && *p > 0.0)).collect::<Option<_>>()?;
+    let same = t.rows.iter().all(|r| {
+        r.cells.len() == ncols
+            && r.cells
+                .iter()
+                .zip(&shares)
+                .all(|(c, s)| c.span() == 1 && c.props.width.is_none() && c.props.width_pct.is_some_and(|p| (p - s).abs() < 0.01))
+    });
+    same.then_some(shares)
 }
 
 /// Word's autofit for a table whose widths may follow its content (`tblLayout` not fixed).
