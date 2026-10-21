@@ -356,6 +356,64 @@ fn device_pixel(view: Affine) -> f64 {
     if scale.is_finite() && scale > 1e-9 { 1.0 / scale } else { 1.0 }
 }
 
+/// Strokes the segment `a`–`b` (page points under `view`) with `st` on whole device pixels, if
+/// it lands horizontal or vertical on the device: the width becomes a whole number of pixels (at
+/// least one), the edges fall on pixel boundaries and the ends on the nearest pixel edge, so the
+/// rule is one solid colour across whole rows or columns. Dashes keep their lengths in device
+/// pixels. Returns false, drawing nothing, for a slanted segment or a degenerate transform.
+fn stroke_on_pixels(ctx: &mut RenderContext, view: Affine, a: kurbo::Point, b: kurbo::Point, st: &kurbo::Stroke) -> bool {
+    let (da, db) = (view * a, view * b);
+    let horizontal = (da.y - db.y).abs() < 1e-6;
+    let vertical = (da.x - db.x).abs() < 1e-6;
+    let len = (b - a).hypot();
+    if horizontal == vertical || !(len.is_finite() && len > 1e-9) || !st.width.is_finite() || st.width <= 0.0 {
+        return false;
+    }
+    // The width across the line on the device: the transformed unit normal's length.
+    let c = view.as_coeffs();
+    let n = kurbo::Vec2::new(-(b.y - a.y) / len, (b.x - a.x) / len);
+    let across = kurbo::Vec2::new(c[0] * n.x + c[2] * n.y, c[1] * n.x + c[3] * n.y).hypot();
+    let w_dev = st.width * across;
+    if !w_dev.is_finite() || w_dev <= 0.0 || w_dev > 1e5 {
+        return false;
+    }
+    let w = w_dev.round().max(1.0);
+    let rect = if horizontal {
+        let top = (da.y - w / 2.0).round();
+        let (l, r) = (da.x.min(db.x).round(), da.x.max(db.x).round());
+        kurbo::Rect::new(l, top, r.max(l + 1.0), top + w)
+    } else {
+        let left = (da.x - w / 2.0).round();
+        let (t, bt) = (da.y.min(db.y).round(), da.y.max(db.y).round());
+        kurbo::Rect::new(left, t, left + w, bt.max(t + 1.0))
+    };
+    if !rect.is_finite() {
+        return false;
+    }
+    ctx.set_transform(Affine::IDENTITY);
+    if st.dash_pattern.is_empty() {
+        ctx.fill_rect(&rect);
+    } else {
+        // Along the middle of the snapped band, dashes scaled into device pixels.
+        let scale = w_dev / st.width;
+        let mid = if horizontal { rect.center().y } else { rect.center().x };
+        let (p0, p1) = if horizontal {
+            (kurbo::Point::new(rect.x0, mid), kurbo::Point::new(rect.x1, mid))
+        } else {
+            (kurbo::Point::new(mid, rect.y0), kurbo::Point::new(mid, rect.y1))
+        };
+        let mut p = BezPath::new();
+        p.move_to(p0);
+        p.line_to(p1);
+        let dashes: Vec<f64> = st.dash_pattern.iter().map(|d| d * scale).collect();
+        ctx.set_stroke(kurbo::Stroke::new(w).with_caps(kurbo::Cap::Butt).with_dashes(st.dash_offset * scale, dashes));
+        ctx.stroke_path(&p);
+        ctx.set_stroke(st.clone());
+    }
+    ctx.set_transform(view);
+    true
+}
+
 /// Largest page-background picture decoded, in pixels (hostile files).
 const MAX_BACKGROUND_PIXELS: u64 = 64 * 1024 * 1024;
 
@@ -409,6 +467,13 @@ pub struct RenderOptions {
     /// Thicken glyphs slightly the way macOS draws text on screen ("font smoothing"), so pages
     /// look like they do in other Mac apps. For on-screen rasters only: exports stay exact.
     pub text_darkening: bool,
+    /// Fit straight rules to the device pixel grid, as Word does on screen: a horizontal or
+    /// vertical border, underline or strikethrough is at least one whole device pixel wide,
+    /// rounded to whole pixels and placed on pixel edges, and a shape or path outline is at least
+    /// one device pixel wide. Without it a 0.5 pt border at 110% on a Retina screen (1.1 px)
+    /// straddles two rows as two pale grey lines, and a 0.25 pt one at 100% on a 96 dpi screen
+    /// (0.33 px) all but vanishes. For on-screen rasters only: exports stay exact.
+    pub pixel_snap: bool,
     /// Dark page (View › Switch Modes): every colour but pictures has its lightness inverted, so
     /// white paper turns black and black text white while hues stay the same. Screen only.
     pub dark: bool,
@@ -493,6 +558,7 @@ impl Default for RenderOptions {
             paper: Rgb::WHITE,
             mark_color: Rgb(0x2B, 0x57, 0x9A),
             text_darkening: false,
+            pixel_snap: false,
             dark: false,
             dark_paper: DARK_PAPER,
         }
@@ -766,10 +832,15 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
                 _ => {}
             }
             let (x0, y0, x1, y1) = (*x0 as f64, *y0 as f64, *x1 as f64, *y1 as f64);
+            let snap = opts.pixel_snap;
             let line = |ctx: &mut RenderContext, ox: f64, oy: f64| {
+                let (a, b) = (kurbo::Point::new(x0 + ox, y0 + oy), kurbo::Point::new(x1 + ox, y1 + oy));
+                if snap && stroke_on_pixels(ctx, view, a, b, &ctx.stroke().clone()) {
+                    return;
+                }
                 let mut p = BezPath::new();
-                p.move_to((x0 + ox, y0 + oy));
-                p.line_to((x1 + ox, y1 + oy));
+                p.move_to(a);
+                p.line_to(b);
                 ctx.stroke_path(&p);
             };
             if *stroke == Stroke::Wave {
@@ -932,7 +1003,8 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
                 // Width 0 (or none) is a hairline.
                 let w = if stroke_width.is_finite() && *stroke_width > 0.0 { stroke_width.clamp(0.25, 200.0) } else { 0.75 };
                 ctx.set_paint(color(opts.ink(*s), 1.0));
-                ctx.set_stroke(kurbo::Stroke::new(w as f64).with_dashes(0.0, dash.iter().map(|v| f64::from(*v))));
+                let w = if opts.pixel_snap { (w as f64).max(device_pixel(view)) } else { w as f64 };
+                ctx.set_stroke(kurbo::Stroke::new(w).with_dashes(0.0, dash.iter().map(|v| f64::from(*v))));
                 ctx.stroke_path(&path);
             }
         }
@@ -1030,10 +1102,9 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
             }
             if let Some(s) = stroke {
                 ctx.set_paint(color(opts.ink(*s), 1.0));
-                ctx.set_stroke(
-                    kurbo::Stroke::new(if stroke_width.is_nan() { 0.25 } else { stroke_width.clamp(0.25, 200.0) } as f64)
-                        .with_dashes(0.0, dash.iter().map(|v| f64::from(*v))),
-                );
+                let w = if stroke_width.is_nan() { 0.25 } else { stroke_width.clamp(0.25, 200.0) } as f64;
+                let w = if opts.pixel_snap { w.max(device_pixel(view)) } else { w };
+                ctx.set_stroke(kurbo::Stroke::new(w).with_dashes(0.0, dash.iter().map(|v| f64::from(*v))));
                 ctx.stroke_path(&path);
             }
         }
@@ -1564,6 +1635,67 @@ mod tests {
         assert!(opts.display.dim_header);
         let img = render_page(&d, &l.pages[0], 1.0, &opts);
         assert!(!img.to_png().is_empty());
+    }
+
+    /// The alpha of every pixel row at column `x` of `img` that has any ink.
+    fn inked_rows(img: &Rendered, x: u32) -> Vec<u8> {
+        (0..img.height).map(|y| img.pixel(x, y)[3]).filter(|a| *a > 0).collect()
+    }
+
+    /// The alpha of every pixel column at row `y` of `img` that has any ink.
+    fn inked_cols(img: &Rendered, y: u32) -> Vec<u8> {
+        (0..img.width).map(|x| img.pixel(x, y)[3]).filter(|a| *a > 0).collect()
+    }
+
+    /// On screen a thin border lands on whole device pixels, as Word draws it: a 0.5 pt rule at
+    /// 2.2 px/pt (110% on a Retina screen) is one solid row, not two pale ones; exports keep the
+    /// exact, antialiased geometry.
+    #[test]
+    fn a_thin_rule_fills_whole_pixels_on_screen() {
+        let d = Document::new();
+        let rule =
+            Draw::Line { x0: 2.0, y0: 10.3, x1: 30.0, y1: 10.3, width: 0.5, color: Rgb::BLACK, stroke: Stroke::Solid, alpha: 1.0, text_bg: None };
+        let shot = |snap| {
+            render_items(&d, std::slice::from_ref(&rule), 0.0, 0.0, 40.0, 20.0, 2.2, &RenderOptions { pixel_snap: snap, ..Default::default() })
+        };
+        assert_eq!(inked_rows(&shot(true), 30), vec![255]);
+        let exact = inked_rows(&shot(false), 30);
+        assert!(exact.len() >= 2 && exact.iter().all(|a| *a < 255), "{exact:?}");
+    }
+
+    /// A 0.25 pt rule at 96 dpi (a third of a pixel) still shows as one solid pixel on screen, and a
+    /// 1.5 pt one rounds to two; vertical rules too.
+    #[test]
+    fn a_hairline_rule_is_at_least_one_device_pixel() {
+        let d = Document::new();
+        let opts = RenderOptions { pixel_snap: true, ..Default::default() };
+        let line = |x0, y0, x1, y1, width| Draw::Line { x0, y0, x1, y1, width, color: Rgb::BLACK, stroke: Stroke::Solid, alpha: 1.0, text_bg: None };
+        let shot = |it: Draw| render_items(&d, &[it], 0.0, 0.0, 40.0, 40.0, 96.0 / 72.0, &opts);
+        assert_eq!(inked_rows(&shot(line(2.0, 10.4, 30.0, 10.4, 0.25)), 20), vec![255]);
+        assert_eq!(inked_rows(&shot(line(2.0, 10.4, 30.0, 10.4, 1.5)), 20), vec![255, 255]);
+        assert_eq!(inked_cols(&shot(line(10.4, 2.0, 10.4, 30.0, 0.25)), 20), vec![255]);
+    }
+
+    /// A slanted rule can't sit on the pixel grid: it is drawn as before, antialiased.
+    #[test]
+    fn a_slanted_rule_is_not_snapped() {
+        let d = Document::new();
+        let it = Draw::Line { x0: 2.0, y0: 2.0, x1: 30.0, y1: 30.0, width: 0.5, color: Rgb::BLACK, stroke: Stroke::Solid, alpha: 1.0, text_bg: None };
+        let shot =
+            |snap| render_items(&d, std::slice::from_ref(&it), 0.0, 0.0, 40.0, 40.0, 2.0, &RenderOptions { pixel_snap: snap, ..Default::default() });
+        assert_eq!(shot(true).pixels, shot(false).pixels);
+    }
+
+    /// A dotted rule on screen keeps its dots (gaps between them) after snapping.
+    #[test]
+    fn a_snapped_dotted_rule_keeps_its_gaps() {
+        let d = Document::new();
+        let it =
+            Draw::Line { x0: 2.0, y0: 10.3, x1: 38.0, y1: 10.3, width: 1.0, color: Rgb::BLACK, stroke: Stroke::Dotted, alpha: 1.0, text_bg: None };
+        let img = render_items(&d, &[it], 0.0, 0.0, 40.0, 20.0, 2.0, &RenderOptions { pixel_snap: true, ..Default::default() });
+        let row: Vec<u8> = (0..img.width).map(|x| img.pixel(x, 20)[3]).collect();
+        assert!(row.contains(&255) && row[4..76].contains(&0), "{row:?}");
+        assert_eq!(inked_rows(&img, 5), vec![255, 255]);
     }
 
     /// #2892: a rule is stroked with flat ends, as the PDF export and Word draw them. Round caps
