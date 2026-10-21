@@ -194,6 +194,7 @@
 	Use the Insert key to switch overtype on and off	Usar a tecla Insert para ativar e desativar a sobrescrita
 	Whole document	Documento inteiro
 	This section	Esta seção
+	Selected text	Texto selecionado
 	Fill	Preenchimento
 	Setting:	Definição:
 	3-D	3D
@@ -569,6 +570,10 @@
 	Modify…	Modificar…
 	Move or Resize	Mover ou Redimensionar
 	Multilevel List	Lista de Vários Níveis
+	Multilevel List Library	Biblioteca de Listas de Vários Níveis
+	Article I.	Artigo I.
+	Chapter 1	Capítulo 1
+	Section 1.01	Seção 1.01
 	Multiple Pages	Várias Páginas
 	Name (A–Z)	Nome (A–Z)
 	Name:	Nome:
@@ -833,6 +838,8 @@
 	Space before/after:	Espaço antes/depois:
 	Spacing	Espaçamento
 	Spacing (pt):	Espaçamento (pt):
+	Kerning for fonts:	Kerning para fontes:
+	Points and above	pontos ou mais
 	Speech	Fala
 	Spelling & Grammar	Ortografia e Gramática
 	Spelling &\nGrammar	Ortografia e\nGramática
@@ -1517,6 +1524,8 @@
 	Math AutoCorrect	Autocorreção de matemática
 	More >>	Mais >>
 	Moves	Movimentações
+	Moved from:	Movido de:
+	Moved to:	Movido para:
 	New document	Novo documento
 	No changes (read only)	Sem alterações (somente leitura)
 	Only allow this kind of editing:	Permitir somente este tipo de edição:
@@ -1576,6 +1585,8 @@
 	Customize Ribbon	Personalizar Faixa de Opções
 	Add to Quick Access Toolbar	Adicionar à Barra de Ferramentas de Acesso Rápido
 	Remove from Quick Access Toolbar	Remover da Barra de Ferramentas de Acesso Rápido
+	Hide Quick Access Toolbar	Ocultar Barra de Ferramentas de Acesso Rápido
+	Show Quick Access Toolbar	Mostrar Barra de Ferramentas de Acesso Rápido
 	Customize the Ribbon…	Personalizar a Faixa de Opções…
 	Customize Quick Access Toolbar…	Personalizar Barra de Ferramentas de Acesso Rápido…
 	More Commands…	Mais Comandos…
@@ -2079,6 +2090,7 @@
 	Hyphenation zone:	Zona de hifenização:
 	Italian	Italiano
 	Croatian	Croata
+	Indonesian	Indonésio
 	Japanese	Japonês
 	Korean	Coreano
 	Limit consecutive hyphens to:	Limitar hífens consecutivos a:
@@ -2162,6 +2174,10 @@
 	Contains	Contém
 	Does not contain	Não contém
 	{count} of {total} recipients will be merged.	{count} de {total} destinatários serão mesclados.
+	Find in list:	Localizar na lista:
+	Any field	Qualquer campo
+	Matches: {count}	Correspondências: {count}
+	Show only records that will be merged	Mostrar somente os registros que serão mesclados
 	Take the last match on the page	Usar a última ocorrência da página
 	Show its list number	Mostrar seu número na lista
 	Show its number relative to this field	Mostrar seu número em relação a este campo
@@ -2713,3 +2729,42 @@ template	Letter	Carta
 	Classic blue	Azul clássico
 	Deep blue	Azul escuro
 	Choose a preset or pick a custom accent color.	Escolha uma cor de destaque predefinida ou personalizada.
+# Split Cells and Convert Text to Table (#2592)
+	Merge cells before split	Mesclar células antes de dividir
+	Table size	Tamanho da tabela
+	AutoFit behavior	Comportamento de autoajuste
+	Initial column width:	Largura inicial da coluna:
+	AutoFit to contents	Autoajustar ao conteúdo
+	AutoFit to window	Autoajustar à janela
+	Separate text at	Separar texto em
+	Commas	Vírgulas
+	Other:	Outro:
+	The number must be between 1 and {max}.	O número deve estar entre 1 e {max}.
+	The measurement must be between {min} and {max}.	A medida deve estar entre {min} e {max}.
+	Recently Used Fonts	Fontes usadas recentemente
+	All Fonts	Todas as fontes
+	Spike	Coletor
+	Insert Spike	Inserir coletor
+# Add Font status (#1789)
+	Added 1 font	1 fonte adicionada
+	Added {n} fonts	{n} fontes adicionadas
+	{added}; {count} couldn't be read: {names}	{added}; {count} não puderam ser lidas: {names}
+	{names} and {n} more	{names} e mais {n}
+	{added}; {n} skipped (limit {max})	{added}; {n} ignoradas (limite de {max})
+
+# Drop Cap menu and Drop Cap Options (#2601)
+	Dropped	No texto
+	In margin	Na margem
+	Drop Cap Options…	Opções de capitular…
+	Lines to drop:	Linhas ocupadas:
+	Distance from text:	Distância do texto:
+	Distance from text	Distância do texto
+
+# Picture Format › Size: the Size dialog, sizes typed in any unit (#2573)
+	Lock aspect ratio	Bloquear proporção
+	Relative to original picture size	Em relação ao tamanho original da imagem
+	Original size	Tamanho original
+	{width} × {height} pixels	{width} × {height} pixels
+	Type a size in any unit, such as 5 cm or 300 px. The other side follows, so the picture keeps its proportions.	Digite um tamanho em qualquer unidade, como 5 cm ou 300 px. O outro lado acompanha, e a imagem mantém as proporções.
+
+	Import…	Importar…

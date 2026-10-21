@@ -44,9 +44,10 @@ fn media_cache_counts_the_source_bytes_it_holds() {
 /// A wave stroke starting around 1e20 never advanced (`x + step == x`), pushing curves until memory ran out.
 #[test]
 fn wave_stroke_at_a_huge_coordinate_ends() {
-    assert!(wave_path(1e20, 2e20, 0.0, 1.0).elements().len() < 3);
-    assert!(wave_path(0.0, 1e20, 0.0, 1.0).elements().len() < 20_100);
-    assert!(wave_path(0.0, 100.0, 0.0, 1.0).elements().len() > 10);
+    assert!(wave_path(1e20, 0.0, 2e20, 0.0, 1.0).elements().len() < 3);
+    assert!(wave_path(0.0, 0.0, 1e20, 0.0, 1.0).elements().len() < 20_100);
+    assert!(wave_path(0.0, 0.0, 100.0, 0.0, 1.0).elements().len() > 10);
+    assert!(wave_path(0.0, 0.0, 0.0, 100.0, 1.0).elements().len() > 10, "vertical wave strokes produce elements");
 }
 
 /// A freeform's joined subpaths (one DrawingML `a:path`) are filled even-odd: an outline inside
@@ -57,7 +58,15 @@ fn even_odd_paths_leave_inner_outlines_empty() {
     let square = |a: f32, b: f32| vec![PathSeg::Move(a, a), PathSeg::Line(b, a), PathSeg::Line(b, b), PathSeg::Line(a, b), PathSeg::Close];
     let segs: Vec<PathSeg> = square(0.0, 40.0).into_iter().chain(square(10.0, 30.0)).collect();
     let alpha_at = |even_odd: bool, x: usize, y: usize| {
-        let p = Draw::Path { segs: segs.clone(), fill: Some(Rgb(0x20, 0x2E, 0x55)), stroke: None, stroke_width: 0.0, even_odd, fill_alpha: 1.0 };
+        let p = Draw::Path {
+            segs: segs.clone(),
+            fill: Some(Rgb(0x20, 0x2E, 0x55)),
+            stroke: None,
+            stroke_width: 0.0,
+            even_odd,
+            fill_alpha: 1.0,
+            dash: Vec::new(),
+        };
         let r = render_items(&Document::new(), &[p], 0.0, 0.0, 40.0, 40.0, 1.0, &RenderOptions::default());
         r.pixels.get((y * r.width as usize + x) * 4 + 3).copied()
     };
@@ -78,6 +87,7 @@ fn a_translucent_shape_fill_is_drawn_see_through() {
         effects: Default::default(),
         corner: None,
         fill_alpha,
+        dash: Vec::new(),
     };
     let alpha = |d: Draw| {
         let r = render_items(&Document::new(), &[d], 0.0, 0.0, 20.0, 20.0, 1.0, &RenderOptions::default());
@@ -99,6 +109,7 @@ fn a_faded_shape_is_drawn_as_one_layer() {
         effects: Default::default(),
         corner: None,
         fill_alpha: 1.0,
+        dash: Vec::new(),
     };
     let faded = Draw::Faded { alpha: 0.573, items: vec![shape] };
     let r = render_items(&Document::new(), &[faded], 0.0, 0.0, 20.0, 20.0, 1.0, &RenderOptions::default());
