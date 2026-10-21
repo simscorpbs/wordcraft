@@ -635,9 +635,12 @@ pub fn specs() -> Vec<CommandSpec> {
         .params(r#"{"path": string}"#)
         .pure(),
         CommandSpec::new("file.autosave", "AutoSave", "Quick Access Toolbar", |s, v| {
-            s.autosave = p::bool(v, "value").unwrap_or(!s.autosave);
-            Ok(json!({"value": s.autosave}))
+            // Remembered for the document's file (`crate::autosave`).
+            let on = p::bool(v, "value").unwrap_or(!s.autosave);
+            s.set_autosave(on);
+            Ok(json!({"value": on}))
         })
+        .params(r#"{"value"?: bool (default: toggle)} — the switch is remembered for the document's file"#)
         .pure(),
         CommandSpec::new("file.compatibility", "Check Compatibility", "File › Info", |s, _| {
             let mut issues = Vec::new();

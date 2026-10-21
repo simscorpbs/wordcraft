@@ -61,7 +61,7 @@
 	AutoFit Contents	Dopasuj do zawartości
 	AutoFit Window	Dopasuj do okna
 	AutoSave	Autozapis
-	AutoSave saves every change to the file (needs a saved document)	Autozapis zapisuje każdą zmianę w pliku (dokument musi być już zapisany)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Autozapis zapisuje każdą zmianę w pliku. WordCraft zapamiętuje przełącznik dla każdego pliku.
 	AutoText	Autotekst
 	Automatic	Automatyczny
 	Automatic ({language})	Automatycznie ({language})
@@ -896,8 +896,8 @@
 	Stopped	Zatrzymano
 	Speed	Szybkość
 	Normal speed	Normalna szybkość
-	AutoSave documents you have saved in WordCraft	Zapisuj automatycznie dokumenty zapisane już w programie WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Autozapis nie powiódł się: {error}. Zapisz dokument, aby ponownie włączyć autozapis.
+	Turn on AutoSave by default	Domyślnie włączaj Autozapis
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Autozapis nie mógł zapisać pliku: {error}. Wkrótce spróbuje ponownie.
 	{name} was moved or deleted elsewhere	{name} został przeniesiony lub usunięty w innym miejscu
 	{name} was changed on another device	{name} został zmieniony na innym urządzeniu
 	AutoSave stopped so that neither version is lost.	Automatyczny zapis został zatrzymany, aby nie utracić żadnej wersji.
@@ -1159,7 +1159,7 @@
 	Paste Clipboard Item	Wklej element schowka
 	Remove Password	Usuń hasło
 	Save the document to turn on AutoSave	Zapisz dokument, aby włączyć Autozapis
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Zapisz dokument, aby włączyć Autozapis (plik, który tylko otwarto, nie jest nadpisywany, dopóki go nie zapiszesz)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Zapisz dokument, aby włączyć Autozapis (WordCraft nie mógł sprawdzić tego pliku na dysku)
 	Shadow, glow and soft edges	Cień, poświata i zmiękczone krawędzie
 	Shape Effects	Efekty kształtów
 	Show in the Styles gallery	Pokaż w galerii stylów

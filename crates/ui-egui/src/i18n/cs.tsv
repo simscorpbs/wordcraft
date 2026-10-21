@@ -112,8 +112,8 @@
 	Automatic Table 1 (3 levels)	Automatický obsah 1 (3 úrovně)
 	Automatic Table 2 (2 levels)	Automatický obsah 2 (2 úrovně)
 	AutoSave	Automatické ukládání
-	AutoSave documents you have saved in WordCraft	Automaticky ukládat dokumenty uložené ve WordCraftu
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Automatické ukládání selhalo: {error}. Uložením dokumentu automatické ukládání znovu zapnete.
+	Turn on AutoSave by default	Ve výchozím nastavení zapnout automatické ukládání
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Automatické ukládání nemohlo zapsat soubor: {error}. Za chvíli to zkusí znovu.
 	{name} was moved or deleted elsewhere	{name} byl jinde přesunut nebo odstraněn
 	{name} was changed on another device	{name} byl změněn na jiném zařízení
 	AutoSave stopped so that neither version is lost.	Automatické ukládání se zastavilo, aby se neztratila žádná verze.
@@ -132,7 +132,7 @@
 	Resolve Save Conflict	Vyřešit konflikt při ukládání
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Automatické ukládání není v prohlížeči dostupné, protože nemůže zapisovat do vašich souborů. Příkaz Uložit stáhne kopii.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Automatické ukládání podporuje pouze soubory .docx, .odt a .rtf; formát {name} nedokáže zachovat veškeré formátování. Pro zapnutí automatického ukládání uložte dokument jako .docx.
-	AutoSave saves every change to the file (needs a saved document)	Automatické ukládání zapisuje každou změnu do souboru (vyžaduje uložený dokument)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Automatické ukládání zapisuje každou změnu do souboru. WordCraft si přepínač pamatuje pro každý soubor.
 	AutoText	Automatický text
 	Backspace	Backspace
 	Balloons	Bubliny
@@ -1051,7 +1051,7 @@
 	DRAFT	KONCEPT
 	SAMPLE	VZOR
 	URGENT	NALÉHAVÉ
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Pro zapnutí automatického ukládání dokument uložte (pouze otevřený soubor se nepřepisuje, dokud jej sami neuložíte)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Pro zapnutí automatického ukládání dokument uložte (WordCraft nemohl tento soubor na disku ověřit)
 	Saved	Uloženo
 	Scale	Měřítko
 	Script	Index

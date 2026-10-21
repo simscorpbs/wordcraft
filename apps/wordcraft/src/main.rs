@@ -453,6 +453,8 @@ fn main() -> eframe::Result {
                 if let Err(e) = app.session.enable_versions(dir.join("versions"), std::sync::Arc::new(move || ctx.request_repaint())) {
                     log::warn!("local version history unavailable: {e}");
                 }
+                // The AutoSave switch each file was left with (`wordcraft_engine::autosave`).
+                app.session.enable_autosave_memory(dir.join("autosave.json"));
             }
             #[cfg(not(target_arch = "wasm32"))]
             {

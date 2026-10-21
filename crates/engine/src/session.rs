@@ -450,7 +450,11 @@ pub struct Session {
     pub(crate) version_next_kind: Option<crate::versions::VersionKind>,
     /// Quick Parts / AutoText entries.
     pub building_blocks: std::collections::BTreeMap<String, Fragment>,
+    /// The AutoSave switch for this document: what its file remembers ([`Session::set_autosave`]),
+    /// else [`Prefs::autosave_by_default`]. The front end decides whether AutoSave can write.
     pub autosave: bool,
+    /// The AutoSave choices remembered for each file (`crate::autosave`).
+    pub(crate) autosave_memory: crate::autosave::AutoSaveMemory,
     /// The document's file as last read or written, AutoSave's conflict waiting, and the cloud
     /// folders on this computer (`cmd::cloud`).
     pub cloud: crate::cmd::cloud::CloudState,
@@ -563,6 +567,9 @@ pub struct Prefs {
     /// in Word). A damaged saved value reads as the defaults.
     #[serde(deserialize_with = "crate::cmd::tools::lenient_autocorrect")]
     pub autocorrect: crate::cmd::tools::AutoCorrectPrefs,
+    /// File › Options › Save: AutoSave is on for every file that has no choice of its own (on,
+    /// the default). Off, AutoSave covers only the files whose switch the user turned on.
+    pub autosave_by_default: bool,
 }
 
 impl Default for Prefs {
@@ -584,6 +591,7 @@ impl Default for Prefs {
             ignore_internet: true,
             detect_language: true,
             autocorrect: Default::default(),
+            autosave_by_default: true,
         }
     }
 }
@@ -683,7 +691,8 @@ impl Session {
             opened_version: None,
             version_next_kind: None,
             building_blocks: Default::default(),
-            autosave: true,
+            autosave: Prefs::default().autosave_by_default,
+            autosave_memory: Default::default(),
             cloud: Default::default(),
             bib_style,
             merge: Default::default(),
@@ -1126,6 +1135,8 @@ impl Session {
         self.password = None;
         self.file_name = None;
         self.cloud.forget_file();
+        // A new document starts with the default switch; opening a file then takes its own.
+        self.autosave = self.prefs.autosave_by_default;
         self.opened_version = None;
         self.version_next_kind = None;
         self.sel = Selection::caret(self.doc.start_of(StoryRef::Body));
@@ -1211,6 +1222,7 @@ impl Session {
             version_next_kind: _,
             building_blocks: _,
             autosave: _,
+            autosave_memory: _,
             // Like the file path: the file on disk, not an edit.
             cloud: _,
             bib_style: _,
@@ -1377,6 +1389,7 @@ impl Session {
             self.pending_move = None;
         }
         let sel_before = self.sel.clone();
+        let file_before = (self.document_id, self.path.clone());
         let run = spec.run;
         let mutates = spec.mutates;
         let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| crate::cmd::column::dispatch(self, id, mutates, run, params)));
@@ -1409,6 +1422,7 @@ impl Session {
                 if let Ok(value) = &result {
                     self.record_saved_command(id, params, value);
                 }
+                self.follow_autosave_file(id, file_before.0, file_before.1.as_deref());
                 if spec.mutates {
                     // Formatting changed while tracking becomes a formatting revision.
                     if let Some((before, ..)) = &before_doc {

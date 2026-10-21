@@ -64,8 +64,8 @@
 	Automatic Table 1 (3 levels)	自動目錄 1（3 階層）
 	Automatic Table 2 (2 levels)	自動目錄 2（2 階層）
 	AutoSave	自動儲存
-	AutoSave documents you have saved in WordCraft	自動儲存在 WordCraft 中儲存過的文件
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	自動儲存失敗：{error}。重新儲存文件後將恢復自動儲存。
+	Turn on AutoSave by default	預設開啟自動儲存
+	AutoSave couldn't write the file: {error}. It will try again shortly.	自動儲存無法寫入檔案：{error}。稍後將重試。
 	{name} was moved or deleted elsewhere	{name} 已在其他位置移動或刪除
 	{name} was changed on another device	{name} 已在其他裝置上變更
 	AutoSave stopped so that neither version is lost.	自動儲存已停止，以免遺失任何版本。
@@ -181,11 +181,11 @@
 	Search for templates	搜尋範本
 	Show all revisions inline	以內嵌方式顯示所有修訂
 	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	像「檢視 › 切換模式」一樣以反轉的色彩顯示文件。儲存、列印和 PDF 不受影響。
-	AutoSave saves every change to the file (needs a saved document)	自動儲存會將每次變更寫入檔案（文件需已儲存）
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	自動儲存會將每次變更寫入檔案。WordCraft 會為每個檔案記住開關狀態。
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	瀏覽器中無法使用自動儲存：它不能寫入您的檔案。儲存會下載一份複本。
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	自動儲存僅適用於 .docx、.odt 和 .rtf 檔案；{name} 無法保留所有格式。另存為 .docx 即可開啟自動儲存。
 	Save the document to turn on AutoSave	儲存文件後即可開啟自動儲存
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	儲存文件後即可開啟自動儲存（僅開啟過的檔案在您儲存之前不會被改寫）
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	儲存文件後即可開啟自動儲存（WordCraft 無法檢查磁碟上的此檔案）
 	AutoText	自動圖文集
 	Backspace	退格
 	Banded Columns	帶狀欄

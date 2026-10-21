@@ -72,7 +72,7 @@
 	AutoFit Contents	Autoanpassa efter innehåll
 	AutoFit Window	Autoanpassa efter fönster
 	AutoSave	Autospara
-	AutoSave saves every change to the file (needs a saved document)	Autospara sparar varje ändring i filen (kräver ett sparat dokument)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Autospara sparar varje ändring i filen. WordCraft kommer ihåg reglaget för varje fil.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Autospara finns inte i webbläsaren, eftersom den inte kan skriva till dina filer. Spara laddar ner en kopia.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Autospara fungerar bara med .docx-, .odt- och .rtf-filer; {name} kan inte behålla all formatering. Spara som .docx för att slå på Autospara.
 	AutoSave writes your changes to the file a moment after you stop typing.	Autospara skriver dina ändringar till filen en liten stund efter att du slutat skriva.
@@ -140,7 +140,7 @@
 	Restart list after:	Börja om listan efter:
 	Right border	Höger kantlinje
 	Save the document to turn on AutoSave	Spara dokumentet för att slå på Autospara
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Spara dokumentet för att slå på Autospara (en fil som du bara har öppnat skrivs inte om förrän du sparar den)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Spara dokumentet för att slå på Autospara (WordCraft kunde inte kontrollera filen på disken)
 	Save documents	Spara dokument
 	AutoText	Autotext
 	Automatic	Automatisk
@@ -1084,8 +1084,8 @@
 	Stopped	Stoppad
 	Speed	Hastighet
 	Normal speed	Normal hastighet
-	AutoSave documents you have saved in WordCraft	Autospara dokument som du har sparat i WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Autospara misslyckades: {error}. Spara dokumentet för att slå på Autospara igen.
+	Turn on AutoSave by default	Slå på Autospara som standard
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Autospara kunde inte skriva filen: {error}. Det försöker igen om en stund.
 	{name} was moved or deleted elsewhere	{name} flyttades eller togs bort någon annanstans
 	{name} was changed on another device	{name} ändrades på en annan enhet
 	AutoSave stopped so that neither version is lost.	Autosparning har stoppats så att ingen version går förlorad.

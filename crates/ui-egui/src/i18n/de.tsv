@@ -71,8 +71,8 @@
 	Automatic Table 1 (3 levels)	Automatisches Inhaltsverzeichnis 1 (3 Ebenen)
 	Automatic Table 2 (2 levels)	Automatisches Inhaltsverzeichnis 2 (2 Ebenen)
 	AutoSave	AutoSpeichern
-	AutoSave documents you have saved in WordCraft	In WordCraft gespeicherte Dokumente automatisch speichern
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	AutoSpeichern fehlgeschlagen: {error}. Speichern Sie das Dokument, um AutoSpeichern wieder zu aktivieren.
+	Turn on AutoSave by default	AutoSpeichern standardmäßig aktivieren
+	AutoSave couldn't write the file: {error}. It will try again shortly.	AutoSpeichern konnte die Datei nicht schreiben: {error}. Es wird gleich erneut versucht.
 	{name} was moved or deleted elsewhere	{name} wurde an einen anderen Ort verschoben oder dort gelöscht
 	{name} was changed on another device	{name} wurde auf einem anderen Gerät geändert
 	AutoSave stopped so that neither version is lost.	AutoSpeichern wurde angehalten, damit keine Version verloren geht.
@@ -136,11 +136,11 @@
 	Search for templates	Vorlagen suchen
 	Show all revisions inline	Alle Änderungen im Text anzeigen
 	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Zeigt Dokumente mit invertierten Farben an, wie Ansicht › Modus wechseln. Speichern, Drucken und PDFs bleiben unverändert.
-	AutoSave saves every change to the file (needs a saved document)	AutoSpeichern speichert jede Änderung in der Datei (erfordert ein gespeichertes Dokument)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	AutoSpeichern speichert jede Änderung in der Datei. WordCraft merkt sich den Schalter für jede Datei.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	AutoSpeichern ist im Browser nicht verfügbar: Es kann nicht in Ihre Dateien schreiben. „Speichern“ lädt eine Kopie herunter.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	AutoSpeichern behält nur .docx-, .odt- und .rtf-Dateien; {name} kann nicht die gesamte Formatierung bewahren. Speichern Sie als .docx, um AutoSpeichern zu aktivieren.
 	Save the document to turn on AutoSave	Speichern Sie das Dokument, um AutoSpeichern zu aktivieren
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Speichern Sie das Dokument, um AutoSpeichern zu aktivieren (eine nur geöffnete Datei wird erst beim Speichern neu geschrieben)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Speichern Sie das Dokument, um AutoSpeichern zu aktivieren (WordCraft konnte diese Datei auf dem Datenträger nicht prüfen)
 	AutoText	Textbausteine
 	Backspace	Rücktaste
 	Banded Columns	Gestreifte Spalten

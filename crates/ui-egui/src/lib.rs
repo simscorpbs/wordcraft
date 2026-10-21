@@ -610,7 +610,6 @@ pub struct WordApp {
     /// Escape may leave full screen. Read before anything handles the frame's keys.
     escape_free: bool,
     pub quit_requested: bool,
-    pub autosave: bool,
     pub word_count: (u64, usize),
     last_autosave: f64,
     /// The tab shown before the Equation tab came up (restored when editing ends).
@@ -628,9 +627,13 @@ pub struct WordApp {
     /// Read Aloud: the start of the sentence the caret was last moved to, and the last error shown.
     pub(crate) read_aloud_at: Option<wordcraft_engine::doc::Pos>,
     pub(crate) read_aloud_error: Option<String>,
-    /// The file AutoSave is allowed to cover. Local files are added after an explicit save; files
-    /// opened from a discovered cloud root are covered as soon as their disk stamp is available.
+    /// The file AutoSave is allowed to write: a file opened from disk (its disk stamp read, local
+    /// or in a cloud folder) or saved in this session.
     autosave_path: Option<std::path::PathBuf>,
+    /// AutoSave writes that keep failing (the file locked by another program, a share gone for a
+    /// moment): AutoSave pauses and tries again with a growing wait, and the status bar says so
+    /// until a write succeeds. The switch remembered for the file stays as it is.
+    autosave_failure: Option<AutoSaveFailure>,
     /// The cloud folders being looked for in the background ([`Self::discover_cloud`]).
     cloud_discovery: Option<std::sync::mpsc::Receiver<Vec<wordcraft_engine::cloud::CloudRoot>>>,
     /// Web: saves the browser's picker hasn't finished yet ([`async_saves`], #1315).
@@ -681,6 +684,8 @@ impl WordApp {
         if let Some(tag) = sys_locale::get_locale() {
             wordcraft_engine::set_system_locale(&tag);
         }
+        // A session that already has a file read from disk: AutoSave may write it.
+        let autosave_path = session.path.clone().filter(|_| session.cloud.stamp.is_some());
         WordApp {
             session,
             ui: UiState::default(),
@@ -726,7 +731,6 @@ impl WordApp {
             seen_full_screen: None,
             escape_free: false,
             quit_requested: false,
-            autosave: true,
             word_count: (0, 0),
             last_autosave: 0.0,
             equation_prev_tab: None,
@@ -737,7 +741,8 @@ impl WordApp {
             ctx: None,
             read_aloud_at: None,
             read_aloud_error: None,
-            autosave_path: None,
+            autosave_path,
+            autosave_failure: None,
             cloud_discovery: None,
             saves_in_flight: Vec::new(),
             awaiting_save: None,
@@ -831,6 +836,8 @@ impl WordApp {
             }
         }
         self.session.prefs = std::mem::take(&mut self.ui.editing);
+        // The saved AutoSave default applies to the open document unless its file has a choice.
+        self.session.refresh_autosave();
         // The saved dictionaries folder (#1063) is searched from the start.
         if let Some(f) = self.session.prefs.dictionaries_folder.as_deref() {
             wordcraft_engine::cmd::options::use_dictionaries_folder(Some(f));
@@ -1059,13 +1066,25 @@ impl WordApp {
         // When the document has been replaced (not when Open only showed its picker), a pending
         // "Save changes?" and AutoSave's go-ahead were both about the old one.
         if self.session.document_id() != document {
-            self.autosave_path = None;
+            self.cover_opened_file();
             if matches!(self.dialog.as_ref(), Some(dialogs::Dialog::SaveChanges { .. })) {
                 self.dialog = None;
             }
             crate::table_pen::stop(self);
         }
-        self.cover_opened_cloud_file();
+        // `file.cloud` also says whether AutoSave covers the document, why not, and the last
+        // AutoSave error while writes keep failing.
+        let r = match r {
+            Ok(mut v) if id == "file.cloud" => {
+                if let Some(o) = v.get_mut("autosave").and_then(Value::as_object_mut) {
+                    o.insert("covers".into(), json!(self.autosaves()));
+                    o.insert("blocked".into(), json!(self.autosave_block().map(|b| b.reason())));
+                    o.insert("failing".into(), json!(self.autosave_failure.as_ref().map(|f| f.error.clone())));
+                }
+                Ok(v)
+            }
+            r => r,
+        };
         // An explicit save to the document's own file lets AutoSave keep writing there.
         if let Ok(v) = &r
             && matches!(id, "file.save" | "file.saveAs" | "file.saveToCloud" | "file.resolveConflict")
@@ -1073,6 +1092,7 @@ impl WordApp {
             && v.get("path").and_then(Value::as_str).map(std::path::Path::new) == self.session.path.as_deref()
         {
             self.autosave_path = self.session.path.clone();
+            self.autosave_recovered();
         }
         if r.is_ok() && id == "file.versions" && params.get("restore").is_some() {
             self.autosave_path = self.session.path.clone();
@@ -1085,8 +1105,8 @@ impl WordApp {
             if self.autosave_path.as_ref() == Some(&old) {
                 self.autosave_path = self.session.path.clone();
             }
-            let old = old.to_string_lossy();
-            self.ui.recent.retain(|r| *r != old);
+            let old = wordcraft_engine::autosave::path_text_key(&old.to_string_lossy());
+            self.ui.recent.retain(|r| wordcraft_engine::autosave::path_text_key(r) != old);
         }
         if let Ok(v) = &r {
             self.keep_web_font(id, &params, v);
@@ -1242,25 +1262,30 @@ impl WordApp {
         self.saves_in_flight.iter().any(|s| s.marked_saved && s.document == document)
     }
 
-    /// AutoSave may cover a file opened from a discovered cloud folder without an explicit save.
-    /// A local file keeps the session's existing opt-in rule.
-    fn cover_opened_cloud_file(&mut self) {
-        if self.autosave_path.is_some() {
-            return;
-        }
-        let Some(path) = self.session.path.as_ref() else { return };
-        if self.session.cloud.stamp.is_some() && wordcraft_engine::cloud::locate(path, &self.session.cloud.roots).is_some() {
-            self.autosave_path = Some(path.clone());
+    /// The document was replaced: AutoSave may write a file just read from disk (local or in a
+    /// cloud folder) without an explicit save, once its disk stamp guards against overwriting a
+    /// change made elsewhere. A document with no file, or one opened from bytes, has no stamp.
+    fn cover_opened_file(&mut self) {
+        self.autosave_path = self.session.path.clone().filter(|_| self.session.cloud.stamp.is_some());
+        self.autosave_failure = None;
+    }
+
+    /// A write of the document went through (AutoSave, or the user's save): AutoSave is no
+    /// longer failing, and its message leaves the status bar.
+    fn autosave_recovered(&mut self) {
+        if let Some(failure) = self.autosave_failure.take()
+            && self.status_msg.as_ref().is_some_and(|(m, _)| *m == failure.message)
+        {
+            self.status_msg = None;
         }
     }
 
     /// Try the Word-style AutoSave flush before a user action replaces or closes the document.
     /// Errors leave the existing Save Changes prompt in charge.
     fn autosave_before_discard(&mut self) -> AutoSaveBeforeDiscard {
-        if !self.session.dirty || !self.autosave {
+        if !self.session.dirty || !self.session.autosave {
             return AutoSaveBeforeDiscard::NotAttempted;
         }
-        self.cover_opened_cloud_file();
         if matches!(self.autosave_block(), Some(AutoSaveBlock::Conflict { .. })) {
             self.show_save_conflict();
             return AutoSaveBeforeDiscard::Conflict;
@@ -1274,6 +1299,7 @@ impl WordApp {
                 AutoSaveBeforeDiscard::Conflict
             }
             Ok(v) if v.get("saved").and_then(Value::as_bool) == Some(true) => {
+                self.autosave_recovered();
                 self.clear_recovery_after_save();
                 AutoSaveBeforeDiscard::Saved
             }
@@ -1482,10 +1508,13 @@ impl WordApp {
         for req in std::mem::take(&mut self.session.ui_requests) {
             self.handle_request(&req);
         }
+        // One entry per file, however its path is spelled (on Windows: letter case, `/` or `\`,
+        // a `\\?\` prefix), as AutoSave remembers files (`wordcraft_engine::autosave`).
         if let Some(p) = self.session.path.as_ref().map(|p| p.to_string_lossy().to_string())
             && self.ui.recent.first() != Some(&p)
         {
-            self.ui.recent.retain(|r| *r != p);
+            let key = wordcraft_engine::autosave::path_text_key(&p);
+            self.ui.recent.retain(|r| wordcraft_engine::autosave::path_text_key(r) != key);
             self.ui.recent.insert(0, p);
             self.ui.recent.truncate(MAX_RECENT);
         }
@@ -2213,7 +2242,6 @@ impl WordApp {
             && let Ok(roots) = rx.try_recv()
         {
             self.session.cloud.roots = roots;
-            self.cover_opened_cloud_file();
             self.cloud_discovery = None;
         }
         self.autosave_tick(now_ms());
@@ -2290,9 +2318,9 @@ impl WordApp {
         self.session.path.is_some() && self.session.path == self.autosave_path
     }
 
-    /// Why AutoSave can't cover the document, or `None` when it can: local files need an explicit
-    /// save in this session, while a file opened inside a discovered cloud root is covered after
-    /// its disk stamp is read. Formats must keep everything, and the browser cannot write files.
+    /// Why AutoSave can't cover the document, or `None` when it can: its file was read from disk
+    /// (local or in a cloud folder) or saved here ([`Self::saved_here`]), in a format that keeps
+    /// everything, with no conflict waiting. The browser cannot write files.
     pub fn autosave_block(&self) -> Option<AutoSaveBlock> {
         if self.services.download.is_some() {
             return Some(AutoSaveBlock::Browser);
@@ -2302,8 +2330,7 @@ impl WordApp {
             let name = path.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
             return Some(AutoSaveBlock::Format { name });
         }
-        let in_cloud = self.session.cloud.stamp.is_some() && wordcraft_engine::cloud::locate(path, &self.session.cloud.roots).is_some();
-        if !self.saved_here() && !in_cloud {
+        if !self.saved_here() {
             return Some(AutoSaveBlock::NotSavedHere);
         }
         if let Some(conflict) = self.session.cloud.conflict {
@@ -2356,7 +2383,7 @@ impl WordApp {
 
     /// Whether AutoSave covers the document: it is on and nothing blocks it ([`Self::autosave_block`]).
     pub fn autosaves(&self) -> bool {
-        self.autosave && self.autosave_block().is_none()
+        self.session.autosave && self.autosave_block().is_none()
     }
 
     /// `file.autosave` (the AutoSave switch, and scripts): `value` turns AutoSave on or off;
@@ -2367,16 +2394,17 @@ impl WordApp {
         if on && let Some(block) = self.autosave_block() {
             return Err(block.reason());
         }
-        self.autosave = on;
-        self.session.autosave = on;
+        // Remembered for the document's file, as the engine's `file.autosave` does.
+        self.session.set_autosave(on);
         Ok(json!({"value": on}))
     }
 
-    /// AutoSave: write a saved document a couple of seconds after the last change. A failure is
-    /// shown in the status bar and turns AutoSave off for the file until the user saves it again.
+    /// AutoSave: write a saved document a couple of seconds after the last change. A failed write
+    /// is shown in the status bar while it keeps failing and tried again after a growing wait
+    /// ([`AutoSaveFailure::retry_after`]); the switch stays on.
     fn autosave_tick(&mut self, now: f64) {
-        self.cover_opened_cloud_file();
-        if self.autosaves() && self.session.dirty && now - self.last_autosave > 2500.0 && now - self.canvas.caret_visible_since > 1500.0 {
+        let waiting = self.autosave_failure.as_ref().is_some_and(|f| now < f.retry_at);
+        if self.autosaves() && self.session.dirty && !waiting && now - self.last_autosave > 2500.0 && now - self.canvas.caret_visible_since > 1500.0 {
             self.last_autosave = now;
             // `ifUnchanged`: never over a version another device saved meanwhile.
             match self.session.run("file.save", &json!({"ifUnchanged": true})) {
@@ -2387,17 +2415,19 @@ impl WordApp {
                     }
                 }
                 Ok(v) if v.get("saved").and_then(Value::as_bool) == Some(true) => {
+                    self.autosave_recovered();
                     self.clear_recovery_after_save();
                     self.continue_after_autosave();
                 }
                 Ok(_) => {}
                 Err(e) => {
-                    log::warn!("AutoSave failed: {e}");
-                    self.autosave_path = None;
-                    self.status(i18n::fmt(
-                        tl!("AutoSave failed: {error}. Save the document to turn AutoSave back on."),
-                        &[("error", &e.to_string())],
-                    ));
+                    let error = e.to_string();
+                    let failures = self.autosave_failure.as_ref().map_or(0, |f| f.failures).saturating_add(1);
+                    log::warn!("AutoSave failed ({failures} in a row): {error}");
+                    let message = i18n::fmt(tl!("AutoSave couldn't write the file: {error}. It will try again shortly."), &[("error", &error)]);
+                    self.status(message.clone());
+                    self.autosave_failure =
+                        Some(AutoSaveFailure { failures, retry_at: now + AutoSaveFailure::retry_after(failures), error, message });
                 }
             }
         }
@@ -2695,6 +2725,28 @@ impl WordApp {
     }
 }
 
+/// AutoSave writes failing one after another ([`WordApp::autosave_tick`]).
+#[derive(Clone, Debug, PartialEq)]
+struct AutoSaveFailure {
+    /// How many writes in a row failed.
+    failures: u32,
+    /// When (in [`now_ms`] time) the next write may be tried.
+    retry_at: f64,
+    /// The last error, as `file.cloud` reports it.
+    error: String,
+    /// The status bar message, taken away once a write succeeds.
+    message: String,
+}
+
+impl AutoSaveFailure {
+    /// The wait before trying again after `failures` failed writes: 5 s, doubling to at most a
+    /// minute.
+    fn retry_after(failures: u32) -> f64 {
+        let doublings = failures.saturating_sub(1).min(4);
+        (5_000.0 * f64::from(1u32 << doublings)).min(60_000.0)
+    }
+}
+
 /// Why AutoSave can't cover the document ([`WordApp::autosave_block`]); the switch is greyed out
 /// and its tooltip gives [`AutoSaveBlock::reason`].
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -2705,7 +2757,8 @@ pub enum AutoSaveBlock {
     Unsaved,
     /// A file in a format that can't keep everything (Markdown, plain text, HTML…), by file name.
     Format { name: String },
-    /// A file that was opened but not yet saved in this session.
+    /// A file AutoSave can't check before writing: opened from bytes, recovered, or after an
+    /// AutoSave write failed; saving it lifts the block.
     NotSavedHere,
     /// Another device or program changed the file (or moved or deleted it, `missing`) since it
     /// was last read or written here; AutoSave waits for the user to choose what to keep.
@@ -2724,9 +2777,7 @@ impl AutoSaveBlock {
                 tl!("AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave."),
                 &[("name", name)],
             ),
-            AutoSaveBlock::NotSavedHere => {
-                tl!("Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)").to_string()
-            }
+            AutoSaveBlock::NotSavedHere => tl!("Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)").to_string(),
             AutoSaveBlock::Conflict { missing: false } => {
                 tl!("AutoSave is paused: this file was changed on another device. Click to choose which version to keep.").to_string()
             }
@@ -5208,7 +5259,6 @@ mod tests {
         let path = docx_on_disk(&dir, "Draft");
         let mut a = app();
         a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
-        a.autosave = false;
         a.session.autosave = false;
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
         assert!(!a.close_requested());
@@ -5248,12 +5298,10 @@ mod tests {
         let mut a = app();
         a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
         a.run("file.save", json!({})).unwrap();
-        a.autosave = false;
         a.session.autosave = false;
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
         a.run("file.new", json!({})).unwrap();
         assert_eq!(prompt(&a), Some("saveChanges"));
-        a.autosave = true;
         a.session.autosave = true;
         a.autosave_tick(now_ms() + 10_000.0);
         assert_eq!(prompt(&a), None);
@@ -5274,6 +5322,8 @@ mod tests {
         let path = docx_on_disk(&folder, "Draft");
         let mut a = app();
         a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        // An opened file is AutoSaved; with AutoSave off, closing asks Save Changes.
+        a.session.autosave = false;
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
         // The document's folder is gone and a file has its name: nothing can be written there.
         std::fs::remove_dir_all(&folder).unwrap();
@@ -5364,6 +5414,8 @@ mod tests {
             let before = std::fs::read(&path).unwrap();
             let mut a = app();
             a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+            // An opened file is AutoSaved; with AutoSave off, closing asks Save Changes.
+            a.session.autosave = false;
             a.run("text.insert", json!({"text": "Revised "})).unwrap();
             a.run("file.close", json!({})).unwrap();
             assert_eq!(prompt(&a), Some("saveChanges"));
@@ -5417,6 +5469,8 @@ mod tests {
             let before = std::fs::read(&path).unwrap();
             let mut a = app();
             a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+            // An opened file is AutoSaved; with AutoSave off, closing asks Save Changes.
+            a.session.autosave = false;
             a.run("text.insert", json!({"text": "Revised "})).unwrap();
             a.run("file.close", json!({})).unwrap();
             assert_eq!(prompt(&a), Some("saveChanges"));
@@ -5465,6 +5519,8 @@ mod tests {
         let before = std::fs::read(&path).unwrap();
         let mut a = app();
         a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        // An opened file is AutoSaved; with AutoSave off, closing asks Save Changes.
+        a.session.autosave = false;
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
         a.canvas.want_focus = true;
         let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
@@ -5511,6 +5567,8 @@ mod tests {
         let path = docx_on_disk(&dir, "Draft");
         let mut a = app();
         a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        // An opened file is AutoSaved; with AutoSave off, closing asks Save Changes.
+        a.session.autosave = false;
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
         a.canvas.want_focus = true;
         let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
@@ -6305,6 +6363,8 @@ mod tests {
         let path = docx_on_disk(&dir, "Draft");
         let mut a = app();
         a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        // An opened file is AutoSaved; with AutoSave off, closing asks Save Changes.
+        a.session.autosave = false;
         a.run("text.insert", json!({"text": "Revised "})).unwrap();
         a.run("file.new", json!({})).unwrap();
         assert_eq!(prompt(&a), Some("saveChanges"));
@@ -6395,12 +6455,12 @@ mod tests {
         assert!(saved.plain_text(wordcraft_doc::StoryRef::Body).contains("More "));
         assert!(!path.exists());
 
-        // A file opened but not saved in this session doesn't gain AutoSave by being renamed.
+        // A file opened from disk is covered at once, and renaming it keeps AutoSave on it.
         let mut b = app();
         b.run("file.open", json!({"path": renamed.to_string_lossy()})).unwrap();
-        assert!(!b.saved_here());
+        assert!(b.saved_here() && b.autosaves());
         b.run("file.rename", json!({"name": "Notes v3"})).unwrap();
-        assert!(!b.saved_here() && !b.autosaves());
+        assert!(b.saved_here() && b.autosaves());
         let _ = std::fs::remove_dir_all(&dir);
     }
 
@@ -6859,32 +6919,12 @@ mod tests {
         }
     }
 
-    /// A local file that was only opened remains protected until the user's explicit save.
+    /// The bug: a .docx saved with AutoSave came back with AutoSave off when it was opened again,
+    /// because only a save in the same session (or a cloud folder) let AutoSave write. A file read
+    /// from disk, local or in a cloud folder, is now covered at once: its disk stamp keeps
+    /// AutoSave from overwriting a change made elsewhere.
     #[test]
-    fn opened_files_are_not_autosaved_until_the_user_saves() {
-        let dir = scratch("autosave");
-        let path = docx_on_disk(&dir, "Original");
-        let before = std::fs::read(&path).unwrap();
-        let mut a = app();
-        a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
-        a.run("text.insert", json!({"text": "Typed "})).unwrap();
-        a.autosave_tick(now_ms() + 10_000.0);
-        assert!(std::fs::read(&path).unwrap() == before, "an opened file is never rewritten behind the user's back");
-        assert!(a.session.dirty);
-
-        // After an explicit save, later changes are saved automatically.
-        a.run("file.save", json!({})).unwrap();
-        a.run("text.insert", json!({"text": "More "})).unwrap();
-        assert!(a.session.dirty);
-        a.autosave_tick(now_ms() + 10_000.0);
-        assert!(!a.session.dirty);
-        let saved = wordcraft_engine::io::open_path(&path).unwrap();
-        assert!(saved.plain_text(wordcraft_doc::StoryRef::Body).contains("Typed More Original"));
-        let _ = std::fs::remove_dir_all(&dir);
-    }
-
-    #[test]
-    fn opened_cloud_files_are_autosaved_but_local_files_stay_blocked() {
+    fn opened_local_and_cloud_files_are_autosaved_without_saving_first() {
         let dir = scratch("autosave-cloud-open");
         let cloud_dir = dir.join("OneDrive");
         std::fs::create_dir_all(&cloud_dir).unwrap();
@@ -6897,28 +6937,216 @@ mod tests {
             path: cloud_dir,
             account: Some("Personal".into()),
         };
+        for (path, text) in [(&cloud_path, "Edited Cloud draft"), (&local_path, "Edited Local draft")] {
+            let mut a = app();
+            a.session.cloud.roots = vec![root.clone()];
+            a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+            assert!(a.session.cloud.stamp.is_some(), "{text}: the disk stamp guards the write");
+            assert!(a.saved_here() && a.autosaves(), "{text}");
+            a.run("text.insert", json!({"text": "Edited "})).unwrap();
+            a.autosave_tick(now_ms() + 10_000.0);
+            assert!(!a.session.dirty, "{text}");
+            let saved = wordcraft_engine::io::open_path(path).unwrap();
+            assert!(saved.plain_text(wordcraft_doc::StoryRef::Body).contains(text));
+        }
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 
-        let mut cloud = app();
-        cloud.session.cloud.roots = vec![root.clone()];
-        cloud.run("file.open", json!({"path": cloud_path.to_string_lossy()})).unwrap();
-        assert!(cloud.saved_here());
-        assert!(cloud.autosaves());
-        cloud.run("text.insert", json!({"text": "Edited "})).unwrap();
-        cloud.autosave_tick(now_ms() + 10_000.0);
-        assert!(!cloud.session.dirty);
-        let saved = wordcraft_engine::io::open_path(&cloud_path).unwrap();
-        assert!(saved.plain_text(wordcraft_doc::StoryRef::Body).contains("Edited Cloud draft"));
+    /// An app with its AutoSave choices kept in `settings` (as the desktop app keeps them in its
+    /// settings folder).
+    fn app_with_settings(settings: &std::path::Path) -> WordApp {
+        let mut a = app();
+        a.session.enable_autosave_memory(settings.join("autosave.json"));
+        a
+    }
 
-        let before = std::fs::read(&local_path).unwrap();
-        let mut local = app();
-        local.session.cloud.roots = vec![root];
-        local.run("file.open", json!({"path": local_path.to_string_lossy()})).unwrap();
-        assert!(!local.saved_here());
-        assert_eq!(local.autosave_block(), Some(AutoSaveBlock::NotSavedHere));
-        local.run("text.insert", json!({"text": "Edited "})).unwrap();
-        local.autosave_tick(now_ms() + 10_000.0);
-        assert!(local.session.dirty);
-        assert_eq!(std::fs::read(&local_path).unwrap(), before);
+    /// The switch is remembered for each file between runs, as Word remembers it per document:
+    /// off stays off when the file is opened again, other files keep the default, Rename keeps
+    /// the choice, turning it back on forgets it, and none of it changes the document's bytes.
+    #[test]
+    fn autosave_is_remembered_per_file_between_runs() {
+        let dir = scratch("autosave-remembered");
+        let settings = dir.join("settings");
+        let path = dir.join("Contract.docx");
+        let other_dir = dir.join("other");
+        std::fs::create_dir_all(&other_dir).unwrap();
+        let other = docx_on_disk(&other_dir, "Other");
+        let mut a = app_with_settings(&settings);
+        a.run("text.insert", json!({"text": "Draft"})).unwrap();
+        a.run("file.save", json!({"path": path.to_string_lossy()})).unwrap();
+        assert!(a.autosaves());
+        drop(a);
+
+        let mut b = app_with_settings(&settings);
+        b.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        assert!(b.autosaves(), "reopened in a new run, AutoSave is still on");
+        let bytes = std::fs::read(&path).unwrap();
+        assert_eq!(b.run("file.autosave", json!({"value": false})).unwrap(), json!({"value": false}));
+        assert_eq!(std::fs::read(&path).unwrap(), bytes, "the choice lives in the settings folder, not in the file");
+        let cloud = b.run("file.cloud", json!({})).unwrap();
+        assert_eq!(cloud["autosave"], json!({"on": false, "default": true, "remembered": false, "covers": false, "blocked": null, "failing": null}));
+        drop(b);
+
+        let mut c = app_with_settings(&settings);
+        c.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        assert!(!c.autosaves() && c.autosave_block().is_none(), "off, and the user can turn it back on");
+        c.run("text.insert", json!({"text": "Unsaved "})).unwrap();
+        c.autosave_tick(now_ms() + 10_000.0);
+        assert!(c.session.dirty, "AutoSave stays off");
+        assert_eq!(std::fs::read(&path).unwrap(), bytes);
+        c.run("file.new", json!({})).unwrap();
+        assert_eq!(prompt(&c), Some("saveChanges"), "with AutoSave off, Save Changes still asks");
+        c.run("ui.saveChanges", json!({"answer": "dontSave"})).unwrap();
+        c.run("file.open", json!({"path": other.to_string_lossy()})).unwrap();
+        assert!(c.autosaves(), "another file keeps the default");
+        c.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        c.run("file.rename", json!({"name": "Contract signed"})).unwrap();
+        drop(c);
+
+        let renamed = dir.join("Contract signed.docx");
+        let mut d = app_with_settings(&settings);
+        d.run("file.open", json!({"path": renamed.to_string_lossy()})).unwrap();
+        assert!(!d.autosaves(), "the renamed file kept its choice");
+        d.run("file.autosave", json!({})).unwrap();
+        assert!(d.autosaves());
+        assert_eq!(d.session.autosave_remembered(), None, "turning it back on forgets the choice");
+        drop(d);
+        let mut e = app_with_settings(&settings);
+        e.run("file.open", json!({"path": renamed.to_string_lossy()})).unwrap();
+        assert!(e.autosaves());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// Save As gives the new file the switch the document had.
+    #[test]
+    fn save_as_carries_the_switch_to_the_new_file() {
+        let dir = scratch("autosave-save-as");
+        let settings = dir.join("settings");
+        let first = docx_on_disk(&dir, "Text");
+        let copy = dir.join("Copy.docx");
+        let mut a = app_with_settings(&settings);
+        a.run("file.open", json!({"path": first.to_string_lossy()})).unwrap();
+        a.run("file.autosave", json!({"value": false})).unwrap();
+        a.run("file.saveAs", json!({"path": copy.to_string_lossy()})).unwrap();
+        assert!(!a.autosaves() && a.autosave_block().is_none());
+        drop(a);
+        let mut b = app_with_settings(&settings);
+        b.run("file.open", json!({"path": copy.to_string_lossy()})).unwrap();
+        assert!(!b.autosaves(), "the copy kept the switch the document had");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// File › Options › Save › Turn on AutoSave by default, off: a file with no choice of its own
+    /// opens with AutoSave off; turning the switch on for one file is remembered for it.
+    #[test]
+    fn with_the_default_off_only_files_turned_on_are_autosaved() {
+        let dir = scratch("autosave-default-off");
+        let settings = dir.join("settings");
+        let path = docx_on_disk(&dir, "Notes");
+        let other = dir.join("other.docx");
+        std::fs::copy(&path, &other).unwrap();
+        let mut a = app_with_settings(&settings);
+        a.run("file.options", json!({"autosaveByDefault": false})).unwrap();
+        assert!(!a.prefs().editing.autosave_by_default, "kept with the app's settings");
+        a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        assert!(!a.autosaves() && a.autosave_block().is_none());
+        a.run("text.insert", json!({"text": "Typed "})).unwrap();
+        a.autosave_tick(now_ms() + 10_000.0);
+        assert!(a.session.dirty, "not written");
+        a.run("file.autosave", json!({"value": true})).unwrap();
+        a.autosave_tick(now_ms() + 20_000.0);
+        assert!(!a.session.dirty, "written once turned on");
+        let prefs = a.prefs();
+        drop(a);
+
+        let mut b = app_with_settings(&settings);
+        b.apply_prefs(prefs);
+        b.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        assert!(b.autosaves(), "the file turned on stays on");
+        b.run("file.open", json!({"path": other.to_string_lossy()})).unwrap();
+        assert!(!b.autosaves(), "another file follows the default");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// A write that fails for a moment (another program holding the file: "Access is denied")
+    /// used to turn AutoSave off until a manual save. It now pauses, says so on the status bar,
+    /// tries again after a wait and carries on; the switch remembered for the file never changes.
+    #[test]
+    fn a_failed_autosave_write_is_tried_again_and_keeps_the_switch() {
+        let dir = scratch("autosave-retry");
+        let settings = dir.join("settings");
+        let path = docx_on_disk(&dir, "Draft");
+        let mut a = app_with_settings(&settings);
+        a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        a.run("text.insert", json!({"text": "Locked "})).unwrap();
+        // Writing fails: a read-only file on Windows, a read-only folder elsewhere.
+        let lock = |on: bool| {
+            #[cfg(windows)]
+            {
+                let mut perms = std::fs::metadata(&path).unwrap().permissions();
+                perms.set_readonly(on);
+                std::fs::set_permissions(&path, perms).unwrap();
+            }
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                std::fs::set_permissions(&dir, std::fs::Permissions::from_mode(if on { 0o555 } else { 0o755 })).unwrap();
+            }
+        };
+        lock(true);
+        let t = now_ms() + 10_000.0;
+        a.autosave_tick(t);
+        let locked = std::fs::OpenOptions::new().append(true).open(&path).is_err() || std::fs::File::create(dir.join("probe")).is_err();
+        if !locked {
+            lock(false);
+            let _ = std::fs::remove_dir_all(&dir);
+            return; // running with rights that ignore read-only files
+        }
+        assert!(a.session.dirty, "nothing was written");
+        let msg = a.status_msg.as_ref().map(|(m, _)| m.clone()).unwrap_or_default();
+        assert!(msg.contains("AutoSave couldn't write the file") && msg.contains("try again"), "{msg}");
+        assert!(a.autosaves() && a.saved_here(), "AutoSave stays on, only paused");
+        assert_eq!(a.session.autosave_remembered(), None, "the remembered switch is untouched");
+        let cloud = a.run("file.cloud", json!({})).unwrap();
+        assert!(cloud["autosave"]["failing"].is_string(), "{cloud}");
+        // Not again before the wait, then again with a longer wait.
+        a.autosave_tick(t + 3_000.0);
+        assert_eq!(a.autosave_failure.as_ref().map(|f| f.failures), Some(1));
+        a.autosave_tick(t + 6_000.0);
+        assert_eq!(a.autosave_failure.as_ref().map(|f| f.failures), Some(2));
+        lock(false);
+        a.autosave_tick(t + 12_000.0);
+        assert!(a.session.dirty, "still waiting out the second pause");
+        a.autosave_tick(t + 20_000.0);
+        assert!(!a.session.dirty, "written once the file could be written again");
+        assert!(a.autosave_failure.is_none());
+        assert!(a.status_msg.as_ref().is_none_or(|(m, _)| !m.contains("AutoSave couldn't")), "the message went away");
+        assert!(wordcraft_engine::io::open_path(&path).unwrap().plain_text(wordcraft_doc::StoryRef::Body).contains("Locked Draft"));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn autosave_retry_waits_grow_to_a_minute() {
+        let waits: Vec<f64> = (1..=7).map(AutoSaveFailure::retry_after).collect();
+        assert_eq!(waits, [5_000.0, 10_000.0, 20_000.0, 40_000.0, 60_000.0, 60_000.0, 60_000.0]);
+        assert_eq!(AutoSaveFailure::retry_after(u32::MAX), 60_000.0);
+    }
+
+    /// Recent listed one file twice when it was opened as `C:\Docs\A.docx` and `c:/docs/a.docx`
+    /// (Windows ignores case and accepts both separators).
+    #[cfg(windows)]
+    #[test]
+    fn recent_keeps_one_entry_per_file_however_it_is_spelled() {
+        let dir = scratch("recent-spelling");
+        let path = docx_on_disk(&dir, "Text");
+        let mut a = app();
+        a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+        let other = path.to_string_lossy().to_uppercase().replace('\\', "/");
+        a.run("file.open", json!({"path": other})).unwrap();
+        let key = wordcraft_engine::autosave::path_text_key(&path.to_string_lossy());
+        let same: Vec<_> = a.ui.recent.iter().filter(|r| wordcraft_engine::autosave::path_text_key(r) == key).collect();
+        assert_eq!(same.len(), 1, "{:?}", a.ui.recent);
+        assert_eq!(a.ui.recent.first(), Some(&other));
         let _ = std::fs::remove_dir_all(&dir);
     }
 
@@ -6935,7 +7163,7 @@ mod tests {
         a.run("file.open", json!({"path": md.to_string_lossy()})).unwrap();
         a.run("text.insert", json!({"text": "Typed "})).unwrap();
         a.run("file.save", json!({})).unwrap();
-        assert!(a.autosave, "the preference stays on");
+        assert!(a.session.autosave, "the switch stays on");
         assert_eq!(a.autosave_block(), Some(AutoSaveBlock::Format { name: "notes.md".into() }));
         assert!(!a.autosaves(), "the switch shows off");
         let why = a.autosave_block().map(|b| b.reason()).unwrap_or_default();
@@ -6943,7 +7171,7 @@ mod tests {
         let err = a.run("file.autosave", json!({"value": true})).unwrap_err();
         assert_eq!(err, why, "scripts are told why");
         assert!(a.run("file.autosave", json!({"value": false})).is_ok(), "turning it off always works");
-        a.autosave = true;
+        a.session.autosave = true;
 
         // Save As .docx (what the greyed switch offers) lifts the block.
         let docx = dir.join("notes.docx");

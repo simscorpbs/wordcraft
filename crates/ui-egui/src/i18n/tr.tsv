@@ -65,7 +65,7 @@
 	Automatic Table 1 (3 levels)	Otomatik Tablo 1 (3 düzey)
 	Automatic Table 2 (2 levels)	Otomatik Tablo 2 (2 düzey)
 	AutoSave	Otomatik Kaydet
-	AutoSave saves every change to the file (needs a saved document)	Otomatik Kaydet, her değişikliği dosyaya kaydeder (belgenin önce kaydedilmesi gerekir)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Otomatik Kaydet, her değişikliği dosyaya kaydeder. WordCraft anahtarın durumunu her dosya için hatırlar.
 	AutoText	Otomatik Metin
 	Backspace	Geri Sil
 	Banded Columns	Şeritli Sütunlar
@@ -867,8 +867,8 @@ preview	Title	Örnek
 	Only web (http, https) and email (mailto) links can be followed	Yalnızca web (http, https) ve e-posta (mailto) bağlantıları açılabilir
 
 	Apply Styles	Stilleri Uygula
-	AutoSave documents you have saved in WordCraft	WordCraft'ta kaydettiğiniz belgeleri otomatik kaydet
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Otomatik Kaydet başarısız oldu: {error}. Otomatik Kaydet'i yeniden açmak için belgeyi kaydedin.
+	Turn on AutoSave by default	Otomatik Kaydet'i varsayılan olarak aç
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Otomatik Kaydet dosyayı yazamadı: {error}. Birazdan yeniden denenecek.
 	{name} was moved or deleted elsewhere	{name} başka bir yere taşındı veya orada silindi
 	{name} was changed on another device	{name} başka bir cihazda değiştirildi
 	AutoSave stopped so that neither version is lost.	Hiçbir sürüm kaybolmasın diye Otomatik Kaydet durduruldu.
@@ -1478,7 +1478,7 @@ preview	Title	Örnek
 	x bar	x Çizgisi
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Otomatik Kaydet tarayıcıda kullanılamaz: dosyalarınıza yazamaz. Kaydet komutu bir kopya indirir.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Otomatik Kaydet yalnızca .docx, .odt ve .rtf dosyalarıyla çalışır; {name} tüm biçimlendirmeyi koruyamaz. Otomatik Kaydet'i açmak için .docx olarak kaydedin.
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Otomatik Kaydet'i açmak için belgeyi kaydedin (yalnızca açtığınız bir dosya, siz kaydedene kadar yeniden yazılmaz)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Otomatik Kaydet'i açmak için belgeyi kaydedin (WordCraft bu dosyayı diskte denetleyemedi)
 
 # Labels added on main and in this stack after the first Russian catalog (#300 integration)
 	Add Object to Selection	Nesneyi Seçime Ekle

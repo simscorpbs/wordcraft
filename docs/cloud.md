@@ -1,6 +1,6 @@
 # AutoSave in synced cloud folders
 
-> **Last reviewed:** 2026-10-17 · **Last updated:** 2026-10-17 · **Change:** AutoSave closes and switches documents like Word; added local version history · **Target:** Microsoft Word (Microsoft 365) for Mac 16.113.4
+> **Last reviewed:** 2026-10-21 · **Last updated:** 2026-10-21 · **Change:** AutoSave is on for every saved file, local or in the cloud, and remembered per file · **Target:** Microsoft Word (Microsoft 365) for Mac 16.113.4
 
 WordCraft uses the desktop sync clients' ordinary folders. It does not connect to a cloud API. A file saved in one of these folders is uploaded by the installed client and becomes available on the person's other devices.
 
@@ -21,7 +21,21 @@ This is the same basic model Word uses when a new document is saved to OneDrive:
 
 With AutoSave enabled, an edited document closes, opens another document or creates a new document after WordCraft writes the pending changes with `file.save` and {"ifUnchanged":true}. The action continues without a Save Changes prompt. If another device changed the file, the Save Conflict dialog stays open and the document remains open. If Save Changes was already visible, a successful AutoSave closes that prompt and continues the pending action. With AutoSave disabled, the existing Save Changes behaviour remains.
 
-A document opened from an iCloud Drive, Google Drive or OneDrive folder is eligible for AutoSave immediately. It does not need an explicit save first. A local document outside those folders still needs an explicit save before AutoSave can write it.
+## AutoSave for each file
+
+AutoSave is on by default for every document whose file exists on disk in a format that keeps everything (`.docx`, `.docm`, `.dotx`, `.dotm`, `.odt`, `.rtf`, and WordCraft's own `.json` and `.xml`). This covers local files as well as files in iCloud Drive, Google Drive or OneDrive folders, and an opened file is covered at once, without a save first. Word turns AutoSave on by default only for files stored in OneDrive or SharePoint. WordCraft also covers local files because the project owner decided so. The disk stamp read when the file is opened protects a local file in the same way as a cloud file.
+
+The switch is still off, with the reason in its tooltip, for a new document that has never been saved, a previous version opened from the history, a format that does not keep everything, the browser, and a file with a conflict waiting. A file opened from bytes, or a recovered document, needs an explicit save before AutoSave writes it, because WordCraft has no disk stamp to check first.
+
+A write that fails, for example because another program holds the file, does not turn AutoSave off. AutoSave pauses and tries again after 5 seconds, then waits twice as long after each further failure, up to one minute. The status bar shows the error while writes keep failing, and the message goes away after the next successful write. The remembered choice for the file does not change.
+
+Each file remembers its switch, as Word remembers it for each document. Turning AutoSave off for a file is remembered when the file is opened again, including in later runs. Turning it back on forgets that choice. The choices are kept in `<settings_dir>/autosave.json`, never in the document, so remembering one does not change the file's bytes. Paths are normalized: on Windows the `\\?\` prefix of canonical paths is removed, separators become `\` and letter case is ignored, and letter case is also ignored on macOS. The file keeps at most 2000 entries, drops the oldest first, is read only up to 1 MiB and is written atomically through a temporary file. Renaming a file (`file.rename`) keeps its choice. Save As, Save to Cloud and Keep both give the new file the switch the document had. The browser build keeps no choices.
+
+File › Options › Save › **Turn on AutoSave by default** sets the default for files with no choice of their own (`file.options` with `{"autosaveByDefault": bool}`, saved with the app's settings as `editing.autosaveByDefault`). It is on by default. When it is off, a file is AutoSaved only after the user turns the switch on for it, and that choice is remembered for the file too.
+
+`file.autosave` with `{"value": bool}` (or `{}` to toggle) sets the open document's switch and remembers it for the file, exactly as the title bar switch does. In the app it fails, with the reason, when AutoSave cannot cover the document. To read the state without changing it, use `file.cloud={}`. Its `autosave` object has `on` (the switch), `default` and `remembered` (`true`, `false`, or `null` when the file follows the default). In the app it also has `covers` (whether AutoSave writes the file), `blocked` (the reason it cannot, or `null`) and `failing` (the last write error while writes keep failing, or `null`).
+
+File › Home and Open list each file once in Recent, using the same path rules without reading the disk. On Windows, `C:\Docs\A.docx` and `c:/docs/a.docx` are one entry.
 
 ## Version history
 
@@ -43,5 +57,6 @@ The feature depends on a compatible sync client being installed and signed in. T
 
 | Date | Change |
 |---|---|
+| 2026-10-21 | AutoSave covers local files without a save first, remembers each file's switch in the settings folder, and adds the Turn on AutoSave by default option. A failed write is retried instead of turning AutoSave off; `file.cloud` reports the AutoSave state; Recent lists each file once. |
 | 2026-10-17 | Added Word-style close and switch behaviour, immediate AutoSave coverage for synced folders and local version history commands. |
 | 2026-10-16 | Added cloud-folder discovery, Save to Cloud, disk-stamp conflict protection and resolution commands. |

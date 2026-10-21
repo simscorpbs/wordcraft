@@ -71,7 +71,7 @@
 	AutoFit Contents	Ajustar al contenido
 	AutoFit Window	Ajustar a la ventana
 	AutoSave	Autoguardado
-	AutoSave saves every change to the file (needs a saved document)	El autoguardado guarda cada cambio en el archivo (requiere un documento guardado)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	El autoguardado guarda cada cambio en el archivo. WordCraft recuerda el interruptor de cada archivo.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	El autoguardado no está disponible en el navegador: no puede escribir en tus archivos. Guardar descarga una copia.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	El autoguardado solo admite archivos .docx, .odt y .rtf; {name} no puede conservar todo el formato. Guarda como .docx para activar el autoguardado.
 	AutoSave writes your changes to the file a moment after you stop typing.	El autoguardado escribe tus cambios en el archivo poco después de que dejes de escribir.
@@ -144,7 +144,7 @@
 	Restart list after:	Reiniciar lista después de:
 	Right border	Borde derecho
 	Save the document to turn on AutoSave	Guarda el documento para activar el autoguardado
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Guarda el documento para activar el autoguardado (un archivo que solo has abierto no se reescribe hasta que lo guardes)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Guarda el documento para activar el autoguardado (WordCraft no pudo comprobar este archivo en el disco)
 	Save documents	Guardar documentos
 	AutoText	Texto automático
 	Automatic	Automático
@@ -1094,8 +1094,8 @@
 	Stopped	Detenido
 	Speed	Velocidad
 	Normal speed	Velocidad normal
-	AutoSave documents you have saved in WordCraft	Autoguardar los documentos que hayas guardado en WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Error de autoguardado: {error}. Guarda el documento para volver a activar el autoguardado.
+	Turn on AutoSave by default	Activar el autoguardado de forma predeterminada
+	AutoSave couldn't write the file: {error}. It will try again shortly.	El autoguardado no pudo escribir el archivo: {error}. Lo volverá a intentar en breve.
 	{name} was moved or deleted elsewhere	{name} se movió o eliminó en otro lugar
 	{name} was changed on another device	{name} cambió en otro dispositivo
 	AutoSave stopped so that neither version is lost.	El autoguardado se detuvo para que no se pierda ninguna versión.

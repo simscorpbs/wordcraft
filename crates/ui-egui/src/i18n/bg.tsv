@@ -72,7 +72,7 @@
 	AutoFit Contents	Автопобиране по съдържанието
 	AutoFit Window	Автопобиране по прозореца
 	AutoSave	Автоматично запазване
-	AutoSave saves every change to the file (needs a saved document)	Автоматичното запазване записва всяка промяна във файла (изисква запазен документ)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Автоматичното запазване записва всяка промяна във файла. WordCraft запомня превключвателя за всеки файл.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Автоматичното запазване не е налично в браузъра: то не може да записва във Вашите файлове. „Запазване“ изтегля копие.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Автоматичното запазване поддържа само файлове .docx, .odt и .rtf; {name} не може да запази цялото форматиране. Запазете като .docx, за да включите автоматичното запазване.
 	Balloons	Балончета
@@ -106,7 +106,7 @@
 	Restart list after:	Рестартиране на списъка след:
 	Right border	Дясна граница
 	Save the document to turn on AutoSave	Запазете документа, за да включите автоматичното запазване
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Запазете документа, за да включите автоматичното запазване (файл, който само сте отворили, не се презаписва, докато не го запазите)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Запазете документа, за да включите автоматичното запазване (WordCraft не можа да провери този файл на диска)
 	AutoText	Автотекст
 	Automatic	Автоматично
 	Automatic ({language})	Автоматично ({language})
@@ -1001,8 +1001,8 @@
 	Stopped	Спряно
 	Speed	Скорост
 	Normal speed	Нормална скорост
-	AutoSave documents you have saved in WordCraft	Автоматично запазване на документите, които сте запазили в WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Автоматичното запазване е неуспешно: {error}. Запазете документа, за да включите отново автоматичното запазване.
+	Turn on AutoSave by default	Включване на автоматичното запазване по подразбиране
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Автоматичното запазване не можа да запише файла: {error}. Ще опита отново след малко.
 	{name} was moved or deleted elsewhere	{name} е преместен или изтрит другаде
 	{name} was changed on another device	{name} е променен на друго устройство
 	AutoSave stopped so that neither version is lost.	Автоматичното записване спря, за да не бъде загубена нито една версия.

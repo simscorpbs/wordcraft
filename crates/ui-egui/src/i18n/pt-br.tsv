@@ -74,7 +74,7 @@
 	Automatic Table 1 (3 levels)	Tabela automática 1 (3 níveis)
 	Automatic Table 2 (2 levels)	Tabela automática 2 (2 níveis)
 	AutoSave	Salvamento automático
-	AutoSave saves every change to the file (needs a saved document)	O salvamento automático grava cada alteração no arquivo (requer um documento já salvo)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	O salvamento automático grava cada alteração no arquivo. O WordCraft lembra a opção de cada arquivo.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	O salvamento automático não está disponível no navegador: ele não pode gravar nos seus arquivos. Salvar baixa uma cópia.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	O salvamento automático só mantém arquivos .docx, .odt e .rtf; {name} não guarda toda a formatação. Salve como .docx para ativar o salvamento automático.
 	Balloons	Balões
@@ -147,7 +147,7 @@
 	Right border	Borda direita
 	Save documents	Salvar Documentos
 	Save the document to turn on AutoSave	Salve o documento para ativar o salvamento automático
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Salve o documento para ativar o salvamento automático (um arquivo que você apenas abriu não é regravado até você salvá-lo)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Salve o documento para ativar o salvamento automático (o WordCraft não conseguiu verificar este arquivo no disco)
 	AutoText	Texto Automático
 	Backspace	Backspace
 	Banded Columns	Colunas em Tiras
@@ -1040,8 +1040,8 @@
 	Stopped	Parado
 	Speed	Velocidade
 	Normal speed	Velocidade normal
-	AutoSave documents you have saved in WordCraft	Salvar automaticamente documentos que você salvou no WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Falha no salvamento automático: {error}. Salve o documento para reativar o salvamento automático.
+	Turn on AutoSave by default	Ativar o salvamento automático por padrão
+	AutoSave couldn't write the file: {error}. It will try again shortly.	O salvamento automático não conseguiu gravar o arquivo: {error}. Ele tentará de novo em instantes.
 	{name} was moved or deleted elsewhere	{name} foi movido ou excluído em outro local
 	{name} was changed on another device	{name} foi alterado em outro dispositivo
 	AutoSave stopped so that neither version is lost.	O salvamento automático foi interrompido para que nenhuma versão seja perdida.

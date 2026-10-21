@@ -442,7 +442,9 @@ mod tests {
     /// The host-enabled recovery store owns its profile files; commands address known snapshot
     /// IDs, never paths. Only that storage module is exempt, not recovery commands in general.
     /// The version history store (`versions.rs`) is the same kind of host-enabled profile store:
-    /// commands address version IDs, never paths.
+    /// commands address version IDs, never paths. So is the AutoSave choice file
+    /// (`autosave.rs`, `<settings_dir>/autosave.json`): it stores a switch per document path and
+    /// never reads or writes the documents themselves.
     #[test]
     fn commands_do_not_touch_the_file_system_themselves() {
         fn walk(dir: &Path, files: &mut Vec<PathBuf>) {
@@ -467,6 +469,7 @@ mod tests {
                 || path.starts_with(src.join("io"))
                 || path == src.join("recovery/desktop.rs")
                 || path == src.join("versions.rs")
+                || path == src.join("autosave.rs")
             {
                 continue;
             }

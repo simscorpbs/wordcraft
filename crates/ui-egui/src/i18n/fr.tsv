@@ -70,7 +70,7 @@
 	Automatic Table 1 (3 levels)	Table automatique 1 (3 niveaux)
 	Automatic Table 2 (2 levels)	Table automatique 2 (2 niveaux)
 	AutoSave	Enregistrement automatique
-	AutoSave saves every change to the file (needs a saved document)	L’enregistrement automatique enregistre chaque modification dans le fichier (nécessite un document enregistré)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	L’enregistrement automatique enregistre chaque modification dans le fichier. WordCraft mémorise l’interrupteur pour chaque fichier.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	L’enregistrement automatique n’est pas disponible dans le navigateur : il ne peut pas écrire dans vos fichiers. La commande Enregistrer télécharge une copie.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	L’enregistrement automatique ne prend en charge que les fichiers .docx, .odt et .rtf ; {name} ne peut pas conserver toute la mise en forme. Enregistrez au format .docx pour activer l’enregistrement automatique.
 	Balloons	Bulles
@@ -109,7 +109,7 @@
 	Restart list after:	Redémarrer la liste après :
 	Right border	Bordure droite
 	Save the document to turn on AutoSave	Enregistrez le document pour activer l’enregistrement automatique
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Enregistrez le document pour activer l’enregistrement automatique (un fichier que vous avez simplement ouvert n’est pas réécrit tant que vous ne l’enregistrez pas)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Enregistrez le document pour activer l’enregistrement automatique (WordCraft n’a pas pu vérifier ce fichier sur le disque)
 	AutoText	Texte automatique
 	Backspace	Retour arrière
 	Banded Columns	Colonnes à bandes
@@ -996,8 +996,8 @@
 	Stopped	Arrêté
 	Speed	Vitesse
 	Normal speed	Vitesse normale
-	AutoSave documents you have saved in WordCraft	Enregistrement automatique des documents que vous avez enregistrés dans WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Échec de l’enregistrement automatique : {error}. Enregistrez le document pour réactiver l’enregistrement automatique.
+	Turn on AutoSave by default	Activer l’enregistrement automatique par défaut
+	AutoSave couldn't write the file: {error}. It will try again shortly.	L’enregistrement automatique n’a pas pu écrire le fichier : {error}. Il réessaiera dans un instant.
 	{name} was moved or deleted elsewhere	{name} a été déplacé ou supprimé ailleurs
 	{name} was changed on another device	{name} a été modifié sur un autre appareil
 	AutoSave stopped so that neither version is lost.	L’enregistrement automatique est arrêté afin qu’aucune version ne soit perdue.

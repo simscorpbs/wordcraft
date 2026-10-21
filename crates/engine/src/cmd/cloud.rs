@@ -87,6 +87,10 @@ fn status(s: &mut Session, _v: &Value) -> CmdResult {
         "conflict": s.cloud.conflict.map(DiskState::id),
         "notDownloaded": not_downloaded,
         "roots": s.cloud.roots.iter().map(root_json).collect::<Vec<_>>(),
+        // The AutoSave switch for this document, the default for files without a choice, and
+        // the choice remembered for this file (null: it follows the default). The app adds
+        // whether AutoSave covers the file and, when not, why.
+        "autosave": {"on": s.autosave, "default": s.prefs.autosave_by_default, "remembered": s.autosave_remembered()},
     }))
 }
 

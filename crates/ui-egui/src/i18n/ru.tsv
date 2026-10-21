@@ -66,7 +66,7 @@
 	Automatic Table 1 (3 levels)	Автоматическое оглавление 1 (3 уровня)
 	Automatic Table 2 (2 levels)	Автоматическое оглавление 2 (2 уровня)
 	AutoSave	Автосохранение
-	AutoSave saves every change to the file (needs a saved document)	Автосохранение записывает каждое изменение в файл (документ должен быть уже сохранён)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Автосохранение записывает каждое изменение в файл. WordCraft запоминает положение переключателя для каждого файла.
 	AutoText	Автотекст
 	Backspace	Backspace
 	Banded Columns	Чередующиеся столбцы
@@ -860,8 +860,8 @@ preview	Title	Пример
 	Only web (http, https) and email (mailto) links can be followed	Переходить можно только по веб-ссылкам (http, https) и ссылкам на электронную почту (mailto)
 
 	Apply Styles	Применить стили
-	AutoSave documents you have saved in WordCraft	Автосохранение документов, уже сохранённых в WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Ошибка автосохранения: {error}. Сохраните документ, чтобы снова включить автосохранение.
+	Turn on AutoSave by default	Включать автосохранение по умолчанию
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Автосохранению не удалось записать файл: {error}. Скоро будет новая попытка.
 	{name} was moved or deleted elsewhere	{name} был перемещён или удалён в другом месте
 	{name} was changed on another device	{name} был изменён на другом устройстве
 	AutoSave stopped so that neither version is lost.	Автосохранение остановлено, чтобы не потерять ни одну версию.
@@ -1479,7 +1479,7 @@ preview	Title	Пример
 	x bar	x с чертой
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	В браузере автосохранение недоступно: оно не может записывать ваши файлы. «Сохранить» скачивает копию.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Автосохранение работает только с файлами .docx, .odt и .rtf; {name} не сохраняет всё форматирование. Сохраните файл как .docx, чтобы включить автосохранение.
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Сохраните документ, чтобы включить автосохранение (открытый файл не перезаписывается, пока вы его не сохраните)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Сохраните документ, чтобы включить автосохранение (WordCraft не удалось проверить этот файл на диске)
 
 # Labels added on main and in this stack after the first Russian catalog (#300 integration)
 	Add Object to Selection	Добавить объект к выделению

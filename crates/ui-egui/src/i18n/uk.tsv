@@ -75,7 +75,7 @@
 	Automatic Table 1 (3 levels)	Автоматичний зміст 1 (3 рівні)
 	Automatic Table 2 (2 levels)	Автоматичний зміст 2 (2 рівні)
 	AutoSave	Автозбереження
-	AutoSave saves every change to the file (needs a saved document)	Автозбереження записує кожну зміну у файл (документ потрібно спочатку зберегти)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Автозбереження записує кожну зміну у файл. WordCraft запам’ятовує положення перемикача для кожного файлу.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Автозбереження недоступне в браузері: воно не може записувати у ваші файли. Збереження завантажує копію.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Автозбереження підтримує лише файли .docx, .odt і .rtf; {name} не може зберегти все форматування. Збережіть як .docx, щоб увімкнути автозбереження.
 	Balloons	Виноски
@@ -148,7 +148,7 @@
 	Right border	Права межа
 	Save documents	Збереження документів
 	Save the document to turn on AutoSave	Збережіть документ, щоб увімкнути автозбереження
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Збережіть документ, щоб увімкнути автозбереження (файл, який ви лише відкрили, не перезаписується, доки ви його не збережете)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Збережіть документ, щоб увімкнути автозбереження (WordCraft не вдалося перевірити цей файл на диску)
 	AutoText	Автоматичний текст
 	Backspace	Видалити попередній символ
 	Banded Columns	Смугасті стовпці
@@ -1068,8 +1068,8 @@
 	Stopped	Зупинено
 	Speed	Швидкість
 	Normal speed	Звичайна швидкість
-	AutoSave documents you have saved in WordCraft	Автоматично зберігати документи, збережені у WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Не вдалося виконати автозбереження: {error}. Збережіть документ, щоб знову ввімкнути автозбереження.
+	Turn on AutoSave by default	Типово вмикати автозбереження
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Автозбереженню не вдалося записати файл: {error}. Незабаром буде нова спроба.
 	{name} was moved or deleted elsewhere	{name} переміщено або видалено в іншому місці
 	{name} was changed on another device	{name} змінено на іншому пристрої
 	AutoSave stopped so that neither version is lost.	Автозбереження зупинено, щоб не втратити жодну версію.

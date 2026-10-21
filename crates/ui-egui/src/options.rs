@@ -433,13 +433,13 @@ fn save(app: &mut WordApp, ui: &mut Ui) {
     section(ui, "Save documents");
     // The browser can't write to the user's files, so AutoSave can't be turned on there (#176).
     let browser = app.autosave_block() == Some(crate::AutoSaveBlock::Browser);
-    let mut autosave = app.autosave && !browser;
-    let r = ui.add_enabled(!browser, egui::Checkbox::new(&mut autosave, tl!("AutoSave documents you have saved in WordCraft")));
+    // The default for files with no choice of their own; the title bar switch sets one file's.
+    let mut autosave = app.session.prefs.autosave_by_default && !browser;
+    let r = ui.add_enabled(!browser, egui::Checkbox::new(&mut autosave, tl!("Turn on AutoSave by default")));
     if browser {
         r.on_disabled_hover_text(crate::AutoSaveBlock::Browser.reason());
     } else if r.changed() {
-        app.autosave = autosave;
-        app.session.autosave = autosave;
+        set(app, json!({"autosaveByDefault": autosave}));
     }
     note(ui, "AutoSave writes your changes to the file a moment after you stop typing.");
     ui.add_space(8.0);

@@ -57,7 +57,7 @@
 	AutoFit Contents	Sobita sisuga
 	AutoFit Window	Sobita aknaga
 	AutoSave	Automaatsalvestus
-	AutoSave saves every change to the file (needs a saved document)	Automaatsalvestus salvestab iga muudatuse faili (dokument peab olema salvestatud)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Automaatsalvestus salvestab iga muudatuse faili. WordCraft jätab lüliti asendi iga faili jaoks meelde.
 	AutoSave writes your changes to the file a moment after you stop typing.	Automaatsalvestus kirjutab muudatused faili veidi pärast seda, kui lõpetad kirjutamise.
 	AutoText	Automaattekst
 	Automatic	Automaatne
@@ -966,8 +966,8 @@
 	Stopped	Lõpetatud
 	Speed	Kiirus
 	Normal speed	Tavaline kiirus
-	AutoSave documents you have saved in WordCraft	Salvesta WordCraftis salvestatud dokumendid automaatselt
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Automaatsalvestus ebaõnnestus: {error}. Selle uuesti sisse lülitamiseks salvesta dokument.
+	Turn on AutoSave by default	Lülita automaatsalvestus vaikimisi sisse
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Automaatsalvestus ei saanud faili kirjutada: {error}. See proovib varsti uuesti.
 	{name} was moved or deleted elsewhere	{name} teisaldati või kustutati mujal
 	{name} was changed on another device	{name} muudeti teises seadmes
 	AutoSave stopped so that neither version is lost.	Automaatne salvestamine peatati, et kumbki versioon ei läheks kaotsi.
@@ -1169,7 +1169,7 @@
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Automaatsalvestus pole brauseris saadaval: see ei saa sinu faile kirjutada. Salvestamine laadib alla koopia.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Automaatsalvestus hoiab ainult .docx-, .odt- ja .rtf-faile; {name} ei säilita kogu vormingut. Automaatsalvestuse sisselülitamiseks salvesta .docx-failina.
 	Save the document to turn on AutoSave	Automaatsalvestuse sisselülitamiseks salvesta dokument
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Automaatsalvestuse sisselülitamiseks salvesta dokument (ainult avatud faili ei kirjutata üle enne, kui selle salvestad)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Automaatsalvestuse sisselülitamiseks salvesta dokument (WordCraft ei saanud seda faili kettal kontrollida)
 	Click a border between two cells to merge them. Esc stops.	Klõpsa kahe lahtri vahelist äärist, et need ühendada. Esc lõpetab.
 	Clipboard Pane	Lõikelaua paan
 	Clipboard Items	Lõikelaua üksused

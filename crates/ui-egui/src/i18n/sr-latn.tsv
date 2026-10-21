@@ -80,8 +80,8 @@
 	Automatic Table 1 (3 levels)	Automatska tabela 1 (3 nivoa)
 	Automatic Table 2 (2 levels)	Automatska tabela 2 (2 nivoa)
 	AutoSave	Automatsko čuvanje
-	AutoSave documents you have saved in WordCraft	Automatski čuvaj dokumente koje ste već sačuvali u WordCraft-u
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Automatsko čuvanje neuspelo: {error}. Sačuvajte dokument da biste ga ponovo uključili.
+	Turn on AutoSave by default	Podrazumevano uključi automatsko čuvanje
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Automatsko čuvanje nije moglo da upiše fajl: {error}. Uskoro će pokušati ponovo.
 	{name} was moved or deleted elsewhere	{name} je premešten ili obrisan drugde
 	{name} was changed on another device	{name} je promenjen na drugom uređaju
 	AutoSave stopped so that neither version is lost.	Automatsko čuvanje je zaustavljeno da se nijedna verzija ne bi izgubila.
@@ -237,11 +237,11 @@
 	Right (vertical)	Desno (vertikalno)
 	Ruby text:	Rubi tekst:
 	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Prikaži dokumente sa invertovanim bojama, kao kod Prikaz › Promeni režim. Čuvanje, štampanje i PDF nisu pogođeni.
-	AutoSave saves every change to the file (needs a saved document)	Automatsko čuvanje upisuje svaku izmenu u fajl (dokument mora biti već sačuvan)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Automatsko čuvanje upisuje svaku izmenu u fajl. WordCraft pamti prekidač za svaki fajl.
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Automatsko čuvanje nije dostupno u pregledaču: ne može da upisuje u vaše fajlove. Čuvanje preuzima kopiju.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Automatsko čuvanje čuva samo .docx, .odt i .rtf fajlove; {name} ne može da zadrži svo formatiranje. Sačuvajte kao .docx da biste uključili automatsko čuvanje.
 	Save the document to turn on AutoSave	Sačuvajte dokument da biste uključili automatsko čuvanje
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Sačuvajte dokument da biste uključili automatsko čuvanje (fajl koji ste samo otvorili ne prepisuje se dok ga ne sačuvate)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Sačuvajte dokument da biste uključili automatsko čuvanje (WordCraft nije mogao da proveri ovaj fajl na disku)
 	AutoText	Automatski tekst
 	Backspace	Backspace
 	Banded Columns	Trakaste kolone

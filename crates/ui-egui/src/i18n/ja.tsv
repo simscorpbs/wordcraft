@@ -63,8 +63,8 @@
 	Automatic Table 1 (3 levels)	自動目次 1（3 レベル）
 	Automatic Table 2 (2 levels)	自動目次 2（2 レベル）
 	AutoSave	自動保存
-	AutoSave documents you have saved in WordCraft	WordCraft で保存した文書を自動保存する
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	自動保存できませんでした: {error}。文書を保存し直すと、自動保存が再開します。
+	Turn on AutoSave by default	既定で自動保存をオンにする
+	AutoSave couldn't write the file: {error}. It will try again shortly.	自動保存でファイルに書き込めませんでした: {error}。まもなく再試行します。
 	{name} was moved or deleted elsewhere	{name} は別の場所に移動または削除されました
 	{name} was changed on another device	{name} は別のデバイスで変更されました
 	AutoSave stopped so that neither version is lost.	どちらのバージョンも失われないよう、自動保存を停止しました。
@@ -180,11 +180,11 @@
 	Search for templates	テンプレートを検索
 	Show all revisions inline	すべての変更履歴を本文中に表示
 	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	表示 › モードの切り替えと同様に、文書の色を反転して表示します。保存、印刷、PDF は変わりません。
-	AutoSave saves every change to the file (needs a saved document)	自動保存は変更のたびにファイルへ保存します（保存済みの文書が必要です）
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	自動保存は変更のたびにファイルへ保存します。WordCraft はファイルごとにスイッチの状態を記憶します。
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	ブラウザーでは自動保存を使えません（ファイルに書き込めないため）。保存するとコピーがダウンロードされます。
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	自動保存の対象は .docx、.odt、.rtf ファイルだけです。{name} ではすべての書式を保持できません。自動保存をオンにするには .docx として保存してください。
 	Save the document to turn on AutoSave	自動保存をオンにするには文書を保存してください
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	自動保存をオンにするには文書を保存してください（開いただけのファイルは、保存するまで書き換えられません）
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	自動保存をオンにするには文書を保存してください（WordCraft はディスク上のこのファイルを確認できませんでした）
 	AutoText	定型句
 	Backspace	Backspace
 	Banded Columns	縞模様（列）

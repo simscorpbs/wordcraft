@@ -327,8 +327,9 @@ impl WordApp {
                 match after {
                     AfterSave::Nothing => Ok(json!({"saved": saved})),
                     AfterSave::AutoSave => {
+                        // The switch asked for AutoSave: on, and remembered for the new file.
                         if saved {
-                            self.autosave = true;
+                            self.session.set_autosave(true);
                         }
                         Ok(json!({"saved": saved}))
                     }

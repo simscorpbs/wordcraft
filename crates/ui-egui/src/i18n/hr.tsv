@@ -209,8 +209,8 @@
 	AutoFit Window	Prilagodi prozoru
 	AutoFormat As You Type	Automatsko oblikovanje tijekom tipkanja
 	AutoSave	Automatsko spremanje
-	AutoSave documents you have saved in WordCraft	Automatsko spremanje dokumenata koje ste spremili u programu WordCraft
-	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Automatsko spremanje nije uspjelo: {error}. Spremite dokument kako biste ponovno uključili automatsko spremanje.
+	Turn on AutoSave by default	Zadano uključi automatsko spremanje
+	AutoSave couldn't write the file: {error}. It will try again shortly.	Automatsko spremanje nije moglo zapisati datoteku: {error}. Uskoro će pokušati ponovno.
 	{name} was moved or deleted elsewhere	{name} premješten je ili izbrisan drugdje
 	{name} was changed on another device	{name} promijenjen je na drugom uređaju
 	AutoSave stopped so that neither version is lost.	Automatsko spremanje zaustavljeno je kako se nijedna verzija ne bi izgubila.
@@ -229,7 +229,7 @@
 	Resolve Save Conflict	Riješi sukob spremanja
 	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Automatsko spremanje nije dostupno u pregledniku: ne može pisati u vaše datoteke. Spremanje preuzima kopiju.
 	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Automatsko spremanje čuva samo datoteke .docx, .odt i .rtf; {name} ne može sačuvati cijelo oblikovanje. Spremite kao .docx kako biste uključili automatsko spremanje.
-	AutoSave saves every change to the file (needs a saved document)	Automatsko spremanje sprema svaku promjenu u datoteku (potreban je spremljen dokument)
+	AutoSave saves every change to the file. WordCraft remembers the switch for each file.	Automatsko spremanje sprema svaku promjenu u datoteku. WordCraft pamti prekidač za svaku datoteku.
 	AutoSave writes your changes to the file a moment after you stop typing.	Automatsko spremanje zapisuje vaše promjene u datoteku trenutak nakon što prestanete tipkati.
 	AutoText	Automatski tekst
 	Automatic	Automatski
@@ -1890,7 +1890,7 @@ template	Letter	Pismo
 	Save as Template	Spremi kao predložak
 	Save documents	Spremanje dokumenata
 	Save the document to turn on AutoSave	Spremite dokument kako biste uključili automatsko spremanje
-	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Spremite dokument kako biste uključili automatsko spremanje (datoteka koju ste samo otvorili ne prepisuje se dok je ne spremite)
+	Save the document to turn on AutoSave (WordCraft couldn't check this file on disk)	Spremite dokument kako biste uključili automatsko spremanje (WordCraft nije mogao provjeriti ovu datoteku na disku)
 	Save these pages as PDF…	Spremi ove stranice kao PDF…
 	Saved	Spremljeno
 	Scale	Mjerilo

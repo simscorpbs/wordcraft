@@ -475,9 +475,10 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                 ui.painter().rect(r, 8.0, fill, Stroke::new(1.0, stroke), egui::StrokeKind::Inside);
                 let knob = if on { r.max.x - 8.0 } else { r.min.x + 8.0 };
                 ui.painter().circle_filled(pos2(knob, r.center().y), 5.0, knob_fill);
-                let tip = block
-                    .as_ref()
-                    .map_or_else(|| tl!("AutoSave saves every change to the file (needs a saved document)").to_string(), |b| b.reason());
+                let tip = block.as_ref().map_or_else(
+                    || tl!("AutoSave saves every change to the file. WordCraft remembers the switch for each file.").to_string(),
+                    |b| b.reason(),
+                );
                 if resp.on_hover_text(tip).clicked() {
                     match block {
                         None => {
