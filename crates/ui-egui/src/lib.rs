@@ -6054,11 +6054,12 @@ mod tests {
         use egui::accesskit::Role;
         use egui_kittest::kittest::{By, Queryable};
         let mut a = typed();
-        a.run("format.font", json!({"name": "Recent Font Alpha"})).unwrap();
-        a.run("format.font", json!({"name": "Recent Font Beta"})).unwrap();
+        // Short names: the Mac font box is narrow enough to cut a long one with "…".
+        a.run("format.font", json!({"name": "Font Alpha"})).unwrap();
+        a.run("format.font", json!({"name": "Font Beta"})).unwrap();
         let mut h = harness(a);
         h.run_steps(6);
-        h.get(By::new().role(Role::TextInput).value("Recent Font Beta")).focus();
+        h.get(By::new().role(Role::TextInput).value("Font Beta")).focus();
         h.step();
         let key = |key, modifiers| egui::Event::Key { key, physical_key: None, pressed: true, repeat: false, modifiers };
         h.event(key(egui::Key::A, egui::Modifiers::COMMAND));
@@ -6067,24 +6068,24 @@ mod tests {
         h.run_steps(2);
         assert!(h.query(By::new().role(Role::TextInput).value("x")).is_some(), "the query replaced the font name");
         assert!(h.query_by_label("Recently Used Fonts").is_none(), "a query lists its matches only");
-        assert_eq!(h.query_all_by_label("Recent Font Alpha").count(), 0);
+        assert_eq!(h.query_all_by_label("Font Alpha").count(), 0);
         h.event(key(egui::Key::Backspace, egui::Modifiers::NONE));
         h.run_steps(2);
         assert!(h.query(By::new().role(Role::TextInput).value("")).is_some(), "Backspace cleared the query");
         assert!(h.query_by_label("Recently Used Fonts").is_some(), "the section shows while nothing is typed");
         assert!(h.query_by_label("All Fonts").is_some());
-        assert_eq!(h.query_all_by_label("Recent Font Beta").count(), 1);
-        assert_eq!(h.query_all_by_label("Recent Font Alpha").count(), 1);
+        assert_eq!(h.query_all_by_label("Font Beta").count(), 1);
+        assert_eq!(h.query_all_by_label("Font Alpha").count(), 1);
         // Down moves to the second recent font; Enter applies it.
         h.event(key(egui::Key::ArrowDown, egui::Modifiers::NONE));
         h.step();
         h.event(key(egui::Key::Enter, egui::Modifiers::NONE));
         h.run_steps(2);
         let st = h.state_mut().session.run("format.state", &json!({})).unwrap();
-        assert_eq!(st.get("font").and_then(Value::as_str), Some("Recent Font Alpha"));
-        assert_eq!(h.state().ui.recent_fonts, ["Recent Font Alpha", "Recent Font Beta"]);
+        assert_eq!(st.get("font").and_then(Value::as_str), Some("Font Alpha"));
+        assert_eq!(h.state().ui.recent_fonts, ["Font Alpha", "Font Beta"]);
         // The arrow's list has the sections too; a click on a heading leaves it open.
-        let field = h.get(By::new().role(Role::TextInput).value("Recent Font Alpha")).rect();
+        let field = h.get(By::new().role(Role::TextInput).value("Font Alpha")).rect();
         let arrow = egui::pos2(field.max.x + 8.0, field.center().y);
         for pressed in [true, false] {
             h.hover_at(arrow);

@@ -370,6 +370,9 @@ pub struct Tokens {
     /// Comment and revision balloons in the markup area beside the page (#2045): the card, the
     /// area behind it and its edge. The card holds `text`, so it is dark in the dark theme.
     pub balloon: Color32,
+    /// The selected balloon's card: the light theme's neutral grey `checked` (Word for Mac's
+    /// toggles) is too dark for the balloon's dim text, so it keeps a pale blue.
+    pub balloon_selected: Color32,
     pub markup_area: Color32,
     pub markup_edge: Color32,
     /// "Resolved" on a balloon: `green` is only 4.2:1 on the light card.
@@ -443,6 +446,7 @@ impl Tokens {
             crop_handle: Color32::BLACK,
             crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
             balloon: Color32::WHITE,
+            balloon_selected: Color32::from_rgb(0xDD, 0xE3, 0xF8),
             markup_area: Color32::from_rgb(0xF3, 0xF3, 0xF3),
             markup_edge: Color32::from_rgb(0xE0, 0xE0, 0xE0),
             resolved_text: Color32::from_rgb(0x1B, 0x6B, 0x42),
@@ -523,6 +527,7 @@ impl Tokens {
             crop_handle: Color32::BLACK,
             crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
             balloon: Color32::from_rgb(0x2B, 0x2B, 0x2B),
+            balloon_selected: Color32::from_rgb(0x2E, 0x3A, 0x66),
             markup_area: Color32::from_rgb(0x1B, 0x1B, 0x1B),
             markup_edge: Color32::from_rgb(0x3A, 0x3A, 0x3A),
             resolved_text: Color32::from_rgb(0x5B, 0xC0, 0x8A),
@@ -1050,7 +1055,7 @@ mod tests {
     #[test]
     fn comment_balloons_are_readable() {
         for t in [super::Tokens::light(), super::Tokens::dark()] {
-            for (name, card) in [("card", t.balloon), ("selected card", t.checked)] {
+            for (name, card) in [("card", t.balloon), ("selected card", t.balloon_selected)] {
                 for (what, fg) in [("text", t.text), ("dim text", t.text_dim), ("resolved label", t.resolved_text)] {
                     let r = contrast(fg, card);
                     assert!(r >= 4.5, "dark={}: {what} on the {name} is {r:.2}:1", t.dark);
@@ -1058,7 +1063,7 @@ mod tests {
             }
             // The light stripes are unchanged; only the dark theme's were unreadable.
             for (i, c) in t.author_colors.iter().enumerate().filter(|_| t.dark) {
-                for (name, bg) in [("card", t.balloon), ("selected card", t.checked), ("markup area", t.markup_area)] {
+                for (name, bg) in [("card", t.balloon), ("selected card", t.balloon_selected), ("markup area", t.markup_area)] {
                     let r = contrast(*c, bg);
                     assert!(r >= 3.0, "dark={}: author colour {i} on the {name} is {r:.2}:1", t.dark);
                 }

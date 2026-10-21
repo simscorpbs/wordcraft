@@ -661,12 +661,15 @@ mod tests {
         let mut h = bar_over("brown fox");
         h.state_mut().run("format.highlight", json!({"color": "yellow"})).unwrap();
         steps(&mut h);
-        // The bar's split buttons are Highlight then Font Color; their arrows are 11 × 22.
+        // The bar's split buttons are Highlight then Font Color; their arrows are
+        // `COMBO_ARROW_WIDTH` wide and a compact control tall.
         let highlight_arrow = |h: &egui_kittest::Harness<'static, WordApp>| {
             let [bar, _] = h.ctx.data(|d| d.get_temp::<[Rect; 2]>(shown_id())).expect("the bar is shown over a selection");
-            h.query_all(
-                By::new().predicate(|n| n.raw_bounds().is_some_and(|r| ((r.x1 - r.x0) - 11.0).abs() < 0.5 && ((r.y1 - r.y0) - 22.0).abs() < 0.5)),
-            )
+            h.query_all(By::new().predicate(|n| {
+                n.raw_bounds().is_some_and(|r| {
+                    ((r.x1 - r.x0) - f64::from(crate::widgets::COMBO_ARROW_WIDTH)).abs() < 0.5 && (r.y1 - r.y0) >= 18.0 && (r.y1 - r.y0) <= 24.5
+                })
+            }))
             .map(|n| n.rect())
             .filter(|r| bar.contains_rect(*r))
             .min_by(|a, b| a.min.x.total_cmp(&b.min.x))

@@ -2026,7 +2026,7 @@ fn author_name(a: &str) -> String {
 fn card_shapes(painter: &egui::Painter, t: &Tokens, card: Rect, color: Color32, selected: bool, slot: Option<egui::layers::ShapeIdx>) {
     let shapes = vec![
         egui::Shape::rect_filled(card.translate(vec2(0.0, 1.0)), 4.0, t.page_shadow),
-        egui::Shape::rect_filled(card, 4.0, if selected { t.checked } else { t.balloon }),
+        egui::Shape::rect_filled(card, 4.0, if selected { t.balloon_selected } else { t.balloon }),
         egui::Shape::rect_stroke(card, 4.0, Stroke::new(if selected { 1.5 } else { 1.0 }, color), egui::StrokeKind::Inside),
         egui::Shape::rect_filled(Rect::from_min_size(card.min, vec2(4.0, card.height())), egui::CornerRadius { nw: 4, sw: 4, ne: 0, se: 0 }, color),
     ];
@@ -2932,7 +2932,8 @@ fn ruler_mark(p: &egui::Painter, at: Pos2, bar: Rect, mark: RulerMark, horizonta
             } else {
                 let r = Rect::from_center_size(at, vec2(size.y, size.x));
                 if !keep_clear.iter().any(|o| o.intersects(r)) {
-                    let text = egui::epaint::TextShape::new(at, galley, color)
+                    // The anchor is the galley's centre, so it turns about `at`.
+                    let text = egui::epaint::TextShape::new(at - size / 2.0, galley, color)
                         .with_angle_and_anchor(std::f32::consts::FRAC_PI_2, egui::Align2::CENTER_CENTER);
                     p.add(text);
                     return;
@@ -5735,7 +5736,7 @@ mod tests {
         let mut d = DrawnRulers::default();
         if let Some(area) = a.canvas.canvas_rect {
             let h = Rect::from_min_max(pos2(area.min.x, area.min.y - RULER), pos2(area.max.x, area.min.y));
-            let v = Rect::from_min_max(pos2(area.min.x - RULER, area.min.y), pos2(area.min.x, area.max.y));
+            let v = Rect::from_min_max(pos2(area.min.x - V_RULER, area.min.y), pos2(area.min.x, area.max.y));
             for c in &out.shapes {
                 match &c.shape {
                     // The bars: the widest grey rect across the top strip, the tallest down the
@@ -5750,10 +5751,13 @@ mod tests {
                         }
                     }
                     egui::Shape::Text(text) => {
-                        let centre = text.pos + text.galley.size() / 2.0;
-                        if text.pos.y >= h.min.y && text.pos.y < h.max.y && text.pos.x >= h.min.x {
+                        // The vertical ruler's numbers are turned a quarter turn about their centre.
+                        let half = text.galley.size() / 2.0;
+                        let (sin, cos) = text.angle.sin_cos();
+                        let centre = text.pos + vec2(half.x * cos - half.y * sin, half.x * sin + half.y * cos);
+                        if centre.y >= h.min.y && centre.y < h.max.y && centre.x >= h.min.x {
                             d.h_labels.push((text.galley.text().to_owned(), centre.x));
-                        } else if text.pos.x >= v.min.x && text.pos.x < v.max.x && text.pos.y >= v.min.y && text.pos.y < v.max.y {
+                        } else if centre.x >= v.min.x && centre.x < v.max.x && centre.y >= v.min.y && centre.y < v.max.y {
                             d.v_labels.push((text.galley.text().to_owned(), centre.y));
                         }
                     }
@@ -5831,7 +5835,9 @@ mod tests {
         let d = frames(&mut a, &mut t);
         assert_eq!(names(&d.h_labels), ["1", "2", "3", "4", "5", "6"]);
         let down = names(&d.v_labels);
-        assert!(down.len() >= 6 && down[..6] == ["1", "2", "3", "4", "5", "6"], "down the page to the bottom of the view: {down:?}");
+        // As far down as the view shows (the Mac-style chrome leaves five inches of the page).
+        let counted: Vec<String> = (1..=down.len()).map(|n| n.to_string()).collect();
+        assert!(down.len() >= 5 && down == counted, "down the page to the bottom of the view: {down:?}");
         let pr = a.canvas.page_rects[0];
         let scale = pr.width() / 612.0;
         assert!((d.v_labels[0].1 - (pr.min.y + 144.0 * scale)).abs() < 1.0, "the first number is an inch below the top margin");
