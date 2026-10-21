@@ -42,17 +42,22 @@ fn rename(s: &mut Session, v: &Value) -> CmdResult {
     {
         return Err(CmdError::Params("Enter a valid document name (up to 200 characters, without path separators).".into()));
     }
-    if let Some(path) = &s.path {
+    if let Some(path) = s.path.clone() {
         let mut destination = path.with_file_name(name);
         // The field edits the stem; retain the original format, including macro/template files.
         if let Some(ext) = path.extension() {
             destination.set_file_name(format!("{name}.{}", ext.to_string_lossy()));
         }
-        if destination != *path {
+        if destination != path {
+            // The history bucket is keyed by the canonical path, which only resolves while the
+            // file is still there.
+            let previous = crate::versions::canonical_path(&path);
             #[cfg(not(target_arch = "wasm32"))]
             {
-                crate::io::rename_file(path, &destination).map_err(CmdError::Failed)?;
+                crate::io::rename_file(&path, &destination).map_err(CmdError::Failed)?;
             }
+            // Like OneDrive, a renamed document keeps its version history.
+            s.versions_renamed(previous, &destination);
             s.path = Some(destination);
         }
     } else {
@@ -308,13 +313,18 @@ pub(crate) fn save(s: &mut Session, v: &Value) -> CmdResult {
     {
         return Ok(json!({"saved": false, "conflict": conflict.id(), "path": path.to_string_lossy()}));
     }
+    // Before the document's file (or a file Save As replaces) is written over, the bytes there
+    // go into its version history unless they are in it already. Never fails the save.
+    if KEEPS_PATH.contains(&ext.as_str()) || s.path.as_deref() == Some(path.as_path()) {
+        s.protect_before_overwrite(&path);
+    }
     s.stamp_save();
     let password = s.password.as_ref().map(crate::io::Password::as_str);
     // A header/footer just made and left empty isn't saved (#960).
     let copy = super::insert::saved_copy(s);
     let stamp = crate::io::save_path_stamped(&path, copy.as_ref().unwrap_or(&s.doc), password, &opts).map_err(CmdError::Failed)?;
     let encrypted = password.is_some() && crate::io::can_encrypt(&path.to_string_lossy());
-    if ["docx", "docm", "dotx", "dotm", "odt", "rtf", "json", "xml"].contains(&ext.as_str()) {
+    if KEEPS_PATH.contains(&ext.as_str()) {
         s.path = Some(path.clone());
         s.dirty = false;
         s.cloud.stamp = stamp;
@@ -322,6 +332,9 @@ pub(crate) fn save(s: &mut Session, v: &Value) -> CmdResult {
     }
     Ok(json!({"saved": true, "path": path.to_string_lossy(), "encrypted": encrypted}))
 }
+
+/// Formats saved without loss: saving to one makes the file the document's own (its path).
+const KEEPS_PATH: &[&str] = &["docx", "docm", "dotx", "dotm", "odt", "rtf", "json", "xml"];
 
 /// Does `path` hold a Word 2003 XML Document already (so a plain save keeps that format)?
 #[cfg(not(target_arch = "wasm32"))]
