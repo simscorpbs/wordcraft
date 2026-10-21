@@ -2160,3 +2160,27 @@ fn right_arrow_moves_through_a_ligature_one_letter_at_a_time() {
     assert_eq!(offs, [0, 1, 2, 3]);
     assert!(xs.windows(2).all(|w| w[0].1 < w[1].1), "caret x after each Right press: {xs:?}");
 }
+
+#[test]
+fn ctrl_left_steps_over_a_typed_apostrophe_and_stops_at_punctuation() {
+    // Smart quotes type `doesn’t`: Ctrl+Left goes to the start of the whole word, and Ctrl+Left
+    // and Ctrl+Right stop at the same places (a full stop is a word of its own, as in Word).
+    let mut s = typed("It doesn't end. Now");
+    assert_eq!(texts(&s), ["it doesn\u{2019}t end. now"]);
+    let mut left = Vec::new();
+    while s.sel.focus.off > 0 {
+        run(&mut s, "caret.wordLeft", json!({}));
+        left.push(s.sel.focus.off);
+    }
+    let mut right = Vec::new();
+    while s.sel.focus.off < 21 {
+        run(&mut s, "caret.wordRight", json!({}));
+        right.push(s.sel.focus.off);
+    }
+    assert_eq!(left, [18, 16, 13, 3, 0]);
+    assert_eq!(right, [3, 13, 16, 18, 21]);
+    // Ctrl+Backspace takes the word the caret is after, apostrophe and all.
+    run(&mut s, "caret.set", json!({"pos": {"story": "body", "path": [0], "off": 13}}));
+    run(&mut s, "text.deleteWordBack", json!({}));
+    assert_eq!(texts(&s), ["it end. now"]);
+}
