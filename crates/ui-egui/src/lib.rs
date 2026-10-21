@@ -7177,7 +7177,8 @@ mod tests {
         let key = wordcraft_engine::autosave::path_text_key(&path.to_string_lossy());
         let same: Vec<_> = a.ui.recent.iter().filter(|r| wordcraft_engine::autosave::path_text_key(r) == key).collect();
         assert_eq!(same.len(), 1, "{:?}", a.ui.recent);
-        assert_eq!(a.ui.recent.first(), Some(&other));
+        // Listed under the name on disk, whatever spelling it was opened with.
+        assert_eq!(a.ui.recent.first(), Some(&wordcraft_engine::io::opened_path(&path.to_string_lossy())));
         let _ = std::fs::remove_dir_all(&dir);
     }
 
