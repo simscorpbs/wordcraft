@@ -1518,7 +1518,11 @@ pub(crate) fn walk_between(bl: &Blocks, prefix: &mut Vec<u32>, out: &mut Vec<Pat
         let m = q.len().min(x.len());
         q[..m].cmp(&x[..m])
     };
-    for (i, blk) in bl.iter().enumerate() {
+    // Where to start among the children of `q`: at `a`'s own child when `q` leads to `a` (every
+    // child before it lies before `a`), else at the first. So a range late in a long story is
+    // found without stepping through every block before it.
+    let first = |q: &[u32]| if a.starts_with(q) { a.get(q.len()).map_or(0, |&i| i as usize) } else { 0 };
+    for (i, blk) in bl.iter().enumerate().skip(first(prefix)) {
         prefix.push(i as u32);
         if side(prefix, b) == Greater {
             prefix.pop();
@@ -1532,7 +1536,13 @@ pub(crate) fn walk_between(bl: &Blocks, prefix: &mut Vec<u32>, out: &mut Vec<Pat
                     }
                 }
                 Block::Table(t) => {
-                    for (r, row) in t.rows.iter().enumerate() {
+                    for (r, row) in t.rows.iter().enumerate().skip(first(prefix)) {
+                        prefix.push(r as u32);
+                        let after = side(prefix, b) == Greater;
+                        prefix.pop();
+                        if after {
+                            break;
+                        }
                         for (c, cell) in row.cells.iter().enumerate() {
                             prefix.push(r as u32);
                             prefix.push(c as u32);

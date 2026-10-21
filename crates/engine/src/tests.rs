@@ -8574,3 +8574,20 @@ fn rtf_list_round_trip_keeps_text() {
         assert_eq!(d.plain_text(StoryRef::Body), "first\nsecond", "{cmd}");
     }
 }
+
+/// Replace All in a long document: each replacement's delete once stepped through every block
+/// before it to find the paragraphs it spans, quadratic in the document's length.
+/// `cargo test -p wordcraft-engine --release replace_all_long_document_bench -- --ignored --nocapture`
+/// (`WORDCRAFT_BENCH_PARAS=n` for another length).
+#[test]
+#[ignore]
+fn replace_all_long_document_bench() {
+    let n = std::env::var("WORDCRAFT_BENCH_PARAS").ok().and_then(|v| v.parse().ok()).unwrap_or(20_000usize);
+    let text: Vec<String> = (0..n).map(|i| format!("Paragraph {i} has a handful of ordinary words in it.")).collect();
+    let mut s = s();
+    run(&mut s, "document.setText", json!({"text": text.join("\n")}));
+    let t = std::time::Instant::now();
+    let r = run(&mut s, "edit.replaceAll", json!({"text": "ordinary", "with": "common"}));
+    eprintln!("{n} paragraphs: Replace All of {} took {:.1} ms", r["replaced"], t.elapsed().as_secs_f64() * 1e3);
+    assert_eq!(r["replaced"], n);
+}
