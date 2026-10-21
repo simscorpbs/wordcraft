@@ -2230,24 +2230,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
                 let shift = match stop.align {
                     TabAlign::Right => stop.pos - tx - seg_w,
                     TabAlign::Center => stop.pos - tx - seg_w / 2.0,
-                    TabAlign::Decimal => {
-                        // Width up to the first '.' in the segment.
-                        let mut w = 0.0;
-                        let mut found = false;
-                        for k in tj + 1..=j {
-                            let Some(cc) = pl.clusters.get(k) else { break };
-                            let s = pl_text_at(cc);
-                            if found {
-                                break;
-                            }
-                            if s {
-                                found = true;
-                                break;
-                            }
-                            w += cc.adv;
-                        }
-                        stop.pos - tx - if found { w } else { seg_w }
-                    }
+                    TabAlign::Decimal => stop.pos - tx - before_decimal(pl, tj + 1, j + 1).unwrap_or(seg_w),
                     _ => 0.0,
                 };
                 let shift = shift.max(0.0);
@@ -2853,16 +2836,29 @@ fn hyphenation_points(text: &str, to_para: impl Fn(usize) -> Option<usize>, pl: 
     out
 }
 
-fn pl_text_at(c: &Cluster) -> bool {
-    c.dot
+/// The width of clusters `from..to` (a decimal tab's text) before the first decimal separator
+/// among them, `None` when there is none.
+fn before_decimal(pl: &ParaLayout, from: usize, to: usize) -> Option<f32> {
+    let mut w = 0.0;
+    for c in pl.clusters.get(from..to)? {
+        if c.dot {
+            return Some(w);
+        }
+        w += c.adv;
+    }
+    None
 }
 
 fn resolve_tab(pl: &mut ParaLayout, pending: &mut Option<(usize, TabStop, f32)>, xs: &mut [f32], c0: usize, x: f32, xo: &mut f32) {
     // Finish a centre/right/decimal tab: its text (possibly empty) ends at `x`.
     let Some((tj, stop, tx)) = pending.take() else { return };
     let seg = x - tx - pl.clusters.get(tj).map(|c| c.adv).unwrap_or(0.0);
+    // The text placed after the tab: the clusters up to the line's last placed one.
+    let placed = c0 + xs.len();
     let want = match stop.align {
-        TabAlign::Right | TabAlign::Decimal => stop.pos - tx - seg,
+        TabAlign::Right => stop.pos - tx - seg,
+        // The decimal point on the stop; a number without one ends there.
+        TabAlign::Decimal => stop.pos - tx - before_decimal(pl, tj + 1, placed).unwrap_or(seg),
         TabAlign::Center => stop.pos - tx - seg / 2.0,
         _ => return,
     }

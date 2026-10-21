@@ -941,6 +941,28 @@ fn right_tab_aligns_text_end() {
     assert!((end - 472.0).abs() < 1.0, "{end}");
 }
 
+/// A decimal tab lines up the decimal point on the stop, whether the line ends after the number,
+/// another tab follows it or a line break does; a number without a point ends on the stop.
+#[test]
+fn decimal_tab_aligns_the_decimal_point() {
+    use wordcraft_doc::props::{TabAlign, TabStop};
+    // `at` is the offset of the decimal point (or of the number's end).
+    let x_at = |text: &str, at: usize| {
+        let mut d = Document::new();
+        d.body = vec![wordcraft_doc::para_block(wordcraft_doc::Paragraph::with_text(text, Default::default()))];
+        d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| {
+            p.tabs = Some(vec![TabStop { pos: 200.0, align: TabAlign::Decimal, leader: Default::default() }]);
+        })
+        .unwrap();
+        lay(&d).caret(&Pos::body(0, at)).unwrap().x
+    };
+    // The stop is 200 pt from the left margin (72 pt); a line break is `LINE_BREAK` ('\n').
+    for (text, at) in [("a\t12.50", 4), ("a\t7.5", 3), ("a\t1234.5\tz", 6), ("a\t3.25\nnext", 3), ("a\t42", 4)] {
+        let x = x_at(text, at);
+        assert!((x - 272.0).abs() < 0.5, "{text:?}: point at {x}, stop at 272");
+    }
+}
+
 /// A paragraph `before` + positional tab + `after`, with left and right indents and a custom
 /// left tab stop at 50 pt that the positional tab must ignore.
 fn ptab_doc(before: &str, after: &str, ptab: InlineObject, indents: (f32, f32)) -> Document {
