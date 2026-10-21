@@ -3231,6 +3231,62 @@ fn hostile_params_never_panic() {
     }
 }
 
+/// Inserting a table in the cell of a table thousands of times overflowed the stack (layout,
+/// saving and freeing the document all recurse into cells) and crashed the app. Edits now stop at
+/// `MAX_TABLE_NESTING`; the refused one changes nothing.
+#[test]
+fn nested_tables_stop_at_the_nesting_limit() {
+    let max = wordcraft_doc::MAX_TABLE_NESTING;
+    let mut s = s();
+    for i in 0..5000 {
+        let r = s.run("insert.table", &json!({"rows": 1, "cols": 1}));
+        assert_eq!(r.is_ok(), i < max, "insert {i}: {r:?}");
+    }
+    assert_eq!(s.doc.table_depth(), max);
+    let err = s.run("insert.table", &json!({"rows": 1, "cols": 1})).unwrap_err().to_string();
+    assert!(err.contains("nest"), "{err}");
+    // Pasting nested tables into the innermost cell is refused as well.
+    let html = "<table><tr><td><table><tr><td>x</td></tr></table></td></tr></table>";
+    let err = s.run("edit.paste", &json!({"html": html})).unwrap_err().to_string();
+    assert!(err.contains("nest"), "{err}");
+    assert_eq!(s.doc.table_depth(), max);
+    // The deepest cell still takes text, and the document lays out, saves and reopens.
+    run(&mut s, "text.insert", json!({"text": "deep"}));
+    assert!(text(&s).contains("deep"));
+    assert!(!s.layout().pages.is_empty());
+    let bytes = crate::io::save_bytes("a.docx", &s.doc).unwrap();
+    assert!(crate::io::open_bytes("a.docx", &bytes).is_ok());
+    for f in ["a.html", "a.rtf", "a.odt", "a.md", "a.txt"] {
+        assert!(crate::io::save_bytes(f, &s.doc).is_ok(), "{f}");
+    }
+}
+
+/// A file opened deeper than the limit (readers cap nesting themselves) can still be edited; only
+/// nesting it further is refused.
+#[test]
+fn a_document_nested_past_the_limit_still_edits() {
+    use std::sync::Arc;
+    use wordcraft_doc::Block;
+    use wordcraft_doc::table::Table;
+    let mut inner = Block::Table(Table::new(1, 1, 400.0));
+    for _ in 0..wordcraft_doc::MAX_TABLE_NESTING + 3 {
+        let mut t = Table::new(1, 1, 400.0);
+        if let Some(c) = t.rows.first_mut().and_then(|r| r.cells.first_mut()) {
+            c.blocks = vec![Arc::new(inner)];
+        }
+        inner = Block::Table(t);
+    }
+    let mut doc = wordcraft_doc::Document::from_text("Top");
+    doc.body.push(Arc::new(inner));
+    let mut s = Session::new(doc);
+    let deep = s.doc.table_depth();
+    assert_eq!(deep, wordcraft_doc::MAX_TABLE_NESTING + 4);
+    run(&mut s, "text.insert", json!({"text": "Still "}));
+    assert!(text(&s).starts_with("Still Top"), "{}", text(&s));
+    run(&mut s, "insert.table", json!({"rows": 2, "cols": 2}));
+    assert_eq!(s.doc.table_depth(), deep);
+}
+
 #[test]
 fn inspect_reports_structure() {
     let mut s = Session::new(crate::sample::sample_document());
