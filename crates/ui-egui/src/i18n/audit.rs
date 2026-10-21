@@ -379,7 +379,7 @@ fn complete_catalogs_have_every_string_the_interface_looked_up(mut keys: std::co
     // translate: its placeholder names aren't words the interface shows.
     let words = |s: &str| english_words(&s.split('{').map(|p| p.split_once('}').map_or(p, |(_, rest)| rest)).collect::<String>());
     let mut report = String::new();
-    for code in ["ru", "hu", "tr", "bg", "it", "sv", "hr", "pl"] {
+    for code in ["ru", "hu", "tr", "bg", "it", "sv", "hr", "pl", "pt-br"] {
         let lang = super::Lang::from_code(code).unwrap_or(super::Lang::EN);
         let missing: Vec<&String> =
             keys.iter().filter(|s| words(s) && !super::has(lang, s) && !numbered(s) && !same(s) && !script_error(s)).collect();

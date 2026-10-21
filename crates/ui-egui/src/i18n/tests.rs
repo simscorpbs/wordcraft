@@ -352,8 +352,33 @@ fn brazilian_portuguese_locales_and_saved_preference_work_without_changing_the_d
 fn brazilian_portuguese_covers_the_entire_existing_interface_catalog() {
     use std::collections::HashSet;
     let keys = |source| parse_entries(source).0.into_iter().map(|e| e.source).collect::<HashSet<_>>();
-    assert_eq!(keys(lang("pt-br").0.source), keys(lang("zh-hans").0.source));
+    let pt_keys = keys(lang("pt-br").0.source);
+    let mut missing: Vec<String> = keys(lang("zh-hans").0.source).difference(&pt_keys).cloned().collect();
+    missing.sort();
+    assert!(missing.is_empty(), "pt-br lacks {missing:?}");
     let pt = lang("pt-br");
+    // Labels a Brazilian Word user reads every day: the big Review button, the built-in styles,
+    // the cross-reference dialog and the hyperlink dialog's place in the document.
+    assert_eq!(tr(pt, "Track\nChanges"), "Controlar\nalterações");
+    assert_eq!(tr(pt, "Quote"), "Citação");
+    assert_eq!(tr(pt, "Footnote Text"), "Texto de nota de rodapé");
+    assert_eq!(tr(pt, "No Spacing"), "Sem espaçamento");
+    assert_eq!(tr(pt, "Reference type:"), "Tipo de referência:");
+    assert_eq!(tr(pt, "Place in This Document"), "Local neste documento");
+    set_current(pt);
+    assert_eq!(builtin_style_name("TOC 3"), "Sumário 3");
+    assert_eq!(builtin_style_name("Heading 7"), "Título 7");
+    // Every built-in paragraph and character style shows in Portuguese in the Styles gallery.
+    let sheet = wordcraft_doc::StyleSheet::builtin();
+    let untranslated: Vec<&str> = sheet
+        .styles
+        .iter()
+        .filter(|s| s.kind != wordcraft_doc::StyleKind::Table && style_name(s) == s.name && s.name.chars().any(char::is_alphabetic))
+        .map(|s| s.name.as_str())
+        .filter(|n| *n != "Normal")
+        .collect();
+    set_current(Lang::EN);
+    assert!(untranslated.is_empty(), "built-in styles without a Portuguese name: {untranslated:?}");
     assert_eq!(tr(pt, "Home"), "Início");
     assert_eq!(tr(pt, "Font"), "Fonte");
     assert_eq!(tr(pt, "Review"), "Revisão");
@@ -991,8 +1016,9 @@ fn polish_covers_every_key_of_every_other_catalog() {
     // Hungarian and Bulgarian also name the citation styles, and Bulgarian has a few one-line
     // pieces of gallery labels. Polish matches every other catalog, including the built-in style
     // names, citation styles and equation gallery. French carries newer strings (paper sizes,
-    // bookmarks, printing) the Polish catalog hasn't caught up with yet.
-    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "pl" | "it" | "hu" | "bg" | "vi" | "sv" | "hr" | "fr")) {
+    // bookmarks, printing) the Polish catalog hasn't caught up with yet; Brazilian Portuguese
+    // carries newer ones still (recovery, cross-references, source import).
+    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "pl" | "it" | "hu" | "bg" | "vi" | "sv" | "hr" | "fr" | "pt-br")) {
         let mut missing: Vec<String> = keys(other.0.source).difference(&polish).cloned().collect();
         missing.sort();
         assert!(missing.is_empty(), "pl lacks {}'s {missing:?}", other.code());
@@ -1337,7 +1363,8 @@ fn croatian_covers_the_entire_existing_interface_catalog_and_keeps_count_labels_
     let keys = |source| parse_entries(source).0.into_iter().map(|e| e.source).collect::<HashSet<_>>();
     let hr = lang("hr");
     // Every key of every other catalog, and no catalog errors.
-    for other in Lang::all().filter(|l| *l != Lang::EN && l.code() != "hr") {
+    // Brazilian Portuguese carries newer strings (recovery, cross-references, source import).
+    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "hr" | "pt-br")) {
         let mut missing: Vec<String> = keys(other.0.source).difference(&keys(hr.0.source)).cloned().collect();
         missing.sort();
         // Italian and Hungarian still carry "Style: APA", which the interface no longer shows.
@@ -1509,7 +1536,8 @@ fn vietnamese_covers_existing_catalog_keys_with_an_explicit_preview_fallback() {
     assert_eq!(trc(vi, "preview", "Title"), tr(vi, "Title"));
     // Compare complete (context, source) keys so a contextual entry cannot hide a missing plain
     // translation, or silently satisfy another context's key.
-    for other in Lang::all().filter(|l| *l != Lang::EN && l.code() != "vi") {
+    // Brazilian Portuguese carries newer strings (recovery, cross-references, source import).
+    for other in Lang::all().filter(|l| *l != Lang::EN && !matches!(l.code(), "vi" | "pt-br")) {
         let (entries, errors) = parse_entries(other.0.source);
         assert!(errors.is_empty(), "{}: {errors:?}", other.code());
         let keys: HashSet<_> = entries.into_iter().map(|e| (e.context, e.source)).collect();
