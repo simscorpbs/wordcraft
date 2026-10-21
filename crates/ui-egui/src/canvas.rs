@@ -388,7 +388,15 @@ fn collapse_white_space(rects: &[Rect], bodies: &[(f32, f32)], scale: f32, avail
 
 /// True when any page is cut to a band (white space is hidden).
 fn white_space_hidden(rects: &[Rect], bands: &[(f32, f32)]) -> bool {
-    rects.iter().zip(bands).any(|(r, b)| b.0 > 0.5 || b.1 < r.height() - 0.5)
+    rects.iter().zip(bands).any(|(r, b)| !shows_whole_page(*b, r.height()))
+}
+
+/// True when a page `height` tall shows whole: its band ([`Geometry::bands`]) isn't cut by
+/// Hide White Space. Within half a point, as a rect moved onto the screen can lose a rounding
+/// step of its height; an exact test then clipped every page to its band, which cut the page
+/// shadow off at the top and bottom and to 4 points at the sides.
+fn shows_whole_page(band: (f32, f32), height: f32) -> bool {
+    band.0 <= 0.5 && band.1 >= height - 0.5
 }
 
 /// True when a double-click at `p` is on the space between two pages (or on the seam when white
@@ -1278,7 +1286,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                 continue;
             }
             let band = band_of(visual_sr);
-            let painter = if band_top <= 0.0 && band_bot >= sr.height() {
+            let painter = if shows_whole_page((band_top, band_bot), pr.height()) {
                 painter.clone()
             } else {
                 painter.with_clip_rect(painter.clip_rect().intersect(band))
@@ -5486,6 +5494,24 @@ mod tests {
         for bad in [0.0, -3.0, f32::NAN, f32::INFINITY] {
             assert_eq!(drawing_grid_step(bad, PX_PER_PT), grid);
         }
+    }
+
+    /// A page moved onto the screen can come out a rounding step shorter than its geometry. It
+    /// still shows whole, so its shadow isn't clipped to the page (no shadow above or below it,
+    /// a hard 4-point band at its sides); a page Hide White Space cuts to a band doesn't.
+    #[test]
+    fn a_whole_page_moved_onto_the_screen_still_shows_whole() {
+        let page = Rect::from_min_size(pos2(0.0, GAP), vec2(654.8, 926.3));
+        let band = (0.0, page.height());
+        let shorter = (0..2000)
+            .map(|i| page.translate(vec2(0.0, 31.0 + i as f32 * 0.37)))
+            .filter(|sr| sr.height() < page.height())
+            .inspect(|sr| assert!(shows_whole_page(band, sr.height())))
+            .count();
+        assert!(shorter > 0, "some offset rounds the height down, as on screen");
+        assert!(shows_whole_page(band, page.height()));
+        assert!(!shows_whole_page((40.0, page.height()), page.height()), "the top margin hidden");
+        assert!(!shows_whole_page((0.0, page.height() - 40.0), page.height()), "the bottom margin hidden");
     }
 
     #[test]
