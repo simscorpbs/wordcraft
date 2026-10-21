@@ -9423,3 +9423,31 @@ fn caret_height_ignores_line_spacing() {
         assert!((single - wide).abs() < 0.01, "{spacing:?}: single {single}, wide {wide}");
     }
 }
+
+/// Laying a long document out again after typing one letter in it, as each keystroke does: every
+/// paragraph's lines come from the cache, so the time is pagination's. A pass once found the
+/// sections (a walk of the whole body) again for each page, quadratic in the document's length.
+/// `cargo test -p wordcraft-layout --release relayout_after_typing_bench -- --ignored --nocapture`
+/// (`WORDCRAFT_BENCH_PARAS=n` for another length).
+#[test]
+#[ignore]
+fn relayout_after_typing_bench() {
+    let n = std::env::var("WORDCRAFT_BENCH_PARAS").ok().and_then(|v| v.parse().ok()).unwrap_or(30_000usize);
+    let text: Vec<String> =
+        (0..n).map(|i| format!("Paragraph {i} has a handful of ordinary words so that it wraps across a line or two of the page.")).collect();
+    let mut d = Document::from_text(&text.join("\n"));
+    let mut c = LayoutCache::new();
+    let opts = LayoutOptions::default();
+    let pages = layout(&d, &mut c, &opts).pages.len();
+    let mut ms = Vec::new();
+    for _ in 0..15 {
+        if let Ok(p) = d.para_mut(StoryRef::Body, &Path::top(n / 2)) {
+            let _ = p.insert_text(5, "x", &Default::default());
+        }
+        let t = std::time::Instant::now();
+        let _ = layout(&d, &mut c, &opts);
+        ms.push(t.elapsed().as_secs_f64() * 1e3);
+    }
+    ms.sort_by(f64::total_cmp);
+    eprintln!("{n} paragraphs, {pages} pages: relayout after a keystroke {:.1} ms (median of {})", ms[ms.len() / 2], ms.len());
+}

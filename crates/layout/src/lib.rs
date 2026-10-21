@@ -724,6 +724,9 @@ struct Ctx<'a> {
     pin: Option<Pin>,
     footer_wraps: HashMap<(usize, u32, bool), Vec<WrapArea>>,
     header_tables: HashMap<(usize, u32, bool), Vec<Rect>>,
+    /// The document's sections ([`Document::sections`]), found once per pass: finding them walks
+    /// the whole body, too slow to repeat for every page of a long document.
+    sections: Vec<(usize, &'a SectionProps)>,
     /// Heights of text boxes that resize to fit their text, by (story, width), worked out once
     /// per layout ([`textbox::fitted_height`]).
     fitted: HashMap<(u32, u32), Option<f32>>,
@@ -2213,8 +2216,9 @@ fn layout_pass(
         header_tables: HashMap::new(),
         footer_wraps: HashMap::new(),
         pin: None,
+        sections: doc.sections(),
     };
-    let sections = doc.sections();
+    let sections = ctx.sections.clone();
     let web = matches!(opts.view, ViewMode::Web | ViewMode::Draft | ViewMode::Outline);
     let read = opts.view == ViewMode::Read;
     let reflow = web || read;
@@ -3129,7 +3133,7 @@ fn footer_table_wraps(ctx: &mut Ctx, pb: &PageBuilder) -> Vec<WrapArea> {
     }
     ctx.footer_wraps.insert(key, Vec::new());
     let doc = ctx.doc;
-    let sections = doc.sections();
+    let sections = ctx.sections.clone();
     let Some((_, sect)) = sections.get(page.section) else { return Vec::new() };
     if sect.text_direction.is_turned() {
         return Vec::new();
@@ -4198,7 +4202,7 @@ fn header_table_areas(ctx: &mut Ctx, pb: &PageBuilder) -> Vec<Rect> {
     if let Some(areas) = ctx.header_tables.get(&key) {
         return areas.clone();
     }
-    let sections = ctx.doc.sections();
+    let sections = ctx.sections.clone();
     let Some((_, sect)) = sections.get(page.section) else { return Vec::new() };
     if sect.text_direction.is_turned() {
         return Vec::new();
