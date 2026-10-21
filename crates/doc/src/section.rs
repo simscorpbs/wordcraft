@@ -732,6 +732,11 @@ pub struct SectionProps {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub form_prot: Option<bool>,
     pub page_borders: Option<Borders>,
+    /// The page borders' `space` is measured from the text, not from the page edge
+    /// (`w:pgBorders w:offsetFrom="text"`, ECMA-376 §17.6.10, the default when a file omits it).
+    /// New borders are measured from the page edge, as Word makes them.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub page_borders_from_text: bool,
     /// Text direction / bidi section.
     pub rtl: bool,
     /// Which way the section's text runs (`w:textDirection`, ECMA-376 §17.6.20): vertical
@@ -779,6 +784,7 @@ impl Default for SectionProps {
             valign: PageVAlign::Top,
             form_prot: None,
             page_borders: None,
+            page_borders_from_text: false,
             rtl: false,
             text_direction: crate::props::TextDirection::Horizontal,
             text_direction_set: false,

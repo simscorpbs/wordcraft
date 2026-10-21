@@ -9647,3 +9647,27 @@ fn caret_height_ignores_line_spacing() {
         assert!((single - wide).abs() < 0.01, "{spacing:?}: single {single}, wide {wide}");
     }
 }
+
+/// Page borders measured from the text sit `space` outside the text area; from the page edge,
+/// `space` inside the paper (`w:pgBorders w:offsetFrom`).
+#[test]
+fn page_borders_measure_from_the_page_edge_or_the_text() {
+    let mut d = Document::from_text("one");
+    let border = wordcraft_doc::props::Border { space: 10.0, ..wordcraft_doc::props::Border::single(1.0) };
+    d.last_section.page_borders = Some(wordcraft_doc::props::Borders::box_(border));
+    let top_rule = |d: &Document| {
+        let l = lay(d);
+        l.pages[0]
+            .items
+            .iter()
+            .find_map(|i| match i {
+                Placed::Rule { x0, y0, y1, .. } if (y0 - y1).abs() < 0.01 => Some((*x0, *y0)),
+                _ => None,
+            })
+            .unwrap()
+    };
+    assert_eq!(top_rule(&d), (10.0, 10.0));
+    d.last_section.page_borders_from_text = true;
+    let s = &d.last_section;
+    assert_eq!(top_rule(&d), (s.margin_left - 10.0, s.margin_top - 10.0));
+}
