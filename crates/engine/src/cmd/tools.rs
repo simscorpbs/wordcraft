@@ -10,7 +10,7 @@ use wordcraft_doc::props::{CharProps, NumRef};
 use wordcraft_doc::{Block, Document, Paragraph, Pos, RevisionKind, StoryRef, para_block};
 
 use super::{delete_selection, sel_result};
-use crate::versions::{OpenedVersion, VersionInfo, VersionKind, local_timestamp};
+use crate::versions::{OpenedVersion, VersionInfo, local_timestamp};
 use crate::{CmdError, CmdResult, CommandSpec, Selection, Session, p};
 
 /// Smileys replaced even when typed straight after a word ("ok:)"), as Word does.
@@ -65,8 +65,9 @@ fn open_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     if encrypted {
         s.password = password.as_deref().map(crate::io::Password::new);
     }
+    let original_dirty = s.opened_version.as_ref().map_or(s.dirty, |version| version.original_dirty);
     s.dirty = false;
-    s.opened_version = Some(OpenedVersion { path: source, info: info.clone(), original_doc, original_sel });
+    s.opened_version = Some(OpenedVersion { path: source, info: info.clone(), original_doc, original_sel, original_dirty });
     Ok(json!({"opened": info.id, "savedAt": info.saved_at, "name": s.file_name.clone()}))
 }
 
@@ -75,6 +76,14 @@ fn restore_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     let (info, bytes) = s.read_version(&source, id).map_err(CmdError::Failed)?;
     let password = s.password.as_ref().map(crate::io::Password::as_str);
     let (doc, _) = crate::io::open_bytes_with(&source.to_string_lossy(), &bytes, password).map_err(CmdError::Failed)?;
+    // The state being replaced stays in the history: unsaved changes are stored first.
+    let unsaved = match &s.opened_version {
+        Some(previous) => previous.original_dirty.then(|| previous.original_doc.clone()),
+        None => s.dirty.then(|| s.doc.clone()),
+    };
+    if let Some(current) = unsaved {
+        s.keep_before_restore(&source, &current);
+    }
     let opened = s.opened_version.take();
     if let Some(previous) = &opened {
         // The previous-version window replaced the live document in this single-session host.
@@ -88,11 +97,13 @@ fn restore_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     s.touch();
     s.relayout();
     s.clamp_selection();
+    // The restore is a version at once, with the restored bytes.
+    s.record_restore(&source, bytes);
+    s.version_next_kind = None;
     if opened.is_some() {
         s.path = Some(source);
         s.file_name = None;
     }
-    s.version_next_kind = Some(VersionKind::Restore);
     Ok(json!({"restored": info.id, "savedAt": info.saved_at}))
 }
 
