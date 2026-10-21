@@ -1149,6 +1149,10 @@ pub struct TableProps {
     /// the right margin.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub bidi_visual: bool,
+    /// Spacing between cells (`w:tblCellSpacing`, ECMA-376 §17.4.46), points. Kept so saving
+    /// writes it back; the layout doesn't space cells apart yet.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cell_spacing: Option<f32>,
 }
 
 /// Where a floating table sits; the text after it wraps around it.
@@ -1230,6 +1234,10 @@ pub struct RowProps {
     pub grid_after: u32,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub w_after: Option<f32>,
+    /// The row's own spacing between cells (`w:tblCellSpacing` in `w:trPr`, §17.4.45), points;
+    /// Word writes it on every row of a table with cell spacing. Kept for saving, like the table's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cell_spacing: Option<f32>,
     /// Tracked formatting change (`w:trPrChange`).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub fmt_change: Option<Box<PropChange<RowProps>>>,

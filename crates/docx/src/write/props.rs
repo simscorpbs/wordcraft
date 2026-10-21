@@ -483,6 +483,7 @@ fn tblpr_inner(w: &mut W, t: &TableProps) {
     if let Some(a) = t.align {
         w.val("w:jc", align_val(if a == Align::Justify || a == Align::Distribute { Align::Left } else { a }));
     }
+    cell_spacing(w, t.cell_spacing);
     if let Some(i) = t.indent {
         w.empty("w:tblInd", &[("w:w", &twips(i)), ("w:type", "dxa")]);
     }
@@ -516,7 +517,7 @@ pub fn trpr(w: &mut W, r: &RowProps, change: Option<&ChangeAttrs>) {
     }
     let change = change.zip(r.fmt_change.as_ref());
     let gaps = r.grid_before > 0 || r.grid_after > 0 || r.w_before.is_some() || r.w_after.is_some();
-    if r.height.is_none() && !r.header && !r.cant_split && !gaps && change.is_none() {
+    if r.height.is_none() && !r.header && !r.cant_split && !gaps && r.cell_spacing.is_none() && change.is_none() {
         return;
     }
     w.open("w:trPr", &[]);
@@ -538,6 +539,7 @@ fn tblprex(w: &mut W, t: &TableProps) {
     if let Some(a) = t.align {
         w.val("w:jc", align_val(if a == Align::Justify || a == Align::Distribute { Align::Left } else { a }));
     }
+    cell_spacing(w, t.cell_spacing);
     if let Some(i) = t.indent {
         w.empty("w:tblInd", &[("w:w", &twips(i)), ("w:type", "dxa")]);
     }
@@ -582,6 +584,14 @@ fn trpr_inner(w: &mut W, r: &RowProps) {
     }
     if r.header {
         w.empty("w:tblHeader", &[]);
+    }
+    cell_spacing(w, r.cell_spacing);
+}
+
+/// `w:tblCellSpacing` (twips), when there is spacing.
+fn cell_spacing(w: &mut W, v: Option<f32>) {
+    if let Some(v) = v.filter(|v| v.is_finite() && *v > 0.0) {
+        w.empty("w:tblCellSpacing", &[("w:w", &twips(v.min(1584.0))), ("w:type", "dxa")]);
     }
 }
 
