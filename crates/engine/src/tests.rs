@@ -5775,7 +5775,8 @@ fn an_empty_file_opens_as_a_blank_document_saved_back_to_it() {
     let r = run(&mut s, "file.open", json!({"path": path.to_string_lossy()}));
     assert_eq!((r["paragraphs"].as_u64(), r["words"].as_u64()), (Some(1), Some(0)), "{r}");
     assert_eq!(text(&s), "");
-    assert_eq!(s.path.as_deref(), Some(path.as_path()));
+    // Kept under its real name (on Windows the long one, should TEMP be a short 8.3 path).
+    assert_eq!(s.path, Some(crate::io::opened_path(&path.to_string_lossy()).into()));
     assert!(!s.dirty);
     let sp = &s.doc.last_section;
     assert_eq!((sp.page_w, sp.page_h), (595.28, 841.89), "the region's paper, as File › New gives");
@@ -8618,4 +8619,54 @@ fn replace_all_long_document_bench() {
     let r = run(&mut s, "edit.replaceAll", json!({"text": "ordinary", "with": "common"}));
     eprintln!("{n} paragraphs: Replace All of {} took {:.1} ms", r["replaced"], t.elapsed().as_secs_f64() * 1e3);
     assert_eq!(r["replaced"], n);
+}
+
+/// Windows spells one file many ways: another case, `/`, a `\\?\` prefix, a short 8.3 name. An
+/// opened document keeps the long name with the case on disk, so its format, Recent, recovery,
+/// history and AutoSave see one file (`RELATO~1.DOC` was taken for a Word 97 file and couldn't
+/// be saved). A junction is not followed: the folder the person opened stays in the path.
+#[cfg(windows)]
+#[test]
+fn opened_files_keep_their_long_name_with_the_case_on_disk() {
+    // The long, on-disk spelling of the scratch folder (TEMP may itself be a short 8.3 path).
+    let canonical = std::fs::canonicalize(scratch_dir("opened-path-spelling")).unwrap();
+    let root = std::path::PathBuf::from(canonical.to_string_lossy().trim_start_matches(r"\\?\"));
+    let dir = root.join("Pasta Longa QA");
+    std::fs::create_dir_all(&dir).unwrap();
+    let long = dir.join("Relatorio Final.docx");
+    let mut s = Session::new(wordcraft_doc::Document::new());
+    s.run("text.insert", &json!({"text": "Original"})).unwrap();
+    s.run("file.save", &json!({"path": long.to_string_lossy()})).unwrap();
+    let long_text = long.to_string_lossy().to_string();
+    let shell = |cmd: String| {
+        let out = std::process::Command::new("cmd").args(["/C", &cmd]).output().unwrap();
+        String::from_utf8_lossy(&out.stdout).trim().to_string()
+    };
+    let mut spellings: Vec<(String, std::path::PathBuf)> =
+        [long_text.to_lowercase(), long_text.replace('\\', "/"), format!(r"\\?\{long_text}")].into_iter().map(|p| (p, long.clone())).collect();
+    // The file's short name gets its long one back; short folder names stay (TEMP is often one).
+    let short = std::path::PathBuf::from(shell(format!("for %I in (\"{long_text}\") do @echo %~sI")));
+    if short.file_name().is_some_and(|n| n.to_string_lossy().contains('~')) {
+        spellings.push((short.to_string_lossy().into(), short.with_file_name("Relatorio Final.docx")));
+    }
+    for (spelling, expected) in spellings {
+        let r = s.run("file.open", &json!({"path": spelling})).unwrap();
+        assert_eq!(s.path.as_deref(), Some(expected.as_path()), "opened as {spelling}");
+        assert_eq!(r["path"], json!(expected.to_string_lossy()), "opened as {spelling}");
+        assert!(crate::io::can_encrypt(r["path"].as_str().unwrap_or_default()), "a .docx, opened as {spelling}");
+        s.run("text.insert", &json!({"text": "!"})).unwrap();
+        assert_eq!(s.run("file.save", &json!({"ifUnchanged": true})).unwrap()["saved"], json!(true), "saved after opening as {spelling}");
+        let names: Vec<_> = std::fs::read_dir(&dir).unwrap().map(|e| e.unwrap().file_name()).collect();
+        assert_eq!(names, ["Relatorio Final.docx"], "opened as {spelling}");
+    }
+    // Through a junction, the path keeps the junction (as through a mapped or subst drive).
+    let link = root.join("Atalho");
+    shell(format!("mklink /J \"{}\" \"{}\"", link.display(), dir.display()));
+    if link.is_dir() {
+        let through = link.join("Relatorio Final.docx");
+        s.run("file.open", &json!({"path": through.to_string_lossy()})).unwrap();
+        assert_eq!(s.path.as_deref(), Some(through.as_path()));
+        let _ = std::fs::remove_dir(&link);
+    }
+    let _ = std::fs::remove_dir_all(&root);
 }

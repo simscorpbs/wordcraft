@@ -129,6 +129,60 @@ pub fn is_empty_file(path: &std::path::Path) -> bool {
     crate::file_access::check_read(&path.to_string_lossy()).is_ok() && std::fs::metadata(path).is_ok_and(|m| m.is_file() && m.len() == 0)
 }
 
+/// The path a document opened from disk is kept under. On Windows that is the path with the case
+/// on disk, without a `\\?\` prefix (`C:/a/b` becomes `C:\a\b`) and with the file's long name,
+/// so the format (`REPORT~1.DOC` is a `.docx`), Recent, recovery, the file's history and
+/// AutoSave's checks all see one spelling of the file. A folder given by its short 8.3 name
+/// keeps it, as `%TEMP%` often is (`C:\Users\RUNNER~1\…`). Links, junctions, `subst` and mapped
+/// drives are not followed: when the canonical path differs in more than spelling, or names
+/// something only a `\\?\` path reaches (a trailing dot or space), the path is kept as given.
+#[cfg(windows)]
+pub fn opened_path(path: &str) -> String {
+    use std::path::{Component, Path, PathBuf, Prefix};
+    let given = Path::new(path);
+    if crate::file_access::check_read(path).is_err() {
+        return path.to_string();
+    }
+    let Ok(canonical) = std::fs::canonicalize(given) else { return path.to_string() };
+    let (a, b): (Vec<Component<'_>>, Vec<Component<'_>>) = (given.components().collect(), canonical.components().collect());
+    if a.len() != b.len() {
+        return path.to_string();
+    }
+    let mut out = PathBuf::new();
+    let last = a.len().saturating_sub(1);
+    for (n, (x, y)) in a.iter().zip(&b).enumerate() {
+        match (x, y) {
+            (Component::Prefix(x), Component::Prefix(y)) => match (x.kind(), y.kind()) {
+                (Prefix::Disk(l) | Prefix::VerbatimDisk(l), Prefix::Disk(m) | Prefix::VerbatimDisk(m)) if l.eq_ignore_ascii_case(&m) => {
+                    out.push(format!("{}:", char::from(m.to_ascii_uppercase())));
+                }
+                (Prefix::UNC(s, h) | Prefix::VerbatimUNC(s, h), Prefix::UNC(t, i) | Prefix::VerbatimUNC(t, i))
+                    if s.eq_ignore_ascii_case(t) && h.eq_ignore_ascii_case(i) =>
+                {
+                    out.push(format!(r"\\{}\{}", t.to_string_lossy(), i.to_string_lossy()));
+                }
+                _ => return path.to_string(),
+            },
+            (Component::RootDir, Component::RootDir) => out.push(r"\"),
+            (Component::Normal(x), Component::Normal(y)) => {
+                let (x, y) = (x.to_string_lossy(), y.to_string_lossy());
+                let short = x.contains('~') && x.to_lowercase() != y.to_lowercase();
+                if !(short || x.to_lowercase() == y.to_lowercase()) || y.ends_with('.') || y.ends_with(' ') {
+                    return path.to_string();
+                }
+                out.push(if short && n < last { &*x } else { &*y });
+            }
+            _ => return path.to_string(),
+        }
+    }
+    out.to_string_lossy().into_owned()
+}
+
+#[cfg(not(windows))]
+pub fn opened_path(path: &str) -> String {
+    path.to_string()
+}
+
 /// [`is_empty_file`]: on the web files come through the browser, never by path.
 #[cfg(target_arch = "wasm32")]
 pub fn is_empty_file(_path: &std::path::Path) -> bool {

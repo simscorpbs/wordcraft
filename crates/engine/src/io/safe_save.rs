@@ -153,10 +153,68 @@ impl Temporary {
     fn commit(mut self, destination: &Path) -> io::Result<()> {
         // Close before replacement, including on Windows.
         drop(self.file.take());
-        fs::rename(&self.path, destination)?;
+        rename_retrying(&self.path, &existing_name(destination))?;
         self.committed = true;
         Ok(())
     }
+}
+
+/// The destination under the name the file already has on disk. Windows ignores case and
+/// accepts short 8.3 names, and a rename takes the name it is given: replacing `Report.docx`
+/// through `report.docx` or `REPORT~1.DOC` renamed the file (and a sync client renamed it on
+/// every device). Only the last component changes, and only to a spelling of the same name; a
+/// link is replaced as itself.
+#[cfg(windows)]
+fn existing_name(destination: &Path) -> PathBuf {
+    let keep = || destination.to_path_buf();
+    let Some(given) = destination.file_name().map(|n| n.to_string_lossy().into_owned()) else { return keep() };
+    if !fs::symlink_metadata(destination).is_ok_and(|m| m.is_file()) {
+        return keep();
+    }
+    let Some(on_disk) = fs::canonicalize(destination).ok().and_then(|c| c.file_name().map(|n| n.to_string_lossy().into_owned())) else {
+        return keep();
+    };
+    let short = given.contains('~') && !on_disk.contains('~');
+    if on_disk == given || !(on_disk.to_lowercase() == given.to_lowercase() || short) {
+        return keep();
+    }
+    destination.with_file_name(on_disk)
+}
+
+#[cfg(not(windows))]
+fn existing_name(destination: &Path) -> PathBuf {
+    destination.to_path_buf()
+}
+
+/// Waits between attempts to replace a file another program holds open (Windows): about 1.35 s
+/// in all before the save fails.
+#[cfg(windows)]
+const HELD_OPEN_WAITS_MS: [u64; 5] = [50, 100, 200, 400, 600];
+
+/// `fs::rename`, tried again for a moment on Windows while another program holds the
+/// destination open without letting it be replaced: OneDrive and other sync clients, antivirus
+/// scanners and the search indexer open a just-saved file briefly, and AutoSave would otherwise
+/// fail with "Access denied".
+#[cfg(windows)]
+fn rename_retrying(from: &Path, to: &Path) -> io::Result<()> {
+    // ERROR_ACCESS_DENIED, ERROR_SHARING_VIOLATION, ERROR_LOCK_VIOLATION.
+    let held_open = |e: &io::Error| matches!(e.raw_os_error(), Some(5 | 32 | 33));
+    let mut waits = HELD_OPEN_WAITS_MS.iter();
+    loop {
+        match fs::rename(from, to) {
+            Ok(()) => return Ok(()),
+            Err(e) if held_open(&e) => match waits.next() {
+                Some(ms) => std::thread::sleep(std::time::Duration::from_millis(*ms)),
+                None => return Err(e),
+            },
+            Err(e) => return Err(e),
+        }
+    }
+}
+
+#[cfg(not(windows))]
+fn rename_retrying(from: &Path, to: &Path) -> io::Result<()> {
+    fs::rename(from, to)
 }
 
 impl Drop for Temporary {
@@ -243,6 +301,79 @@ mod tests {
         assert_eq!(fs::read(&path).unwrap(), b"Exported bytes.");
         assert_eq!(fs::read(&alias).unwrap(), b"Original bytes.");
         assert_eq!(fs::read_dir(&d.0).unwrap().count(), 2);
+    }
+
+    /// Windows ignores case: saving `Report.docx` through `report.docx` replaces the file and keeps
+    /// its name (the rename used to change it to `report.docx`, and OneDrive synced that).
+    #[cfg(windows)]
+    #[test]
+    fn saving_through_another_spelling_keeps_the_name_on_disk() {
+        let d = Scratch::new();
+        fs::write(d.0.join("Report Final.docx"), b"Original bytes.").unwrap();
+        write(&d.0.join("report final.DOCX"), b"Saved bytes.").unwrap();
+        let names: Vec<_> = fs::read_dir(&d.0).unwrap().map(|e| e.unwrap().file_name()).collect();
+        assert_eq!(names, ["Report Final.docx"]);
+        assert_eq!(fs::read(d.0.join("Report Final.docx")).unwrap(), b"Saved bytes.");
+        // The short 8.3 name, where the volume makes them, is the same file too.
+        let long = d.0.join("Report Final.docx");
+        let out = std::process::Command::new("cmd").args(["/C", &format!("for %I in (\"{}\") do @echo %~sI", long.display())]).output().unwrap();
+        let short = PathBuf::from(String::from_utf8_lossy(&out.stdout).trim());
+        if short.file_name().is_some_and(|n| n.to_string_lossy().contains('~')) {
+            write(&short, b"Saved through the short name.").unwrap();
+            let names: Vec<_> = fs::read_dir(&d.0).unwrap().map(|e| e.unwrap().file_name()).collect();
+            assert_eq!(names, ["Report Final.docx"], "saved through {}", short.display());
+            assert_eq!(fs::read(&long).unwrap(), b"Saved through the short name.");
+        }
+        // A new file is still created under the name given.
+        write(&d.0.join("Nova.docx"), b"New.").unwrap();
+        assert!(fs::read_dir(&d.0).unwrap().any(|e| e.unwrap().file_name() == "Nova.docx"));
+    }
+
+    /// Opens `path` the way a sync client or scanner does: others may read and write it, but not
+    /// replace or delete it.
+    #[cfg(windows)]
+    fn hold_open(path: &Path) -> File {
+        use std::os::windows::fs::OpenOptionsExt;
+        // FILE_SHARE_READ | FILE_SHARE_WRITE, no FILE_SHARE_DELETE.
+        OpenOptions::new().read(true).share_mode(0x1 | 0x2).open(path).unwrap()
+    }
+
+    /// A file held open for a moment (OneDrive, antivirus, the indexer) is replaced once it is
+    /// let go, instead of the save failing with "Access denied" (which turned AutoSave off).
+    #[cfg(windows)]
+    #[test]
+    fn a_file_held_open_for_a_moment_is_replaced_when_released() {
+        let d = Scratch::new();
+        let path = d.target();
+        fs::write(&path, b"Original bytes.").unwrap();
+        let holder = hold_open(&path);
+        let release = std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(250));
+            drop(holder);
+        });
+        write(&path, b"Saved bytes.").unwrap();
+        release.join().unwrap();
+        assert_eq!(fs::read(&path).unwrap(), b"Saved bytes.");
+        assert_eq!(fs::read_dir(&d.0).unwrap().count(), 1);
+    }
+
+    /// Held open for good, the save gives up after the short wait, leaves the original and no
+    /// temporary file.
+    #[cfg(windows)]
+    #[test]
+    fn a_file_held_open_for_good_fails_after_a_short_wait() {
+        let d = Scratch::new();
+        let path = d.target();
+        fs::write(&path, b"Original bytes.").unwrap();
+        let _holder = hold_open(&path);
+        let started = std::time::Instant::now();
+        let err = write(&path, b"Saved bytes.").unwrap_err();
+        let waited = started.elapsed();
+        assert_eq!(err.raw_os_error(), Some(5), "{err}");
+        let budget: u64 = HELD_OPEN_WAITS_MS.iter().sum();
+        assert!(waited >= std::time::Duration::from_millis(budget) && waited < std::time::Duration::from_secs(5), "{waited:?}");
+        assert_eq!(fs::read(&path).unwrap(), b"Original bytes.");
+        assert_eq!(fs::read_dir(&d.0).unwrap().count(), 1);
     }
 
     /// Makes `dir` read-only while `f` runs. `None` when running as root, where the folder isn't
