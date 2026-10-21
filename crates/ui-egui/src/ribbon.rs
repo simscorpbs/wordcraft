@@ -1565,8 +1565,10 @@ fn design(app: &mut WordApp, ui: &mut Ui) {
     });
     group(ui, "Page Background", None, app, |ui, app| {
         menu_button(ui, app, "watermark", Some("Watermark"), "Watermark", true, "design.watermark", |ui, app| {
+            // The page gets the word the menu shows: `RASCUNHO` in Portuguese, not `DRAFT`.
             for w in ["DRAFT", "CONFIDENTIAL", "DO NOT COPY", "SAMPLE", "ASAP", "URGENT"] {
-                mi(ui, app, w, "design.watermark", json!({"text": w}));
+                let text = tl!(w);
+                mi_text(ui, app, text, "design.watermark", json!({ "text": text }));
             }
             ui.separator();
             mi(ui, app, "Custom Watermark…", "ui.dialog", json!({"name": "watermark"}));
@@ -3433,5 +3435,50 @@ mod tests {
         let before = (size(&a), a.session.undo_depth());
         assert_eq!(before.0, Some((20.0, 2500.0)));
         assert_eq!(shown(a), before, "Chart Design shown, the chart untouched");
+    }
+
+    /// Design › Watermark in Spanish shows `BORRADOR`: clicking it puts `BORRADOR` on the page,
+    /// not the English `DRAFT` the menu is built from.
+    #[test]
+    fn a_watermark_preset_puts_the_word_it_shows_on_the_page() {
+        use egui_kittest::kittest::{NodeT, Queryable};
+        let mut app = WordApp::new(Session::new(wordcraft_doc::Document::from_text("Texto")), crate::Services::default());
+        app.run("ui.language", json!({"value": "es"})).unwrap();
+        app.run("ui.tab", json!({"tab": "Design"})).unwrap();
+        let mut h = egui_kittest::Harness::builder().with_size(vec2(1920.0, 900.0)).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                app.logic(&ctx);
+                app.ui(ui);
+            },
+            app,
+        );
+        h.run_steps(3);
+        let shown = crate::i18n::tr(crate::i18n::Lang::from_code("es").unwrap(), "DRAFT");
+        assert_eq!(shown, "BORRADOR");
+        let menu = crate::i18n::tr(crate::i18n::Lang::from_code("es").unwrap(), "Watermark");
+        h.get_all_by_role_and_label(egui::accesskit::Role::Button, menu).next().expect("the Watermark button").click();
+        h.run_steps(3);
+        h.query_all(egui_kittest::kittest::By::new().role(egui::accesskit::Role::Button))
+            .find(|n| n.accesskit_node().label().as_deref().map(str::trim) == Some(shown))
+            .expect("the BORRADOR item")
+            .click();
+        h.run_steps(3);
+        let wm = h.state().session.doc.settings.watermark.clone().expect("a watermark");
+        assert_eq!(wm.text, "BORRADOR");
+    }
+
+    /// Custom Watermark opens on the document's watermark, so OK doesn't replace it with the
+    /// default; a document without one starts from the default word in the interface language.
+    #[test]
+    fn custom_watermark_opens_on_the_documents_watermark() {
+        let mut app = WordApp::new(Session::new(wordcraft_doc::Document::from_text("Texto")), crate::Services::default());
+        crate::i18n::set_current(crate::i18n::Lang::from_code("es").unwrap());
+        let fresh = crate::dialogs::Dialog::open("watermark", &mut app);
+        crate::i18n::set_current(crate::i18n::Lang::EN);
+        assert!(matches!(fresh, Some(crate::dialogs::Dialog::Watermark { ref text, diagonal: true }) if text == "CONFIDENCIAL"), "{fresh:?}");
+        app.run("design.watermark", json!({"text": "SIGILOSO", "diagonal": false})).unwrap();
+        let open = crate::dialogs::Dialog::open("watermark", &mut app);
+        assert!(matches!(open, Some(crate::dialogs::Dialog::Watermark { ref text, diagonal: false }) if text == "SIGILOSO"), "{open:?}");
     }
 }
