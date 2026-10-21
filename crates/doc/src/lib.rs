@@ -639,6 +639,24 @@ impl Default for Watermark {
     }
 }
 
+impl Watermark {
+    /// How far a diagonal watermark is turned, anticlockwise, in radians: 45°, whatever the
+    /// page's shape. Word's watermark shape is turned `rotation:315` (315° clockwise), and that
+    /// is what the DOCX writer saves.
+    pub const DIAGONAL_TURN: f64 = std::f64::consts::FRAC_PI_4;
+
+    /// The text's opacity: Word's semitransparent watermark is filled at `opacity=".5"` (what the
+    /// DOCX writer saves), an opaque one at full strength.
+    pub fn opacity(&self) -> f32 {
+        if self.semitransparent { 0.5 } else { 1.0 }
+    }
+
+    /// The anticlockwise turn, in radians, the watermark is drawn at.
+    pub fn turn(&self) -> f64 {
+        if self.diagonal { Self::DIAGONAL_TURN } else { 0.0 }
+    }
+}
+
 /// Our default theme colours.
 pub const THEME_COLORS: [Rgb; 12] = [
     Rgb(0x00, 0x00, 0x00),
