@@ -1322,22 +1322,31 @@ impl Paragraph {
             _ => self.prev_boundary(off),
         }
     }
-    /// Start of the word at or before `off` (Ctrl+Left).
+    /// Start of the word at or before `off` (Ctrl+Left, Ctrl+Backspace): the stops of
+    /// [`Self::word_end`] taken the other way. Spaces before `off` go with the word before them;
+    /// a punctuation mark is a word of its own (`fox.` stops before the full stop, as Word does),
+    /// and an apostrophe opening a word (`'tis`) is not part of it.
     pub fn word_start(&self, off: usize) -> usize {
         let off = self.clamp(off);
         let Some(before) = self.text.get(..off) else { return 0 };
+        let mut it = before.char_indices().rev().peekable();
         let mut idx = off;
-        let mut seen_word = false;
-        for (i, c) in before.char_indices().rev() {
-            let w = crate::bidi::is_word_char(c);
-            if w {
-                seen_word = true;
-                idx = i;
-            } else if seen_word {
-                break;
-            } else {
-                idx = i;
+        while let Some((i, _)) = it.next_if(|(_, c)| *c == ' ' || *c == NBSP) {
+            idx = i;
+        }
+        match it.peek().copied() {
+            Some((_, c)) if in_word(c) => {
+                while let Some((i, _)) = it.next_if(|(_, c)| in_word(*c)) {
+                    idx = i;
+                }
+                let word = before.get(idx..).unwrap_or_default();
+                let quotes = word.len() - word.trim_start_matches(['\'', '\u{2019}']).len();
+                if word.get(quotes..).and_then(|w| w.chars().next()).is_some_and(in_word) {
+                    idx += quotes;
+                }
             }
+            Some((i, _)) => idx = i,
+            None => {}
         }
         idx
     }
@@ -1347,10 +1356,10 @@ impl Paragraph {
         let Some(after) = self.text.get(off..) else { return self.text.len() };
         let it = after.char_indices().peekable();
         let mut end = self.text.len();
-        let first_word = after.chars().next().is_some_and(|c| crate::bidi::is_word_char(c) && c != '\'');
+        let first_word = after.chars().next().is_some_and(|c| in_word(c) && c != '\'' && c != '\u{2019}');
         let mut in_space = false;
         for (i, c) in it {
-            let w = crate::bidi::is_word_char(c);
+            let w = in_word(c);
             if c == ' ' || c == NBSP {
                 in_space = true;
                 continue;
@@ -1365,7 +1374,7 @@ impl Paragraph {
     /// The word around `off` (double-click): (start, end) without trailing space.
     pub fn word_at(&self, off: usize) -> (usize, usize) {
         let off = self.clamp(off);
-        let is_w = |c: char| crate::bidi::is_word_char(c);
+        let is_w = in_word;
         let mut a = off;
         for (i, c) in self.text.get(..off).unwrap_or("").char_indices().rev() {
             if !is_w(c) {
@@ -1427,6 +1436,12 @@ impl Paragraph {
         }
         (a, b)
     }
+}
+
+/// A character inside a word for word-by-word moves and double-click: letters, digits and
+/// apostrophes, the typographic one (’) as well, which smart quotes type in `don’t`.
+fn in_word(c: char) -> bool {
+    crate::bidi::is_word_char(c) || c == '\u{2019}'
 }
 
 #[cfg(test)]
@@ -1591,6 +1606,37 @@ mod tests {
         assert_eq!(p.sentence_at(3), (0, 21));
         assert_eq!(p.next_boundary(0), 1);
         assert_eq!(p.prev_boundary(0), 0);
+    }
+
+    #[test]
+    fn word_left_stops_where_word_right_does() {
+        // Ctrl+Left visits the stops of Ctrl+Right in reverse: punctuation is a word of its own.
+        let p = Paragraph::with_text("Hello, world. Next", CharProps::default());
+        let mut right = vec![0];
+        while let Some(&x) = right.last().filter(|x| **x < p.len()) {
+            right.push(p.word_end(x));
+        }
+        assert_eq!(right, [0, 5, 7, 12, 14, 18]);
+        let mut left = vec![p.len()];
+        while let Some(&x) = left.last().filter(|x| **x > 0) {
+            left.push(p.word_start(x));
+        }
+        left.reverse();
+        assert_eq!(left, right);
+        // An apostrophe inside a word, straight or typographic, belongs to it; one opening a
+        // word doesn't, either way.
+        for t in ["don't stop", "don\u{2019}t stop"] {
+            let p = Paragraph::with_text(t, CharProps::default());
+            let end = p.len();
+            assert_eq!(p.word_end(0), end - 4, "{t}");
+            assert_eq!(p.word_start(end - 4), 0, "{t}");
+            assert_eq!(p.word_at(1), (0, end - 4), "{t}");
+        }
+        for t in ["'tis", "\u{2019}tis"] {
+            let p = Paragraph::with_text(t, CharProps::default());
+            let q = t.len() - 3;
+            assert_eq!((p.word_end(0), p.word_start(p.len()), p.word_start(q)), (q, q, 0), "{t}");
+        }
     }
 
     proptest::proptest! {
