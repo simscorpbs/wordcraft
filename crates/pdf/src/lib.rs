@@ -1616,8 +1616,9 @@ impl Exporter<'_> {
         }
         let hh = h.min(2000.0);
         let diag = if wm.diagonal { (w * w + hh * hh).sqrt() } else { w };
-        let size = (diag * 0.7 / raw_w).min(300.0);
-        let angle = if wm.diagonal { -(hh / w.max(1.0)).atan() } else { 0.0 };
+        // As big as on screen and in the saved DOCX shape: half the page's width or diagonal.
+        let size = (diag * 0.5 / raw_w).min(200.0);
+        let angle = -wm.turn() as f32;
         let (c, sn) = (angle.cos(), angle.sin());
         let (dx, dy) = (-raw_w * size / 2.0, size * 0.35);
         let (cx, cy) = (w / 2.0, hh / 2.0);
@@ -1644,7 +1645,7 @@ impl Exporter<'_> {
             .collect();
         s.push_transform(&Transform::from_row(c, sn, -sn, c, c * dx - sn * dy + cx, sn * dx + c * dy + cy));
         s.set_stroke(None);
-        s.set_fill(Some(fill(wm.color, if wm.semitransparent { 0.5 } else { 1.0 })));
+        s.set_fill(Some(fill(wm.color, wm.opacity())));
         match font {
             Some(font) => {
                 s.draw_glyphs(Point::from_xy(0.0, 0.0), &glyphs, font, &text, size, false);

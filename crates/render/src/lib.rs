@@ -669,11 +669,11 @@ fn draw_watermark(ctx: &mut RenderContext, view: Affine, page: &Page, wm: &wordc
     let diag = if wm.diagonal { (pw.powi(2) + (page.h.min(2000.0) as f64).powi(2)).sqrt() } else { pw };
     let size = (diag * 0.5 / raw_w).min(200.0);
     let k = size / upem;
-    let angle = if wm.diagonal { -((page.h.min(2000.0) as f64) / pw).atan() } else { 0.0 };
+    // At Word's 45° and opacity, as the PDF export draws it and the DOCX writer saves it.
     let base = Affine::translate((pw / 2.0, page.h.min(2000.0) as f64 / 2.0))
-        * Affine::rotate(angle)
+        * Affine::rotate(-wm.turn())
         * Affine::translate((-raw_w * size / 2.0, size * 0.35));
-    ctx.set_paint(color(opts.ink(wm.color), if wm.semitransparent { 0.35 } else { 0.8 }));
+    ctx.set_paint(color(opts.ink(wm.color), wm.opacity()));
     let db = FontDb::global();
     let mut x = 0.0;
     for g in &glyphs {
@@ -1361,6 +1361,37 @@ mod tests {
         assert!(dark > 30, "dark {dark}");
         assert_eq!(img.pixel(5, 5), [255, 255, 255, 255]);
         assert!(!img.to_png().is_empty());
+    }
+
+    /// A diagonal watermark is turned 45° on any page, as Word turns its watermark shape
+    /// (`rotation:315`, what the DOCX writer saves), not along the page's diagonal; a
+    /// semitransparent one is drawn at half strength (`opacity=".5"`), an opaque one at full.
+    #[test]
+    fn a_watermark_is_turned_45_degrees_at_words_opacity() {
+        let ink = |semitransparent: bool| {
+            let mut d = Document::from_text("");
+            d.settings.watermark =
+                Some(wordcraft_doc::Watermark { text: "HHHHHHHHHHHH".into(), color: Rgb::BLACK, semitransparent, ..Default::default() });
+            let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+            let img = render_page(&d, &l.pages[0], 1.0, &RenderOptions::default());
+            let (mut x0, mut y0, mut x1, mut y1, mut darkest) = (u32::MAX, u32::MAX, 0, 0, 255);
+            for y in 0..img.height {
+                for x in 0..img.width {
+                    let v = img.pixel(x, y)[0];
+                    darkest = darkest.min(v);
+                    if v < 250 {
+                        (x0, y0, x1, y1) = (x0.min(x), y0.min(y), x1.max(x), y1.max(y));
+                    }
+                }
+            }
+            assert!(x1 > x0 && y1 > y0, "the watermark is drawn");
+            ((y1 - y0) as f32 / (x1 - x0) as f32, darkest)
+        };
+        let (aspect, darkest) = ink(true);
+        // Along the Letter page's diagonal (52°) the ink would be about a fifth taller than wide.
+        assert!((aspect - 1.0).abs() < 0.05, "turned 45°: ink {aspect} as tall as wide");
+        assert!((120..=135).contains(&darkest), "half strength: {darkest}");
+        assert!(ink(false).1 < 8, "an opaque watermark at full strength");
     }
 
     /// Table Layout › Text Direction (#226): a turned cell's text is painted running down the
