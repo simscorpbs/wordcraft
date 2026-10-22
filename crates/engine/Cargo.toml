@@ -37,6 +37,9 @@ js-sys = "0.3"
 getrandom = { workspace = true }
 # Stable digests of the bytes kept in the local version history.
 sha2 = { workspace = true }
+# The version history keeps zip packages as their parts, compressed (pure Rust).
+zip = { workspace = true }
+miniz_oxide = { workspace = true }
 # The system time zone, so date and time fields show local time as Word's do.
 jiff = "0.2"
 

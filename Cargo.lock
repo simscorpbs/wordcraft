@@ -5330,6 +5330,7 @@ dependencies = [
  "jiff",
  "js-sys",
  "log",
+ "miniz_oxide 0.8.9",
  "regex",
  "regex-automata",
  "serde",

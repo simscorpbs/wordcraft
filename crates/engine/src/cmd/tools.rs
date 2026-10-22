@@ -23,6 +23,8 @@ fn version_json(index: usize, info: &VersionInfo) -> Value {
         "savedAt": info.saved_at.clone(),
         "author": info.author.clone(),
         "size": info.size,
+        // The disk space the version added (shared parts count once); `size` for older entries.
+        "stored": info.stored.unwrap_or(info.size),
         "kind": info.kind.id(),
         // Compatibility names used by the former in-memory command.
         "date": info.saved_at.clone(),

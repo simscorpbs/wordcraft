@@ -5,7 +5,11 @@
 //! document bytes are written by a worker, beside a bounded JSON index.
 //!
 //! Storage, per document, under `<root>/<key>/` where the key hashes the canonical path:
-//! - `<id>.bin`: the exact bytes of one version, verified after writing;
+//! - `<id>.parts.json` and `objects/<sha256>`: a version of a zip package (`.docx`, `.odt`…)
+//!   kept as its parts, each part an object named by the hash of its content, so what did not
+//!   change between versions is stored once and what changed is a small delta (see [`pack`]);
+//! - `<id>.bin`: the exact bytes of one version, for the `original` copy, files that are not a
+//!   zip, and versions written by earlier builds; verified after writing;
 //! - `index.json`: the versions' metadata ([`VersionInfo`]), newest first;
 //! - `document.json`: the path the bucket last belonged to, so a file moved outside WordCraft
 //!   can find its history again (see `adopt_moved`).
@@ -50,6 +54,21 @@ impl VersionKind {
     }
 }
 
+/// How a version's bytes are kept on disk.
+#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum VersionStorage {
+    /// The bytes as they were saved, in `<id>.bin`.
+    #[default]
+    Whole,
+    /// A zip package split into content-addressed parts, in `<id>.parts.json` (see [`pack`]).
+    Parts,
+}
+
+fn is_whole(storage: &VersionStorage) -> bool {
+    *storage == VersionStorage::Whole
+}
+
 /// The metadata shown by `file.versions` and the Version History pane.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -78,6 +97,13 @@ pub struct VersionInfo {
     /// is not pruned the moment it is stored.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub captured_at: Option<String>,
+    /// How the bytes are kept. `size` stays the size of the document as it was saved.
+    #[serde(default, skip_serializing_if = "is_whole")]
+    pub storage: VersionStorage,
+    /// Disk space this version added when it was stored: its manifest and the parts no earlier
+    /// version had, or its whole bytes. Absent for versions written by earlier builds.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stored: Option<u64>,
 }
 
 /// Format a stored UTC timestamp for the history pane.  Version metadata stays UTC on disk so
@@ -304,16 +330,29 @@ pub struct OpenedVersion {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
+pub(crate) mod pack;
+
+#[cfg(not(target_arch = "wasm32"))]
 const INDEX_FILE: &str = "index.json";
+#[cfg(not(target_arch = "wasm32"))]
+const PARTS_SUFFIX: &str = ".parts.json";
+#[cfg(not(target_arch = "wasm32"))]
+const OBJECTS_DIR: &str = "objects";
+#[cfg(not(target_arch = "wasm32"))]
+const MAX_MANIFEST_BYTES: u64 = 8 << 20;
+/// Largest object file read: a whole part compressed (incompressible data grows a little).
+#[cfg(not(target_arch = "wasm32"))]
+const MAX_OBJECT_FILE: u64 = pack::MAX_PART_BYTES + (16 << 20);
 #[cfg(not(target_arch = "wasm32"))]
 const META_FILE: &str = "document.json";
 #[cfg(not(target_arch = "wasm32"))]
 const MAX_INDEX_BYTES: u64 = 8 << 20;
 #[cfg(not(target_arch = "wasm32"))]
 const MAX_META_BYTES: u64 = 64 << 10;
-/// A single document is never allowed to make the profile larger than 500 MiB. This is
-/// WordCraft's own disk budget: OneDrive and SharePoint count versions against the account's
-/// storage instead, which a local profile does not have.
+/// A single document is never allowed to make the profile larger than 500 MiB, counted as the
+/// space its history really takes on disk (shared parts once). This is WordCraft's own disk
+/// budget: OneDrive and SharePoint count versions against the account's storage instead, which
+/// a local profile does not have. A single saved document may not be larger either.
 pub const MAX_DOCUMENT_BYTES: u64 = 500 << 20;
 /// At most 500 versions per document: the count limit of SharePoint's and OneDrive for work's
 /// automatic version limits (Microsoft Learn, "Plan version storage for document libraries").
@@ -641,12 +680,25 @@ fn read_index(dir: &Path) -> Vec<VersionInfo> {
             && !seen.contains(&v.id)
             && v.size <= MAX_DOCUMENT_BYTES
             && parse_iso_secs(&v.saved_at).is_some()
-            && fs::symlink_metadata(dir.join(format!("{}.bin", v.id))).is_ok_and(|m| m.is_file() && m.len() == v.size)
+            && match v.storage {
+                VersionStorage::Whole => fs::symlink_metadata(dir.join(format!("{}.bin", v.id))).is_ok_and(|m| m.is_file() && m.len() == v.size),
+                VersionStorage::Parts => fs::symlink_metadata(manifest_path(dir, &v.id)).is_ok_and(|m| m.is_file()),
+            }
             && seen.insert(v.id.clone())
     });
     if let Ok(entries) = fs::read_dir(dir) {
         for entry in entries.flatten().take(MAX_RECOVERED_FILES) {
             let name = entry.file_name();
+            if let Some(id) = name.to_str().and_then(|n| n.strip_suffix(PARTS_SUFFIX))
+                && id_ok(id)
+                && !seen.contains(id)
+                && let Some(manifest) = read_manifest(dir, id)
+            {
+                // A manifest carries its version's metadata, so it comes back as it was.
+                seen.insert(id.to_owned());
+                list.push(VersionInfo { storage: VersionStorage::Parts, ..manifest.info });
+                continue;
+            }
             let Some(id) = name.to_str().and_then(|n| n.strip_suffix(".bin")) else { continue };
             if !id_ok(id) || seen.contains(id) {
                 continue;
@@ -746,6 +798,243 @@ fn write_version_file(dir: &Path, id: &str, bytes: &[u8]) -> Result<(), String> 
     write_atomic(&dir.join(format!("{id}.bin")), bytes)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+fn manifest_path(dir: &Path, id: &str) -> PathBuf {
+    dir.join(format!("{id}{PARTS_SUFFIX}"))
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn object_path(dir: &Path, hash: &str) -> PathBuf {
+    dir.join(OBJECTS_DIR).join(hash)
+}
+
+/// The manifest of version `id`, checked before anything is built from it.
+#[cfg(not(target_arch = "wasm32"))]
+fn read_manifest(dir: &Path, id: &str) -> Option<pack::Manifest> {
+    let bytes = read_small(&manifest_path(dir, id), MAX_MANIFEST_BYTES)?;
+    let manifest: pack::Manifest = serde_json::from_slice(&bytes).ok()?;
+    (pack::manifest_ok(&manifest) && manifest.info.id == id).then_some(manifest)
+}
+
+/// The header of an object file, and the file's size.
+#[cfg(not(target_arch = "wasm32"))]
+fn object_header(dir: &Path, hash: &str) -> Result<(pack::ObjectHeader, u64), String> {
+    let path = object_path(dir, hash);
+    let meta = fs::symlink_metadata(&path).map_err(|_| "a part of this version is missing".to_string())?;
+    if !meta.is_file() {
+        return Err("a part of this version is missing".into());
+    }
+    let mut head = Vec::with_capacity(pack::HEADER_MAX);
+    File::open(&path).map_err(|e| e.to_string())?.take(pack::HEADER_MAX as u64).read_to_end(&mut head).map_err(|e| e.to_string())?;
+    Ok((pack::ObjectHeader::parse(&head)?, meta.len()))
+}
+
+/// The content of object `hash`: its chain of deltas is followed back to a whole copy, and
+/// every step is checked against its own name, so a damaged object anywhere in the chain is an
+/// error for the versions that use it and nothing else.
+#[cfg(not(target_arch = "wasm32"))]
+fn load_object(dir: &Path, hash: &str) -> Result<Vec<u8>, String> {
+    let mut chain: Vec<(String, Vec<u8>)> = Vec::new();
+    let mut current = hash.to_owned();
+    loop {
+        if !pack::hash_ok(&current) || chain.len() >= pack::MAX_CHAIN {
+            return Err("a part of this version is damaged".into());
+        }
+        let bytes = read_small(&object_path(dir, &current), MAX_OBJECT_FILE).ok_or("a part of this version is missing")?;
+        let base = pack::ObjectHeader::parse(&bytes)?.base;
+        chain.push((current, bytes));
+        match base {
+            Some(base) => current = base,
+            None => break,
+        }
+    }
+    let mut content: Option<Vec<u8>> = None;
+    for (name, bytes) in chain.iter().rev() {
+        let next = pack::decode(bytes, content.as_deref())?;
+        if digest_hex(&next) != *name {
+            return Err("a part of this version is damaged (its checksum does not match)".into());
+        }
+        content = Some(next);
+    }
+    content.ok_or_else(|| "a part of this version is missing".into())
+}
+
+/// Store the parts of a version as objects, each a delta against the same part of `base` when
+/// that pays. An object already there is reused only when it still reads back correctly; a
+/// damaged one is written again whole, which also repairs every version that uses it. Returns
+/// the bytes newly written.
+#[cfg(not(target_arch = "wasm32"))]
+fn store_parts(dir: &Path, parts: &[pack::Part], base: Option<&pack::Manifest>) -> Result<u64, String> {
+    private_dir(&dir.join(OBJECTS_DIR)).map_err(|e| e.to_string())?;
+    let mut written = 0u64;
+    for part in parts.iter().filter(|part| !part.meta.dir) {
+        let hash = part.meta.sha256.as_str();
+        let path = object_path(dir, hash);
+        let object = if fs::symlink_metadata(&path).is_ok() {
+            if load_object(dir, hash).is_ok() {
+                continue;
+            }
+            pack::encode_full(&part.data)
+        } else {
+            let base_part = base.and_then(|manifest| manifest.parts.iter().find(|p| !p.dir && p.name == part.meta.name && p.sha256 != hash));
+            let base = base_part.and_then(|p| {
+                let depth = object_header(dir, &p.sha256).ok()?.0.depth;
+                Some((p.sha256.clone(), depth, load_object(dir, &p.sha256).ok()?))
+            });
+            pack::encode(&part.data, base.as_ref().map(|(hash, depth, content)| (hash.as_str(), *depth, content.as_slice())))
+        };
+        write_atomic(&path, &object)?;
+        if let Err(error) = load_object(dir, hash) {
+            let _ = fs::remove_file(&path);
+            return Err(error);
+        }
+        written = written.saturating_add(object.len() as u64);
+    }
+    Ok(written)
+}
+
+/// The newest version kept as parts whose manifest reads: the base for the next deltas.
+#[cfg(not(target_arch = "wasm32"))]
+fn newest_manifest(dir: &Path, list: &[VersionInfo]) -> Option<pack::Manifest> {
+    list.iter().filter(|v| v.storage == VersionStorage::Parts).find_map(|v| read_manifest(dir, &v.id))
+}
+
+/// Keep `bytes` (a zip package) as parts for version `info`: objects first, then the manifest.
+/// The archive is rebuilt in memory and split again before anything is written, so a version
+/// stored as parts is known to come back with the same parts. Returns the space it added.
+#[cfg(not(target_arch = "wasm32"))]
+fn write_parts_version(dir: &Path, info: &VersionInfo, bytes: &[u8], base: Option<&pack::Manifest>) -> Result<u64, String> {
+    let (parts, comment) = pack::split_zip(bytes).ok_or("not a zip package that can be kept as parts")?;
+    let manifest = pack::Manifest {
+        format: 1,
+        info: VersionInfo { storage: VersionStorage::Parts, stored: None, ..info.clone() },
+        comment,
+        parts: parts.iter().map(|part| part.meta.clone()).collect(),
+    };
+    let contents: Vec<Vec<u8>> = parts.iter().map(|part| part.data.clone()).collect();
+    let rebuilt = pack::assemble_zip(&manifest, &contents)?;
+    drop(contents);
+    let same = pack::split_zip(&rebuilt)
+        .is_some_and(|(again, again_comment)| again_comment == manifest.comment && again.iter().map(|part| &part.meta).eq(manifest.parts.iter()));
+    if !same {
+        return Err("the package does not come back the same when rebuilt".into());
+    }
+    let added = store_parts(dir, &parts, base)?;
+    let json = serde_json::to_vec(&manifest).map_err(|e| e.to_string())?;
+    write_atomic(&manifest_path(dir, &info.id), &json)?;
+    Ok(added.saturating_add(json.len() as u64))
+}
+
+/// The bytes of a version kept as parts: the archive rebuilt from its manifest. Every part is
+/// checked against its hash; the zip around them may differ from the saved file's bytes.
+#[cfg(not(target_arch = "wasm32"))]
+fn read_parts_version(dir: &Path, id: &str) -> Result<Vec<u8>, String> {
+    let manifest = read_manifest(dir, id).ok_or("this version's list of parts is missing or damaged")?;
+    let mut contents = Vec::with_capacity(manifest.parts.len());
+    for part in &manifest.parts {
+        if part.dir {
+            contents.push(Vec::new());
+            continue;
+        }
+        let content = load_object(dir, &part.sha256)?;
+        if content.len() as u64 != part.size {
+            return Err("a part of this version is damaged".into());
+        }
+        contents.push(content);
+    }
+    pack::assemble_zip(&manifest, &contents)
+}
+
+/// Versions written whole by earlier builds move to parts a little at a time: at most one per
+/// save, newest first, and only after the parts read back. One that cannot be split (not a
+/// zip, or over the limits) is marked with `stored` so it is not tried again.
+#[cfg(not(target_arch = "wasm32"))]
+fn migrate_one(dir: &Path, list: &mut [VersionInfo]) {
+    let base = newest_manifest(dir, list);
+    let Some(entry) = list.iter_mut().find(|v| v.storage == VersionStorage::Whole && v.stored.is_none() && v.kind != VersionKind::Original) else {
+        return;
+    };
+    let mut converted = None;
+    if let Some(bytes) = read_small(&dir.join(format!("{}.bin", entry.id)), MAX_DOCUMENT_BYTES)
+        && bytes.starts_with(b"PK\x03\x04")
+    {
+        let digest = digest_hex(&bytes);
+        // A damaged `.bin` stays as it is (reading it reports the damage).
+        if entry.digest.as_ref().is_none_or(|known| *known == digest) {
+            entry.digest = Some(digest);
+            converted = write_parts_version(dir, entry, &bytes, base.as_ref()).ok();
+        }
+    }
+    match converted {
+        // The `.bin` goes when the index no longer needs it (see `prune`).
+        Some(stored) => {
+            entry.storage = VersionStorage::Parts;
+            entry.stored = Some(stored);
+        }
+        None => {
+            let _ = fs::remove_file(manifest_path(dir, &entry.id));
+            entry.stored = Some(entry.size);
+        }
+    }
+}
+
+/// What versions take on disk, with shared parts counted once.
+#[cfg(not(target_arch = "wasm32"))]
+struct Usage<'a> {
+    dir: &'a Path,
+    objects: std::collections::HashMap<String, (u64, Option<String>)>,
+    /// Something could not be read: object files are then left alone this time.
+    incomplete: bool,
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl<'a> Usage<'a> {
+    fn new(dir: &'a Path) -> Self {
+        Usage { dir, objects: std::collections::HashMap::new(), incomplete: false }
+    }
+
+    /// The objects a version needs (its parts and the bases of their deltas) and the size of
+    /// its own file.
+    fn needs(&mut self, entry: &VersionInfo) -> (BTreeSet<String>, u64) {
+        let mut needed = BTreeSet::new();
+        if entry.storage == VersionStorage::Whole {
+            return (needed, entry.size);
+        }
+        let own = fs::symlink_metadata(manifest_path(self.dir, &entry.id)).map_or(0, |m| m.len());
+        let Some(manifest) = read_manifest(self.dir, &entry.id) else {
+            self.incomplete = true;
+            return (needed, own);
+        };
+        for part in manifest.parts.iter().filter(|part| !part.dir) {
+            let mut current = Some(part.sha256.clone());
+            let mut steps = 0;
+            while let Some(hash) = current.take() {
+                steps += 1;
+                if steps > pack::MAX_CHAIN || !needed.insert(hash.clone()) {
+                    break;
+                }
+                if !self.objects.contains_key(&hash) {
+                    match object_header(self.dir, &hash) {
+                        Ok((header, len)) => {
+                            self.objects.insert(hash.clone(), (len, header.base));
+                        }
+                        Err(_) => {
+                            self.incomplete = true;
+                            continue;
+                        }
+                    }
+                }
+                current = self.objects.get(&hash).and_then(|(_, base)| base.clone());
+            }
+        }
+        (needed, own)
+    }
+
+    fn size(&self, hash: &str) -> u64 {
+        self.objects.get(hash).map_or(0, |(len, _)| *len)
+    }
+}
+
 /// The time retention counts from: the capture time of an `original`, else when it was saved.
 #[cfg(not(target_arch = "wasm32"))]
 fn retention_secs(entry: &VersionInfo) -> Option<u64> {
@@ -755,7 +1044,8 @@ fn retention_secs(entry: &VersionInfo) -> Option<u64> {
 /// Apply the retention rules and delete the version files that fall out:
 /// - every version kept for [`KEEP_ALL_SECS`], then the newest of each hour until
 ///   [`KEEP_HOURLY_SECS`], of each day until [`KEEP_DAILY_SECS`] and of each week after that;
-/// - at most [`MAX_VERSIONS`] versions and [`MAX_DOCUMENT_BYTES`] per document, newest first;
+/// - at most [`MAX_VERSIONS`] versions and [`MAX_DOCUMENT_BYTES`] of real disk space per
+///   document (a part shared by several versions counts once), newest first;
 /// - the oldest `original` (the file as it was before WordCraft first wrote it) is pinned: it
 ///   outlives the time rules and is the last to go for the count and size limits. This goes
 ///   beyond OneDrive on purpose: AutoSave is on for local files that never had a server-side
@@ -792,28 +1082,64 @@ fn prune(dir: &Path, mut list: Vec<VersionInfo>, now: u64) -> Vec<VersionInfo> {
             kept.push(entry);
         }
     }
-    let pinned_size = pinned_entry.as_ref().map_or(0, |v| v.size);
-    while kept.iter().map(|v| v.size).sum::<u64>().saturating_add(pinned_size) > MAX_DOCUMENT_BYTES {
-        // The newest version always stays, even alone over the budget.
-        if kept.len() <= 1 {
-            break;
+    // Real space: each version's own file plus the objects it needs, shared objects once.
+    let mut usage = Usage::new(dir);
+    let mut needs: Vec<(BTreeSet<String>, u64)> = kept.iter().map(|entry| usage.needs(entry)).collect();
+    let pinned_needs = pinned_entry.as_ref().map(|entry| usage.needs(entry));
+    let mut counts: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    let mut total = 0u64;
+    for (objects, own) in needs.iter().chain(pinned_needs.iter()) {
+        total = total.saturating_add(*own);
+        for hash in objects {
+            let count = counts.entry(hash.clone()).or_insert(0);
+            if *count == 0 {
+                total = total.saturating_add(usage.size(hash));
+            }
+            *count += 1;
         }
+    }
+    // The newest version always stays, even alone over the budget.
+    while total > MAX_DOCUMENT_BYTES && kept.len() > 1 {
         kept.pop();
+        let Some((objects, own)) = needs.pop() else { break };
+        total = total.saturating_sub(own);
+        for hash in objects {
+            if let Some(count) = counts.get_mut(&hash) {
+                *count = count.saturating_sub(1);
+                if *count == 0 {
+                    total = total.saturating_sub(usage.size(&hash));
+                }
+            }
+        }
     }
     if let Some(entry) = pinned_entry {
         kept.push(entry);
         sort_newest_first(&mut kept);
     }
-    let keep_ids: BTreeSet<&str> = kept.iter().map(|v| v.id.as_str()).collect();
+    let keep: std::collections::HashMap<&str, VersionStorage> = kept.iter().map(|v| (v.id.as_str(), v.storage)).collect();
     if let Ok(entries) = fs::read_dir(dir) {
         for entry in entries.flatten() {
             let path = entry.path();
             let Some(name) = path.file_name().and_then(|n| n.to_str()) else { continue };
-            if let Some(id) = name.strip_suffix(".bin")
-                && id_ok(id)
-                && !keep_ids.contains(id)
+            // A version's file goes when the version goes, or when it is kept the other way.
+            let stale = |id: &str, storage: VersionStorage| id_ok(id) && keep.get(id) != Some(&storage);
+            if name.strip_suffix(".bin").is_some_and(|id| stale(id, VersionStorage::Whole))
+                || name.strip_suffix(PARTS_SUFFIX).is_some_and(|id| stale(id, VersionStorage::Parts))
             {
                 let _ = fs::remove_file(path);
+            }
+        }
+    }
+    // Objects no kept version needs, directly or as the base of a delta. When anything could
+    // not be read, nothing is collected: an unreadable manifest must not cost its parts.
+    if !usage.incomplete
+        && let Ok(entries) = fs::read_dir(dir.join(OBJECTS_DIR))
+    {
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            let Some(name) = name.to_str() else { continue };
+            if pack::hash_ok(name) && counts.get(name).is_none_or(|count| *count == 0) {
+                let _ = fs::remove_file(entry.path());
             }
         }
     }
@@ -848,10 +1174,9 @@ fn store_save_at(root: &Path, write: VersionWrite, now: u64) -> Result<Vec<Versi
         });
     let started = if replace { list.first().map(window_start) } else { None };
     let id = if replace { list.first().map(|v| v.id.clone()).ok_or("autosave history is inconsistent")? } else { new_id()? };
-    write_version_file(&dir, &id, &write.bytes)?;
     let captured_at = (write.kind == VersionKind::Original).then(|| crate::cmd::iso_from_unix_secs(now));
     let session = if write.kind == VersionKind::Autosave { write.session } else { None };
-    let info = VersionInfo {
+    let mut info = VersionInfo {
         id: id.clone(),
         saved_at: write.saved_at,
         author: write.author,
@@ -861,7 +1186,29 @@ fn store_save_at(root: &Path, write: VersionWrite, now: u64) -> Result<Vec<Versi
         digest: Some(digest),
         session,
         captured_at,
+        storage: VersionStorage::Whole,
+        stored: Some(size),
     };
+    // A zip package is kept as parts; the `original` copy is kept byte for byte, as it was on
+    // disk. Anything that goes wrong with the parts falls back to the whole bytes.
+    let as_parts = write.kind != VersionKind::Original
+        && write.bytes.starts_with(b"PK\x03\x04")
+        // An AutoSave that replaces the newest version deltas against the one before it, so
+        // the replaced version's parts are not kept alive as a base.
+        && match write_parts_version(&dir, &info, &write.bytes, newest_manifest(&dir, if replace { list.get(1..).unwrap_or_default() } else { &list }).as_ref()) {
+            Ok(stored) => {
+                info.storage = VersionStorage::Parts;
+                info.stored = Some(stored);
+                true
+            }
+            Err(error) => {
+                log::debug!("version history keeps this version whole: {error}");
+                false
+            }
+        };
+    if !as_parts {
+        write_version_file(&dir, &id, &write.bytes)?;
+    }
     if replace {
         if let Some(first) = list.first_mut() {
             *first = info;
@@ -869,6 +1216,7 @@ fn store_save_at(root: &Path, write: VersionWrite, now: u64) -> Result<Vec<Versi
     } else {
         list.insert(0, info);
     }
+    migrate_one(&dir, &mut list);
     list = prune(&dir, list, now);
     save_index(&dir, &list)?;
     // The identity record only helps find a moved file; failing to write it loses nothing.
@@ -904,14 +1252,38 @@ fn merge_bucket(from_dir: &Path, to_dir: &Path, to_path: &Path, now: u64) -> Res
     private_dir(to_dir).map_err(|e| e.to_string())?;
     let mut list = read_index(to_dir);
     let mut left_behind = false;
+    // Objects first, so a moved manifest never names a part that is not there yet. An object
+    // with the same name holds the same content, so one already there is kept.
+    if let Ok(objects) = fs::read_dir(from_dir.join(OBJECTS_DIR)) {
+        private_dir(&to_dir.join(OBJECTS_DIR)).map_err(|e| e.to_string())?;
+        for object in objects.flatten() {
+            let name = object.file_name();
+            if !name.to_str().is_some_and(pack::hash_ok) {
+                continue;
+            }
+            let target = to_dir.join(OBJECTS_DIR).join(&name);
+            if fs::symlink_metadata(&target).is_ok() {
+                continue;
+            }
+            let source = object.path();
+            let moved = fs::rename(&source, &target).is_ok() || fs::copy(&source, &target).is_ok();
+            if !moved {
+                left_behind = true;
+            }
+        }
+    }
     for entry in moving {
-        let name = format!("{}.bin", entry.id);
+        let name = match entry.storage {
+            VersionStorage::Whole => format!("{}.bin", entry.id),
+            VersionStorage::Parts => format!("{}{PARTS_SUFFIX}", entry.id),
+        };
         if list.iter().any(|v| v.id == entry.id) {
             continue;
         }
         let (source, target) = (from_dir.join(&name), to_dir.join(&name));
+        let expected = fs::symlink_metadata(&source).map_or(0, |m| m.len());
         let moved = fs::rename(&source, &target).is_ok()
-            || (fs::copy(&source, &target).is_ok_and(|copied| copied == entry.size) && fs::remove_file(&source).is_ok());
+            || (fs::copy(&source, &target).is_ok_and(|copied| copied == expected) && fs::remove_file(&source).is_ok());
         if moved {
             list.push(entry);
         } else {
@@ -1205,11 +1577,16 @@ impl Versions {
             return Err("invalid version id".into());
         }
         let dir = document_dir(&self.root, path);
-        let list = {
-            let _guard = hold(&self.lock);
-            read_index(&dir)
-        };
+        // Held while parts are read, so the worker's collection of unused parts cannot remove
+        // one in between.
+        let guard = hold(&self.lock);
+        let list = read_index(&dir);
         let info = list.into_iter().find(|entry| entry.id == id).ok_or_else(|| "no such version".to_string())?;
+        if info.storage == VersionStorage::Parts {
+            let bytes = read_parts_version(&dir, id)?;
+            return Ok((info, bytes));
+        }
+        drop(guard);
         let file_path = dir.join(format!("{id}.bin"));
         let meta = fs::symlink_metadata(&file_path).map_err(|e| e.to_string())?;
         if !meta.is_file() || meta.len() != info.size || meta.len() > MAX_DOCUMENT_BYTES {
@@ -1522,6 +1899,443 @@ mod tests {
         session.doc.plain_text(wordcraft_doc::StoryRef::Body)
     }
 
+    /// Two zip packages with the same parts: names, order, methods, dates and contents.
+    #[cfg(not(target_arch = "wasm32"))]
+    fn same_parts(a: &[u8], b: &[u8]) -> bool {
+        let parts = |bytes: &[u8]| pack::split_zip(bytes).map(|(parts, comment)| (parts.into_iter().map(|p| p.meta).collect::<Vec<_>>(), comment));
+        parts(a).is_some() && parts(a) == parts(b)
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    fn noise(len: usize, seed: u64) -> Vec<u8> {
+        let mut state = seed | 1;
+        (0..len)
+            .map(|_| {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                state as u8
+            })
+            .collect()
+    }
+
+    /// The body of a document with `paragraphs` paragraphs, the `edit`-th one changed.
+    #[cfg(not(target_arch = "wasm32"))]
+    fn body_xml(paragraphs: usize, edit: usize) -> Vec<u8> {
+        let mut xml = String::from("<?xml version=\"1.0\"?><w:document><w:body>");
+        for i in 0..paragraphs {
+            let words = if i == edit % paragraphs.max(1) {
+                format!("Paragraph {i} as revised in edit {edit}, with a new sentence.")
+            } else {
+                format!("Paragraph {i} of the report says what it says.")
+            };
+            xml.push_str(&format!(
+                "<w:p><w:pPr><w:pStyle w:val=\"Normal\"/></w:pPr><w:r><w:rPr><w:lang w:val=\"en-US\"/></w:rPr><w:t>{words}</w:t></w:r></w:p>"
+            ));
+        }
+        xml.push_str("</w:body></w:document>");
+        xml.into_bytes()
+    }
+
+    /// A body of varied prose (it compresses like real text, not like a repeated line):
+    /// `paragraphs` paragraphs of words drawn per paragraph, with the `edit`-th one rewritten.
+    #[cfg(not(target_arch = "wasm32"))]
+    fn varied_body_xml(paragraphs: usize, edit: usize) -> Vec<u8> {
+        const WORDS: &[&str] = &[
+            "the",
+            "court",
+            "found",
+            "that",
+            "contract",
+            "was",
+            "signed",
+            "after",
+            "notice",
+            "parties",
+            "agreed",
+            "payment",
+            "within",
+            "thirty",
+            "days",
+            "account",
+            "access",
+            "restored",
+            "evidence",
+            "shows",
+            "request",
+            "denied",
+            "claim",
+            "damages",
+            "moral",
+            "platform",
+            "user",
+            "terms",
+            "breach",
+            "hearing",
+            "judge",
+            "appeal",
+            "record",
+            "filed",
+            "deadline",
+            "expert",
+            "report",
+            "witness",
+            "statement",
+            "judgment",
+        ];
+        let mut xml = String::from("<?xml version=\"1.0\"?><w:document><w:body>");
+        for i in 0..paragraphs {
+            let seed = if i == edit % paragraphs.max(1) { (i as u64) << 20 | edit as u64 } else { i as u64 };
+            let mut state = seed.wrapping_mul(0x9e37_79b9_7f4a_7c15) | 1;
+            let mut words = Vec::new();
+            for _ in 0..(12 + (seed % 30)) {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                words.push(WORDS[(state % WORDS.len() as u64) as usize]);
+            }
+            xml.push_str(&format!("<w:p><w:pPr><w:pStyle w:val=\"Normal\"/></w:pPr><w:r><w:t>{}.</w:t></w:r></w:p>", words.join(" ")));
+        }
+        xml.push_str("</w:body></w:document>");
+        xml.into_bytes()
+    }
+
+    /// A `.docx`-shaped package: a deflated body and styles and a stored picture, like Word's.
+    #[cfg(not(target_arch = "wasm32"))]
+    fn package(body: &[u8], picture: &[u8], extra: Option<(&str, &[u8])>) -> Vec<u8> {
+        let mut writer = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
+        let deflated = zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
+        let stored = zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Stored);
+        let mut part = |name: &str, data: &[u8], options| {
+            writer.start_file(name, options).unwrap();
+            writer.write_all(data).unwrap();
+        };
+        part("[Content_Types].xml", b"<Types><Default Extension=\"xml\"/><Default Extension=\"png\"/></Types>", deflated);
+        part("word/document.xml", body, deflated);
+        part("word/styles.xml", "<w:styles>".repeat(2_000).as_bytes(), deflated);
+        part("word/media/image1.png", picture, stored);
+        if let Some((name, data)) = extra {
+            part(name, data, deflated);
+        }
+        writer.finish().unwrap().into_inner()
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    fn save_bytes_at(root: &Path, file: &Path, bytes: &[u8], when: u64) -> Vec<VersionInfo> {
+        store_save_at(
+            root,
+            VersionWrite {
+                path: file.to_path_buf(),
+                bytes: bytes.to_vec(),
+                author: "Tester".into(),
+                kind: VersionKind::Save,
+                saved_at: crate::cmd::iso_from_unix_secs(when),
+                session: None,
+            },
+            when,
+        )
+        .unwrap()
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    fn read_at(root: &Path, file: &Path, id: &str) -> Result<Vec<u8>, String> {
+        let dir = document_dir(root, file);
+        match read_index(&dir).into_iter().find(|v| v.id == id).map(|v| v.storage) {
+            Some(VersionStorage::Parts) => read_parts_version(&dir, id),
+            Some(VersionStorage::Whole) => fs::read(dir.join(format!("{id}.bin"))).map_err(|e| e.to_string()),
+            None => Err("no such version".into()),
+        }
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    fn objects_in(dir: &Path) -> Vec<String> {
+        let mut names: Vec<String> = fs::read_dir(dir.join(OBJECTS_DIR))
+            .map(|entries| entries.flatten().filter_map(|e| e.file_name().to_str().map(str::to_owned)).collect())
+            .unwrap_or_default();
+        names.sort();
+        names
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    fn disk_bytes(dir: &Path) -> u64 {
+        let mut total = 0;
+        for entry in fs::read_dir(dir).unwrap().flatten() {
+            let meta = entry.metadata().unwrap();
+            total += if meta.is_dir() { disk_bytes(&entry.path()) } else { meta.len() };
+        }
+        total
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn a_picture_is_stored_once_and_edits_are_small_deltas() {
+        let root = temp("dedupe");
+        let file = root.join("Report.docx");
+        let picture = noise(300_000, 7);
+        let now = 1_800_000_000;
+        let first = package(&body_xml(400, 0), &picture, None);
+        let list = save_bytes_at(&root, &file, &first, now);
+        assert_eq!(list[0].storage, VersionStorage::Parts);
+        let first_stored = list[0].stored.unwrap();
+        let second = package(&body_xml(400, 1), &picture, None);
+        let list = save_bytes_at(&root, &file, &second, now + 60);
+        let second_stored = list[0].stored.unwrap();
+        assert!(first_stored > picture.len() as u64, "the first version holds the picture");
+        assert!(second_stored < 4_000, "an edit costs a small delta, not the picture again: {second_stored} bytes");
+        let dir = document_dir(&root, &file);
+        let picture_hash = digest_hex(&picture);
+        assert!(objects_in(&dir).contains(&picture_hash));
+        assert_eq!(object_header(&dir, &picture_hash).unwrap().0.depth, 0);
+        // Each version comes back with exactly its own parts.
+        assert!(same_parts(&read_at(&root, &file, &list[1].id).unwrap(), &first));
+        assert!(same_parts(&read_at(&root, &file, &list[0].id).unwrap(), &second));
+        // `size` stays the saved document's size; `size` and `stored` reach file.versions.
+        assert_eq!(list[0].size, second.len() as u64);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn changed_parts_chain_deltas_and_start_again_whole() {
+        let root = temp("chain");
+        let file = root.join("Chain.docx");
+        let picture = noise(1_000, 9);
+        let now = 1_800_000_000;
+        let count = usize::from(pack::KEYFRAME_INTERVAL) + 3;
+        let packages: Vec<Vec<u8>> = (0..count).map(|edit| package(&body_xml(200, edit), &picture, None)).collect();
+        for (i, bytes) in packages.iter().enumerate() {
+            let _ = save_bytes_at(&root, &file, bytes, now + i as u64);
+        }
+        let dir = document_dir(&root, &file);
+        let depths: Vec<u16> = packages
+            .iter()
+            .map(|bytes| {
+                let (parts, _) = pack::split_zip(bytes).unwrap();
+                let body = parts.iter().find(|p| p.meta.name == "word/document.xml").unwrap();
+                object_header(&dir, &body.meta.sha256).unwrap().0.depth
+            })
+            .collect();
+        let interval = pack::KEYFRAME_INTERVAL;
+        let mut expected: Vec<u16> = (0..=interval).collect();
+        expected.extend(0..u16::try_from(count).unwrap() - interval - 1);
+        assert_eq!(depths, expected, "a whole copy, {interval} deltas, then a whole copy again");
+        let list = read_index(&dir);
+        for (entry, bytes) in list.iter().rev().zip(&packages) {
+            assert!(same_parts(&read_at(&root, &file, &entry.id).unwrap(), bytes));
+        }
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn a_damaged_part_only_affects_the_versions_that_need_it() {
+        let root = temp("damaged-part");
+        let file = root.join("Fragile.docx");
+        let picture = noise(2_000, 11);
+        let now = 1_800_000_000;
+        let packages: Vec<Vec<u8>> = (0..4).map(|edit| package(&body_xml(150, edit), &picture, None)).collect();
+        for (i, bytes) in packages.iter().enumerate() {
+            let _ = save_bytes_at(&root, &file, bytes, now + i as u64);
+        }
+        let dir = document_dir(&root, &file);
+        let list = read_index(&dir); // newest first
+        let body_of = |bytes: &[u8]| pack::split_zip(bytes).unwrap().0.into_iter().find(|p| p.meta.name == "word/document.xml").unwrap().meta.sha256;
+        // Damage the third version's body, a delta that the fourth builds on.
+        let third = object_path(&dir, &body_of(&packages[2]));
+        let mut bytes = fs::read(&third).unwrap();
+        let last = bytes.len() - 1;
+        bytes[last] ^= 0x55;
+        fs::write(&third, bytes).unwrap();
+        assert!(same_parts(&read_at(&root, &file, &list[3].id).unwrap(), &packages[0]), "older versions still open");
+        assert!(same_parts(&read_at(&root, &file, &list[2].id).unwrap(), &packages[1]));
+        assert!(read_at(&root, &file, &list[1].id).is_err(), "the damaged version is an error");
+        assert!(read_at(&root, &file, &list[0].id).is_err(), "and so is the one whose delta leads through it");
+        // A missing part is an error too, never a panic.
+        fs::remove_file(object_path(&dir, &digest_hex(&picture))).unwrap();
+        assert!(read_at(&root, &file, &list[3].id).is_err());
+        // Saving the damaged content again writes it whole and repairs every version using it.
+        let _ = save_bytes_at(&root, &file, &packages[2], now + 10);
+        assert!(same_parts(&read_at(&root, &file, &list[1].id).unwrap(), &packages[2]));
+        assert!(same_parts(&read_at(&root, &file, &list[0].id).unwrap(), &packages[3]));
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn autosaves_that_join_one_version_leave_no_parts_behind() {
+        let root = temp("join-parts");
+        let file = root.join("Join.docx");
+        let picture = noise(3_000, 23);
+        let now = 1_800_000_000;
+        let _ = save_bytes_at(&root, &file, &package(&body_xml(150, 0), &picture, None), now);
+        let mut last = Vec::new();
+        for edit in 1..6 {
+            last = package(&body_xml(150, edit), &picture, None);
+            let at = now + edit as u64 * 10;
+            let _ = store_save_at(
+                &root,
+                VersionWrite {
+                    path: file.clone(),
+                    bytes: last.clone(),
+                    author: "Tester".into(),
+                    kind: VersionKind::Autosave,
+                    saved_at: crate::cmd::iso_from_unix_secs(at),
+                    session: Some("s".into()),
+                },
+                at,
+            )
+            .unwrap();
+        }
+        let dir = document_dir(&root, &file);
+        let list = read_index(&dir);
+        assert_eq!(list.len(), 2, "five AutoSave writes joined one version");
+        // Content types, styles, the picture, the saved body and the latest body: nothing from
+        // the writes the window replaced.
+        assert_eq!(objects_in(&dir).len(), 5, "{:?}", objects_in(&dir));
+        assert!(same_parts(&read_at(&root, &file, &list[0].id).unwrap(), &last));
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn unused_parts_are_collected_but_delta_bases_stay() {
+        let root = temp("gc");
+        let file = root.join("Collect.docx");
+        let picture = noise(5_000, 13);
+        let only_first = noise(4_000, 14);
+        let now = 1_800_000_000;
+        let first = package(&body_xml(150, 0), &picture, Some(("word/media/old.bin", &only_first)));
+        let list = save_bytes_at(&root, &file, &first, now);
+        let first_id = list[0].id.clone();
+        let second = package(&body_xml(150, 1), &picture, None);
+        let list = save_bytes_at(&root, &file, &second, now + 1);
+        let dir = document_dir(&root, &file);
+        let body_first = pack::split_zip(&first).unwrap().0.into_iter().find(|p| p.meta.name == "word/document.xml").unwrap().meta.sha256;
+        // The first version goes.
+        let kept = prune(&dir, list.into_iter().filter(|v| v.id != first_id).collect(), now + 2);
+        assert_eq!(kept.len(), 1);
+        assert!(!manifest_path(&dir, &first_id).exists());
+        let objects = objects_in(&dir);
+        assert!(!objects.contains(&digest_hex(&only_first)), "a part only the removed version had is collected");
+        assert!(objects.contains(&body_first), "the base of a delta still in use stays");
+        assert!(objects.contains(&digest_hex(&picture)));
+        assert!(same_parts(&read_at(&root, &file, &kept[0].id).unwrap(), &second));
+        // An unreadable manifest stops collection: its parts are never deleted on a guess.
+        fs::write(manifest_path(&dir, &kept[0].id), b"{ damaged").unwrap();
+        let before = objects_in(&dir);
+        let _ = prune(&dir, kept, now + 3);
+        assert_eq!(objects_in(&dir), before);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn whole_versions_from_earlier_builds_stay_readable_and_move_to_parts() {
+        let root = temp("migrate");
+        let file = root.join("Old.docx");
+        let picture = noise(20_000, 15);
+        let now = 1_800_000_000;
+        let old = package(&body_xml(100, 0), &picture, None);
+        // As an earlier build left it: a `.bin` and an index entry without `storage` or `stored`.
+        let dir = document_dir(&root, &file);
+        fs::create_dir_all(&dir).unwrap();
+        let id = "0123456789abcdef0123456789abcdef";
+        fs::write(dir.join(format!("{id}.bin")), &old).unwrap();
+        let legacy = json!([{"id": id, "savedAt": crate::cmd::iso_from_unix_secs(now), "author": "Tester", "size": old.len(), "kind": "save", "digest": digest_hex(&old)}]);
+        fs::write(dir.join(INDEX_FILE), serde_json::to_vec(&legacy).unwrap()).unwrap();
+        assert_eq!(read_at(&root, &file, id).unwrap(), old, "readable as it is");
+        let newer = package(&body_xml(100, 1), &picture, None);
+        let list = save_bytes_at(&root, &file, &newer, now + 60);
+        let migrated = list.iter().find(|v| v.id == id).unwrap();
+        assert_eq!(migrated.storage, VersionStorage::Parts, "moved to parts at the next save");
+        assert!(!dir.join(format!("{id}.bin")).exists());
+        assert!(same_parts(&read_at(&root, &file, id).unwrap(), &old));
+        assert_eq!(migrated.digest.as_deref(), Some(digest_hex(&old).as_str()), "still recognised as the bytes that were saved");
+        // A `.bin` that is not a zip stays whole and is not tried again.
+        let text_file = root.join("notes.txt");
+        let list = save_bytes_at(&root, &text_file, b"plain text", now);
+        assert_eq!(list[0].storage, VersionStorage::Whole);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn the_original_and_files_that_are_not_zips_stay_byte_for_byte() {
+        let root = temp("verbatim");
+        let file = root.join("Original.docx");
+        let original = package(&body_xml(50, 0), &noise(1_000, 17), None);
+        let list = store_save_at(
+            &root,
+            VersionWrite {
+                path: file.clone(),
+                bytes: original.clone(),
+                author: String::new(),
+                kind: VersionKind::Original,
+                saved_at: crate::cmd::iso_from_unix_secs(1_800_000_000),
+                session: None,
+            },
+            1_800_000_000,
+        )
+        .unwrap();
+        assert_eq!(list[0].storage, VersionStorage::Whole);
+        assert_eq!(read_at(&root, &file, &list[0].id).unwrap(), original);
+        // A truncated or bogus zip is kept whole as well.
+        let broken = original.get(..original.len() / 2).unwrap().to_vec();
+        let list = save_bytes_at(&root, &file, &broken, 1_800_000_100);
+        assert_eq!(list[0].storage, VersionStorage::Whole);
+        assert_eq!(read_at(&root, &file, &list[0].id).unwrap(), broken);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    fn the_size_limit_counts_real_disk_space() {
+        let root = temp("space");
+        let file = root.join("Space.docx");
+        let dir = document_dir(&root, &file);
+        let picture = noise(50_000, 19);
+        let now = 1_800_000_000;
+        let mut logical = 0u64;
+        for edit in 0..20 {
+            let bytes = package(&body_xml(100, edit), &picture, None);
+            logical += bytes.len() as u64;
+            let _ = save_bytes_at(&root, &file, &bytes, now + edit as u64);
+        }
+        let kept = read_index(&dir);
+        assert_eq!(kept.len(), 20);
+        let real = disk_bytes(&dir);
+        assert!(real * 5 < logical, "20 versions take {real} bytes on disk instead of {logical}");
+        let _ = fs::remove_dir_all(root);
+    }
+
+    /// The figure for the docs: 100 versions of a ~2 MB `.docx` with a picture, one paragraph
+    /// edited each time. Run with `cargo test -p wordcraft-engine --lib storage_figure -- --ignored --nocapture`.
+    #[cfg(not(target_arch = "wasm32"))]
+    #[test]
+    #[ignore = "slow; prints the storage figure for docs/cloud.md"]
+    fn storage_figure_for_a_hundred_versions() {
+        let root = temp("figure");
+        let file = root.join("Figure.docx");
+        let dir = document_dir(&root, &file);
+        let picture = noise(1_700_000, 21);
+        let now = 1_800_000_000;
+        let mut whole = 0u64;
+        let mut size = 0;
+        for edit in 0..100 {
+            let bytes = package(&varied_body_xml(3_000, edit * 7), &picture, None);
+            size = bytes.len();
+            whole += bytes.len() as u64;
+            let _ = save_bytes_at(&root, &file, &bytes, now + edit as u64 * 60);
+        }
+        let parts = disk_bytes(&dir);
+        println!(
+            "100 versions of a {size}-byte .docx: {whole} bytes kept whole, {parts} bytes as parts ({:.1}%)",
+            parts as f64 * 100.0 / whole as f64
+        );
+        assert!(parts * 10 < whole);
+        let _ = fs::remove_dir_all(root);
+    }
+
     #[cfg(not(target_arch = "wasm32"))]
     #[test]
     fn the_first_listing_after_opening_is_complete() {
@@ -1739,13 +2553,17 @@ mod tests {
         assert!(first.captured_at.is_some());
         let newest = &list[0];
         assert_eq!(newest.kind, VersionKind::Autosave);
-        assert_eq!(version_bytes(&s, &file, &newest.id), fs::read(&file).unwrap(), "the version is exactly what went to disk");
+        assert_eq!(newest.storage, VersionStorage::Parts);
+        assert!(
+            same_parts(&version_bytes(&s, &file, &newest.id), &fs::read(&file).unwrap()),
+            "the version holds exactly the parts that went to disk"
+        );
         // Later saves of the same opening do not read or store the original again.
         s.run("document.setText", &json!({"text": "edited again"})).unwrap();
         s.run("file.save", &json!({})).unwrap();
         let list = wait_versions(&s, &file, 3);
         assert_eq!(list.iter().filter(|v| v.kind == VersionKind::Original).count(), 1);
-        assert_eq!(version_bytes(&s, &file, &list[0].id), fs::read(&file).unwrap());
+        assert!(same_parts(&version_bytes(&s, &file, &list[0].id), &fs::read(&file).unwrap()));
         drop(s);
         let _ = fs::remove_dir_all(root);
     }
@@ -1939,7 +2757,7 @@ mod tests {
         let list = wait_versions(&s, &file, 3);
         assert_eq!(list.len(), 3, "{list:?}");
         assert_eq!(list[0].kind, VersionKind::Restore, "the restore is the newest version straight away");
-        assert_eq!(version_bytes(&s, &file, &list[0].id), version_bytes(&s, &file, &first[0].id), "with the restored bytes");
+        assert!(same_parts(&version_bytes(&s, &file, &list[0].id), &version_bytes(&s, &file, &first[0].id)), "with the restored content");
         let kept = &list[1];
         let mut check = crate::Session::new(wordcraft_doc::Document::new());
         let (doc, _) = crate::io::open_bytes_with("Letter.docx", &version_bytes(&s, &file, &kept.id), None).unwrap();
