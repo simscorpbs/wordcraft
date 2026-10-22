@@ -459,6 +459,109 @@ fn save(app: &mut WordApp, ui: &mut Ui) {
         }
     }
     note(ui, "The document you are editing keeps the names and dates; only the saved file leaves them out.");
+    ui.add_space(8.0);
+    section(ui, "Version history");
+    version_history(app, ui);
+}
+
+/// File › Options › Save › Version history: where the history is kept (the settings folder,
+/// another folder, or both), the device name versions record, and deleting history.
+fn version_history(app: &mut WordApp, ui: &mut Ui) {
+    let saved = app.session.prefs.versions_folder.clone().unwrap_or_default();
+    let id = egui::Id::new("options_versions_folder");
+    let mut folder = ui.data(|d| d.get_temp::<String>(id)).unwrap_or_else(|| saved.clone());
+    let existing_id = egui::Id::new("options_versions_existing");
+    let mut existing = ui.data(|d| d.get_temp::<String>(existing_id)).unwrap_or_else(|| "copy".to_owned());
+    ui.label(tl!("History folder:"));
+    ui.horizontal(|ui| {
+        ui.add(egui::TextEdit::singleline(&mut folder).desired_width(320.0).hint_text(tl!("Not set: the settings folder")));
+        let changed = folder.trim() != saved;
+        if ui.add_enabled(changed, egui::Button::new(tl!("Apply"))).clicked() {
+            let value = if folder.trim().is_empty() { "default" } else { folder.trim() };
+            match app.run("file.options", json!({"versionsFolder": value, "versionsExisting": existing})) {
+                Ok(_) => folder = app.session.prefs.versions_folder.clone().unwrap_or_default(),
+                Err(e) => app.status(e),
+            }
+        }
+        if ui.add_enabled(!saved.is_empty(), egui::Button::new(tl!("Use the settings folder"))).clicked()
+            && app.run("file.options", json!({"versionsFolder": "default", "versionsExisting": existing})).is_ok()
+        {
+            folder.clear();
+        }
+    });
+    ui.horizontal(|ui| {
+        ui.label(tl!("History already kept:"));
+        for (value, label) in [("copy", "Copy it there"), ("move", "Move it there"), ("leave", "Leave it where it is")] {
+            ui.radio_value(&mut existing, value.to_owned(), tl!(label));
+        }
+    });
+    let mut mirror = app.session.prefs.versions_mirror;
+    if ui.add_enabled(!saved.is_empty(), egui::Checkbox::new(&mut mirror, tl!("Also keep the history in the settings folder"))).changed() {
+        set(app, json!({"versionsMirror": mirror, "versionsExisting": existing}));
+    }
+    ui.data_mut(|d| {
+        d.insert_temp(id, folder);
+        d.insert_temp(existing_id, existing);
+    });
+    let (_, unavailable, relocating) = app.session.version_folders();
+    if relocating {
+        note(ui, "Copying the version history to the new folder…");
+    }
+    for away in &unavailable {
+        ui.label(egui::RichText::new(format!("{} {}", tl!("Not reachable now; brought up to date when it is back:"), away.display())).small());
+    }
+    note(
+        ui,
+        "A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.",
+    );
+    ui.add_space(6.0);
+    // The device name versions record instead of the computer's own name.
+    let label_id = egui::Id::new("options_device_label");
+    let saved_label = app.session.prefs.device_label.clone().unwrap_or_default();
+    let mut label = ui.data(|d| d.get_temp::<String>(label_id)).unwrap_or_else(|| saved_label.clone());
+    let default_label = wordcraft_engine::versions::default_device_label();
+    ui.horizontal(|ui| {
+        ui.label(tl!("Device name in the history:"));
+        ui.add(egui::TextEdit::singleline(&mut label).desired_width(200.0).char_limit(64).hint_text(tl!(default_label)));
+        if ui.add_enabled(label.trim() != saved_label, egui::Button::new(tl!("Apply"))).clicked() {
+            let value = if label.trim().is_empty() { "auto" } else { label.trim() };
+            set(app, json!({"deviceLabel": value}));
+        }
+    });
+    ui.data_mut(|d| d.insert_temp(label_id, label));
+    ui.add_space(6.0);
+    // Deleting history asks once more, in place.
+    let confirm_id = egui::Id::new("options_versions_delete");
+    let mut confirm = ui.data(|d| d.get_temp::<String>(confirm_id)).unwrap_or_default();
+    ui.horizontal(|ui| {
+        let has_document = app.session.path.is_some();
+        if ui.add_enabled(has_document, egui::Button::new(tl!("Delete this document's history…"))).clicked() {
+            confirm = "document".into();
+        }
+        if ui.button(tl!("Delete all version history…")).clicked() {
+            confirm = "all".into();
+        }
+    });
+    if !confirm.is_empty() {
+        let question = if confirm == "all" {
+            tl!("Delete every document's version history, in every history folder? This cannot be undone.")
+        } else {
+            tl!("Delete this document's version history, in every history folder? This cannot be undone.")
+        };
+        ui.label(question);
+        ui.horizontal(|ui| {
+            if ui.button(tl!("Delete")).clicked() {
+                if let Err(e) = app.run("file.versions", json!({"delete": confirm})) {
+                    app.status(e);
+                }
+                confirm.clear();
+            }
+            if ui.button(tl!("Cancel")).clicked() {
+                confirm.clear();
+            }
+        });
+    }
+    ui.data_mut(|d| d.insert_temp(confirm_id, confirm));
 }
 
 fn language(app: &mut WordApp, ui: &mut Ui) {
@@ -1018,6 +1121,32 @@ mod tests {
         h.run_steps(2);
         assert!(!h.state().session.prefs.typing_replaces_selection);
         assert!(h.query_by_label("Measurement units:").is_some());
+    }
+
+    /// File › Options › Save › Version history: the folder, device name and delete buttons are
+    /// there, and deleting asks once more before anything goes.
+    #[test]
+    fn save_version_history_asks_before_deleting() {
+        let mut a = app();
+        a.run("file.options", json!({"pane": "save"})).unwrap();
+        let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 1400.0)).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                app.logic(&ctx);
+                app.ui(ui);
+            },
+            a,
+        );
+        h.run_steps(4);
+        assert!(h.query_by_label("Version history").is_some());
+        assert!(h.query_by_label("History folder:").is_some());
+        assert!(h.query_by_label("Device name in the history:").is_some());
+        h.get_by_label("Delete all version history…").click();
+        h.run_steps(4);
+        assert!(h.query_by_label("Delete every document's version history, in every history folder? This cannot be undone.").is_some());
+        h.get_by_label("Cancel").click();
+        h.run_steps(4);
+        assert!(h.query_by_label("Delete every document's version history, in every history folder? This cannot be undone.").is_none());
     }
 
     /// File › Options › Save › Privacy (#1062): the checkboxes are the document's

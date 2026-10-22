@@ -2732,3 +2732,25 @@ preview	Title	Naslov
 
 	Import…	Uvezi…
 	Yesterday	Jučer
+	Version history	Povijest verzija
+	History folder:	Mapa povijesti:
+	Not set: the settings folder	Nije postavljeno: mapa postavki
+	Use the settings folder	Koristi mapu postavki
+	History already kept:	Već spremljena povijest:
+	Copy it there	Kopiraj je tamo
+	Move it there	Premjesti je tamo
+	Leave it where it is	Ostavi je gdje jest
+	Also keep the history in the settings folder	Povijest čuvaj i u mapi postavki
+	Copying the version history to the new folder…	Povijest verzija kopira se u novu mapu…
+	Not reachable now; brought up to date when it is back:	Trenutačno nedostupna; bit će ažurirana kad ponovno bude dostupna:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Mapa povijesti u servisu iCloud Drive, OneDrive ili Google Drive privatna je koliko i taj račun: svatko tko mu ima pristup može otvoriti vaše ranije verzije.
+	Device name in the history:	Naziv uređaja u povijesti:
+	Delete this document's history…	Izbriši povijest ovog dokumenta…
+	Delete all version history…	Izbriši svu povijest verzija…
+	Delete every document's version history, in every history folder? This cannot be undone.	Izbrisati povijest verzija svih dokumenata u svim mapama povijesti? To se ne može poništiti.
+	Delete this document's version history, in every history folder? This cannot be undone.	Izbrisati povijest verzija ovog dokumenta u svim mapama povijesti? To se ne može poništiti.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Računalo

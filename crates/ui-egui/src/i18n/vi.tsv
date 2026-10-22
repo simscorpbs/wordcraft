@@ -2772,3 +2772,25 @@ template	Letter	Thư
 
 	Import…	Nhập…
 	Yesterday	Hôm qua
+	Version history	Lịch sử phiên bản
+	History folder:	Thư mục lịch sử:
+	Not set: the settings folder	Chưa đặt: thư mục cài đặt
+	Use the settings folder	Dùng thư mục cài đặt
+	History already kept:	Lịch sử đã lưu:
+	Copy it there	Sao chép sang đó
+	Move it there	Di chuyển sang đó
+	Leave it where it is	Để nguyên chỗ cũ
+	Also keep the history in the settings folder	Giữ lịch sử cả trong thư mục cài đặt
+	Copying the version history to the new folder…	Đang sao chép lịch sử phiên bản sang thư mục mới…
+	Not reachable now; brought up to date when it is back:	Hiện không truy cập được; sẽ được cập nhật khi có lại:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Thư mục lịch sử trong iCloud Drive, OneDrive hoặc Google Drive riêng tư đúng bằng tài khoản đó: ai có quyền truy cập đều có thể mở các phiên bản trước của bạn.
+	Device name in the history:	Tên thiết bị trong lịch sử:
+	Delete this document's history…	Xóa lịch sử của tài liệu này…
+	Delete all version history…	Xóa toàn bộ lịch sử phiên bản…
+	Delete every document's version history, in every history folder? This cannot be undone.	Xóa lịch sử phiên bản của mọi tài liệu, trong mọi thư mục lịch sử? Không thể hoàn tác thao tác này.
+	Delete this document's version history, in every history folder? This cannot be undone.	Xóa lịch sử phiên bản của tài liệu này, trong mọi thư mục lịch sử? Không thể hoàn tác thao tác này.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Máy tính

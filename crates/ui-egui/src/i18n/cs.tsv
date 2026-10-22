@@ -2724,3 +2724,25 @@ preview	Title	Ukázka
 
 	Import…	Importovat…
 	Yesterday	Včera
+	Version history	Historie verzí
+	History folder:	Složka historie:
+	Not set: the settings folder	Nenastaveno: složka nastavení
+	Use the settings folder	Použít složku nastavení
+	History already kept:	Již uložená historie:
+	Copy it there	Zkopírovat ji tam
+	Move it there	Přesunout ji tam
+	Leave it where it is	Nechat ji na místě
+	Also keep the history in the settings folder	Uchovávat historii i ve složce nastavení
+	Copying the version history to the new folder…	Historie verzí se kopíruje do nové složky…
+	Not reachable now; brought up to date when it is back:	Teď není dostupná; aktualizuje se, až bude zase dostupná:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Složka historie na iCloud Drive, OneDrive nebo Google Drive je soukromá stejně jako daný účet: kdokoli, kdo k ní má přístup, může otevřít vaše dřívější verze.
+	Device name in the history:	Název zařízení v historii:
+	Delete this document's history…	Odstranit historii tohoto dokumentu…
+	Delete all version history…	Odstranit celou historii verzí…
+	Delete every document's version history, in every history folder? This cannot be undone.	Odstranit historii verzí všech dokumentů ve všech složkách historie? Tuto akci nelze vrátit zpět.
+	Delete this document's version history, in every history folder? This cannot be undone.	Odstranit historii verzí tohoto dokumentu ve všech složkách historie? Tuto akci nelze vrátit zpět.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Počítač

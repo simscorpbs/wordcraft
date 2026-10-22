@@ -76,7 +76,7 @@ pub fn specs() -> Vec<CommandSpec> {
             .pure(),
         CommandSpec::new("file.save", "Save", "File", save)
             .key("Mod+S / Shift+F12 / Alt+Shift+F2")
-            .params(r#"{"path"?: string, "password"?: string (encrypt this and later saves with it, as file.encrypt does), "markup"?: bool (Print Markup for a PDF, PNG, HTML, Markdown or text copy: comments shown; default file.printMarkup), "format"?: "wordml2003" (an .xml file as a Word 2003 XML Document) | "flatopc" (as a Word XML Document, the default; saving over a Word 2003 XML file keeps that format), "ifUnchanged"?: bool (AutoSave: write the document's own file only if no other device or program changed it since it was read or written here; else nothing is written and the result has `conflict`: "changed" | "missing", see file.resolveConflict)}"#)
+            .params(r#"{"path"?: string, "password"?: string (encrypt this and later saves with it, as file.encrypt does), "markup"?: bool (Print Markup for a PDF, PNG, HTML, Markdown or text copy: comments shown; default file.printMarkup), "format"?: "wordml2003" (an .xml file as a Word 2003 XML Document) | "flatopc" (as a Word XML Document, the default; saving over a Word 2003 XML file keeps that format), "ifUnchanged"?: bool (AutoSave: write the document's own file only if no other device or program changed it since it was read or written here; else nothing is written and the result has `conflict`: "changed" | "missing", see file.resolveConflict), "trigger"?: string (what asked for the save, recorded in the version history: close, …)}"#)
             .pure(),
         CommandSpec::new("file.saveAs", "Save As", "File", save_as).key(super::mac_or("F12 / Mod+Shift+S", "F12 / Alt+F2")).params(r#"{"path": string, "password"?: string, "markup"?: bool, "format"?: string (as file.save)}"#).pure(),
         // Pure: the password must not land in Repeat or a recorded macro, and it isn't an edit
@@ -254,6 +254,8 @@ pub(crate) fn open(s: &mut Session, v: &Value) -> CmdResult {
     if p::str(v, "data").is_none() {
         s.cloud.opened(std::path::Path::new(path));
     }
+    // The version history counts the next edit's words against the document as opened.
+    s.versions_document_opened();
     // Like Word, a document opened with a password is saved with it again.
     if encrypted {
         s.password = password.map(crate::io::Password::new);
@@ -321,10 +323,15 @@ pub(crate) fn save(s: &mut Session, v: &Value) -> CmdResult {
     {
         return Ok(json!({"saved": false, "conflict": conflict.id(), "path": path.to_string_lossy()}));
     }
-    // Before the document's file (or a file Save As replaces) is written over, the bytes there
-    // go into its version history unless they are in it already. Never fails the save.
+    // The document's identity for its version history, and the bytes on disk kept before the
+    // document's file (or a file Save As replaces) is written over. Never fails the save.
+    let trigger = match v.get("trigger") {
+        None | Some(Value::Null) => None,
+        Some(Value::String(t)) if !t.is_empty() && t.len() <= 32 && t.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-') => Some(t.as_str()),
+        Some(_) => return Err(CmdError::Params("`trigger` is a short word such as close".into())),
+    };
     if KEEPS_PATH.contains(&ext.as_str()) || s.path.as_deref() == Some(path.as_path()) {
-        s.protect_before_overwrite(&path);
+        s.prepare_version(&path, &ext, trigger, p::bool(v, "ifUnchanged") == Some(true));
     }
     s.stamp_save();
     let password = s.password.as_ref().map(crate::io::Password::as_str);

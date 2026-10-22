@@ -2747,3 +2747,25 @@ preview	Title	Titel
 
 	Import…	Importera…
 	Yesterday	I går
+	Version history	Versionshistorik
+	History folder:	Mapp för historiken:
+	Not set: the settings folder	Inte angiven: inställningsmappen
+	Use the settings folder	Använd inställningsmappen
+	History already kept:	Historik som redan sparats:
+	Copy it there	Kopiera den dit
+	Move it there	Flytta den dit
+	Leave it where it is	Låt den ligga kvar
+	Also keep the history in the settings folder	Behåll historiken även i inställningsmappen
+	Copying the version history to the new folder…	Versionshistoriken kopieras till den nya mappen…
+	Not reachable now; brought up to date when it is back:	Går inte att nå nu; uppdateras när den är tillbaka:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	En historikmapp i iCloud Drive, OneDrive eller Google Drive är lika privat som det kontot: alla med åtkomst kan öppna dina tidigare versioner.
+	Device name in the history:	Enhetsnamn i historiken:
+	Delete this document's history…	Ta bort historiken för det här dokumentet…
+	Delete all version history…	Ta bort all versionshistorik…
+	Delete every document's version history, in every history folder? This cannot be undone.	Ta bort versionshistoriken för alla dokument i alla historikmappar? Det går inte att ångra.
+	Delete this document's version history, in every history folder? This cannot be undone.	Ta bort versionshistoriken för det här dokumentet i alla historikmappar? Det går inte att ångra.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Dator

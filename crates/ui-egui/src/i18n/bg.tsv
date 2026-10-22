@@ -2721,3 +2721,25 @@
 
 	Import…	Импортиране…
 	Yesterday	Вчера
+	Version history	История на версиите
+	History folder:	Папка на историята:
+	Not set: the settings folder	Не е зададена: папката с настройки
+	Use the settings folder	Използване на папката с настройки
+	History already kept:	Вече пазената история:
+	Copy it there	Копиране там
+	Move it there	Преместване там
+	Leave it where it is	Оставяне на място
+	Also keep the history in the settings folder	Историята да се пази и в папката с настройки
+	Copying the version history to the new folder…	Историята на версиите се копира в новата папка…
+	Not reachable now; brought up to date when it is back:	В момента е недостъпна; ще бъде обновена, когато отново е достъпна:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Папка на историята в iCloud Drive, OneDrive или Google Drive е толкова поверителна, колкото този акаунт: всеки с достъп до нея може да отвори предишните ви версии.
+	Device name in the history:	Име на устройството в историята:
+	Delete this document's history…	Изтриване на историята на този документ…
+	Delete all version history…	Изтриване на цялата история на версиите…
+	Delete every document's version history, in every history folder? This cannot be undone.	Да се изтрие ли историята на версиите на всички документи във всички папки на историята? Това не може да бъде отменено.
+	Delete this document's version history, in every history folder? This cannot be undone.	Да се изтрие ли историята на версиите на този документ във всички папки на историята? Това не може да бъде отменено.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Компютър

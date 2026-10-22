@@ -448,6 +448,12 @@ pub struct Session {
     pub(crate) opened_version: Option<crate::versions::OpenedVersion>,
     /// A restore save is labelled separately from an ordinary save.
     pub(crate) version_next_kind: Option<crate::versions::VersionKind>,
+    /// What `file.save` worked out for the version it is about to make (identity, the bytes it
+    /// replaces), taken when the save is recorded.
+    pub(crate) version_pending: Option<crate::versions::PendingVersion>,
+    /// When the open document was opened or made (Unix seconds): the start of its editing
+    /// session, as the version history records it.
+    document_opened_at: u64,
     /// Quick Parts / AutoText entries.
     pub building_blocks: std::collections::BTreeMap<String, Fragment>,
     /// The AutoSave switch for this document: what its file remembers ([`Session::set_autosave`]),
@@ -570,6 +576,13 @@ pub struct Prefs {
     /// File › Options › Save: AutoSave is on for every file that has no choice of its own (on,
     /// the default). Off, AutoSave covers only the files whose switch the user turned on.
     pub autosave_by_default: bool,
+    /// File › Options › Save › Version history: a folder for the history other than the
+    /// settings folder (`None`: the settings folder only).
+    pub versions_folder: Option<String>,
+    /// With `versions_folder`: the settings folder keeps the history too (a mirror).
+    pub versions_mirror: bool,
+    /// The device label versions record (`None`: the system's name, "Windows", "Mac").
+    pub device_label: Option<String>,
 }
 
 impl Default for Prefs {
@@ -592,6 +605,9 @@ impl Default for Prefs {
             detect_language: true,
             autocorrect: Default::default(),
             autosave_by_default: true,
+            versions_folder: None,
+            versions_mirror: false,
+            device_label: None,
         }
     }
 }
@@ -690,6 +706,8 @@ impl Session {
             version_store: None,
             opened_version: None,
             version_next_kind: None,
+            version_pending: None,
+            document_opened_at: crate::cmd::now_unix(),
             building_blocks: Default::default(),
             autosave: Prefs::default().autosave_by_default,
             autosave_memory: Default::default(),
@@ -779,6 +797,17 @@ impl Session {
     pub fn rev(&self) -> u64 {
         self.rev
     }
+    /// When the open document was opened or made (Unix seconds).
+    pub fn document_opened_at(&self) -> u64 {
+        self.document_opened_at
+    }
+
+    /// The page count of the layout already made for the document as it is, if there is one
+    /// (none is made just to count).
+    pub(crate) fn cached_page_count(&self) -> Option<usize> {
+        self.layout.as_ref().filter(|cached| cached.0 == self.rev).map(|cached| cached.5.pages.len())
+    }
+
     /// Which document is open (see `document_id`): lets a caller tell an edit from a replacement.
     pub fn document_id(&self) -> u64 {
         self.document_id
@@ -1129,6 +1158,8 @@ impl Session {
     pub fn set_document(&mut self, doc: Document) {
         self.autocap = None;
         self.document_id = self.document_id.wrapping_add(1);
+        self.document_opened_at = crate::cmd::now_unix();
+        self.version_pending = None;
         self.bib_style = doc_bib_style(&doc);
         self.doc = doc;
         self.doc.ensure_nonempty();
@@ -1220,6 +1251,8 @@ impl Session {
                 version_store: _,
             opened_version: _,
             version_next_kind: _,
+            version_pending: _,
+            document_opened_at: _,
             building_blocks: _,
             autosave: _,
             autosave_memory: _,

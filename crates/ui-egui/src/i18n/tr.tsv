@@ -2729,3 +2729,25 @@ preview	Title	Örnek
 
 	Import…	İçe aktar…
 	Yesterday	Dün
+	Version history	Sürüm geçmişi
+	History folder:	Geçmiş klasörü:
+	Not set: the settings folder	Ayarlanmadı: ayarlar klasörü
+	Use the settings folder	Ayarlar klasörünü kullan
+	History already kept:	Önceden tutulan geçmiş:
+	Copy it there	Oraya kopyala
+	Move it there	Oraya taşı
+	Leave it where it is	Olduğu yerde bırak
+	Also keep the history in the settings folder	Geçmişi ayarlar klasöründe de tut
+	Copying the version history to the new folder…	Sürüm geçmişi yeni klasöre kopyalanıyor…
+	Not reachable now; brought up to date when it is back:	Şu anda erişilemiyor; geri geldiğinde güncellenecek:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	iCloud Drive, OneDrive veya Google Drive içindeki bir geçmiş klasörü o hesap kadar gizlidir: erişimi olan herkes önceki sürümlerinizi açabilir.
+	Device name in the history:	Geçmişteki aygıt adı:
+	Delete this document's history…	Bu belgenin geçmişini sil…
+	Delete all version history…	Tüm sürüm geçmişini sil…
+	Delete every document's version history, in every history folder? This cannot be undone.	Tüm belgelerin sürüm geçmişi tüm geçmiş klasörlerinden silinsin mi? Bu işlem geri alınamaz.
+	Delete this document's version history, in every history folder? This cannot be undone.	Bu belgenin sürüm geçmişi tüm geçmiş klasörlerinden silinsin mi? Bu işlem geri alınamaz.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Bilgisayar

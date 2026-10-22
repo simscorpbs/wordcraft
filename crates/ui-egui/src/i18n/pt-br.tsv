@@ -2807,3 +2807,25 @@ template	Letter	Carta
 	Back to the current version	Voltar à versão atual
 	Show the previous version again	Mostrar de novo a versão anterior
 	Show what changed since this version	Mostrar o que mudou desde esta versão
+	Version history	Histórico de versões
+	History folder:	Pasta do histórico:
+	Not set: the settings folder	Não definida: a pasta de configurações
+	Use the settings folder	Usar a pasta de configurações
+	History already kept:	Histórico já guardado:
+	Copy it there	Copiar para lá
+	Move it there	Mover para lá
+	Leave it where it is	Deixar onde está
+	Also keep the history in the settings folder	Manter o histórico também na pasta de configurações
+	Copying the version history to the new folder…	Copiando o histórico de versões para a nova pasta…
+	Not reachable now; brought up to date when it is back:	Inacessível agora; será atualizada quando voltar:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Uma pasta de histórico no iCloud Drive, no OneDrive ou no Google Drive é tão privada quanto essa conta: quem tiver acesso a ela pode abrir suas versões anteriores.
+	Device name in the history:	Nome do dispositivo no histórico:
+	Delete this document's history…	Excluir o histórico deste documento…
+	Delete all version history…	Excluir todo o histórico de versões…
+	Delete every document's version history, in every history folder? This cannot be undone.	Excluir o histórico de versões de todos os documentos, em todas as pastas de histórico? Isso não pode ser desfeito.
+	Delete this document's version history, in every history folder? This cannot be undone.	Excluir o histórico de versões deste documento, em todas as pastas de histórico? Isso não pode ser desfeito.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Computador

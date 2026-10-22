@@ -2741,3 +2741,25 @@ preview	Title	Esempio
 
 	Import…	Importa…
 	Yesterday	Ieri
+	Version history	Cronologia versioni
+	History folder:	Cartella della cronologia:
+	Not set: the settings folder	Non impostata: la cartella delle impostazioni
+	Use the settings folder	Usa la cartella delle impostazioni
+	History already kept:	Cronologia già conservata:
+	Copy it there	Copiala lì
+	Move it there	Spostala lì
+	Leave it where it is	Lasciala dov'è
+	Also keep the history in the settings folder	Conserva la cronologia anche nella cartella delle impostazioni
+	Copying the version history to the new folder…	Copia della cronologia versioni nella nuova cartella…
+	Not reachable now; brought up to date when it is back:	Non raggiungibile ora; verrà aggiornata quando tornerà disponibile:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Una cartella della cronologia in iCloud Drive, OneDrive o Google Drive è riservata quanto quell'account: chiunque vi abbia accesso può aprire le versioni precedenti.
+	Device name in the history:	Nome del dispositivo nella cronologia:
+	Delete this document's history…	Elimina la cronologia di questo documento…
+	Delete all version history…	Elimina tutta la cronologia versioni…
+	Delete every document's version history, in every history folder? This cannot be undone.	Eliminare la cronologia versioni di tutti i documenti, in tutte le cartelle della cronologia? L'operazione non può essere annullata.
+	Delete this document's version history, in every history folder? This cannot be undone.	Eliminare la cronologia versioni di questo documento, in tutte le cartelle della cronologia? L'operazione non può essere annullata.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Computer

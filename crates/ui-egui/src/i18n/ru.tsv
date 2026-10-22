@@ -2730,3 +2730,25 @@ preview	Title	Пример
 
 	Import…	Импорт…
 	Yesterday	Вчера
+	Version history	Журнал версий
+	History folder:	Папка журнала:
+	Not set: the settings folder	Не задана: папка настроек
+	Use the settings folder	Использовать папку настроек
+	History already kept:	Уже сохранённый журнал:
+	Copy it there	Скопировать туда
+	Move it there	Переместить туда
+	Leave it where it is	Оставить на месте
+	Also keep the history in the settings folder	Также хранить журнал в папке настроек
+	Copying the version history to the new folder…	Журнал версий копируется в новую папку…
+	Not reachable now; brought up to date when it is back:	Сейчас недоступна; будет обновлена, когда снова станет доступна:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Папка журнала в iCloud Drive, OneDrive или Google Drive защищена так же, как эта учётная запись: любой, у кого есть к ней доступ, может открыть ваши прежние версии.
+	Device name in the history:	Имя устройства в журнале:
+	Delete this document's history…	Удалить журнал этого документа…
+	Delete all version history…	Удалить весь журнал версий…
+	Delete every document's version history, in every history folder? This cannot be undone.	Удалить журнал версий всех документов во всех папках журнала? Это действие нельзя отменить.
+	Delete this document's version history, in every history folder? This cannot be undone.	Удалить журнал версий этого документа во всех папках журнала? Это действие нельзя отменить.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Компьютер

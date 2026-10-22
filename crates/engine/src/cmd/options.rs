@@ -13,6 +13,8 @@ pub const PANES: [&str; 8] = ["general", "display", "proofing", "save", "languag
 pub const MAX_INITIALS_CHARS: usize = 9;
 /// Longest dictionaries folder path taken, in characters.
 const MAX_FOLDER_CHARS: usize = 4096;
+/// Longest device label, in characters.
+pub const MAX_DEVICE_LABEL_CHARS: usize = 64;
 /// Longest word the custom dictionary takes, in characters.
 pub const MAX_WORD_CHARS: usize = 64;
 /// Most words one call may add or remove.
@@ -22,7 +24,7 @@ pub fn specs() -> Vec<CommandSpec> {
     vec![
         CommandSpec::new("file.options", "Options", "File", options)
             .params(
-                r#"{"pane"?: "general|display|proofing|save|language|accessibility|advanced|agents", "author"?: string, "initials"?: string, "units"?: "inches|centimeters|millimeters|points|picas|auto" (auto: the region's), "region"?: string (a locale tag like pl-PL, saved: the paper File › New starts on, the default units and the decimal separator; auto: the system's), "typingReplacesSelection"?: bool, "insertKeyOvertype"?: bool, "overtype"?: bool, "marks"?: {"tabs"?: bool, "spaces"?: bool, "paragraphs"?: bool, "hidden"?: bool}, "checkSpelling"?: bool, "markGrammar"?: bool, "ignoreUppercase"?: bool, "ignoreNumbers"?: bool, "ignoreInternet"?: bool, "dictionariesFolder"?: string (a folder of Hunspell .aff/.dic files searched first, saved; auto: the system locations only), "addWords"?: [string], "removeWords"?: [string], "autosaveByDefault"?: bool (AutoSave is on for files with no choice of their own)} — with any setting it changes them and opens nothing; without, it opens File › Options (at `pane`). Returns the settings."#,
+                r#"{"pane"?: "general|display|proofing|save|language|accessibility|advanced|agents", "author"?: string, "initials"?: string, "units"?: "inches|centimeters|millimeters|points|picas|auto" (auto: the region's), "region"?: string (a locale tag like pl-PL, saved: the paper File › New starts on, the default units and the decimal separator; auto: the system's), "typingReplacesSelection"?: bool, "insertKeyOvertype"?: bool, "overtype"?: bool, "marks"?: {"tabs"?: bool, "spaces"?: bool, "paragraphs"?: bool, "hidden"?: bool}, "checkSpelling"?: bool, "markGrammar"?: bool, "ignoreUppercase"?: bool, "ignoreNumbers"?: bool, "ignoreInternet"?: bool, "dictionariesFolder"?: string (a folder of Hunspell .aff/.dic files searched first, saved; auto: the system locations only), "addWords"?: [string], "removeWords"?: [string], "autosaveByDefault"?: bool (AutoSave is on for files with no choice of their own), "versionsFolder"?: string (a folder for the version history instead of the settings folder; default: the settings folder only), "versionsMirror"?: bool (with versionsFolder: keep the history in the settings folder too, and write both), "versionsExisting"?: "copy" | "move" | "leave" (when the folders change, what happens to the history already kept; default copy), "deviceLabel"?: string (the device name versions record; auto: the system's, such as Windows or Mac)} — with any setting it changes them and opens nothing; without, it opens File › Options (at `pane`). Returns the settings."#,
             )
             .pure(),
         CommandSpec::new("text.overtype", "Overtype", "File › Options › Advanced", |s, v| {
@@ -139,6 +141,26 @@ fn options(s: &mut Session, v: &Value) -> CmdResult {
         Some(_) => return Err(CmdError::Params("`marks` must be an object of true/false".into())),
     }
     let check_spelling = bool_param(v, "checkSpelling")?;
+    let versions_folder = match v.get("versionsFolder") {
+        None | Some(Value::Null) => None,
+        Some(Value::String(f)) if f.trim().is_empty() || f.trim().eq_ignore_ascii_case("default") => Some(None),
+        Some(Value::String(f)) => Some(Some(folder_param(f, "versionsFolder")?)),
+        Some(_) => return Err(CmdError::Params("`versionsFolder` must be a folder path, or default".into())),
+    };
+    let versions_mirror = bool_param(v, "versionsMirror")?;
+    let existing = match p::str(v, "versionsExisting") {
+        None => crate::versions::Relocation::Copy,
+        Some("copy") => crate::versions::Relocation::Copy,
+        Some("move") => crate::versions::Relocation::Move,
+        Some("leave") => crate::versions::Relocation::Leave,
+        Some(other) => return Err(CmdError::Params(format!("`versionsExisting` is copy, move or leave, not `{other}`"))),
+    };
+    let device_label = match v.get("deviceLabel") {
+        None | Some(Value::Null) => None,
+        Some(Value::String(l)) if l.trim().is_empty() || l.trim().eq_ignore_ascii_case("auto") => Some(None),
+        Some(Value::String(l)) => Some(Some(l.trim().chars().filter(|c| !c.is_control()).take(MAX_DEVICE_LABEL_CHARS).collect::<String>())),
+        Some(_) => return Err(CmdError::Params("`deviceLabel` must be a string, or auto".into())),
+    };
     let autosave_by_default = bool_param(v, "autosaveByDefault")?;
     let add = words_param(v, "addWords")?;
     let remove = words_param(v, "removeWords")?;
@@ -152,6 +174,9 @@ fn options(s: &mut Session, v: &Value) -> CmdResult {
         || !mark_values.is_empty()
         || check_spelling.is_some()
         || autosave_by_default.is_some()
+        || versions_folder.is_some()
+        || versions_mirror.is_some()
+        || device_label.is_some()
         || !add.is_empty()
         || !remove.is_empty();
     if let Some(name) = author {
@@ -181,6 +206,18 @@ fn options(s: &mut Session, v: &Value) -> CmdResult {
     }
     if let Some(b) = autosave_by_default {
         s.set_autosave_by_default(b);
+    }
+    if let Some(label) = device_label {
+        s.prefs.device_label = label;
+    }
+    if versions_folder.is_some() || versions_mirror.is_some() {
+        if let Some(folder) = versions_folder {
+            s.prefs.versions_folder = folder;
+        }
+        if let Some(mirror) = versions_mirror {
+            s.prefs.versions_mirror = mirror;
+        }
+        s.apply_version_folders(existing).map_err(CmdError::Failed)?;
     }
     for w in &add {
         wordcraft_proof::add_word(w);
@@ -227,11 +264,38 @@ pub fn current(s: &Session) -> Value {
         "dictionary": wordcraft_proof::user_dictionary(),
         "dictionariesFolder": pr.dictionaries_folder,
         "autosaveByDefault": pr.autosave_by_default,
+        "versionsFolder": pr.versions_folder,
+        "versionsMirror": pr.versions_mirror,
+        "versionsFolders": s.version_folders().0,
+        "versionsUnavailable": s.version_folders().1,
+        "versionsRelocating": s.version_folders().2,
+        "deviceLabel": pr.device_label,
+        "deviceLabelDefault": crate::versions::default_device_label(),
         "dictionaries": wordcraft_proof::installed_dictionaries()
             .into_iter()
             .map(|(lang, dic)| json!({"language": lang.code(), "file": dic.map(|d| d.to_string_lossy().into_owned())}))
             .collect::<Vec<_>>(),
     })
+}
+
+/// A folder setting: an existing folder, given as an absolute path or one starting with `~/`.
+fn folder_param(f: &str, name: &str) -> Result<String, CmdError> {
+    let f = f.trim();
+    if f.chars().count() > MAX_FOLDER_CHARS || f.chars().any(char::is_control) {
+        return Err(CmdError::Params(format!("`{name}` isn't a folder path")));
+    }
+    let home = std::env::var_os("HOME").or_else(|| std::env::var_os("USERPROFILE")).filter(|h| !h.is_empty()).map(std::path::PathBuf::from);
+    let path = match (f.strip_prefix("~/"), home) {
+        (Some(rest), Some(h)) => h.join(rest),
+        _ => std::path::PathBuf::from(f),
+    };
+    if !path.is_absolute() {
+        return Err(CmdError::Params(format!("`{name}`: {f:?} isn't a full path")));
+    }
+    if !path.is_dir() {
+        return Err(CmdError::Failed(format!("no folder at {}", path.display())));
+    }
+    Ok(path.to_string_lossy().into_owned())
 }
 
 /// The `dictionariesFolder` setting: `auto` (or nothing) forgets it; otherwise an existing

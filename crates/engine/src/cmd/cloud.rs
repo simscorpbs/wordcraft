@@ -167,7 +167,11 @@ fn resolve_conflict(s: &mut Session, v: &Value) -> CmdResult {
         "both" => {
             let copy = wordcraft_cloud::conflict_copy_path(&path, "conflict copy")
                 .ok_or_else(|| CmdError::Failed(format!("Too many conflict copies of {}", path.display())))?;
-            let r = save(s, &copy)?;
+            // The copy's history starts as a conflict copy of this document.
+            s.version_next_kind = Some(crate::versions::VersionKind::ConflictCopy);
+            let r = save(s, &copy);
+            s.version_next_kind = None;
+            let r = r?;
             // The session now edits the copy; the other version is left as it is.
             s.cloud.conflict = None;
             Ok(r)

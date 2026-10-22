@@ -2737,3 +2737,25 @@ preview	Title	Tytuł
 
 	Import…	Importuj…
 	Yesterday	Wczoraj
+	Version history	Historia wersji
+	History folder:	Folder historii:
+	Not set: the settings folder	Nie ustawiono: folder ustawień
+	Use the settings folder	Użyj folderu ustawień
+	History already kept:	Już zapisana historia:
+	Copy it there	Skopiuj ją tam
+	Move it there	Przenieś ją tam
+	Leave it where it is	Pozostaw na miejscu
+	Also keep the history in the settings folder	Przechowuj historię także w folderze ustawień
+	Copying the version history to the new folder…	Kopiowanie historii wersji do nowego folderu…
+	Not reachable now; brought up to date when it is back:	Obecnie niedostępny; zostanie zaktualizowany, gdy znów będzie dostępny:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Folder historii w usłudze iCloud Drive, OneDrive lub Google Drive jest tak prywatny jak to konto: każdy, kto ma do niego dostęp, może otworzyć Twoje wcześniejsze wersje.
+	Device name in the history:	Nazwa urządzenia w historii:
+	Delete this document's history…	Usuń historię tego dokumentu…
+	Delete all version history…	Usuń całą historię wersji…
+	Delete every document's version history, in every history folder? This cannot be undone.	Usunąć historię wersji wszystkich dokumentów we wszystkich folderach historii? Tej operacji nie można cofnąć.
+	Delete this document's version history, in every history folder? This cannot be undone.	Usunąć historię wersji tego dokumentu we wszystkich folderach historii? Tej operacji nie można cofnąć.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Komputer

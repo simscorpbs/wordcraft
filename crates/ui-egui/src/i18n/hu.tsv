@@ -2728,3 +2728,25 @@
 
 	Import…	Importálás…
 	Yesterday	Tegnap
+	Version history	Verzióelőzmények
+	History folder:	Előzmények mappája:
+	Not set: the settings folder	Nincs megadva: a beállítások mappája
+	Use the settings folder	A beállítások mappájának használata
+	History already kept:	A már megőrzött előzmények:
+	Copy it there	Másolás oda
+	Move it there	Áthelyezés oda
+	Leave it where it is	Maradjon a helyén
+	Also keep the history in the settings folder	Az előzmények a beállítások mappájában is maradjanak
+	Copying the version history to the new folder…	A verzióelőzmények másolása az új mappába…
+	Not reachable now; brought up to date when it is back:	Most nem érhető el; frissül, amint újra elérhető:
+	A history folder inside iCloud Drive, OneDrive or Google Drive is as private as that account: anyone with access to it can open your earlier versions.	Az iCloud Drive-ban, a OneDrive-ban vagy a Google Drive-ban lévő előzménymappa ugyanolyan privát, mint az a fiók: aki hozzáfér, megnyithatja a korábbi verzióit.
+	Device name in the history:	Eszköz neve az előzményekben:
+	Delete this document's history…	A dokumentum előzményeinek törlése…
+	Delete all version history…	Az összes verzióelőzmény törlése…
+	Delete every document's version history, in every history folder? This cannot be undone.	Törli minden dokumentum verzióelőzményeit az összes előzménymappában? Ez nem vonható vissza.
+	Delete this document's version history, in every history folder? This cannot be undone.	Törli a dokumentum verzióelőzményeit az összes előzménymappában? Ez nem vonható vissza.
+	Windows	Windows
+	Mac	Mac
+	Linux	Linux
+	BSD	BSD
+	Computer	Számítógép

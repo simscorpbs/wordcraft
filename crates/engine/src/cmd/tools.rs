@@ -29,6 +29,11 @@ fn version_json(index: usize, info: &VersionInfo) -> Value {
         // Compatibility names used by the former in-memory command.
         "date": info.saved_at.clone(),
         "label": info.kind.id(),
+        "storage": info.storage,
+        "documentId": info.document_id,
+        "supersedes": info.supersedes,
+        // Where the version comes from and what it holds: counts and hashes, never text.
+        "details": info.details,
     })
 }
 
@@ -126,7 +131,7 @@ fn restore_persisted_version(s: &mut Session, id: &str) -> CmdResult {
     s.relayout();
     s.clamp_selection();
     // The restore is a version at once, with the restored bytes.
-    s.record_restore(&source, bytes);
+    s.record_restore(&source, bytes, &info.id);
     s.version_next_kind = None;
     if let Some(previous) = opened {
         s.path = Some(source);
@@ -148,9 +153,24 @@ fn versions_command(s: &mut Session, v: &Value) -> CmdResult {
         return Err(CmdError::Params("file.versions parameters must be an object".into()));
     };
     for key in object.keys() {
-        if !matches!(key.as_str(), "open" | "restore" | "save") {
+        if !matches!(key.as_str(), "open" | "restore" | "save" | "delete") {
             return Err(CmdError::Params(format!("unknown file.versions parameter `{key}`")));
         }
+    }
+    if let Some(scope) = v.get("delete") {
+        if object.len() > 1 {
+            return Err(CmdError::Params("`delete` goes alone".into()));
+        }
+        let scope = match scope.as_str() {
+            Some("document") => crate::versions::DeleteScope::Document,
+            Some("all") => crate::versions::DeleteScope::All,
+            _ => return Err(CmdError::Params("`delete` is \"document\" (this document's history) or \"all\"".into())),
+        };
+        if !persistent_versions(s) {
+            return Err(CmdError::Disabled("local version history is available on the desktop host".into()));
+        }
+        let deleted = s.delete_version_history(scope).map_err(CmdError::Failed)?;
+        return Ok(json!({"deleted": deleted}));
     }
     let has_open = v.get("open").is_some();
     let has_restore = v.get("restore").is_some();

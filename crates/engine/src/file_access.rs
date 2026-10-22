@@ -469,6 +469,7 @@ mod tests {
                 || path.starts_with(src.join("io"))
                 || path == src.join("recovery/desktop.rs")
                 || path == src.join("versions.rs")
+                || path.starts_with(src.join("versions"))
                 || path == src.join("autosave.rs")
             {
                 continue;
