@@ -409,6 +409,11 @@ pub struct RenderOptions {
     /// Thicken glyphs slightly the way macOS draws text on screen ("font smoothing"), so pages
     /// look like they do in other Mac apps. For on-screen rasters only: exports stay exact.
     pub text_darkening: bool,
+    /// Put every line of text on the pixel grid: the baseline is rounded to a whole device pixel,
+    /// as Word does on screen, so the bottoms of letters end on a crisp edge and every line has the
+    /// same weight instead of each smearing over a different fraction of a pixel row. Horizontal
+    /// positions stay exact. For on-screen rasters only: exports stay exact.
+    pub snap_baselines: bool,
     /// Dark page (View › Switch Modes): every colour but pictures has its lightness inverted, so
     /// white paper turns black and black text white while hues stay the same. Screen only.
     pub dark: bool,
@@ -493,6 +498,7 @@ impl Default for RenderOptions {
             paper: Rgb::WHITE,
             mark_color: Rgb(0x2B, 0x57, 0x9A),
             text_darkening: false,
+            snap_baselines: false,
             dark: false,
             dark_paper: DARK_PAPER,
         }
@@ -700,6 +706,20 @@ pub fn stem_darkening(ppem: f64) -> f64 {
 /// How much of the macOS smoothing curve [`stem_darkening`] applies, measured against Word for Mac.
 pub const WORD_MAC_STEM_SCALE: f64 = 0.5;
 
+/// Whether `view` only scales and moves (no rotation or skew), so a page row is a pixel row.
+fn axis_aligned(view: Affine) -> bool {
+    let [_, b, c, _, _, _] = view.as_coeffs();
+    b.abs() < 1e-9 && c.abs() < 1e-9
+}
+
+/// `origin` (a glyph's origin placed on the device) moved up or down to the nearest whole device
+/// pixel row; left as it is when the row isn't a finite number.
+fn snap_baseline(origin: Affine) -> Affine {
+    let [a, b, c, d, e, f] = origin.as_coeffs();
+    let row = f.round();
+    if row.is_finite() { Affine::new([a, b, c, d, e, row]) } else { origin }
+}
+
 /// A wavy line from `(x0, y0)` to `(x1, y1)`; at most 20 000 units long, so a huge extent can't make it endless.
 fn wave_path(x0: f64, y0: f64, x1: f64, y1: f64, amp: f64) -> BezPath {
     let mut p = BezPath::new();
@@ -814,6 +834,7 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
             // Emoji and other colour glyphs (#1269) are drawn from the font's colour data.
             let colour = face.has_color_glyphs();
             let ppem = *size as f64 * px_per_pt;
+            let snap = opts.snap_baselines && axis_aligned(view);
             for (gid, x, y) in glyphs {
                 let (gx, gy) = (*x as f64, *y as f64);
                 // Written so a NaN position is skipped too.
@@ -821,8 +842,10 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
                 if !near {
                     continue;
                 }
+                let origin = view * Affine::translate((gx, gy));
+                let origin = if snap { snap_baseline(origin) } else { origin };
                 if colour && let Some(d) = color_glyph::drawable(face, *gid, ppem, true) {
-                    let at = view * Affine::translate((gx, gy)) * skew * Affine::scale(k);
+                    let at = origin * skew * Affine::scale(k);
                     color_glyph::draw(ctx, &d, at, face.upem, color(opts.ink(*c), 1.0), *alpha);
                     ctx.set_paint(color(opts.ink(*c), *alpha));
                     continue;
@@ -831,7 +854,7 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
                 if o.elements().is_empty() {
                     continue;
                 }
-                ctx.set_transform(view * Affine::translate((gx, gy)) * skew * Affine::scale(k));
+                ctx.set_transform(origin * skew * Affine::scale(k));
                 ctx.fill_path(&o);
                 if outline_stroke > 0.0 {
                     ctx.stroke_path(&o);
@@ -1450,6 +1473,41 @@ mod tests {
         assert!(b as f64 > a as f64 * 1.04 && (b as f64) < a as f64 * 1.3, "plain {a}, darkened {b}");
         // Off by default: exports and thumbnails are untouched.
         assert!(!RenderOptions::default().text_darkening);
+    }
+
+    /// Ink in each pixel row of a raster.
+    fn row_ink(img: &Rendered) -> Vec<u64> {
+        img.pixels.chunks(img.width as usize * 4).map(|row| row.as_chunks::<4>().0.iter().map(|p| 255 - p[0] as u64).sum()).collect()
+    }
+
+    /// On screen a line's baseline sits on a whole pixel row, as in Word: the flat feet of "IIII"
+    /// end on a crisp edge at every zoom, where an exact baseline leaves a part-inked row under
+    /// them at most zooms (a lighter, blurrier bottom that changes from line to line).
+    #[test]
+    fn snapped_baselines_end_letters_on_a_pixel_row() {
+        let d = Document::from_text("IIII");
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+        let snapped = RenderOptions { snap_baselines: true, ..Default::default() };
+        // Ink of the last inked row against the row above it (both inside the stems).
+        let foot = |img: &Rendered| {
+            let rows = row_ink(img);
+            let last = rows.iter().rposition(|v| *v > 0).unwrap();
+            rows[last] as f64 / rows[last - 1] as f64
+        };
+        let mut blurred = 0;
+        for scale in [1.0, 1.1, 1.25, 1.37, 1.5, 1.75, 2.0, 2.2, 2.75] {
+            let crisp = foot(&render_page(&d, &l.pages[0], scale, &snapped));
+            assert!(crisp > 0.97, "scale {scale}: the last row of the feet holds {crisp:.2} of a full row");
+            if foot(&render_page(&d, &l.pages[0], scale, &RenderOptions::default())) < 0.9 {
+                blurred += 1;
+            }
+        }
+        assert!(blurred >= 3, "exact baselines should blur the feet at most zooms, did at {blurred}");
+        // Off by default: exports keep exact positions.
+        assert!(!RenderOptions::default().snap_baselines);
+        // Only for an upright page: a turned view keeps exact positions.
+        assert!(axis_aligned(Affine::scale(1.5)) && !axis_aligned(Affine::rotate(0.3)));
+        assert_eq!(snap_baseline(Affine::translate((3.3, 7.6))).as_coeffs(), [1.0, 0.0, 0.0, 1.0, 3.3, 8.0]);
     }
 
     #[test]

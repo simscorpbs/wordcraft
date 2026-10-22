@@ -3404,9 +3404,10 @@ fn caret_color_at(app: &mut WordApp, layout: &std::sync::Arc<DocLayout>, page: u
 }
 
 /// Render options for page rasters shown on screen: on macOS, text is darkened the way the system
-/// draws it, so a page looks as it does in other Mac apps (exports never are).
+/// draws it, so a page looks as it does in other Mac apps, and every line's baseline sits on a
+/// pixel row, as in Word (exports never are).
 pub(crate) fn screen_render_options() -> wordcraft_render::RenderOptions {
-    wordcraft_render::RenderOptions { text_darkening: cfg!(target_os = "macos"), ..Default::default() }
+    wordcraft_render::RenderOptions { text_darkening: cfg!(target_os = "macos"), snap_baselines: true, ..Default::default() }
 }
 
 /// The hyperlink under the pointer at (x, y) on `page`, where `pos` is the caret position the
