@@ -636,6 +636,55 @@ fn justified_lines_hyphenate_only_when_their_spaces_would_stretch_too_far() {
     assert!(!justified_hyphenates(30), "30 spaces absorb the gap: \"typography\" moves down");
 }
 
+/// The byte where the first line of a justified mode-15 paragraph "a a a a a a typography …"
+/// stops, and whether it ends in a hyphen, with the margin `past` points left of where " typog-"
+/// would end at natural width.
+fn justified_split(past: f32) -> (usize, bool) {
+    let lead = format!("{}typography", "a ".repeat(6));
+    let at = lead.len() - "typography".len();
+    let probe = format!("{}typog-x", "a ".repeat(6));
+    let l = lay(&Document::from_text(&probe));
+    let end = l
+        .pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .find_map(|it| match it {
+            Placed::Lines { para, x, .. } => Some(para.x_of(0, probe.len() - 1).unwrap() + x),
+            _ => None,
+        })
+        .unwrap();
+    let mut d = Document::from_text(&format!("{lead} lesson and more words to fill a second line"));
+    d.settings.auto_hyphenation = true;
+    d.settings.compat_mode = 15;
+    let right = end - past;
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| {
+        p.align = Some(Align::Justify);
+        p.indent_right = Some(540.0 - right);
+    })
+    .unwrap();
+    let l = lay(&d);
+    let line = l
+        .pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .find_map(|it| match it {
+            Placed::Lines { para, .. } => para.lines.first().map(|li| (li.stop, li.hyphen.is_some())),
+            _ => None,
+        })
+        .unwrap();
+    (line.0.saturating_sub(at), line.1)
+}
+
+#[test]
+fn a_justified_split_keeps_the_longest_part_that_fits_at_natural_width() {
+    // With room for "typog-" the word splits there.
+    assert_eq!(justified_split(-1.0), (5, true));
+    // A point beyond: "typog-" would need the spaces squeezed by 1 pt, within both of Word's
+    // limits, but "ty-" fits at natural width, so Word ends the line in "ty-" (a pt-BR brief in
+    // Word for Mac: "FA-" and "mo-", not "FACE-" and "mone-").
+    assert_eq!(justified_split(1.0), (2, true));
+}
+
 #[test]
 fn word_2013_mode_hyphenates_whatever_the_zone() {
     // Word 2013+ hyphenates whenever "ty-" fits, even inside the zone; older modes leave a gap up

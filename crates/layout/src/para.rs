@@ -2097,6 +2097,9 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
         let mut word_overhang = f32::MAX;
         // Where that word starts, and the space before it.
         let (mut word_x0, mut word_before) = (0.0f32, 0.0f32);
+        // The word (its last cluster) one of whose hyphenation points already fits this line at
+        // natural width: its later points must fit at natural width too.
+        let mut natural_split: Option<usize> = None;
         while j < n {
             let Some(c) = pl.clusters.get(j).cloned() else { break };
             match c.kind {
@@ -2298,8 +2301,21 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u32, level: Optio
                 } else if hyph_ok && !pl.clusters.get(j + 1).is_some_and(|n| n.kind == ClKind::Text && n.g1 <= n.g0) {
                     let hw = hyphen_glyph(pl, c.style, &mut hcache).2;
                     // On a justified line the part before the hyphen may hang past the margin
-                    // by less than a whole word may (Word 2013+).
-                    let room = if floor > 0.0 { floor.min(MAX_FRAGMENT_OVERHANG * (x + hw - word_x0 + word_before)) } else { shrink };
+                    // by less than a whole word may (Word 2013+), but only while no shorter part
+                    // of the word fits at natural width: Word then keeps the longest part that
+                    // fits without squeezing the spaces (a pt-BR brief in Word for Mac ends lines
+                    // in "FA-" and "mo-" where "FACE-" and "mone-" were within both limits).
+                    let squeezed = natural_split.is_some() && natural_split == word_end;
+                    let room = if squeezed {
+                        0.0
+                    } else if floor > 0.0 {
+                        floor.min(MAX_FRAGMENT_OVERHANG * (x + hw - word_x0 + word_before))
+                    } else {
+                        shrink
+                    };
+                    if x + hw <= right_edge + 0.01 {
+                        natural_split = word_end;
+                    }
                     if x + hw <= right_edge + room + 0.01 {
                         last_break = Some(j);
                     }
