@@ -284,7 +284,14 @@ pub struct UiState {
     /// View › Navigation Pane: open or closed as the person left it, kept between runs (#2526).
     /// The session owns it while running (see [`WordApp::prefs`]).
     pub nav_pane: bool,
+    /// File › Options › General: show the Discord button in the title bar. Off by default. Saved
+    /// under its own key: builds before the option wrote `showDiscord: true` on every save, so
+    /// that old key is read and dropped, and the button doesn't come back after an update.
+    #[serde(rename = "showDiscordButton")]
     pub show_discord: bool,
+    /// `showDiscord` as builds before the option saved it: read once, never written or used.
+    #[serde(rename = "showDiscord", skip_serializing)]
+    pub(crate) legacy_show_discord: Option<bool>,
     /// File › Options › General: show the account picture in the title bar.
     pub show_account_picture: bool,
     /// File › Options › General: show the titles under ribbon groups.
@@ -401,7 +408,8 @@ impl Default for UiState {
             legacy_dark: None,
             nav_tab: "headings".into(),
             nav_pane: false,
-            show_discord: show_title_bar_extras,
+            show_discord: false,
+            legacy_show_discord: None,
             show_account_picture: show_title_bar_extras,
             show_group_titles,
             author: String::new(),
@@ -3312,9 +3320,9 @@ mod tests {
     fn title_bar_extras_are_ui_commands_and_survive_a_restart() {
         let mut a = app();
         let default = !cfg!(target_os = "macos");
-        assert_eq!(a.ui.show_discord, default);
+        assert!(!a.ui.show_discord, "the Discord button is off by default everywhere");
         assert_eq!(a.ui.show_account_picture, default);
-        assert_eq!(a.run("ui.showDiscord", json!({})).unwrap(), json!({"showDiscord": default}));
+        assert_eq!(a.run("ui.showDiscord", json!({})).unwrap(), json!({"showDiscord": false}));
         assert_eq!(a.run("ui.showAccountPicture", json!({})).unwrap(), json!({"showAccountPicture": default}));
         assert_eq!(a.run("ui.showDiscord", json!({"value": false})).unwrap(), json!({"showDiscord": false}));
         assert_eq!(a.run("ui.showAccountPicture", json!({"value": false})).unwrap(), json!({"showAccountPicture": false}));
@@ -3324,7 +3332,8 @@ mod tests {
             }
         }
         let saved = serde_json::to_string(&a.prefs()).unwrap();
-        assert!(saved.contains(r#""showDiscord":false"#), "{saved}");
+        assert!(saved.contains(r#""showDiscordButton":false"#), "{saved}");
+        assert!(!saved.contains(r#""showDiscord""#), "{saved}");
         assert!(saved.contains(r#""showAccountPicture":false"#), "{saved}");
         let mut b = app();
         b.apply_prefs(serde_json::from_str(&saved).unwrap());
@@ -3332,8 +3341,14 @@ mod tests {
         assert!(works_without_document("ui.showDiscord"));
         assert!(works_without_document("ui.showAccountPicture"));
         let old: UiState = serde_json::from_str(r#"{"tab":"Home"}"#).unwrap();
-        assert_eq!(old.show_discord, default);
+        assert!(!old.show_discord);
         assert_eq!(old.show_account_picture, default);
+        // Builds before the option saved `showDiscord: true` every time: that doesn't bring it back.
+        let older: UiState = serde_json::from_str(r#"{"tab":"Home","showDiscord":true}"#).unwrap();
+        assert!(!older.show_discord);
+        // Turned on in Options, it stays on.
+        let on: UiState = serde_json::from_str(r#"{"showDiscordButton":true}"#).unwrap();
+        assert!(on.show_discord);
     }
 
     /// #1945: showing or hiding the Quick Access Toolbar is a UI command (no value toggles it),
