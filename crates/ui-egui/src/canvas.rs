@@ -38,9 +38,16 @@ const LEFT_MARKER_HEIGHT: f32 = if cfg!(target_os = "macos") { 9.0 } else { 8.0 
 pub(crate) const HOURGLASS_HEIGHT: f32 = 16.0;
 const RIGHT_MARKER_HEIGHT: f32 = if cfg!(target_os = "macos") { 8.5 } else { 5.0 };
 const RIGHT_MARKER_RADIUS: f32 = if cfg!(target_os = "macos") { 3.0 } else { 0.0 };
-pub(crate) const RULER_SHADOW_OUTER: f32 = 9.0;
-pub(crate) const RULER_SHADOW_MIDDLE: f32 = 5.0;
-pub(crate) const RULER_SHADOW_INNER: f32 = 2.0;
+/// Word's page frame on screen, measured on Word for Mac (Retina, 110%): a 1-point rule on the
+/// page's own edge pixels (`Tokens::page_edge`) and, outside it, a shadow dropped 1 point that
+/// fades from `Tokens::page_shadow_edge` with a 3-point decay and is gone 9 points out. Screen
+/// points, not document points: the frame keeps its size at every zoom.
+pub(crate) const PAGE_EDGE_WIDTH: f32 = 1.0;
+pub(crate) const PAGE_SHADOW_DROP: f32 = 1.0;
+pub(crate) const PAGE_SHADOW_DECAY: f32 = 3.0;
+pub(crate) const PAGE_SHADOW_REACH: f32 = 9.0;
+/// Most vertex rows (and columns) the shadow has on each side of the page.
+const PAGE_SHADOW_STEPS: f32 = 36.0;
 /// Maximum device-pixel height of a tile on very tall Web/Draft pages.
 const TILE_HEIGHT_PX: usize = 1024;
 
@@ -384,6 +391,90 @@ fn collapse_white_space(rects: &[Rect], bodies: &[(f32, f32)], scale: f32, avail
         cursor = y + bot + SEAM;
     }
     (out, bands, (cursor - SEAM + GAP).max(avail_h))
+}
+
+/// `v` rounded to the nearest device-pixel boundary (`ppp` device pixels per point).
+fn snap_to_pixel(v: f32, ppp: f32) -> f32 {
+    (v * ppp).round() / ppp
+}
+
+/// A usable pixels-per-point: anything not finite and positive counts as 1.
+fn sane_ppp(ppp: f32) -> f32 {
+    if ppp.is_finite() && ppp > 0.0 { ppp } else { 1.0 }
+}
+
+/// The page rect with its edges on device-pixel boundaries, so the frame is drawn sharp.
+fn snapped_page(page: Rect, ppp: f32) -> Rect {
+    Rect::from_min_max(
+        pos2(snap_to_pixel(page.min.x, ppp), snap_to_pixel(page.min.y, ppp)),
+        pos2(snap_to_pixel(page.max.x, ppp), snap_to_pixel(page.max.y, ppp)),
+    )
+}
+
+/// The page's edge rule as its top, bottom, left and right strips: [`PAGE_EDGE_WIDTH`] rounded to
+/// whole device pixels (at least one), inside the page's pixel-snapped rect, as Word draws it.
+fn page_edge_rects(page: Rect, ppp: f32) -> [Rect; 4] {
+    let ppp = sane_ppp(ppp);
+    let r = snapped_page(page, ppp);
+    let w = ((PAGE_EDGE_WIDTH * ppp).round().max(1.0) / ppp).min(r.width() / 2.0).min(r.height() / 2.0).max(0.0);
+    [
+        Rect::from_min_max(r.min, pos2(r.max.x, r.min.y + w)),
+        Rect::from_min_max(pos2(r.min.x, r.max.y - w), r.max),
+        Rect::from_min_max(pos2(r.min.x, r.min.y + w), pos2(r.min.x + w, r.max.y - w)),
+        Rect::from_min_max(pos2(r.max.x - w, r.min.y + w), pos2(r.max.x, r.max.y - w)),
+    ]
+}
+
+/// How dark the page shadow is `d` points outside the dropped page, as a fraction of
+/// `Tokens::page_shadow_edge`: an exponential decay fitted to Word's (on a 231 canvas it reads
+/// 217, 219, 220, 222... 230 per device pixel at 2x: 15.8 levels at the edge, a 3-point decay), cut at
+/// [`PAGE_SHADOW_REACH`], where it's under one level.
+fn page_shadow_falloff(d: f32) -> f32 {
+    if d.is_nan() || d >= PAGE_SHADOW_REACH {
+        0.0
+    } else if d <= 0.0 {
+        1.0
+    } else {
+        (-d / PAGE_SHADOW_DECAY).exp()
+    }
+}
+
+/// The page shadow as one mesh: the page dropped by [`PAGE_SHADOW_DROP`], with a row and a column
+/// of vertices on each device-pixel boundary out to [`PAGE_SHADOW_REACH`] (at most
+/// [`PAGE_SHADOW_STEPS`] per side), each shaded by the falloff of its horizontal and vertical
+/// distance, so the corners round off like a blur. The outermost ring is clear, so there's no
+/// hard outer edge, and the colour is interpolated between rings.
+fn page_shadow_mesh(page: Rect, ppp: f32, color: Color32) -> egui::Mesh {
+    let ppp = sane_ppp(ppp);
+    let r = snapped_page(page, ppp).translate(vec2(0.0, snap_to_pixel(PAGE_SHADOW_DROP, ppp)));
+    let step = (1.0 / ppp).max(PAGE_SHADOW_REACH / PAGE_SHADOW_STEPS);
+    let n = (PAGE_SHADOW_REACH / step).ceil().clamp(1.0, PAGE_SHADOW_STEPS) as usize;
+    // Coordinates along one axis with their distance outside the shadow's rect.
+    let axis = |lo: f32, hi: f32| -> Vec<(f32, f32)> {
+        let mut out = Vec::with_capacity(2 * n + 2);
+        out.extend((1..=n).rev().map(|k| (lo - k as f32 * step, k as f32 * step)));
+        out.push((lo, 0.0));
+        out.push((hi.max(lo), 0.0));
+        out.extend((1..=n).map(|k| (hi.max(lo) + k as f32 * step, k as f32 * step)));
+        out
+    };
+    let (xs, ys) = (axis(r.min.x, r.max.x), axis(r.min.y, r.max.y));
+    let mut mesh = egui::Mesh::default();
+    for &(y, dy) in &ys {
+        for &(x, dx) in &xs {
+            mesh.colored_vertex(pos2(x, y), color.gamma_multiply(page_shadow_falloff(dx) * page_shadow_falloff(dy)));
+        }
+    }
+    let cols = xs.len() as u32;
+    for row in 0..ys.len().saturating_sub(1) as u32 {
+        for col in 0..cols.saturating_sub(1) {
+            let a = row * cols + col;
+            let c = a + cols;
+            mesh.add_triangle(a, a + 1, c);
+            mesh.add_triangle(a + 1, c + 1, c);
+        }
+    }
+    mesh
 }
 
 /// True when any page is cut to a band (white space is hidden).
@@ -1282,10 +1373,8 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             } else {
                 painter.with_clip_rect(painter.clip_rect().intersect(band))
             };
-            // Shadow and paper.
-            painter.rect_filled(visual_sr.translate(vec2(0.0, 2.0)).expand(RULER_SHADOW_OUTER), 1.0, t.page_shadow_outer);
-            painter.rect_filled(visual_sr.translate(vec2(0.0, 2.0)).expand(RULER_SHADOW_MIDDLE), 1.0, t.page_shadow_middle);
-            painter.rect_filled(visual_sr.translate(vec2(0.0, 1.0)).expand(RULER_SHADOW_INNER), 1.0, t.page_shadow_inner);
+            // Shadow and paper; the page's edge rule goes on top of its image below.
+            painter.add(egui::Shape::mesh(page_shadow_mesh(visual_sr, ppp, t.page_shadow_edge)));
             painter.rect_filled(visual_sr, 0.0, if dark_page { Color32::from_gray(dark_paper) } else { Color32::WHITE });
             if tiled {
                 // Render before painting to keep the frame sharp immediately after an edit or
@@ -1344,6 +1433,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                 }
             } else if let Some((_, tex)) = app.canvas.textures.get(&i) {
                 painter.image(tex.id(), visual_sr, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
+            }
+            for edge in page_edge_rects(visual_sr, ppp) {
+                painter.rect_filled(edge, 0.0, t.page_edge);
             }
             let page_scale = page_screen_scale(visual_sr, page, geo.scale);
             // Header/footer editing chrome.
@@ -5562,9 +5654,81 @@ mod tests {
         assert_eq!(RIGHT_MARKER_HEIGHT, if cfg!(target_os = "macos") { 8.5 } else { 5.0 });
         assert_eq!(RIGHT_MARKER_RADIUS, if cfg!(target_os = "macos") { 3.0 } else { 0.0 });
         assert_eq!(GAP, if cfg!(target_os = "macos") { 11.5 } else { 18.0 });
-        assert_eq!(RULER_SHADOW_OUTER, 9.0);
-        assert_eq!(RULER_SHADOW_MIDDLE, 5.0);
-        assert_eq!(RULER_SHADOW_INNER, 2.0);
+    }
+
+    /// Word for Mac's page frame, measured per device pixel on a Retina screen at 110% over its
+    /// 231 canvas: out from the page's 2-pixel #BABABA rule, the shadow reads 217 and fades back to
+    /// 231 about 8.5 points out; above the page it starts 1 point weaker (it's dropped). The old
+    /// frame was a solid 2-point band of 146 and steps of 203 and 222.
+    #[test]
+    fn page_frame_matches_words_measured_profile() {
+        let t = crate::theme::Tokens::light();
+        let ppp = 2.0;
+        let page = Rect::from_min_size(pos2(100.0, 100.0), vec2(654.5, 926.0));
+        let mesh = page_shadow_mesh(page, ppp, t.page_shadow_edge);
+        let alpha = |p: Pos2| mesh.vertices.iter().find(|v| (v.pos - p).length() < 1e-3).map_or(0.0, |v| v.color.a() as f32);
+        let canvas = t.canvas.r() as f32;
+        assert_eq!(canvas, 231.0);
+        // A device pixel's grey: the GPU interpolates between the vertices on its two edges.
+        let grey = |a: Pos2, b: Pos2| canvas * (1.0 - (alpha(a) + alpha(b)) / 2.0 / 255.0);
+        // Rows and columns of vertices run only along the shadow's edges and rings; along the
+        // page the shadow is the same as on its (dropped) top-left corner's row and column.
+        let mid_y = page.min.y + PAGE_SHADOW_DROP;
+        let word_left = [217.0, 219.0, 220.0, 222.0, 223.0, 224.0, 226.0, 226.0, 227.0, 227.0, 228.0, 229.0, 229.0, 230.0, 230.0, 230.0, 231.0];
+        for (k, want) in word_left.iter().enumerate() {
+            let x = page.min.x - k as f32 / ppp;
+            let got = grey(pos2(x, mid_y), pos2(x - 1.0 / ppp, mid_y));
+            assert!((got - want).abs() <= 1.5, "left, pixel {}: {got} against Word's {want}", k + 1);
+        }
+        let mid_x = page.min.x;
+        let word_top = [220.0, 222.0, 223.0, 224.0, 226.0, 226.0, 227.0, 227.0, 228.0, 229.0, 229.0, 230.0, 230.0, 230.0, 231.0];
+        for (k, want) in word_top.iter().enumerate() {
+            let y = page.min.y - k as f32 / ppp;
+            let got = grey(pos2(mid_x, y), pos2(mid_x, y - 1.0 / ppp));
+            assert!((got - want).abs() <= 1.5, "top, pixel {}: {got} against Word's {want}", k + 1);
+        }
+        // Nothing past the reach; the outermost ring is clear, so there's no outer edge.
+        assert!(mesh.vertices.iter().all(|v| v.pos.x >= page.min.x - PAGE_SHADOW_REACH - 1e-3));
+        assert_eq!(alpha(pos2(page.min.x - PAGE_SHADOW_REACH, mid_y)), 0.0);
+        // The rule: 1 point (2 device pixels) of #BABABA on the page's own edge, all four sides.
+        assert_eq!(t.page_edge, Color32::from_rgb(0xBA, 0xBA, 0xBA));
+        let [top, bottom, left, right] = page_edge_rects(page, ppp);
+        let snapped = snapped_page(page, ppp);
+        assert_eq!((top.min, top.height()), (snapped.min, 1.0));
+        assert_eq!((bottom.max, bottom.height()), (snapped.max, 1.0));
+        assert_eq!((left.min.x, left.width()), (snapped.min.x, 1.0));
+        assert_eq!((right.max.x, right.width()), (snapped.max.x, 1.0));
+        assert!(snapped.contains_rect(top.union(bottom).union(left).union(right)));
+    }
+
+    /// The frame's edges fall on device pixels at any scale, a 1x screen gets a 1-pixel rule, and
+    /// a degenerate page or a broken pixel scale doesn't produce a broken mesh.
+    #[test]
+    fn page_frame_is_pixel_aligned_and_robust() {
+        for ppp in [1.0, 1.25, 1.5, 2.0, 3.0] {
+            let page = Rect::from_min_size(pos2(10.3, 20.7), vec2(400.2, 300.9));
+            for r in page_edge_rects(page, ppp) {
+                for v in [r.min.x, r.min.y, r.max.x, r.max.y] {
+                    assert!(((v * ppp) - (v * ppp).round()).abs() < 1e-3, "{v} at {ppp}x");
+                }
+                assert!(r.width().min(r.height()) * ppp >= 0.999, "at least one device pixel");
+            }
+            let mesh = page_shadow_mesh(page, ppp, Color32::from_black_alpha(0x11));
+            assert!(mesh.is_valid());
+            for v in &mesh.vertices {
+                assert!(((v.pos.x * ppp) - (v.pos.x * ppp).round()).abs() < 1e-3 || ppp > PAGE_SHADOW_STEPS / PAGE_SHADOW_REACH);
+            }
+        }
+        for ppp in [0.0, -1.0, f32::NAN, f32::INFINITY] {
+            assert!(page_shadow_mesh(Rect::from_min_size(pos2(0.0, 0.0), vec2(10.0, 10.0)), ppp, Color32::BLACK).is_valid());
+            let _ = page_edge_rects(Rect::from_min_size(pos2(0.0, 0.0), vec2(10.0, 10.0)), ppp);
+        }
+        assert!(page_shadow_mesh(Rect::NOTHING, 2.0, Color32::BLACK).is_valid());
+        let tiny = page_edge_rects(Rect::from_min_size(pos2(0.0, 0.0), vec2(0.5, 0.5)), 2.0);
+        assert!(tiny.iter().all(|r| r.width() >= 0.0 && r.height() >= 0.0));
+        assert_eq!(page_shadow_falloff(f32::NAN), 0.0);
+        assert_eq!(page_shadow_falloff(-1.0), 1.0);
+        assert_eq!(page_shadow_falloff(PAGE_SHADOW_REACH), 0.0);
     }
 
     #[test]
