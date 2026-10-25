@@ -126,8 +126,9 @@ pub struct ViewState {
     pub ruler: bool,
     /// View › Show › Gridlines: the drawing grid over the page's text area (on screen only).
     pub gridlines: bool,
-    /// Table Layout › View Gridlines: outlines of table cells (on screen only); on by default, as in Word.
-    #[serde(default = "on")]
+    /// Table Layout › View Gridlines: outlines of table cells (on screen only). Off by default:
+    /// Word on the Mac shows no cell outlines on a table without borders until this is turned on.
+    #[serde(default)]
     pub table_gridlines: bool,
     pub nav_pane: bool,
     pub styles_pane: bool,
@@ -204,10 +205,6 @@ pub struct ViewState {
     pub full_screen: bool,
 }
 
-fn on() -> bool {
-    true
-}
-
 /// The text column of Draft and Outline, and of Web Layout in a headless session.
 const DRAFT_WIDTH: f32 = 800.0;
 
@@ -237,7 +234,7 @@ impl Default for ViewState {
             marks: false,
             ruler: true,
             gridlines: false,
-            table_gridlines: true,
+            table_gridlines: false,
             nav_pane: false,
             styles_pane: false,
             style_inspector: false,
